@@ -1,0 +1,25 @@
+<idea-plugin>
+
+    <id>codeemoji-plugin</id>
+    <name><![CDATA[codƎEmoji]]></name>
+    <version>1.0.0-SNAPSHOT</version>
+    <vendor email="fernando.opc@gmail.com" url="https://www.unibz.it">UNIBZ</vendor>
+
+    <description><![CDATA[codƎEmoji-Plugin]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService
+                serviceImplementation="state.BadVariableNameState"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="state.BadVariableNameProvider"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="my.IsReturnsMoreThanABoolean"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="my.SetMethodReturns"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="my.GetMethodDoesNotReturn"/>
+    </extensions>
+</idea-plugin>

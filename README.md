@@ -1,1 +1,1 @@
-# codeemoji-plugin
+# codƎEmoji-Plugin
