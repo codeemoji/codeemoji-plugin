@@ -5,6 +5,8 @@
     <version>1.0.0-SNAPSHOT</version>
     <vendor email="fernando.opc@gmail.com" url="https://www.unibz.it">UNIBZ</vendor>
 
+    <resource-bundle>CodeemojiBundle</resource-bundle>
+
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.java</depends>
 

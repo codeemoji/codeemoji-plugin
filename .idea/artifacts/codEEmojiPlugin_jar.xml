@@ -1,15 +1,12 @@
 <component name="ArtifactManager">
   <artifact type="jar" build-on-make="true" name="codEEmojiPlugin:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/codEEmojiPlugin_jar</output-path>
-    <properties id="ant-preprocessing">
-      <options enabled="true" />
-    </properties>
     <root id="archive" name="codEEmojiPlugin.jar">
+      <element id="module-output" name="codEEmojiPlugin.main" />
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" />
       </element>
-      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/codeemoji.properties" />
-      <element id="module-output" name="codEEmojiPlugin.main" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/CodeemojiBundle.properties" />
     </root>
   </artifact>
 </component>

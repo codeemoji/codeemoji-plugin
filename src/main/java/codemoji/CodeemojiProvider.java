@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
 @Data
 public abstract class CodeemojiProvider implements InlayHintsProvider<NoSettings> {
 
-    ResourceBundle bundle = ResourceBundle.getBundle("codeemoji");
+    ResourceBundle bundle = ResourceBundle.getBundle("CodeemojiBundle");
 
     @NotNull
     @Override
