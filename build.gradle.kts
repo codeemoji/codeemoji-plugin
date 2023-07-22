@@ -49,7 +49,7 @@ tasks {
     }
 
     withType<org.jetbrains.intellij.tasks.RunIdeTask> {
-        this.maxHeapSize = "4G"
+        this.maxHeapSize = "4g"
     }
 
     patchPluginXml {

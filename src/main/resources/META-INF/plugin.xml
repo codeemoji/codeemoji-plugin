@@ -5,8 +5,6 @@
     <version>1.0.0-SNAPSHOT</version>
     <vendor email="fernando.opc@gmail.com" url="https://www.unibz.it">UNIBZ</vendor>
 
-    <description><![CDATA[codƎEmoji-Plugin]]></description>
-
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.java</depends>
 
