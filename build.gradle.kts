@@ -1,11 +1,17 @@
+import org.jetbrains.changelog.Changelog
+import org.jetbrains.changelog.markdownToHTML
+
+fun properties(key: String) = project.findProperty(key).toString()
+
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.0"
     id("org.jetbrains.intellij") version "1.15.0"
+    id("org.jetbrains.changelog") version "2.1.2"
 }
 
-group = "codeemoji"
-version = "1.0.0-SNAPSHOT"
+group = properties("pluginGroup")
+version = properties("pluginVersion")
 
 repositories {
     mavenCentral()
@@ -17,9 +23,19 @@ dependencies {
 }
 
 intellij {
-    version.set("2023.1.4")
-    type.set("IC")
-    plugins.set(listOf("com.intellij.java"))
+    version.set(properties("platformVersion"))
+    type.set(properties("platformType"))
+    downloadSources.set(properties("platformDownloadSources").toBoolean())
+    updateSinceUntilBuild.set(true)
+    val platformPlugins = properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty)
+    plugins.set(
+        platformPlugins + listOf("com.intellij.java")
+    )
+}
+
+changelog {
+    version.set(properties("pluginVersion"))
+    groups.set(emptyList())
 }
 
 tasks {
@@ -32,9 +48,29 @@ tasks {
         kotlinOptions.jvmTarget = "17"
     }
 
+    withType<org.jetbrains.intellij.tasks.RunIdeTask> {
+        this.maxHeapSize = "4G"
+    }
+
     patchPluginXml {
-        sinceBuild.set("222")
-        untilBuild.set("232.*")
+        version.set(properties("pluginVersion"))
+        sinceBuild.set(properties("pluginSinceBuild"))
+        untilBuild.set(properties("pluginUntilBuild"))
+        pluginDescription.set(
+            projectDir.resolve("README.md").readText().lines().run {
+                val start = "<!-- Plugin description -->"
+                val end = "<!-- Plugin description end -->"
+                if (!containsAll(listOf(start, end))) {
+                    throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
+                }
+                subList(indexOf(start) + 1, indexOf(end))
+            }.joinToString("\n").run { markdownToHTML(this) }
+        )
+        changeNotes.set(changelog.renderItem(changelog.getLatest(), Changelog.OutputType.HTML))
+    }
+
+    runPluginVerifier {
+        ideVersions.set(properties("pluginVerifierIdeVersions").split(",").toList())
     }
 
     test {
