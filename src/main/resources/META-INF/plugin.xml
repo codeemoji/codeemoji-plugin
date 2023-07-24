@@ -12,14 +12,14 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService
-                serviceImplementation="state.BadVariableNameState"/>
+                serviceImplementation="codeemoji.inlayhints.variable.BadVariableNameState"/>
         <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="state.BadVariableNameProvider"/>
+                                   implementationClass="codeemoji.inlayhints.variable.BadVariableNameProvider"/>
         <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="my.IsReturnsMoreThanABoolean"/>
+                                   implementationClass="codeemoji.inlayhints.method.IsReturnsMoreThanABoolean"/>
         <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="my.SetMethodReturns"/>
+                                   implementationClass="codeemoji.inlayhints.method.SetMethodReturns"/>
         <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="my.GetMethodDoesNotReturn"/>
+                                   implementationClass="codeemoji.inlayhints.method.GetMethodDoesNotReturn"/>
     </extensions>
 </idea-plugin>

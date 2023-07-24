@@ -1,7 +1,7 @@
-package my;
+package codeemoji.inlayhints.method;
 
-import codemoji.CodeemojiCollector;
-import codemoji.CodeemojiProvider;
+import codeemoji.core.CodeemojiCollector;
+import codeemoji.core.CodeemojiProvider;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class IsReturnsMoreThanABoolean extends CodeemojiProvider {
+public class SetMethodReturns extends CodeemojiProvider {
 
     @Override
     public InlayHintsCollector getCollector(Editor editor) {
@@ -20,15 +20,13 @@ public class IsReturnsMoreThanABoolean extends CodeemojiProvider {
             @Override
             public void processInlayHint(@Nullable PsiMethod method, InlayHintsSink sink) {
                 InlayPresentation inlay = configureInlayHint(getName(), 0x1F937, true);
-                if ((method != null
-                        && method.getName().startsWith("is")
-                        && !(Objects.equals(method.getReturnType(), PsiTypes.booleanType()) ||
-                        Objects.equals(method.getReturnType(), PsiTypes.voidType())))) {
+                if ((method != null &&
+                        method.getName().startsWith("set")) &&
+                        !(Objects.equals(method.getReturnType(), PsiTypes.voidType()))) {
                     addInlayHint(method, sink, inlay);
                 }
             }
         };
-
     }
 }
 

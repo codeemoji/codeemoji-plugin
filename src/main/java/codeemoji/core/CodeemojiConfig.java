@@ -1,4 +1,4 @@
-package codemoji;
+package codeemoji.core;
 
 import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;

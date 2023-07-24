@@ -1,4 +1,4 @@
-package state;
+package codeemoji.inlayhints.variable;
 
 import com.intellij.codeInsight.hints.*;
 import com.intellij.lang.Language;

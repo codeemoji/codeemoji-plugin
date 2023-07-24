@@ -1,4 +1,4 @@
-package state;
+package codeemoji.inlayhints.variable;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;

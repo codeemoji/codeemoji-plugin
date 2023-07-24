@@ -1,4 +1,4 @@
-package codemoji;
+package codeemoji.core;
 
 import com.intellij.codeInsight.hints.*;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;

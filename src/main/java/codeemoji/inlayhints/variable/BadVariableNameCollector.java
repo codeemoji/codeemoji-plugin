@@ -1,6 +1,6 @@
-package state;
+package codeemoji.inlayhints.variable;
 
-import codemoji.CodeemojiUtil;
+import codeemoji.core.CodeemojiUtil;
 import com.intellij.codeInsight.hints.FactoryInlayHintsCollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;

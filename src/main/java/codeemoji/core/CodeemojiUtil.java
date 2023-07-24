@@ -1,4 +1,4 @@
-package codemoji;
+package codeemoji.core;
 
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.codeInsight.hints.presentation.PresentationFactory;
@@ -25,7 +25,7 @@ public class CodeemojiUtil {
     }
 
 
-    public static @NotNull InlayPresentation configureInlayHint(PresentationFactory factory,String tooltipText, int codePoint, boolean addColor) {
+    public static @NotNull InlayPresentation configureInlayHint(PresentationFactory factory, String tooltipText, int codePoint, boolean addColor) {
         var inlay = factory.text(CodeemojiUtil.generateEmoji(codePoint, addColor));
         inlay = factory.roundWithBackgroundAndSmallInset(inlay);
         inlay = factory.withTooltip(tooltipText, inlay);
