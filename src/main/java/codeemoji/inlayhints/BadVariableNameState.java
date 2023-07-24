@@ -1,6 +1,5 @@
-package codeemoji.inlayhints.variable;
+package codeemoji.inlayhints;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -15,10 +14,6 @@ public class BadVariableNameState implements PersistentStateComponent<BadVariabl
 
     private Integer numberOfLetters = 1;
 
-    public static BadVariableNameState getInstance() {
-        return ApplicationManager.getApplication().getService(BadVariableNameState.class);
-    }
-
     @Nullable
     @Override
     public BadVariableNameState getState() {
@@ -29,10 +24,4 @@ public class BadVariableNameState implements PersistentStateComponent<BadVariabl
     public void loadState(@NotNull BadVariableNameState state) {
         XmlSerializerUtil.copyBean(state, this);
     }
-
-    @Override
-    public void noStateLoaded() {
-        PersistentStateComponent.super.noStateLoaded();
-    }
-
 }

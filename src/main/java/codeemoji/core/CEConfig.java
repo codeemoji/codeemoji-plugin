@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public record CodeemojiConfig(String header) implements ImmediateConfigurable {
+public record CEConfig(String header) implements ImmediateConfigurable {
 
     @NotNull
     @Override

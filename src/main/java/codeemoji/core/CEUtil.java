@@ -4,10 +4,11 @@ import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.codeInsight.hints.presentation.PresentationFactory;
 import com.intellij.openapi.editor.Editor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-public class CodeemojiUtil {
+public class CEUtil {
 
     public static boolean isPreviewEditor(@NotNull Editor editor) {
         return editor.getEditorKind().name().equalsIgnoreCase("UNTYPED");
@@ -25,10 +26,12 @@ public class CodeemojiUtil {
     }
 
 
-    public static @NotNull InlayPresentation configureInlayHint(PresentationFactory factory, String tooltipText, int codePoint, boolean addColor) {
-        var inlay = factory.text(CodeemojiUtil.generateEmoji(codePoint, addColor));
+    public static @NotNull InlayPresentation configureInlayHint(@NotNull PresentationFactory factory, @Nullable String tooltipText, int codePoint, boolean addColor) {
+        var inlay = factory.text(CEUtil.generateEmoji(codePoint, addColor));
         inlay = factory.roundWithBackgroundAndSmallInset(inlay);
-        inlay = factory.withTooltip(tooltipText, inlay);
+        if (tooltipText != null) {
+            inlay = factory.withTooltip(tooltipText, inlay);
+        }
         return inlay;
     }
 }
