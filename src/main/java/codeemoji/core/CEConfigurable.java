@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public record CEConfig(String header) implements ImmediateConfigurable {
+public record CEConfigurable(String header) implements ImmediateConfigurable {
 
     @NotNull
     @Override

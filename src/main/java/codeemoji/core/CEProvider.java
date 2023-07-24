@@ -18,31 +18,17 @@ import java.util.ResourceBundle;
 @Data
 public abstract class CEProvider<T> implements InlayHintsProvider<T> {
 
-    final T settings;
     final ResourceBundle bundle = ResourceBundle.getBundle("CodeemojiBundle");
+    T settings;
 
-    @SuppressWarnings("unchecked")
     public CEProvider() {
-        try {
-            Class<T> type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-            T genericType = type.getDeclaredConstructor().newInstance();
-            if (genericType instanceof NoSettings) {
-                this.settings = (T) new NoSettings();
-            } else if (genericType instanceof PersistentStateComponent<?> typeT) {
-                this.settings = (T) ApplicationManager.getApplication().getService(typeT.getClass());
-            } else {
-                throw new RuntimeException("Settings must be 'NoSettings' or 'PersistentStateComponent' type.");
-            }
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
+        this.settings = createSettings();
     }
 
     @NotNull
     @Override
     public SettingsKey<T> getKey() {
-        return new SettingsKey<>(getName().replaceAll(" ", ""));
+        return new SettingsKey<>(getName().replaceAll(" ", "").trim().toLowerCase());
     }
 
     @Nls(capitalization = Nls.Capitalization.Sentence)
@@ -59,11 +45,28 @@ public abstract class CEProvider<T> implements InlayHintsProvider<T> {
     @NotNull
     @Override
     public ImmediateConfigurable createConfigurable(@NotNull T settings) {
-        return new CEConfig(getHeader());
+        return new CEConfigurable(getHeader());
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public @NotNull T createSettings() {
+        if (settings == null) {
+            try {
+                Class<T> type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+                T genericType = type.getDeclaredConstructor().newInstance();
+                if (genericType instanceof NoSettings) {
+                    this.settings = (T) new NoSettings();
+                } else if (genericType instanceof PersistentStateComponent<?> typeT) {
+                    this.settings = (T) ApplicationManager.getApplication().getService(typeT.getClass());
+                } else {
+                    throw new RuntimeException("Settings must be 'NoSettings' or 'PersistentStateComponent' type.");
+                }
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                     NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return settings;
     }
 
@@ -83,6 +86,6 @@ public abstract class CEProvider<T> implements InlayHintsProvider<T> {
         return getClass().getSimpleName().toLowerCase();
     }
 
-    public abstract InlayHintsCollector getCollector(Editor editor);
+    public abstract InlayHintsCollector getCollector(@NotNull Editor editor);
 
 }

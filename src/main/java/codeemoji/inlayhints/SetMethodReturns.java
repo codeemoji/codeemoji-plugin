@@ -9,6 +9,7 @@ import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiTypes;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -27,7 +28,7 @@ public class SetMethodReturns extends CEProvider<NoSettings> {
     }
 
     @Override
-    public InlayHintsCollector getCollector(Editor editor) {
+    public InlayHintsCollector getCollector(@NotNull Editor editor) {
         return new CEMethodCollector(editor) {
             @Override
             public void processInlayHint(@Nullable PsiMethod method, InlayHintsSink sink) {

@@ -12,7 +12,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService
-                serviceImplementation="codeemoji.inlayhints.BadVariableNameState"/>
+                serviceImplementation="codeemoji.inlayhints.BadVariableNameSettings"/>
         <codeInsight.inlayProvider language="JAVA"
                                    implementationClass="codeemoji.inlayhints.BadVariableName"/>
         <codeInsight.inlayProvider language="JAVA"

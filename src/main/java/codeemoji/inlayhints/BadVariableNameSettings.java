@@ -9,19 +9,19 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Data
-@State(name = "BadVariableNameHintState", storages = @Storage("bad-variable-name-hint.xml"))
-public class BadVariableNameState implements PersistentStateComponent<BadVariableNameState> {
+@State(name = "BadVariableNameSettings", storages = @Storage("bad-variable-name-settings.xml"))
+public class BadVariableNameSettings implements PersistentStateComponent<BadVariableNameSettings> {
 
     private Integer numberOfLetters = 1;
 
     @Nullable
     @Override
-    public BadVariableNameState getState() {
+    public BadVariableNameSettings getState() {
         return this;
     }
 
     @Override
-    public void loadState(@NotNull BadVariableNameState state) {
+    public void loadState(@NotNull BadVariableNameSettings state) {
         XmlSerializerUtil.copyBean(state, this);
     }
 }

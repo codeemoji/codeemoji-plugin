@@ -11,7 +11,7 @@ import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BadVariableName extends CEProvider<BadVariableNameState> {
+public class BadVariableName extends CEProvider<BadVariableNameSettings> {
 
     @Override
     public @Nullable String getPreviewText() {
@@ -29,7 +29,7 @@ public class BadVariableName extends CEProvider<BadVariableNameState> {
     }
 
     @Override
-    public InlayHintsCollector getCollector(Editor editor) {
+    public InlayHintsCollector getCollector(@NotNull Editor editor) {
         return new CELocalVariableCollector(editor) {
             @Override
             public void processInlayHint(PsiElement element, InlayHintsSink sink) {
@@ -42,7 +42,7 @@ public class BadVariableName extends CEProvider<BadVariableNameState> {
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull BadVariableNameState settings) {
-        return new BadVariableNameConfig(getHeader(), settings);
+    public @NotNull ImmediateConfigurable createConfigurable(@NotNull BadVariableNameSettings settings) {
+        return new BadVariableNameConfigurable(getHeader(), settings);
     }
 }
