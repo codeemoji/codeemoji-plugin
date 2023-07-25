@@ -34,7 +34,7 @@ public class IsReturnsMoreThanABoolean extends CEProvider<NoSettings> {
                 if ((method != null && method.getName().startsWith("is") &&
                         !(Objects.equals(method.getReturnType(), PsiTypes.booleanType()) ||
                                 Objects.equals(method.getReturnType(), PsiTypes.voidType())))) {
-                    addInlayHint(method, sink, 0x1F937, true);
+                    addInlayHint(method, sink, 0x1F937);
                 }
             }
         };

@@ -40,11 +40,11 @@ public abstract class CEMethodCollector extends CECollector {
     }
 
     @Override
-    public void addInlayHint(@NotNull PsiElement element, @NotNull InlayHintsSink sink, int codePoint, boolean addColor) {
+    public void addInlayHint(@NotNull PsiElement element, @NotNull InlayHintsSink sink, int codePoint, int modifier, boolean addColor) {
         if (element instanceof PsiMethod method) {
             PsiIdentifier identifier = method.getNameIdentifier();
             if (identifier != null) {
-                super.addInlayHint(identifier, sink, codePoint, addColor);
+                super.addInlayHint(identifier, sink, codePoint, modifier, addColor);
             }
         }
     }

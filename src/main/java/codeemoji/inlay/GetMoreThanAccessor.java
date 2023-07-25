@@ -43,7 +43,7 @@ public class GetMoreThanAccessor extends CEProvider<NoSettings> {
                 if (method != null && method.getName().startsWith("get") &&
                         !(Objects.equals(method.getReturnType(), PsiTypes.voidType())) &&
                         Objects.requireNonNull(method.getBody()).getStatements().length > 1) {
-                    addInlayHint(method, sink, 0x1F937, true);
+                    addInlayHint(method, sink, 0x1F937);
                 }
             }
         };

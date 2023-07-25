@@ -33,7 +33,7 @@ public class GetMethodDoesNotReturn extends CEProvider<NoSettings> {
                 if (method != null &&
                         (method.getName().startsWith("get") || method.getName().startsWith("return")) &&
                         Objects.equals(method.getReturnType(), PsiTypes.voidType())) {
-                    addInlayHint(method, sink, 0x1F937, true);
+                    addInlayHint(method, sink, 0x1F937);
                 }
             }
         };

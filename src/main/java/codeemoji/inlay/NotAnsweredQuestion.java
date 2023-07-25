@@ -13,15 +13,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class SetMethodReturns extends CEProvider<NoSettings> {
+public class NotAnsweredQuestion extends CEProvider<NoSettings> {
 
     @Override
     public @Nullable String getPreviewText() {
         return """
                 public class Customer {
-                    public String setName(String name) {
-                        this.name = name;
-                        return this.name;
+                    public void isHuman() {
+                        doSomething();
                     }
                 }""";
     }
@@ -31,13 +30,13 @@ public class SetMethodReturns extends CEProvider<NoSettings> {
         return new CEMethodCollector(editor, keyId) {
             @Override
             public void processInlayHint(@Nullable PsiMethod method, InlayHintsSink sink) {
-                if ((method != null &&
-                        method.getName().startsWith("set")) &&
-                        !(Objects.equals(method.getReturnType(), PsiTypes.voidType()))) {
+                if ((method != null && method.getName().startsWith("is") &&
+                        Objects.equals(method.getReturnType(), PsiTypes.voidType()))) {
                     addInlayHint(method, sink, 0x1F937);
                 }
             }
         };
+
     }
 }
 

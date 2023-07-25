@@ -24,5 +24,11 @@
                                    implementationClass="codeemoji.inlay.GetMethodDoesNotReturn"/>
         <codeInsight.inlayProvider language="JAVA"
                                    implementationClass="codeemoji.inlay.GetMoreThanAccessor"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.ExpectingButNotGettingASingleInstance"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.ValidationMethodDoesNotConfirm"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.NotAnsweredQuestion"/>
     </extensions>
 </idea-plugin>

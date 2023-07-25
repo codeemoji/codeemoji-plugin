@@ -2,26 +2,29 @@ package codeemoji.inlay;
 
 import codeemoji.core.CEMethodCollector;
 import codeemoji.core.CEProvider;
+import codeemoji.core.CEUtil;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.PsiTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class SetMethodReturns extends CEProvider<NoSettings> {
+public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings> {
 
     @Override
     public @Nullable String getPreviewText() {
         return """
                 public class Customer {
-                    public String setName(String name) {
-                        this.name = name;
-                        return this.name;
+                    public Object[] getParameter() {
+                        Object[] array = doSomething();
+                        return array;
                     }
                 }""";
     }
@@ -31,10 +34,16 @@ public class SetMethodReturns extends CEProvider<NoSettings> {
         return new CEMethodCollector(editor, keyId) {
             @Override
             public void processInlayHint(@Nullable PsiMethod method, InlayHintsSink sink) {
-                if ((method != null &&
-                        method.getName().startsWith("set")) &&
-                        !(Objects.equals(method.getReturnType(), PsiTypes.voidType()))) {
-                    addInlayHint(method, sink, 0x1F937);
+                if (method != null &&
+                        (method.getName().startsWith("get") || method.getName().startsWith("return")) &&
+                        !Objects.equals(method.getReturnType(), PsiTypes.voidType()) &&
+                        !(method.getName().endsWith("s"))) {
+                    PsiTypeElement returnElem = method.getReturnTypeElement();
+                    PsiJavaFile javaFile = (PsiJavaFile) method.getContainingFile();
+                    if (CEUtil.isArrayReturn(returnElem) || CEUtil.isIterableReturn(returnElem, javaFile)) {
+                        addInlayHint(method, sink, 0x0039);
+                    }
+
                 }
             }
         };
