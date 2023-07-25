@@ -11,6 +11,7 @@
     <depends>com.intellij.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+
         <applicationService
                 serviceImplementation="codeemoji.inlay.BadVariableNameSettings"/>
         <codeInsight.inlayProvider language="JAVA"
@@ -21,5 +22,7 @@
                                    implementationClass="codeemoji.inlay.SetMethodReturns"/>
         <codeInsight.inlayProvider language="JAVA"
                                    implementationClass="codeemoji.inlay.GetMethodDoesNotReturn"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.GetMoreThanAccessor"/>
     </extensions>
 </idea-plugin>
