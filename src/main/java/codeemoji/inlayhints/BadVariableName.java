@@ -5,7 +5,6 @@ import codeemoji.core.CEProvider;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
@@ -29,13 +28,12 @@ public class BadVariableName extends CEProvider<BadVariableNameSettings> {
     }
 
     @Override
-    public InlayHintsCollector getCollector(@NotNull Editor editor) {
-        return new CELocalVariableCollector(editor) {
+    public InlayHintsCollector getCollector(@NotNull Editor editor, @NotNull String keyId) {
+        return new CELocalVariableCollector(editor, keyId) {
             @Override
             public void processInlayHint(PsiElement element, InlayHintsSink sink) {
                 if (getSettings().getNumberOfLetters() >= element.getTextLength()) {
-                    InlayPresentation inlay = configureInlayHint(getName(), 0x1F90F);
-                    addInlayHint(element, sink, inlay);
+                    addInlayHint(element, sink, 0x1F90F);
                 }
             }
         };
@@ -43,6 +41,6 @@ public class BadVariableName extends CEProvider<BadVariableNameSettings> {
 
     @Override
     public @NotNull ImmediateConfigurable createConfigurable(@NotNull BadVariableNameSettings settings) {
-        return new BadVariableNameConfigurable(getHeader(), settings);
+        return new BadVariableNameConfigurable(settings);
     }
 }

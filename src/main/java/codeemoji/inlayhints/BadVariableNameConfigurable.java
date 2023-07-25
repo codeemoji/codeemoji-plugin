@@ -8,8 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 
-public record BadVariableNameConfigurable(String header,
-                                          BadVariableNameSettings settings) implements ImmediateConfigurable {
+public record BadVariableNameConfigurable(BadVariableNameSettings settings) implements ImmediateConfigurable {
 
     @NotNull
     @Override
@@ -24,9 +23,9 @@ public record BadVariableNameConfigurable(String header,
             }
         });
         return FormBuilder.createFormBuilder()
-                .addComponent(new JLabel(header()))
                 .addLabeledComponent("Number of letters", jSpinner)
-                .addComponentFillVertically(new JPanel(), 0)
                 .getPanel();
     }
+
+
 }

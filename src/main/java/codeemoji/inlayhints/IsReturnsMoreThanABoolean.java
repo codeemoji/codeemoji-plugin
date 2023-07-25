@@ -5,7 +5,6 @@ import codeemoji.core.CEProvider;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.NoSettings;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiTypes;
@@ -28,13 +27,14 @@ public class IsReturnsMoreThanABoolean extends CEProvider<NoSettings> {
     }
 
     @Override
-    public InlayHintsCollector getCollector(@NotNull Editor editor) {
-        return new CEMethodCollector(editor) {
+    public InlayHintsCollector getCollector(@NotNull Editor editor, @NotNull String keyId) {
+        return new CEMethodCollector(editor, keyId) {
             @Override
             public void processInlayHint(@Nullable PsiMethod method, InlayHintsSink sink) {
-                InlayPresentation inlay = configureInlayHint(getName(), 0x1F937, true);
-                if ((method != null && method.getName().startsWith("is") && !(Objects.equals(method.getReturnType(), PsiTypes.booleanType()) || Objects.equals(method.getReturnType(), PsiTypes.voidType())))) {
-                    addInlayHint(method, sink, inlay);
+                if ((method != null && method.getName().startsWith("is") &&
+                        !(Objects.equals(method.getReturnType(), PsiTypes.booleanType()) ||
+                                Objects.equals(method.getReturnType(), PsiTypes.voidType())))) {
+                    addInlayHint(method, sink, 0x1F937, true);
                 }
             }
         };

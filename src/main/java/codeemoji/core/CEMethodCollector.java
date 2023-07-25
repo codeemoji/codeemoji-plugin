@@ -1,7 +1,6 @@
 package codeemoji.core;
 
 import com.intellij.codeInsight.hints.InlayHintsSink;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiElement;
@@ -13,8 +12,8 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class CEMethodCollector extends CECollector {
 
-    public CEMethodCollector(@NotNull Editor editor) {
-        super(editor);
+    public CEMethodCollector(@NotNull Editor editor, @NotNull String keyId) {
+        super(editor, keyId);
     }
 
     @Override
@@ -40,15 +39,17 @@ public abstract class CEMethodCollector extends CECollector {
         return false;
     }
 
-    public void addInlayHint(@Nullable PsiElement element, @NotNull InlayHintsSink sink, InlayPresentation inlay) {
+    @Override
+    public void addInlayHint(@NotNull PsiElement element, @NotNull InlayHintsSink sink, int codePoint, boolean addColor) {
         if (element instanceof PsiMethod method) {
             PsiIdentifier identifier = method.getNameIdentifier();
             if (identifier != null) {
-                sink.addInlineElement(identifier.getTextOffset() + identifier.getTextLength(), false, inlay, false);
+                super.addInlayHint(identifier, sink, codePoint, addColor);
             }
         }
     }
 
+    @Override
     public final void processInlayHint(@Nullable PsiElement element, InlayHintsSink sink) {
         if (element instanceof PsiMethod method) {
             processInlayHint(method, sink);

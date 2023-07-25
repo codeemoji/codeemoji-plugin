@@ -9,8 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class CELocalVariableCollector extends CECollector {
 
-    public CELocalVariableCollector(@NotNull Editor editor) {
-        super(editor);
+    public CELocalVariableCollector(@NotNull Editor editor, @NotNull String keyId) {
+        super(editor, keyId);
     }
 
     @Override

@@ -6,20 +6,21 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
-import lombok.Data;
+import com.intellij.util.ui.FormBuilder;
+import lombok.Getter;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
-import java.util.ResourceBundle;
+import java.util.Objects;
 
-@Data
+@Getter
 public abstract class CEProvider<T> implements InlayHintsProvider<T> {
 
-    final ResourceBundle bundle = ResourceBundle.getBundle("CodeemojiBundle");
-    T settings;
+    private T settings;
 
     public CEProvider() {
         this.settings = createSettings();
@@ -28,24 +29,37 @@ public abstract class CEProvider<T> implements InlayHintsProvider<T> {
     @NotNull
     @Override
     public SettingsKey<T> getKey() {
-        return new SettingsKey<>(getName().replaceAll(" ", "").trim().toLowerCase());
+        return new SettingsKey<>(getClass().getSimpleName().toLowerCase());
     }
 
     @Nls(capitalization = Nls.Capitalization.Sentence)
     @NotNull
     @Override
     public String getName() {
-        return bundle.getString(getBaseKey() + ".name");
+        try {
+            return Objects.requireNonNull(getProperty("inlay." + getKey().getId() + ".name"));
+        } catch (RuntimeException ex) {
+            return "<NAME_NOT_DEFINED>";
+        }
     }
 
-    public String getHeader() {
-        return bundle.getString(getBaseKey() + ".header");
+    @Nls
+    @Nullable
+    @Override
+    public String getProperty(@NotNull String key) {
+        return CEBundle.getInstance().getMessages().getString(key);
     }
 
     @NotNull
     @Override
     public ImmediateConfigurable createConfigurable(@NotNull T settings) {
-        return new CEConfigurable(getHeader());
+        return new ImmediateConfigurable() {
+            @NotNull
+            @Override
+            public JComponent createComponent(@NotNull ChangeListener changeListener) {
+                return FormBuilder.createFormBuilder().getPanel();
+            }
+        };
     }
 
     @Override
@@ -73,7 +87,7 @@ public abstract class CEProvider<T> implements InlayHintsProvider<T> {
     @Nullable
     @Override
     public InlayHintsCollector getCollectorFor(@NotNull PsiFile psiFile, @NotNull Editor editor, @NotNull T settings, @NotNull InlayHintsSink inlayHintsSink) {
-        return getCollector(editor);
+        return getCollector(editor, getKey().getId());
     }
 
     @Override
@@ -81,11 +95,6 @@ public abstract class CEProvider<T> implements InlayHintsProvider<T> {
         return "JAVA".equals(language.getID());
     }
 
-
-    public @NotNull String getBaseKey() {
-        return getClass().getSimpleName().toLowerCase();
-    }
-
-    public abstract InlayHintsCollector getCollector(@NotNull Editor editor);
+    public abstract InlayHintsCollector getCollector(@NotNull Editor editor, @NotNull String keyId);
 
 }
