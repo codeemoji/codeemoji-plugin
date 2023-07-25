@@ -6,7 +6,7 @@
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" />
       </element>
-      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/CodeemojiBundle.properties" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/CEBundle.properties" />
     </root>
   </artifact>
 </component>

@@ -1,4 +1,4 @@
-package codeemoji.inlayhints;
+package codeemoji.inlay;
 
 import codeemoji.core.CEMethodCollector;
 import codeemoji.core.CEProvider;
@@ -13,15 +13,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class SetMethodReturns extends CEProvider<NoSettings> {
+public class GetMethodDoesNotReturn extends CEProvider<NoSettings> {
 
     @Override
     public @Nullable String getPreviewText() {
         return """
                 public class Customer {
-                    public String setName(String name) {
-                        this.name = name;
-                        return this.name;
+                    public void getName() {
+                        doSomething();
                     }
                 }""";
     }
@@ -31,9 +30,9 @@ public class SetMethodReturns extends CEProvider<NoSettings> {
         return new CEMethodCollector(editor, keyId) {
             @Override
             public void processInlayHint(@Nullable PsiMethod method, InlayHintsSink sink) {
-                if ((method != null &&
-                        method.getName().startsWith("set")) &&
-                        !(Objects.equals(method.getReturnType(), PsiTypes.voidType()))) {
+                if (method != null &&
+                        (method.getName().startsWith("get") || method.getName().startsWith("return")) &&
+                        Objects.equals(method.getReturnType(), PsiTypes.voidType())) {
                     addInlayHint(method, sink, 0x1F937, true);
                 }
             }

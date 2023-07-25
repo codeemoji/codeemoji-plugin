@@ -1,4 +1,4 @@
-package codeemoji.inlayhints;
+package codeemoji.inlay;
 
 import codeemoji.core.CEMethodCollector;
 import codeemoji.core.CEProvider;

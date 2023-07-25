@@ -1,4 +1,4 @@
-package codeemoji.inlayhints;
+package codeemoji.inlay;
 
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;

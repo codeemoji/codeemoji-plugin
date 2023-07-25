@@ -5,21 +5,21 @@
     <version>1.0.0-SNAPSHOT</version>
     <vendor email="fernando.opc@gmail.com" url="https://www.unibz.it">UNIBZ</vendor>
 
-    <resource-bundle>CodeemojiBundle</resource-bundle>
+    <resource-bundle>CEBundle</resource-bundle>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService
-                serviceImplementation="codeemoji.inlayhints.BadVariableNameSettings"/>
+                serviceImplementation="codeemoji.inlay.BadVariableNameSettings"/>
         <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlayhints.BadVariableName"/>
+                                   implementationClass="codeemoji.inlay.BadVariableName"/>
         <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlayhints.IsReturnsMoreThanABoolean"/>
+                                   implementationClass="codeemoji.inlay.IsReturnsMoreThanABoolean"/>
         <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlayhints.SetMethodReturns"/>
+                                   implementationClass="codeemoji.inlay.SetMethodReturns"/>
         <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlayhints.GetMethodDoesNotReturn"/>
+                                   implementationClass="codeemoji.inlay.GetMethodDoesNotReturn"/>
     </extensions>
 </idea-plugin>

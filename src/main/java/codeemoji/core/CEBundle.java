@@ -11,7 +11,7 @@ public class CEBundle {
     final ResourceBundle messages;
 
     private CEBundle() {
-        this.messages = ResourceBundle.getBundle("CodeemojiBundle");
+        this.messages = ResourceBundle.getBundle("CEBundle");
     }
 
     public static CEBundle getInstance() {
