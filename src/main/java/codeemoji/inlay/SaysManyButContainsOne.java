@@ -12,15 +12,15 @@ import com.intellij.psi.PsiTypeElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static codeemoji.core.CESymbol.MANY;
+import static codeemoji.core.CESymbol.ONE;
 
-public class SaysOneButContainsMany extends CEProvider<NoSettings> {
+public class SaysManyButContainsOne extends CEProvider<NoSettings> {
 
     @Override
     public @Nullable String getPreviewText() {
         return """
                 public class Customer {
-                  private String[] name;
+                  private String names;
                 }""";
     }
 
@@ -30,8 +30,8 @@ public class SaysOneButContainsMany extends CEProvider<NoSettings> {
             @Override
             public void processInlayHint(PsiField field, InlayHintsSink sink) {
                 PsiTypeElement typeElement = field.getTypeElement();
-                if (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement)) {
-                    addInlayHint(field, sink, MANY);
+                if (!CEUtil.isArrayType(typeElement) && !CEUtil.isIterableType(typeElement)) {
+                    addInlayHint(field, sink, ONE);
                 }
             }
         };

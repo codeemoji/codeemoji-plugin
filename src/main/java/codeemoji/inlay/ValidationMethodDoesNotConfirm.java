@@ -13,6 +13,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+import static codeemoji.core.CESymbol.CONFUSED;
+
 public class ValidationMethodDoesNotConfirm extends CEProvider<NoSettings> {
 
     @Override
@@ -34,7 +36,7 @@ public class ValidationMethodDoesNotConfirm extends CEProvider<NoSettings> {
             public void processInlayHint(@Nullable PsiMethod method, InlayHintsSink sink) {
                 if (method != null && method.getName().startsWith("check") &&
                         !(Objects.equals(method.getReturnType(), PsiTypes.booleanType()))) {
-                    addInlayHint(method, sink, 0x1F937);
+                    addInlayHint(method, sink, CONFUSED);
                 }
             }
         };

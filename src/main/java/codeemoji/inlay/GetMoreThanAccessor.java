@@ -13,6 +13,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+import static codeemoji.core.CESymbol.CONFUSED;
+
 public class GetMoreThanAccessor extends CEProvider<NoSettings> {
 
     @Override
@@ -43,7 +45,7 @@ public class GetMoreThanAccessor extends CEProvider<NoSettings> {
                 if (method != null && method.getName().startsWith("get") &&
                         !(Objects.equals(method.getReturnType(), PsiTypes.voidType())) &&
                         Objects.requireNonNull(method.getBody()).getStatements().length > 1) {
-                    addInlayHint(method, sink, 0x1F937);
+                    addInlayHint(method, sink, CONFUSED);
                 }
             }
         };

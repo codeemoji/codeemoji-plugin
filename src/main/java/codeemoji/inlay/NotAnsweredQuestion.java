@@ -13,6 +13,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+import static codeemoji.core.CESymbol.CONFUSED;
+
 public class NotAnsweredQuestion extends CEProvider<NoSettings> {
 
     @Override
@@ -32,7 +34,7 @@ public class NotAnsweredQuestion extends CEProvider<NoSettings> {
             public void processInlayHint(@Nullable PsiMethod method, InlayHintsSink sink) {
                 if ((method != null && method.getName().startsWith("is") &&
                         Objects.equals(method.getReturnType(), PsiTypes.voidType()))) {
-                    addInlayHint(method, sink, 0x1F937);
+                    addInlayHint(method, sink, CONFUSED);
                 }
             }
         };

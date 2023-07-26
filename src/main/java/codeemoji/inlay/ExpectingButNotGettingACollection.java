@@ -15,6 +15,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+import static codeemoji.core.CESymbol.CONFUSED;
+
 public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
 
     @Override
@@ -38,7 +40,7 @@ public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
                     PsiTypeElement typeElement = method.getReturnTypeElement();
                     if (Objects.equals(method.getReturnType(), PsiTypes.voidType()) ||
                             (!CEUtil.isArrayType(typeElement) && !CEUtil.isIterableType(typeElement))) {
-                        addInlayHint(method, sink, 0x1F937);
+                        addInlayHint(method, sink, CONFUSED);
                     }
                 }
             }

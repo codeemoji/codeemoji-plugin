@@ -23,5 +23,6 @@
         <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.TransformMethodDoesNotReturn"/>
         <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.ExpectingButNotGettingACollection"/>
         <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.SaysOneButContainsMany"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.SaysManyButContainsOne"/>
     </extensions>
 </idea-plugin>

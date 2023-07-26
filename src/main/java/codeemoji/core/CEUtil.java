@@ -11,6 +11,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static codeemoji.core.CESymbol.COLOR_BACKGROUND;
+
 public class CEUtil {
 
     public static boolean isPreviewEditor(@NotNull Editor editor) {
@@ -26,7 +28,7 @@ public class CEUtil {
             System.arraycopy(modifierChar, 0, withoutColor, codePointChar.length, modifierChar.length);
         }
         if (addColor) {
-            char[] addColorChar = Character.toChars(0x0FE0F);
+            char[] addColorChar = Character.toChars(COLOR_BACKGROUND.getValue());
             char[] withColor = Arrays.copyOf(withoutColor, withoutColor.length + addColorChar.length);
             System.arraycopy(addColorChar, 0, withColor, withoutColor.length, addColorChar.length);
             return new String(withColor);
@@ -40,11 +42,11 @@ public class CEUtil {
             if (fieldType instanceof PsiClassType psiType) {
                 PsiClass psiTypeClass = Objects.requireNonNull(psiType.resolve());
                 String qualifiedName = Objects.requireNonNull(psiTypeClass.getQualifiedName());
-                Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
                 try {
                     Class<?> typeClass = Class.forName(qualifiedName);
                     return Iterable.class.isAssignableFrom(typeClass);
                 } catch (RuntimeException | ClassNotFoundException ignored) {
+                    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
                     for (Project proj : openProjects) {
                         Project project = typeElement.getProject();
                         GlobalSearchScope scope = psiTypeClass.getResolveScope();

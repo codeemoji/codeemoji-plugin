@@ -10,6 +10,8 @@ import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static codeemoji.core.CESymbol.SMALL_NAME;
+
 public class BadVariableName extends CEProvider<BadVariableNameSettings> {
 
     @Override
@@ -33,7 +35,7 @@ public class BadVariableName extends CEProvider<BadVariableNameSettings> {
             @Override
             public void processInlayHint(PsiElement element, InlayHintsSink sink) {
                 if (getSettings().getNumberOfLetters() >= element.getTextLength()) {
-                    addInlayHint(element, sink, 0x1F90F);
+                    addInlayHint(element, sink, SMALL_NAME);
                 }
             }
         };

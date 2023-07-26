@@ -13,6 +13,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+import static codeemoji.core.CESymbol.CONFUSED;
+
 public class SetMethodReturns extends CEProvider<NoSettings> {
 
     @Override
@@ -34,7 +36,7 @@ public class SetMethodReturns extends CEProvider<NoSettings> {
                 if ((method != null &&
                         method.getName().startsWith("set")) &&
                         !(Objects.equals(method.getReturnType(), PsiTypes.voidType()))) {
-                    addInlayHint(method, sink, 0x1F937);
+                    addInlayHint(method, sink, CONFUSED);
                 }
             }
         };

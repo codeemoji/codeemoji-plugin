@@ -9,6 +9,8 @@ import com.intellij.psi.PsiElement;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import static codeemoji.core.CESymbol.DEFAULT;
+
 @Getter
 public abstract class CECollector extends FactoryInlayHintsCollector {
 
@@ -30,15 +32,27 @@ public abstract class CECollector extends FactoryInlayHintsCollector {
     }
 
     public void addInlayHint(@NotNull PsiElement element, @NotNull InlayHintsSink sink) {
-        addInlayHint(element, sink, 0x2757);
+        addInlayHint(element, sink, DEFAULT);
+    }
+
+    public void addInlayHint(@NotNull PsiElement element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint) {
+        addInlayHint(element, sink, codePoint.getValue(), 0);
     }
 
     public void addInlayHint(@NotNull PsiElement element, @NotNull InlayHintsSink sink, int codePoint) {
         addInlayHint(element, sink, codePoint, 0);
     }
 
+    public void addInlayHint(@NotNull PsiElement element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint, int modifier) {
+        addInlayHint(element, sink, codePoint.getValue(), modifier, true);
+    }
+
     public void addInlayHint(@NotNull PsiElement element, @NotNull InlayHintsSink sink, int codePoint, int modifier) {
         addInlayHint(element, sink, codePoint, modifier, true);
+    }
+
+    public void addInlayHint(@NotNull PsiElement element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint, int modifier, boolean addColor) {
+        addInlayHint(element, sink, codePoint.getValue(), modifier, true);
     }
 
     public void addInlayHint(@NotNull PsiElement element, @NotNull InlayHintsSink sink, int codePoint, int modifier, boolean addColor) {

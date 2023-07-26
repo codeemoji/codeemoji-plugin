@@ -15,6 +15,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+import static codeemoji.core.CESymbol.MANY;
+
 public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings> {
 
     @Override
@@ -39,7 +41,7 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings
                         !(method.getName().endsWith("s"))) {
                     PsiTypeElement typeElement = method.getReturnTypeElement();
                     if (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement)) {
-                        addInlayHint(method, sink, 0x0039);
+                        addInlayHint(method, sink, MANY);
                     }
 
                 }
