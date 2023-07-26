@@ -72,4 +72,19 @@ public class CEUtil {
         }
         return false;
     }
+
+    public static boolean isCollectiveName(@Nullable PsiTypeElement typeElement, @Nullable String fieldName) {
+        if (fieldName != null) {
+            try {
+                String typeName = Objects.requireNonNull(typeElement).getType().getPresentableText();
+                int index = typeName.indexOf("<");
+                if (index > 0) {
+                    typeName = typeName.substring(0, index);
+                }
+                return fieldName.equalsIgnoreCase(typeName);
+            } catch (RuntimeException ignored) {
+            }
+        }
+        return false;
+    }
 }

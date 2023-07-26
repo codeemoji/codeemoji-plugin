@@ -30,7 +30,7 @@ public class SaysManyButContainsOne extends CEProvider<NoSettings> {
             @Override
             public void processInlayHint(PsiField field, InlayHintsSink sink) {
                 PsiTypeElement typeElement = field.getTypeElement();
-                if (!CEUtil.isArrayType(typeElement) && !CEUtil.isIterableType(typeElement)) {
+                if (field.getName().endsWith("s") && !CEUtil.isArrayType(typeElement) && !CEUtil.isIterableType(typeElement)) {
                     addInlayHint(field, sink, ONE);
                 }
             }
