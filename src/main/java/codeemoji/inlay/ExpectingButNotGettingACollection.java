@@ -16,15 +16,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings> {
+public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
 
     @Override
     public @Nullable String getPreviewText() {
         return """
                 public class Customer {
-                    public Object[] getParameter() {
-                        Object[] array = doSomething();
-                        return array;
+                    public byte getBytes(byte[] buffer) {
+                        doSomething();
                     }
                 }""";
     }
@@ -36,14 +35,13 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings
             public void processInlayHint(@Nullable PsiMethod method, InlayHintsSink sink) {
                 if (method != null &&
                         (method.getName().startsWith("get") || method.getName().startsWith("return")) &&
-                        !Objects.equals(method.getReturnType(), PsiTypes.voidType()) &&
-                        !(method.getName().endsWith("s"))) {
+                        (method.getName().endsWith("s"))) {
                     PsiTypeElement typeElement = method.getReturnTypeElement();
                     PsiJavaFile javaFile = (PsiJavaFile) method.getContainingFile();
-                    if (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement, javaFile)) {
-                        addInlayHint(method, sink, 0x0039);
+                    if (Objects.equals(method.getReturnType(), PsiTypes.voidType()) ||
+                            (!CEUtil.isArrayType(typeElement) && !CEUtil.isIterableType(typeElement, javaFile))) {
+                        addInlayHint(method, sink, 0x1F937);
                     }
-
                 }
             }
         };

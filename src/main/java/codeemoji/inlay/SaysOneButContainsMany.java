@@ -1,0 +1,39 @@
+package codeemoji.inlay;
+
+import codeemoji.core.CEFieldCollector;
+import codeemoji.core.CEProvider;
+import codeemoji.core.CEUtil;
+import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.NoSettings;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiTypeElement;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class SaysOneButContainsMany extends CEProvider<NoSettings> {
+
+    @Override
+    public @Nullable String getPreviewText() {
+        return """
+                public class Customer {
+                  private String[] name;
+                }""";
+    }
+
+    @Override
+    public InlayHintsCollector getCollector(@NotNull Editor editor, @NotNull String keyId) {
+        return new CEFieldCollector(editor, keyId) {
+            @Override
+            public void processInlayHint(PsiField field, InlayHintsSink sink) {
+                PsiTypeElement typeElement = field.getTypeElement();
+                PsiJavaFile javaFile = (PsiJavaFile) field.getContainingFile();
+                if (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement, javaFile)) {
+                    addInlayHint(field, sink, 0x0039);
+                }
+            }
+        };
+    }
+}

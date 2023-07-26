@@ -52,6 +52,4 @@ public abstract class CELocalVariableCollector extends CECollector {
         }
         return false;
     }
-
-
 }

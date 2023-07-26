@@ -11,24 +11,17 @@
     <depends>com.intellij.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-
-        <applicationService
-                serviceImplementation="codeemoji.inlay.BadVariableNameSettings"/>
-        <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlay.BadVariableName"/>
-        <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlay.IsReturnsMoreThanABoolean"/>
-        <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlay.SetMethodReturns"/>
-        <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlay.GetMethodDoesNotReturn"/>
-        <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlay.GetMoreThanAccessor"/>
-        <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlay.ExpectingButNotGettingASingleInstance"/>
-        <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlay.ValidationMethodDoesNotConfirm"/>
-        <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlay.NotAnsweredQuestion"/>
+        <applicationService serviceImplementation="codeemoji.inlay.BadVariableNameSettings"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.BadVariableName"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.IsReturnsMoreThanABoolean"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.SetMethodReturns"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.GetMethodDoesNotReturn"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.GetMoreThanAccessor"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.ExpectingButNotGettingASingleInstance"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.ValidationMethodDoesNotConfirm"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.NotAnsweredQuestion"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.TransformMethodDoesNotReturn"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.ExpectingButNotGettingACollection"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.SaysOneButContainsMany"/>
     </extensions>
 </idea-plugin>
