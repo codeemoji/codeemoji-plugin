@@ -7,7 +7,6 @@ import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.PsiTypes;
@@ -39,8 +38,7 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings
                         !Objects.equals(method.getReturnType(), PsiTypes.voidType()) &&
                         !(method.getName().endsWith("s"))) {
                     PsiTypeElement typeElement = method.getReturnTypeElement();
-                    PsiJavaFile javaFile = (PsiJavaFile) method.getContainingFile();
-                    if (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement, javaFile)) {
+                    if (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement)) {
                         addInlayHint(method, sink, 0x0039);
                     }
 

@@ -7,7 +7,6 @@ import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.PsiTypes;
@@ -37,9 +36,8 @@ public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
                         (method.getName().startsWith("get") || method.getName().startsWith("return")) &&
                         (method.getName().endsWith("s"))) {
                     PsiTypeElement typeElement = method.getReturnTypeElement();
-                    PsiJavaFile javaFile = (PsiJavaFile) method.getContainingFile();
                     if (Objects.equals(method.getReturnType(), PsiTypes.voidType()) ||
-                            (!CEUtil.isArrayType(typeElement) && !CEUtil.isIterableType(typeElement, javaFile))) {
+                            (!CEUtil.isArrayType(typeElement) && !CEUtil.isIterableType(typeElement))) {
                         addInlayHint(method, sink, 0x1F937);
                     }
                 }

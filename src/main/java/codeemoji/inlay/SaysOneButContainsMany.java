@@ -8,7 +8,6 @@ import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiTypeElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,8 +28,7 @@ public class SaysOneButContainsMany extends CEProvider<NoSettings> {
             @Override
             public void processInlayHint(PsiField field, InlayHintsSink sink) {
                 PsiTypeElement typeElement = field.getTypeElement();
-                PsiJavaFile javaFile = (PsiJavaFile) field.getContainingFile();
-                if (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement, javaFile)) {
+                if (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement)) {
                     addInlayHint(field, sink, 0x0039);
                 }
             }

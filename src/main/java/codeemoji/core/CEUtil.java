@@ -1,7 +1,10 @@
 package codeemoji.core;
 
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.psi.*;
+import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,27 +34,30 @@ public class CEUtil {
         return new String(withoutColor);
     }
 
-    public static boolean isIterableType(PsiTypeElement typeElement, @NotNull PsiJavaFile javaFile) {
+    public static boolean isIterableType(@Nullable PsiTypeElement typeElement) {
         try {
-            String simpleName = Objects.requireNonNull(typeElement).getText();
-            PsiImportList importList = javaFile.getImportList();
-            PsiImportStatementBase[] imps = Objects.requireNonNull(importList).getAllImportStatements();
-            for (PsiImportStatementBase imp : imps) {
-                PsiJavaCodeReferenceElement refElement = Objects.requireNonNull(imp.getImportReference());
-                String refName = refElement.getReferenceName();
-                String qualifiedName = refElement.getQualifiedName();
-                int genericType = simpleName.indexOf("<");
-                if (genericType >= 0) {
-                    simpleName = simpleName.substring(0, genericType);
-                }
-                if (Objects.equals(refName, simpleName)) {
-                    if (Iterable.class.isAssignableFrom(Class.forName(qualifiedName))) {
-                        return true;
+            PsiType fieldType = Objects.requireNonNull(typeElement).getType();
+            if (fieldType instanceof PsiClassType psiType) {
+                PsiClass psiTypeClass = Objects.requireNonNull(psiType.resolve());
+                String qualifiedName = Objects.requireNonNull(psiTypeClass.getQualifiedName());
+                Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+                try {
+                    Class<?> typeClass = Class.forName(qualifiedName);
+                    return Iterable.class.isAssignableFrom(typeClass);
+                } catch (RuntimeException | ClassNotFoundException ignored) {
+                    for (Project proj : openProjects) {
+                        Project project = typeElement.getProject();
+                        GlobalSearchScope scope = psiTypeClass.getResolveScope();
+                        PsiClass psiUserClass = JavaPsiFacade.getInstance(project).findClass(qualifiedName, scope);
+                        PsiClassType iteratorType = JavaPsiFacade.getElementFactory(project).createTypeByFQClassName("java.lang.Iterable", scope);
+                        PsiClass iteratorClass = iteratorType.resolve();
+                        if (iteratorClass != null && psiUserClass != null && psiUserClass.isInheritor(iteratorClass, true)) {
+                            return true;
+                        }
                     }
-                    break;
                 }
             }
-        } catch (RuntimeException | ClassNotFoundException ignored) {
+        } catch (RuntimeException ignored) {
         }
         return false;
     }
