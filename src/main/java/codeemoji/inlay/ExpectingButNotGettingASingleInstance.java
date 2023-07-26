@@ -38,7 +38,7 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings
                 if (method != null &&
                         (method.getName().startsWith("get") || method.getName().startsWith("return")) &&
                         !Objects.equals(method.getReturnType(), PsiTypes.voidType()) &&
-                        !(method.getName().endsWith("s"))) {
+                        !CEUtil.isPluralForm(method.getName())) {
                     PsiTypeElement typeElement = method.getReturnTypeElement();
                     if (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement)) {
                         addInlayHint(method, sink, MANY);

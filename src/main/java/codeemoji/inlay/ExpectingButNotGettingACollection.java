@@ -36,7 +36,7 @@ public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
             public void processInlayHint(@Nullable PsiMethod method, InlayHintsSink sink) {
                 if (method != null &&
                         (method.getName().startsWith("get") || method.getName().startsWith("return")) &&
-                        (method.getName().endsWith("s"))) {
+                        CEUtil.isPluralForm(method.getName())) {
                     PsiTypeElement typeElement = method.getReturnTypeElement();
                     if (Objects.equals(method.getReturnType(), PsiTypes.voidType()) ||
                             (!CEUtil.isArrayType(typeElement) && !CEUtil.isIterableType(typeElement))) {

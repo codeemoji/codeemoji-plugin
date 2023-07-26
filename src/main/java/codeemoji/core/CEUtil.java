@@ -5,11 +5,17 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
+import edu.stanford.nlp.ling.CoreAnnotations;
+import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.pipeline.Annotation;
+import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 
 import static codeemoji.core.CESymbol.COLOR_BACKGROUND;
 
@@ -73,7 +79,7 @@ public class CEUtil {
         return false;
     }
 
-    public static boolean isCollectiveName(@Nullable PsiTypeElement typeElement, @Nullable String fieldName) {
+    public static boolean sameNameAsType(@Nullable PsiTypeElement typeElement, @Nullable String fieldName) {
         if (fieldName != null) {
             try {
                 String typeName = Objects.requireNonNull(typeElement).getType().getPresentableText();
@@ -87,4 +93,23 @@ public class CEUtil {
         }
         return false;
     }
+
+    public static boolean isPluralForm(String name) {
+        try {
+            Properties props = new Properties();
+            props.setProperty("annotators", "tokenize, ssplit, pos");
+            StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
+            Annotation annotation = new Annotation(name);
+            pipeline.annotate(annotation);
+            List<CoreLabel> tokens = annotation.get(CoreAnnotations.TokensAnnotation.class);
+            if (!tokens.isEmpty()) {
+                CoreLabel lastToken = tokens.get(tokens.size() - 1);
+                String posTag = lastToken.get(CoreAnnotations.PartOfSpeechAnnotation.class);
+                return posTag.equals("NNS") || posTag.equals("NNPS");
+            }
+        } catch (RuntimeException ignored) {
+        }
+        return false;
+    }
+
 }
