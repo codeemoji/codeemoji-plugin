@@ -9,32 +9,32 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class CELocalVariableCollector extends CECollector<PsiElement, PsiElement> {
 
-    public CELocalVariableCollector(@NotNull Editor editor, @NotNull String keyId) {
-        super(editor, keyId);
+    public CELocalVariableCollector(@NotNull Editor editor) {
+        super(editor);
     }
 
     @Override
-    public boolean collectForPreviewEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) {
+    public final boolean collectInPreviewEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) throws RuntimeException {
         if (element instanceof PsiLocalVariable variable) {
             PsiElement elem = variable.getNameIdentifier();
             if (elem != null) {
-                execute(elem, sink);
+                processInlay(elem, sink);
             }
         } else if (element instanceof PsiReferenceExpression reference) {
             PsiElement elem = reference.getQualifier();
             if (elem != null) {
-                execute(elem, sink);
+                processInlay(elem, sink);
             }
         }
         return false;
     }
 
     @Override
-    public boolean collectForRegularEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) {
+    public final boolean collectInDefaultEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) throws RuntimeException {
         element.accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitLocalVariable(@NotNull PsiLocalVariable variable) {
-                execute(variable.getNameIdentifier(), sink);
+                processInlay(variable.getNameIdentifier(), sink);
                 visitReferencesForElement(variable);
                 super.visitLocalVariable(variable);
             }
@@ -43,7 +43,7 @@ public abstract class CELocalVariableCollector extends CECollector<PsiElement, P
                 GlobalSearchScope scope = GlobalSearchScope.fileScope(element.getContainingFile());
                 PsiReference[] refs = ReferencesSearch.search(element, scope, false).toArray(PsiReference.EMPTY_ARRAY);
                 for (PsiReference ref : refs) {
-                    execute(ref.getElement(), sink);
+                    processInlay(ref.getElement(), sink);
                 }
             }
         });

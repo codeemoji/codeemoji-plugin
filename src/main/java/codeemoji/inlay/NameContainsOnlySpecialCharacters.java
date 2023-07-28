@@ -24,13 +24,13 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NoSettings> {
     }
 
     @Override
-    public InlayHintsCollector getCollector(@NotNull Editor editor, @NotNull String keyId) {
-        return new CEFieldCollector(editor, keyId) {
+    public InlayHintsCollector getCollector(@NotNull Editor editor) {
+        return new CEFieldCollector(editor) {
             @Override
-            public void execute(@Nullable PsiField field, InlayHintsSink sink) {
+            public void processInlay(@Nullable PsiField field, InlayHintsSink sink) {
                 if (field != null) {
                     if (CEUtil.containsOnlySpecialCharacters(field.getName())) {
-                        addInlayHint(field.getNameIdentifier(), sink, CONFUSED);
+                        addInlay(field.getNameIdentifier(), sink, CONFUSED);
                     }
                 }
             }

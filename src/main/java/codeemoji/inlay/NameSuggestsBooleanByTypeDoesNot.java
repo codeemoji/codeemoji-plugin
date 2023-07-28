@@ -24,13 +24,13 @@ public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NoSettings> {
     }
 
     @Override
-    public InlayHintsCollector getCollector(@NotNull Editor editor, @NotNull String keyId) {
-        return new CEFieldCollector(editor, keyId) {
+    public InlayHintsCollector getCollector(@NotNull Editor editor) {
+        return new CEFieldCollector(editor) {
             @Override
-            public void execute(@Nullable PsiField field, InlayHintsSink sink) {
+            public void processInlay(@Nullable PsiField field, InlayHintsSink sink) {
                 if (field != null) {
                     if (field.getName().startsWith("is") && !field.getType().equals(PsiTypes.booleanType())) {
-                        addInlayHint(field.getNameIdentifier(), sink, CONFUSED);
+                        addInlay(field.getNameIdentifier(), sink, CONFUSED);
                     }
                 }
             }

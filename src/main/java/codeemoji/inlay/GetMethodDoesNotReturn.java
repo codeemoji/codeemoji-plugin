@@ -28,14 +28,14 @@ public class GetMethodDoesNotReturn extends CEProvider<NoSettings> {
     }
 
     @Override
-    public InlayHintsCollector getCollector(@NotNull Editor editor, @NotNull String keyId) {
-        return new CEMethodCollector(editor, keyId) {
+    public InlayHintsCollector getCollector(@NotNull Editor editor) {
+        return new CEMethodCollector(editor) {
             @Override
-            public void execute(@Nullable PsiMethod method, InlayHintsSink sink) {
+            public void processInlay(@Nullable PsiMethod method, InlayHintsSink sink) {
                 if (method != null &&
                         (method.getName().startsWith("get") || method.getName().startsWith("return")) &&
                         Objects.equals(method.getReturnType(), PsiTypes.voidType())) {
-                    addInlayHint(Objects.requireNonNull(method.getNameIdentifier()), sink, CONFUSED);
+                    addInlay(Objects.requireNonNull(method.getNameIdentifier()), sink, CONFUSED);
                 }
             }
         };
