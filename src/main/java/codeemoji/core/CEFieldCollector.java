@@ -53,5 +53,5 @@ public abstract class CEFieldCollector extends CECollector {
         }
     }
 
-    public abstract void processInlayHint(PsiField field, InlayHintsSink sink);
+    public abstract void processInlayHint(@Nullable PsiField field, InlayHintsSink sink);
 }

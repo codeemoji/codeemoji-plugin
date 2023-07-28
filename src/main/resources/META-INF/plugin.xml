@@ -24,5 +24,7 @@
         <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.ExpectingButNotGettingACollection"/>
         <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.SaysOneButContainsMany"/>
         <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.SaysManyButContainsOne"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.NameSuggestsBooleanByTypeDoesNot"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.NameContainsOnlySpecialCharacters"/>
     </extensions>
 </idea-plugin>

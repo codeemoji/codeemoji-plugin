@@ -146,7 +146,10 @@ public class CEUtil {
         return false;
     }
 
-    public static boolean isSingularForm(String name) {
-        return false;
+    public static boolean containsOnlySpecialCharacters(@NotNull String name) {
+        String alphaNumericChars = "^[^a-zA-Z0-9]+$";
+        Pattern pattern = Pattern.compile(alphaNumericChars);
+        Matcher matcher = pattern.matcher(name);
+        return matcher.matches();
     }
 }

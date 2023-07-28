@@ -2,25 +2,24 @@ package codeemoji.inlay;
 
 import codeemoji.core.CEFieldCollector;
 import codeemoji.core.CEProvider;
-import codeemoji.core.CEUtil;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiTypeElement;
+import com.intellij.psi.PsiTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static codeemoji.core.CESymbol.ONE;
+import static codeemoji.core.CESymbol.CONFUSED;
 
-public class SaysManyButContainsOne extends CEProvider<NoSettings> {
+public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NoSettings> {
 
     @Override
     public @Nullable String getPreviewText() {
         return """
                 public class Customer {
-                  private String names;
+                  private int isPattern;
                 }""";
     }
 
@@ -28,14 +27,11 @@ public class SaysManyButContainsOne extends CEProvider<NoSettings> {
     public InlayHintsCollector getCollector(@NotNull Editor editor, @NotNull String keyId) {
         return new CEFieldCollector(editor, keyId) {
             @Override
-            public void processInlayHint(PsiField field, InlayHintsSink sink) {
-                PsiTypeElement typeElement = field.getTypeElement();
-                if (typeElement != null &&
-                        CEUtil.isPluralForm(field.getName()) &&
-                        !CEUtil.isArrayType(typeElement) &&
-                        !CEUtil.isIterableType(typeElement) &&
-                        !CEUtil.containsOnlySpecialCharacters(typeElement.getText())) {
-                    addInlayHint(field, sink, ONE);
+            public void processInlayHint(@Nullable PsiField field, InlayHintsSink sink) {
+                if (field != null) {
+                    if (field.getName().startsWith("is") && !field.getType().equals(PsiTypes.booleanType())) {
+                        addInlayHint(field, sink, CONFUSED);
+                    }
                 }
             }
         };
