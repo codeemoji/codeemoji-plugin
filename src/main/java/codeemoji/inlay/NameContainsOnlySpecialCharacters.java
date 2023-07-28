@@ -19,7 +19,7 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NoSettings> {
     public @Nullable String getPreviewText() {
         return """
                 public class Customer {
-                  private int isPattern;
+                  private int _ç;
                 }""";
     }
 
