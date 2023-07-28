@@ -9,10 +9,12 @@ import com.intellij.psi.PsiElement;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+
 import static codeemoji.core.CESymbol.DEFAULT;
 
 @Getter
-public abstract class CECollector extends FactoryInlayHintsCollector {
+public abstract class CECollector<T extends PsiElement, V extends PsiElement> extends FactoryInlayHintsCollector {
 
     private final String keyId;
 
@@ -21,7 +23,20 @@ public abstract class CECollector extends FactoryInlayHintsCollector {
         this.keyId = keyId;
     }
 
-    public abstract boolean collectForPreviewEditor(PsiElement element, InlayHintsSink sink);
+    @Override
+    public final boolean collect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+        try {
+            return CEUtil.isPreviewEditor(editor) ?
+                    collectForPreviewEditor(psiElement, inlayHintsSink) : collectForRegularEditor(psiElement, inlayHintsSink);
+        } catch (RuntimeException ex) {
+            System.out.println(Arrays.toString(ex.getStackTrace()));
+        }
+        return false;
+    }
+
+    public abstract boolean collectForPreviewEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink);
+
+    public abstract boolean collectForRegularEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink);
 
     public String getTooltipText() {
         try {
@@ -31,36 +46,36 @@ public abstract class CECollector extends FactoryInlayHintsCollector {
         }
     }
 
-    public void addInlayHint(@NotNull PsiElement element, @NotNull InlayHintsSink sink) {
+    public void addInlayHint(@NotNull V element, @NotNull InlayHintsSink sink) {
         addInlayHint(element, sink, DEFAULT);
     }
 
-    public void addInlayHint(@NotNull PsiElement element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint) {
+    public void addInlayHint(@NotNull V element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint) {
         addInlayHint(element, sink, codePoint.getValue(), 0);
     }
 
-    public void addInlayHint(@NotNull PsiElement element, @NotNull InlayHintsSink sink, int codePoint) {
+    public void addInlayHint(@NotNull V element, @NotNull InlayHintsSink sink, int codePoint) {
         addInlayHint(element, sink, codePoint, 0);
     }
 
-    public void addInlayHint(@NotNull PsiElement element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint, int modifier) {
+    public void addInlayHint(@NotNull V element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint, int modifier) {
         addInlayHint(element, sink, codePoint.getValue(), modifier, true);
     }
 
-    public void addInlayHint(@NotNull PsiElement element, @NotNull InlayHintsSink sink, int codePoint, int modifier) {
+    public void addInlayHint(@NotNull V element, @NotNull InlayHintsSink sink, int codePoint, int modifier) {
         addInlayHint(element, sink, codePoint, modifier, true);
     }
 
-    public void addInlayHint(@NotNull PsiElement element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint, int modifier, boolean addColor) {
+    public void addInlayHint(@NotNull V element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint, int modifier, boolean addColor) {
         addInlayHint(element, sink, codePoint.getValue(), modifier, true);
     }
 
-    public void addInlayHint(@NotNull PsiElement element, @NotNull InlayHintsSink sink, int codePoint, int modifier, boolean addColor) {
+    public void addInlayHint(@NotNull V element, @NotNull InlayHintsSink sink, int codePoint, int modifier, boolean addColor) {
         InlayPresentation inlay = configureInlayHint(codePoint, modifier, addColor);
         sink.addInlineElement(element.getTextOffset() + element.getTextLength(), false, inlay, false);
     }
 
-    public @NotNull InlayPresentation configureInlayHint(int codePoint, int modifier, boolean addColor) {
+    private @NotNull InlayPresentation configureInlayHint(int codePoint, int modifier, boolean addColor) {
         PresentationFactory factory = getFactory();
         var inlay = factory.text(CEUtil.generateEmoji(codePoint, modifier, addColor));
         inlay = factory.roundWithBackgroundAndSmallInset(inlay);
@@ -71,5 +86,5 @@ public abstract class CECollector extends FactoryInlayHintsCollector {
         return inlay;
     }
 
-    public abstract void processInlayHint(PsiElement element, InlayHintsSink sink);
+    public abstract void execute(T element, InlayHintsSink sink);
 }

@@ -28,12 +28,12 @@ public class SaysOneButContainsMany extends CEProvider<NoSettings> {
     public InlayHintsCollector getCollector(@NotNull Editor editor, @NotNull String keyId) {
         return new CEFieldCollector(editor, keyId) {
             @Override
-            public void processInlayHint(PsiField field, InlayHintsSink sink) {
+            public void execute(PsiField field, InlayHintsSink sink) {
                 PsiTypeElement typeElement = field.getTypeElement();
                 if (!CEUtil.isPluralForm(field.getName()) &&
                         (!CEUtil.sameNameAsType(typeElement, field.getName())) &&
                         (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement))) {
-                    addInlayHint(field, sink, MANY);
+                    addInlayHint(field.getNameIdentifier(), sink, MANY);
                 }
             }
         };

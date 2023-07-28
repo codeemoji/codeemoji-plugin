@@ -32,11 +32,11 @@ public class SetMethodReturns extends CEProvider<NoSettings> {
     public InlayHintsCollector getCollector(@NotNull Editor editor, @NotNull String keyId) {
         return new CEMethodCollector(editor, keyId) {
             @Override
-            public void processInlayHint(@Nullable PsiMethod method, InlayHintsSink sink) {
+            public void execute(@Nullable PsiMethod method, InlayHintsSink sink) {
                 if ((method != null &&
                         method.getName().startsWith("set")) &&
                         !(Objects.equals(method.getReturnType(), PsiTypes.voidType()))) {
-                    addInlayHint(method, sink, CONFUSED);
+                    addInlayHint(Objects.requireNonNull(method.getNameIdentifier()), sink, CONFUSED);
                 }
             }
         };

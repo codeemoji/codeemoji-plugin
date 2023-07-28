@@ -7,21 +7,34 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class CELocalVariableCollector extends CECollector {
+public abstract class CELocalVariableCollector extends CECollector<PsiElement, PsiElement> {
 
     public CELocalVariableCollector(@NotNull Editor editor, @NotNull String keyId) {
         super(editor, keyId);
     }
 
     @Override
-    public boolean collect(@NotNull PsiElement element, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
-        if (CEUtil.isPreviewEditor(editor)) {
-            return collectForPreviewEditor(element, sink);
+    public boolean collectForPreviewEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) {
+        if (element instanceof PsiLocalVariable variable) {
+            PsiElement elem = variable.getNameIdentifier();
+            if (elem != null) {
+                execute(elem, sink);
+            }
+        } else if (element instanceof PsiReferenceExpression reference) {
+            PsiElement elem = reference.getQualifier();
+            if (elem != null) {
+                execute(elem, sink);
+            }
         }
+        return false;
+    }
+
+    @Override
+    public boolean collectForRegularEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) {
         element.accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitLocalVariable(@NotNull PsiLocalVariable variable) {
-                processInlayHint(variable.getNameIdentifier(), sink);
+                execute(variable.getNameIdentifier(), sink);
                 visitReferencesForElement(variable);
                 super.visitLocalVariable(variable);
             }
@@ -30,26 +43,10 @@ public abstract class CELocalVariableCollector extends CECollector {
                 GlobalSearchScope scope = GlobalSearchScope.fileScope(element.getContainingFile());
                 PsiReference[] refs = ReferencesSearch.search(element, scope, false).toArray(PsiReference.EMPTY_ARRAY);
                 for (PsiReference ref : refs) {
-                    processInlayHint(ref.getElement(), sink);
+                    execute(ref.getElement(), sink);
                 }
             }
         });
-        return false;
-    }
-
-    @Override
-    public boolean collectForPreviewEditor(PsiElement element, InlayHintsSink sink) {
-        if (element instanceof PsiLocalVariable variable) {
-            PsiElement elem = variable.getNameIdentifier();
-            if (elem != null) {
-                processInlayHint(elem, sink);
-            }
-        } else if (element instanceof PsiReferenceExpression reference) {
-            PsiElement elem = reference.getQualifier();
-            if (elem != null) {
-                processInlayHint(elem, sink);
-            }
-        }
         return false;
     }
 }

@@ -33,14 +33,14 @@ public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
     public InlayHintsCollector getCollector(@NotNull Editor editor, @NotNull String keyId) {
         return new CEMethodCollector(editor, keyId) {
             @Override
-            public void processInlayHint(@Nullable PsiMethod method, InlayHintsSink sink) {
+            public void execute(@Nullable PsiMethod method, InlayHintsSink sink) {
                 if (method != null &&
                         (method.getName().startsWith("get") || method.getName().startsWith("return")) &&
                         CEUtil.isPluralForm(method.getName())) {
                     PsiTypeElement typeElement = method.getReturnTypeElement();
                     if (Objects.equals(method.getReturnType(), PsiTypes.voidType()) ||
                             (!CEUtil.isArrayType(typeElement) && !CEUtil.isIterableType(typeElement))) {
-                        addInlayHint(method, sink, ONE);
+                        addInlayHint(Objects.requireNonNull(method.getNameIdentifier()), sink, ONE);
                     }
                 }
             }

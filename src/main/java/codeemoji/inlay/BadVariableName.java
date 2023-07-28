@@ -33,7 +33,7 @@ public class BadVariableName extends CEProvider<BadVariableNameSettings> {
     public InlayHintsCollector getCollector(@NotNull Editor editor, @NotNull String keyId) {
         return new CELocalVariableCollector(editor, keyId) {
             @Override
-            public void processInlayHint(PsiElement element, InlayHintsSink sink) {
+            public void execute(PsiElement element, InlayHintsSink sink) {
                 if (getSettings().getNumberOfLetters() >= element.getTextLength()) {
                     addInlayHint(element, sink, SMALL_NAME);
                 }

@@ -33,10 +33,10 @@ public class ValidationMethodDoesNotConfirm extends CEProvider<NoSettings> {
     public InlayHintsCollector getCollector(@NotNull Editor editor, @NotNull String keyId) {
         return new CEMethodCollector(editor, keyId) {
             @Override
-            public void processInlayHint(@Nullable PsiMethod method, InlayHintsSink sink) {
+            public void execute(@Nullable PsiMethod method, InlayHintsSink sink) {
                 if (method != null && method.getName().startsWith("check") &&
                         !(Objects.equals(method.getReturnType(), PsiTypes.booleanType()))) {
-                    addInlayHint(method, sink, CONFUSED);
+                    addInlayHint(Objects.requireNonNull(method.getNameIdentifier()), sink, CONFUSED);
                 }
             }
         };

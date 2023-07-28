@@ -34,14 +34,14 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings
     public InlayHintsCollector getCollector(@NotNull Editor editor, @NotNull String keyId) {
         return new CEMethodCollector(editor, keyId) {
             @Override
-            public void processInlayHint(@Nullable PsiMethod method, InlayHintsSink sink) {
+            public void execute(@Nullable PsiMethod method, InlayHintsSink sink) {
                 if (method != null &&
                         (method.getName().startsWith("get") || method.getName().startsWith("return")) &&
                         !Objects.equals(method.getReturnType(), PsiTypes.voidType()) &&
                         !CEUtil.isPluralForm(method.getName())) {
                     PsiTypeElement typeElement = method.getReturnTypeElement();
                     if (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement)) {
-                        addInlayHint(method, sink, MANY);
+                        addInlayHint(Objects.requireNonNull(method.getNameIdentifier()), sink, MANY);
                     }
 
                 }
