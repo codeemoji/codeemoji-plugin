@@ -44,8 +44,10 @@ public class GetMoreThanAccessor extends CEProvider<NoSettings> {
             public void processInlayHint(@Nullable PsiMethod method, InlayHintsSink sink) {
                 if (method != null && method.getName().startsWith("get") &&
                         !(Objects.equals(method.getReturnType(), PsiTypes.voidType())) &&
-                        Objects.requireNonNull(method.getBody()).getStatements().length > 1) {
-                    addInlayHint(method, sink, CONFUSED);
+                        method.getBody() != null) {
+                    if (method.getBody().getStatements().length > 1) {
+                        addInlayHint(method, sink, CONFUSED);
+                    }
                 }
             }
         };

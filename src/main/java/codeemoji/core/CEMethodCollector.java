@@ -9,7 +9,6 @@ import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-
 public abstract class CEMethodCollector extends CECollector {
 
     public CEMethodCollector(@NotNull Editor editor, @NotNull String keyId) {
@@ -57,6 +56,5 @@ public abstract class CEMethodCollector extends CECollector {
     }
 
     public abstract void processInlayHint(PsiMethod method, InlayHintsSink sink);
-
 
 }

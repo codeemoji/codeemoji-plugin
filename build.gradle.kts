@@ -20,19 +20,7 @@ repositories {
 dependencies {
     compileOnly("org.projectlombok:lombok:1.18.28")
     annotationProcessor("org.projectlombok:lombok:1.18.28")
-    implementation("edu.stanford.nlp:stanford-corenlp:4.5.4") {
-        exclude(group = "org.slf4j")
-    }
-    implementation("edu.stanford.nlp:stanford-corenlp:4.5.4:models") {
-        exclude(group = "org.slf4j")
-    }
-    implementation("edu.stanford.nlp:stanford-corenlp:4.5.4:models-english") {
-        exclude(group = "org.slf4j")
-    }
-    implementation("edu.stanford.nlp:stanford-corenlp:4.5.4:models-english-kbp") {
-        exclude(group = "org.slf4j")
-        exclude(group = "junit", module = "junit")
-    }
+    implementation("com.google.code.gson:gson:2.10.1")
 }
 
 intellij {
