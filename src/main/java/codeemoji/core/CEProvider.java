@@ -87,7 +87,7 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
     @Nullable
     @Override
     public InlayHintsCollector getCollectorFor(@NotNull PsiFile psiFile, @NotNull Editor editor, @NotNull S settings, @NotNull InlayHintsSink inlayHintsSink) {
-        return getCollector(editor);
+        return buildCollector(editor);
     }
 
     @Override
@@ -95,6 +95,6 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
         return "JAVA".equals(language.getID());
     }
 
-    public abstract InlayHintsCollector getCollector(@NotNull Editor editor);
+    public abstract InlayHintsCollector buildCollector(@NotNull Editor editor);
 
 }

@@ -28,7 +28,7 @@ public class TransformMethodDoesNotReturn extends CEProvider<NoSettings> {
     }
 
     @Override
-    public InlayHintsCollector getCollector(@NotNull Editor editor) {
+    public InlayHintsCollector buildCollector(@NotNull Editor editor) {
         return new CEMethodCollector(editor, getKey().getId()) {
             @Override
             public void processInlay(@Nullable PsiMethod method, InlayHintsSink sink) {

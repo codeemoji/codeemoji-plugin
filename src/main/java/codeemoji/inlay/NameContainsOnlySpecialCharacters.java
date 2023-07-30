@@ -24,7 +24,7 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NoSettings> {
     }
 
     @Override
-    public InlayHintsCollector getCollector(@NotNull Editor editor) {
+    public InlayHintsCollector buildCollector(@NotNull Editor editor) {
         return new CEFieldCollector(editor, getKey().getId()) {
             @Override
             public void processInlay(@Nullable PsiField field, InlayHintsSink sink) {

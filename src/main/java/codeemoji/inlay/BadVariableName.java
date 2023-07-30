@@ -30,7 +30,7 @@ public class BadVariableName extends CEProvider<BadVariableNameSettings> {
     }
 
     @Override
-    public InlayHintsCollector getCollector(@NotNull Editor editor) {
+    public InlayHintsCollector buildCollector(@NotNull Editor editor) {
         return new CELocalVariableCollector(editor, getKey().getId()) {
             @Override
             public void processInlay(PsiElement element, InlayHintsSink sink) {

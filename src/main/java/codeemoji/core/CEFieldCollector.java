@@ -10,8 +10,6 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class CEFieldCollector extends CECollector<PsiField, PsiIdentifier> {
 
-    String keyId = getClass().getSimpleName().toLowerCase();
-
     public CEFieldCollector(@NotNull Editor editor, @NotNull String keyId) {
         super(editor, keyId);
     }
