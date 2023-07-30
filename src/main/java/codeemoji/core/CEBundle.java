@@ -8,10 +8,10 @@ import java.util.ResourceBundle;
 public class CEBundle {
 
     private static volatile CEBundle INSTANCE;
-    final ResourceBundle messages;
+    final ResourceBundle bundle;
 
     private CEBundle() {
-        this.messages = ResourceBundle.getBundle("CEBundle");
+        this.bundle = ResourceBundle.getBundle("CEBundle");
     }
 
     public static CEBundle getInstance() {

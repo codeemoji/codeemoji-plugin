@@ -18,9 +18,9 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Objects;
 
 @Getter
-public abstract class CEProvider<T> implements InlayHintsProvider<T> {
+public abstract class CEProvider<S> implements InlayHintsProvider<S> {
 
-    private T settings;
+    private S settings;
 
     public CEProvider() {
         this.settings = createSettings();
@@ -28,7 +28,7 @@ public abstract class CEProvider<T> implements InlayHintsProvider<T> {
 
     @NotNull
     @Override
-    public SettingsKey<T> getKey() {
+    public SettingsKey<S> getKey() {
         return new SettingsKey<>(getClass().getSimpleName().toLowerCase());
     }
 
@@ -47,12 +47,12 @@ public abstract class CEProvider<T> implements InlayHintsProvider<T> {
     @Nullable
     @Override
     public String getProperty(@NotNull String key) {
-        return CEBundle.getInstance().getMessages().getString(key);
+        return CEBundle.getInstance().getBundle().getString(key);
     }
 
     @NotNull
     @Override
-    public ImmediateConfigurable createConfigurable(@NotNull T settings) {
+    public ImmediateConfigurable createConfigurable(@NotNull S settings) {
         return new ImmediateConfigurable() {
             @NotNull
             @Override
@@ -64,15 +64,15 @@ public abstract class CEProvider<T> implements InlayHintsProvider<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public @NotNull T createSettings() {
+    public @NotNull S createSettings() {
         if (settings == null) {
             try {
-                Class<T> type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-                T genericType = type.getDeclaredConstructor().newInstance();
+                Class<S> type = (Class<S>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+                S genericType = type.getDeclaredConstructor().newInstance();
                 if (genericType instanceof NoSettings) {
-                    this.settings = (T) new NoSettings();
+                    this.settings = (S) new NoSettings();
                 } else if (genericType instanceof PersistentStateComponent<?> typeT) {
-                    this.settings = (T) ApplicationManager.getApplication().getService(typeT.getClass());
+                    this.settings = (S) ApplicationManager.getApplication().getService(typeT.getClass());
                 } else {
                     throw new RuntimeException("Settings must be 'NoSettings' or 'PersistentStateComponent' type.");
                 }
@@ -86,7 +86,7 @@ public abstract class CEProvider<T> implements InlayHintsProvider<T> {
 
     @Nullable
     @Override
-    public InlayHintsCollector getCollectorFor(@NotNull PsiFile psiFile, @NotNull Editor editor, @NotNull T settings, @NotNull InlayHintsSink inlayHintsSink) {
+    public InlayHintsCollector getCollectorFor(@NotNull PsiFile psiFile, @NotNull Editor editor, @NotNull S settings, @NotNull InlayHintsSink inlayHintsSink) {
         return getCollector(editor);
     }
 

@@ -15,7 +15,7 @@ import java.util.Arrays;
 import static codeemoji.core.CESymbol.DEFAULT;
 
 @Getter
-public abstract class CECollector<T extends PsiElement, V extends PsiElement> extends FactoryInlayHintsCollector {
+public abstract class CECollector<P extends PsiElement, A extends PsiElement> extends FactoryInlayHintsCollector {
 
     private final String keyId;
 
@@ -41,37 +41,37 @@ public abstract class CECollector<T extends PsiElement, V extends PsiElement> ex
 
     public @Nullable String getTooltip() {
         try {
-            return CEBundle.getInstance().getMessages().getString("inlay." + getKeyId() + ".tooltip");
+            return CEBundle.getInstance().getBundle().getString("inlay." + getKeyId() + ".tooltip");
         } catch (RuntimeException ex) {
             return null;
         }
     }
 
-    public final void addInlay(@NotNull V element, @NotNull InlayHintsSink sink) {
+    public final void addInlay(@NotNull A element, @NotNull InlayHintsSink sink) {
         addInlay(element, sink, DEFAULT);
     }
 
-    public final void addInlay(@NotNull V element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint) {
+    public final void addInlay(@NotNull A element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint) {
         addInlay(element, sink, codePoint.getValue(), 0);
     }
 
-    public final void addInlay(@NotNull V element, @NotNull InlayHintsSink sink, int codePoint) {
+    public final void addInlay(@NotNull A element, @NotNull InlayHintsSink sink, int codePoint) {
         addInlay(element, sink, codePoint, 0);
     }
 
-    public final void addInlay(@NotNull V element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint, int modifier) {
+    public final void addInlay(@NotNull A element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint, int modifier) {
         addInlay(element, sink, codePoint.getValue(), modifier, true);
     }
 
-    public final void addInlay(@NotNull V element, @NotNull InlayHintsSink sink, int codePoint, int modifier) {
+    public final void addInlay(@NotNull A element, @NotNull InlayHintsSink sink, int codePoint, int modifier) {
         addInlay(element, sink, codePoint, modifier, true);
     }
 
-    public final void addInlay(@NotNull V element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint, int modifier, boolean addColor) {
+    public final void addInlay(@NotNull A element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint, int modifier, boolean addColor) {
         addInlay(element, sink, codePoint.getValue(), modifier, addColor);
     }
 
-    public void addInlay(@NotNull V element, @NotNull InlayHintsSink sink, int codePoint, int modifier, boolean addColor) {
+    public void addInlay(@NotNull A element, @NotNull InlayHintsSink sink, int codePoint, int modifier, boolean addColor) {
         InlayPresentation inlay = configureInlay(codePoint, modifier, addColor);
         sink.addInlineElement(element.getTextOffset() + element.getTextLength(), false, inlay, false);
     }
@@ -87,5 +87,5 @@ public abstract class CECollector<T extends PsiElement, V extends PsiElement> ex
         return inlay;
     }
 
-    public abstract void processInlay(T element, InlayHintsSink sink);
+    public abstract void processInlay(P element, InlayHintsSink sink);
 }
