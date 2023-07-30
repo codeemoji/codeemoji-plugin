@@ -25,7 +25,7 @@ public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NoSettings> {
 
     @Override
     public InlayHintsCollector getCollector(@NotNull Editor editor) {
-        return new CEFieldCollector(editor) {
+        return new CEFieldCollector(editor, getKey().getId()) {
             @Override
             public void processInlay(@Nullable PsiField field, InlayHintsSink sink) {
                 if (field != null) {

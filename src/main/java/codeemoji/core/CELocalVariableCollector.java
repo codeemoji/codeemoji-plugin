@@ -9,8 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class CELocalVariableCollector extends CECollector<PsiElement, PsiElement> {
 
-    public CELocalVariableCollector(@NotNull Editor editor) {
-        super(editor);
+    public CELocalVariableCollector(@NotNull Editor editor, @NotNull String keyId) {
+        super(editor, keyId);
     }
 
     @Override
@@ -30,7 +30,7 @@ public abstract class CELocalVariableCollector extends CECollector<PsiElement, P
     }
 
     @Override
-    public final boolean collectInDefaultEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) throws RuntimeException {
+    public final boolean collectInDefaultEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) {
         element.accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitLocalVariable(@NotNull PsiLocalVariable variable) {

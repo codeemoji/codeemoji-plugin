@@ -10,12 +10,12 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class CEMethodCollector extends CECollector<PsiMethod, PsiIdentifier> {
 
-    public CEMethodCollector(@NotNull Editor editor) {
-        super(editor);
+    public CEMethodCollector(@NotNull Editor editor, @NotNull String keyId) {
+        super(editor, keyId);
     }
 
     @Override
-    public final boolean collectInPreviewEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) throws RuntimeException {
+    public final boolean collectInPreviewEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) {
         if (element instanceof PsiMethod method) {
             processInlay(method, sink);
         }
@@ -23,7 +23,7 @@ public abstract class CEMethodCollector extends CECollector<PsiMethod, PsiIdenti
     }
 
     @Override
-    public final boolean collectInDefaultEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) throws RuntimeException {
+    public final boolean collectInDefaultEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) {
         element.accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitMethod(@NotNull PsiMethod method) {

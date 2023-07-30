@@ -10,12 +10,14 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class CEFieldCollector extends CECollector<PsiField, PsiIdentifier> {
 
-    public CEFieldCollector(@NotNull Editor editor) {
-        super(editor);
+    String keyId = getClass().getSimpleName().toLowerCase();
+
+    public CEFieldCollector(@NotNull Editor editor, @NotNull String keyId) {
+        super(editor, keyId);
     }
 
     @Override
-    public final boolean collectInPreviewEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) throws RuntimeException {
+    public final boolean collectInPreviewEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) {
         if (element instanceof PsiField field) {
             processInlay(field, sink);
         }
@@ -23,7 +25,7 @@ public abstract class CEFieldCollector extends CECollector<PsiField, PsiIdentifi
     }
 
     @Override
-    public final boolean collectInDefaultEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) throws RuntimeException {
+    public final boolean collectInDefaultEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) {
         element.accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitField(@NotNull PsiField field) {

@@ -19,9 +19,9 @@ public abstract class CECollector<T extends PsiElement, V extends PsiElement> ex
 
     private final String keyId;
 
-    public CECollector(@NotNull Editor editor) {
+    public CECollector(@NotNull Editor editor, @NotNull String keyId) {
         super(editor);
-        this.keyId = getClass().getSimpleName().toLowerCase();
+        this.keyId = keyId;
     }
 
     @Override
@@ -30,14 +30,14 @@ public abstract class CECollector<T extends PsiElement, V extends PsiElement> ex
             return CEUtil.isPreviewEditor(editor) ?
                     collectInPreviewEditor(psiElement, inlayHintsSink) : collectInDefaultEditor(psiElement, inlayHintsSink);
         } catch (RuntimeException ex) {
-            System.out.println(Arrays.toString(ex.getStackTrace()));
+            System.out.println(psiElement + ": " + Arrays.toString(ex.getStackTrace()));
         }
         return false;
     }
 
-    public abstract boolean collectInPreviewEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) throws RuntimeException;
+    public abstract boolean collectInPreviewEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink);
 
-    public abstract boolean collectInDefaultEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) throws RuntimeException;
+    public abstract boolean collectInDefaultEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink);
 
     public @Nullable String getTooltip() {
         try {
@@ -68,7 +68,7 @@ public abstract class CECollector<T extends PsiElement, V extends PsiElement> ex
     }
 
     public final void addInlay(@NotNull V element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint, int modifier, boolean addColor) {
-        addInlay(element, sink, codePoint.getValue(), modifier, true);
+        addInlay(element, sink, codePoint.getValue(), modifier, addColor);
     }
 
     public void addInlay(@NotNull V element, @NotNull InlayHintsSink sink, int codePoint, int modifier, boolean addColor) {

@@ -152,4 +152,17 @@ public class CEUtil {
         Matcher matcher = pattern.matcher(name);
         return matcher.matches();
     }
+
+    public static boolean isNotGenericType(@Nullable PsiTypeElement typeElement) {
+        /*if (typeElement != null) {
+            PsiType type = typeElement.getType();
+            if (type instanceof PsiPrimitiveType) {
+                return true;
+            } else if (type.getDeepComponentType() instanceof PsiClassType classType) {
+                return !classType.hasParameters();
+            }
+        }*/
+        //TODO: Implement
+        return true;
+    }
 }
