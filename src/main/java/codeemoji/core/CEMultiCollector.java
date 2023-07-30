@@ -7,7 +7,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class CEMultiCollector extends FactoryInlayHintsCollector {
 
     private final List<InlayHintsCollector> collectors;
 
-    public CEMultiCollector(@NotNull Editor editor, @Nullable List<InlayHintsCollector> collectors) {
+    public CEMultiCollector(Editor editor, List<InlayHintsCollector> collectors) {
         super(editor);
         this.collectors = collectors;
     }

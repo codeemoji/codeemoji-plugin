@@ -8,20 +8,37 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-
-import static codeemoji.core.CESymbol.DEFAULT;
 
 @Getter
 public abstract class CECollector<P extends PsiElement, A extends PsiElement> extends FactoryInlayHintsCollector {
 
     private final String keyId;
+    private final InlayPresentation inlay;
 
-    public CECollector(@NotNull Editor editor, @NotNull String keyId) {
+    public CECollector(Editor editor, String keyId) {
         super(editor);
         this.keyId = keyId;
+        inlay = buildInlay();
+    }
+
+    public CECollector(Editor editor, String keyId, CEInlay ceInlay) {
+        super(editor);
+        this.keyId = keyId;
+        this.inlay = buildInlay(ceInlay);
+    }
+
+    public CECollector(Editor editor, String keyId, int codePoint) {
+        super(editor);
+        this.keyId = keyId;
+        this.inlay = buildInlay(new CEInlay(codePoint));
+    }
+
+    public CECollector(Editor editor, String keyId, CESymbol symbol) {
+        super(editor);
+        this.keyId = keyId;
+        this.inlay = buildInlay(new CEInlay(symbol));
     }
 
     @Override
@@ -35,11 +52,7 @@ public abstract class CECollector<P extends PsiElement, A extends PsiElement> ex
         return false;
     }
 
-    public abstract boolean collectInPreviewEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink);
-
-    public abstract boolean collectInDefaultEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink);
-
-    public @Nullable String getTooltip() {
+    public String getTooltip() {
         try {
             return CEBundle.getInstance().getBundle().getString("inlay." + getKeyId() + ".tooltip");
         } catch (RuntimeException ex) {
@@ -47,38 +60,19 @@ public abstract class CECollector<P extends PsiElement, A extends PsiElement> ex
         }
     }
 
-    public final void addInlay(@NotNull A element, @NotNull InlayHintsSink sink) {
-        addInlay(element, sink, DEFAULT);
+    public void addInlayOnEditor(A element, InlayHintsSink sink) {
+        if (element != null) {
+            sink.addInlineElement(element.getTextOffset() + element.getTextLength(), false, getInlay(), false);
+        }
     }
 
-    public final void addInlay(@NotNull A element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint) {
-        addInlay(element, sink, codePoint.getValue(), 0);
+    private InlayPresentation buildInlay() {
+        return buildInlay(new CEInlay());
     }
 
-    public final void addInlay(@NotNull A element, @NotNull InlayHintsSink sink, int codePoint) {
-        addInlay(element, sink, codePoint, 0);
-    }
-
-    public final void addInlay(@NotNull A element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint, int modifier) {
-        addInlay(element, sink, codePoint.getValue(), modifier, true);
-    }
-
-    public final void addInlay(@NotNull A element, @NotNull InlayHintsSink sink, int codePoint, int modifier) {
-        addInlay(element, sink, codePoint, modifier, true);
-    }
-
-    public final void addInlay(@NotNull A element, @NotNull InlayHintsSink sink, @NotNull CESymbol codePoint, int modifier, boolean addColor) {
-        addInlay(element, sink, codePoint.getValue(), modifier, addColor);
-    }
-
-    public void addInlay(@NotNull A element, @NotNull InlayHintsSink sink, int codePoint, int modifier, boolean addColor) {
-        InlayPresentation inlay = configureInlay(codePoint, modifier, addColor);
-        sink.addInlineElement(element.getTextOffset() + element.getTextLength(), false, inlay, false);
-    }
-
-    private @NotNull InlayPresentation configureInlay(int codePoint, int modifier, boolean addColor) {
+    private InlayPresentation buildInlay(@NotNull CEInlay ceInlay) {
         PresentationFactory factory = getFactory();
-        var inlay = factory.text(CEUtil.generateEmoji(codePoint, modifier, addColor));
+        var inlay = factory.text(CEUtil.generateEmoji(ceInlay.getCodePoint(), ceInlay.getModifier(), ceInlay.isBackground()));
         inlay = factory.roundWithBackgroundAndSmallInset(inlay);
         String tooltip = getTooltip();
         if (tooltip != null) {
@@ -87,5 +81,9 @@ public abstract class CECollector<P extends PsiElement, A extends PsiElement> ex
         return inlay;
     }
 
-    public abstract void processInlay(P element, InlayHintsSink sink);
+    public abstract boolean collectInPreviewEditor(PsiElement element, InlayHintsSink sink);
+
+    public abstract boolean collectInDefaultEditor(PsiElement element, InlayHintsSink sink);
+
+    public abstract boolean checkAddInlay(P element);
 }

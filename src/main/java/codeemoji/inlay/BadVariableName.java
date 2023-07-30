@@ -4,18 +4,16 @@ import codeemoji.core.CELocalVariableCollector;
 import codeemoji.core.CEProvider;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
-import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import static codeemoji.core.CESymbol.SMALL_NAME;
 
 public class BadVariableName extends CEProvider<BadVariableNameSettings> {
 
     @Override
-    public @Nullable String getPreviewText() {
+    public String getPreviewText() {
         return """
                 public class Customer {
                   public String statement() {
@@ -30,13 +28,11 @@ public class BadVariableName extends CEProvider<BadVariableNameSettings> {
     }
 
     @Override
-    public InlayHintsCollector buildCollector(@NotNull Editor editor) {
-        return new CELocalVariableCollector(editor, getKey().getId()) {
+    public InlayHintsCollector buildCollector(Editor editor) {
+        return new CELocalVariableCollector(editor, getKey().getId(), SMALL_NAME) {
             @Override
-            public void processInlay(PsiElement element, InlayHintsSink sink) {
-                if (getSettings().getNumberOfLetters() >= element.getTextLength()) {
-                    addInlay(element, sink, SMALL_NAME);
-                }
+            public boolean checkAddInlay(PsiElement element) {
+                return getSettings().getNumberOfLetters() >= element.getTextLength();
             }
         };
     }

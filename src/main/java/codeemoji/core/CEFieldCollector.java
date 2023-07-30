@@ -10,24 +10,38 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class CEFieldCollector extends CECollector<PsiField, PsiIdentifier> {
 
-    public CEFieldCollector(@NotNull Editor editor, @NotNull String keyId) {
+    public CEFieldCollector(Editor editor, String keyId) {
         super(editor, keyId);
     }
 
+    public CEFieldCollector(Editor editor, String keyId, CEInlay ceInlay) {
+        super(editor, keyId, ceInlay);
+    }
+
+    public CEFieldCollector(Editor editor, String keyId, int codePoint) {
+        super(editor, keyId, codePoint);
+    }
+
+    public CEFieldCollector(Editor editor, String keyId, CESymbol symbol) {
+        super(editor, keyId, symbol);
+    }
+
     @Override
-    public final boolean collectInPreviewEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) {
+    public final boolean collectInPreviewEditor(PsiElement element, InlayHintsSink sink) {
         if (element instanceof PsiField field) {
-            processInlay(field, sink);
+            checkAddInlay(field);
         }
         return false;
     }
 
     @Override
-    public final boolean collectInDefaultEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) {
+    public final boolean collectInDefaultEditor(@NotNull PsiElement element, InlayHintsSink sink) {
         element.accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitField(@NotNull PsiField field) {
-                processInlay(field, sink);
+                if (checkAddInlay(field)) {
+                    addInlayOnEditor(field.getNameIdentifier(), sink);
+                }
                 super.visitField(field);
             }
         });

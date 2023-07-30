@@ -9,33 +9,45 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class CELocalVariableCollector extends CECollector<PsiElement, PsiElement> {
 
-    public CELocalVariableCollector(@NotNull Editor editor, @NotNull String keyId) {
+    public CELocalVariableCollector(Editor editor, String keyId) {
         super(editor, keyId);
     }
 
+    public CELocalVariableCollector(Editor editor, String keyId, CEInlay ceInlay) {
+        super(editor, keyId, ceInlay);
+    }
+
+    public CELocalVariableCollector(Editor editor, String keyId, int codePoint) {
+        super(editor, keyId, codePoint);
+    }
+
+    public CELocalVariableCollector(Editor editor, String keyId, CESymbol symbol) {
+        super(editor, keyId, symbol);
+    }
+
     @Override
-    public final boolean collectInPreviewEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) throws RuntimeException {
+    public final boolean collectInPreviewEditor(PsiElement element, InlayHintsSink sink) throws RuntimeException {
         if (element instanceof PsiLocalVariable variable) {
-            PsiElement elem = variable.getNameIdentifier();
-            if (elem != null) {
-                processInlay(elem, sink);
+            if (checkAddInlay(variable.getNameIdentifier())) {
+                addInlayOnEditor(variable.getNameIdentifier(), sink);
             }
         } else if (element instanceof PsiReferenceExpression reference) {
-            PsiElement elem = reference.getQualifier();
-            if (elem != null) {
-                processInlay(elem, sink);
+            if (checkAddInlay(reference.getQualifier())) {
+                addInlayOnEditor(reference.getQualifier(), sink);
             }
         }
         return false;
     }
 
     @Override
-    public final boolean collectInDefaultEditor(@NotNull PsiElement element, @NotNull InlayHintsSink sink) {
+    public final boolean collectInDefaultEditor(@NotNull PsiElement element, InlayHintsSink sink) {
         element.accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitLocalVariable(@NotNull PsiLocalVariable variable) {
-                processInlay(variable.getNameIdentifier(), sink);
-                visitReferencesForElement(variable);
+                if (checkAddInlay(variable.getNameIdentifier())) {
+                    addInlayOnEditor(variable.getNameIdentifier(), sink);
+                    visitReferencesForElement(variable);
+                }
                 super.visitLocalVariable(variable);
             }
 
@@ -43,7 +55,7 @@ public abstract class CELocalVariableCollector extends CECollector<PsiElement, P
                 GlobalSearchScope scope = GlobalSearchScope.fileScope(element.getContainingFile());
                 PsiReference[] refs = ReferencesSearch.search(element, scope, false).toArray(PsiReference.EMPTY_ARRAY);
                 for (PsiReference ref : refs) {
-                    processInlay(ref.getElement(), sink);
+                    addInlayOnEditor(ref.getElement(), sink);
                 }
             }
         });

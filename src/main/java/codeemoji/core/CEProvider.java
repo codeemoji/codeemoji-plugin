@@ -10,7 +10,6 @@ import com.intellij.util.ui.FormBuilder;
 import lombok.Getter;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -26,16 +25,15 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
         this.settings = createSettings();
     }
 
-    @NotNull
     @Override
-    public SettingsKey<S> getKey() {
+    public @NotNull SettingsKey<S> getKey() {
         return new SettingsKey<>(getClass().getSimpleName().toLowerCase());
     }
 
     @Nls(capitalization = Nls.Capitalization.Sentence)
-    @NotNull
+
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         try {
             return Objects.requireNonNull(getProperty("inlay." + getKey().getId() + ".name"));
         } catch (RuntimeException ex) {
@@ -44,19 +42,17 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
     }
 
     @Nls
-    @Nullable
+
     @Override
     public String getProperty(@NotNull String key) {
         return CEBundle.getInstance().getBundle().getString(key);
     }
 
-    @NotNull
     @Override
-    public ImmediateConfigurable createConfigurable(@NotNull S settings) {
+    public @NotNull ImmediateConfigurable createConfigurable(@NotNull S settings) {
         return new ImmediateConfigurable() {
-            @NotNull
             @Override
-            public JComponent createComponent(@NotNull ChangeListener changeListener) {
+            public @NotNull JComponent createComponent(@NotNull ChangeListener changeListener) {
                 return FormBuilder.createFormBuilder().getPanel();
             }
         };
@@ -84,7 +80,6 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
         return settings;
     }
 
-    @Nullable
     @Override
     public InlayHintsCollector getCollectorFor(@NotNull PsiFile psiFile, @NotNull Editor editor, @NotNull S settings, @NotNull InlayHintsSink inlayHintsSink) {
         return buildCollector(editor);
@@ -95,6 +90,6 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
         return "JAVA".equals(language.getID());
     }
 
-    public abstract InlayHintsCollector buildCollector(@NotNull Editor editor);
+    public abstract InlayHintsCollector buildCollector(Editor editor);
 
 }

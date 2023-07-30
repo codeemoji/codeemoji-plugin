@@ -3,6 +3,7 @@ package codeemoji.core;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@Getter
 @AllArgsConstructor
 public enum CESymbol {
     DEFAULT(0x2757),
@@ -12,7 +13,6 @@ public enum CESymbol {
     MANY(0x1F590),
     ONE(0x261D);
 
-    @Getter
     private final int value;
 
 }

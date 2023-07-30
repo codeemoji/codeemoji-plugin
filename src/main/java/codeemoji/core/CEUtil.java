@@ -8,8 +8,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +28,7 @@ public class CEUtil {
         return editor.getEditorKind().name().equalsIgnoreCase("UNTYPED");
     }
 
+    @Contract("_, _, _ -> new")
     public static @NotNull String generateEmoji(int codePoint, int modifier, boolean addColor) {
         char[] codePointChar = Character.toChars(codePoint);
         char[] withoutColor = codePointChar;
@@ -45,7 +46,7 @@ public class CEUtil {
         return new String(withoutColor);
     }
 
-    public static boolean isIterableType(@Nullable PsiTypeElement typeElement) {
+    public static boolean isIterableType(PsiTypeElement typeElement) {
         try {
             PsiType fieldType = Objects.requireNonNull(typeElement).getType();
             if (fieldType instanceof PsiClassType psiType) {
@@ -73,7 +74,7 @@ public class CEUtil {
         return false;
     }
 
-    public static boolean isArrayType(@Nullable PsiTypeElement typeElement) {
+    public static boolean isArrayType(PsiTypeElement typeElement) {
         try {
             String returnClassSimpleName = Objects.requireNonNull(typeElement).getText();
             return returnClassSimpleName.contains("[]");
@@ -82,7 +83,7 @@ public class CEUtil {
         return false;
     }
 
-    public static boolean sameNameAsType(@Nullable PsiTypeElement typeElement, @Nullable String fieldName) {
+    public static boolean sameNameAsType(PsiTypeElement typeElement, String fieldName) {
         if (fieldName != null) {
             try {
                 String typeName = Objects.requireNonNull(typeElement).getType().getPresentableText();
@@ -97,7 +98,7 @@ public class CEUtil {
         return false;
     }
 
-    public static boolean isPluralForm(@Nullable String name) {
+    public static boolean isPluralForm(String name) {
         if (name != null) {
             String word = getLastWordWithUpperCase(name);
             if (isIrregularPluralForm(word)) {
@@ -107,7 +108,7 @@ public class CEUtil {
         return false;
     }
 
-    private static String getLastWordWithUpperCase(@NotNull String name) {
+    private static String getLastWordWithUpperCase(String name) {
         String result = null;
         Pattern pattern = Pattern.compile("\\b[A-Z][a-zA-Z]*\\b");
         Matcher matcher = pattern.matcher(name);
@@ -117,7 +118,7 @@ public class CEUtil {
         return (result != null) ? result : name;
     }
 
-    private static boolean isIrregularPluralForm(@NotNull String word) {
+    private static boolean isIrregularPluralForm(String word) {
         ClassLoader classLoader = CEUtil.class.getClassLoader();
         try (InputStream is = classLoader.getResourceAsStream("irregular_plural.json")) {
             if (is != null) {
@@ -132,7 +133,7 @@ public class CEUtil {
         return false;
     }
 
-    private static boolean isCommonPluralForm(@NotNull String word) {
+    private static boolean isCommonPluralForm(String word) {
         String[] pluralPatterns = {
                 ".*s$", ".*[aeiou]ys$", ".*[^s]ses$", ".*[^z]zes$", ".*[^i]xes$",
                 ".*[cs]hes$", ".*[^aeiou]ies$", ".*[^aeiou]ices$", ".*[aeiou]es$",
@@ -146,22 +147,19 @@ public class CEUtil {
         return false;
     }
 
-    public static boolean containsOnlySpecialCharacters(@NotNull String name) {
+    public static boolean containsOnlySpecialCharacters(String name) {
         String alphaNumericChars = "^[^a-zA-Z0-9]+$";
         Pattern pattern = Pattern.compile(alphaNumericChars);
         Matcher matcher = pattern.matcher(name);
         return matcher.matches();
     }
 
-    public static boolean isNotGenericType(@Nullable PsiTypeElement typeElement) {
-        /*if (typeElement != null) {
-            PsiType type = typeElement.getType();
-            if (type instanceof PsiPrimitiveType) {
-                return true;
-            } else if (type.getDeepComponentType() instanceof PsiClassType classType) {
-                return !classType.hasParameters();
-            }
-        }*/
+    public static boolean isNotGenericType(PsiTypeElement typeElement) {
+        //TODO: Implement
+        return true;
+    }
+
+    public static boolean isNotNumericType(PsiTypeElement typeElement) {
         //TODO: Implement
         return true;
     }

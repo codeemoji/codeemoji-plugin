@@ -10,9 +10,8 @@ import javax.swing.event.ChangeEvent;
 
 public record BadVariableNameConfigurable(BadVariableNameSettings settings) implements ImmediateConfigurable {
 
-    @NotNull
     @Override
-    public JComponent createComponent(@NotNull ChangeListener changeListener) {
+    public @NotNull JComponent createComponent(@NotNull ChangeListener changeListener) {
         var jSpinner = new JSpinner();
         jSpinner.setValue(settings().getNumberOfLetters());
         jSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -26,6 +25,5 @@ public record BadVariableNameConfigurable(BadVariableNameSettings settings) impl
                 .addLabeledComponent("Number of letters", jSpinner)
                 .getPanel();
     }
-
 
 }

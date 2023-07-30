@@ -3,13 +3,10 @@ package codeemoji.inlay;
 import codeemoji.core.CEMethodCollector;
 import codeemoji.core.CEProvider;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
-import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiTypes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -18,7 +15,7 @@ import static codeemoji.core.CESymbol.CONFUSED;
 public class GetMoreThanAccessor extends CEProvider<NoSettings> {
 
     @Override
-    public @Nullable String getPreviewText() {
+    public String getPreviewText() {
         return """
                 public class Customer {
                     public List<Item> getItems() {
@@ -38,17 +35,16 @@ public class GetMoreThanAccessor extends CEProvider<NoSettings> {
     }
 
     @Override
-    public InlayHintsCollector buildCollector(@NotNull Editor editor) {
-        return new CEMethodCollector(editor, getKey().getId()) {
+    public InlayHintsCollector buildCollector(Editor editor) {
+        return new CEMethodCollector(editor, getKey().getId(), CONFUSED) {
             @Override
-            public void processInlay(@Nullable PsiMethod method, InlayHintsSink sink) {
+            public boolean checkAddInlay(PsiMethod method) {
                 if (method != null && method.getName().startsWith("get") &&
                         !(Objects.equals(method.getReturnType(), PsiTypes.voidType())) &&
                         method.getBody() != null) {
-                    if (method.getBody().getStatements().length > 1 && !method.getName().equalsIgnoreCase("getInstance")) {
-                        addInlay(Objects.requireNonNull(method.getNameIdentifier()), sink, CONFUSED);
-                    }
+                    return method.getBody().getStatements().length > 1 && !method.getName().equalsIgnoreCase("getInstance");
                 }
+                return false;
             }
         };
     }

@@ -4,14 +4,11 @@ import codeemoji.core.CEMethodCollector;
 import codeemoji.core.CEProvider;
 import codeemoji.core.CEUtil;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
-import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.PsiTypes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -20,7 +17,7 @@ import static codeemoji.core.CESymbol.MANY;
 public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings> {
 
     @Override
-    public @Nullable String getPreviewText() {
+    public String getPreviewText() {
         return """
                 public class Customer {
                     public Object[] getParameter() {
@@ -31,21 +28,18 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings
     }
 
     @Override
-    public InlayHintsCollector buildCollector(@NotNull Editor editor) {
-        return new CEMethodCollector(editor, getKey().getId()) {
-
+    public InlayHintsCollector buildCollector(Editor editor) {
+        return new CEMethodCollector(editor, getKey().getId(), MANY) {
             @Override
-            public void processInlay(@Nullable PsiMethod method, InlayHintsSink sink) {
+            public boolean checkAddInlay(PsiMethod method) {
                 if (method != null &&
                         (method.getName().startsWith("get") || method.getName().startsWith("return")) &&
                         !Objects.equals(method.getReturnType(), PsiTypes.voidType()) &&
                         !CEUtil.isPluralForm(method.getName())) {
                     PsiTypeElement typeElement = method.getReturnTypeElement();
-                    if (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement)) {
-                        addInlay(Objects.requireNonNull(method.getNameIdentifier()), sink, MANY);
-                    }
-
+                    return CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement);
                 }
+                return false;
             }
         };
     }

@@ -5,24 +5,23 @@ import codeemoji.core.CELocalVariableCollector;
 import codeemoji.core.CEMultiProvider;
 import codeemoji.core.CEUtil;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
-import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiTypeElement;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static codeemoji.core.CESymbol.MANY;
+import static codeemoji.core.CESymbol.SMALL_NAME;
 
 public class SaysOneButContainsMany extends CEMultiProvider<NoSettings> {
 
     @Override
-    public @Nullable String getPreviewText() {
+    public String getPreviewText() {
         return """
                 public class Customer {
                   private String[] name;
@@ -30,25 +29,23 @@ public class SaysOneButContainsMany extends CEMultiProvider<NoSettings> {
     }
 
     @Override
-    public List<InlayHintsCollector> buildCollectors(@NotNull Editor editor) {
+    public List<InlayHintsCollector> buildCollectors(Editor editor) {
         List<InlayHintsCollector> collectors = new ArrayList<>();
 
-        CEFieldCollector fieldCollector = new CEFieldCollector(editor, getKey().getId()) {
+        CEFieldCollector fieldCollector = new CEFieldCollector(editor, getKey().getId(), MANY) {
             @Override
-            public void processInlay(@NotNull PsiField field, InlayHintsSink sink) {
+            public boolean checkAddInlay(@NotNull PsiField field) {
                 PsiTypeElement typeElement = field.getTypeElement();
-                if (!CEUtil.isPluralForm(field.getName()) &&
+                return !CEUtil.isPluralForm(field.getName()) &&
                         !CEUtil.sameNameAsType(typeElement, field.getName()) &&
-                        (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement))) {
-                    addInlay(field.getNameIdentifier(), sink, MANY);
-                }
+                        (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement));
             }
         };
 
-        CELocalVariableCollector localVariableCollector = new CELocalVariableCollector(editor, getKey().getId()) {
+        CELocalVariableCollector localVariableCollector = new CELocalVariableCollector(editor, getKey().getId(), SMALL_NAME) {
             @Override
-            public void processInlay(PsiElement element, InlayHintsSink sink) {
-
+            public boolean checkAddInlay(PsiElement field) {
+                return false;
             }
         };
 

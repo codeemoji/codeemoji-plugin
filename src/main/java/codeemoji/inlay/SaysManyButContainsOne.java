@@ -4,20 +4,17 @@ import codeemoji.core.CEFieldCollector;
 import codeemoji.core.CEProvider;
 import codeemoji.core.CEUtil;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
-import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiTypeElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import static codeemoji.core.CESymbol.ONE;
 
 public class SaysManyButContainsOne extends CEProvider<NoSettings> {
 
     @Override
-    public @Nullable String getPreviewText() {
+    public String getPreviewText() {
         return """
                 public class Customer {
                   private String names;
@@ -25,19 +22,18 @@ public class SaysManyButContainsOne extends CEProvider<NoSettings> {
     }
 
     @Override
-    public InlayHintsCollector buildCollector(@NotNull Editor editor) {
-        return new CEFieldCollector(editor, getKey().getId()) {
+    public InlayHintsCollector buildCollector(Editor editor) {
+        return new CEFieldCollector(editor, getKey().getId(), ONE) {
             @Override
-            public void processInlay(PsiField field, InlayHintsSink sink) {
+            public boolean checkAddInlay(PsiField field) {
                 PsiTypeElement typeElement = field.getTypeElement();
-                if (typeElement != null &&
+                return typeElement != null &&
                         CEUtil.isPluralForm(field.getName()) &&
                         CEUtil.isNotGenericType(typeElement) &&
+                        CEUtil.isNotNumericType(typeElement) &&
                         !CEUtil.isArrayType(typeElement) &&
                         !CEUtil.isIterableType(typeElement) &&
-                        !CEUtil.containsOnlySpecialCharacters(typeElement.getText())) {
-                    addInlay(field.getNameIdentifier(), sink, ONE);
-                }
+                        !CEUtil.containsOnlySpecialCharacters(typeElement.getText());
             }
         };
     }
