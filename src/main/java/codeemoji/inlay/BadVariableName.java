@@ -29,7 +29,7 @@ public class BadVariableName extends CEProvider<BadVariableNameSettings> {
 
     @Override
     public InlayHintsCollector buildCollector(Editor editor) {
-        return new CELocalVariableCollector(editor, getKey().getId(), SMALL_NAME) {
+        return new CELocalVariableCollector(editor, getKeyId(), SMALL_NAME) {
             @Override
             public boolean checkAddInlay(PsiElement element) {
                 return getSettings().getNumberOfLetters() >= element.getTextLength();

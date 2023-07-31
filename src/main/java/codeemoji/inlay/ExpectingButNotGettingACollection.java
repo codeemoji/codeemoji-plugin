@@ -28,7 +28,7 @@ public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
 
     @Override
     public InlayHintsCollector buildCollector(Editor editor) {
-        return new CEMethodCollector(editor, getKey().getId(), ONE) {
+        return new CEMethodCollector(editor, getKeyId(), ONE) {
             @Override
             public boolean checkAddInlay(PsiMethod method) {
                 if (method != null &&

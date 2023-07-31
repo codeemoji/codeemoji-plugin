@@ -27,7 +27,7 @@ public class IsReturnsMoreThanABoolean extends CEProvider<NoSettings> {
 
     @Override
     public InlayHintsCollector buildCollector(Editor editor) {
-        return new CEMethodCollector(editor, getKey().getId(), CONFUSED) {
+        return new CEMethodCollector(editor, getKeyId(), CONFUSED) {
             @Override
             public boolean checkAddInlay(PsiMethod method) {
                 return method != null && method.getName().startsWith("is") &&

@@ -22,7 +22,7 @@ public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NoSettings> {
 
     @Override
     public InlayHintsCollector buildCollector(Editor editor) {
-        return new CEFieldCollector(editor, getKey().getId(), CONFUSED) {
+        return new CEFieldCollector(editor, getKeyId(), CONFUSED) {
             @Override
             public boolean checkAddInlay(PsiField field) {
                 return field != null && (field.getName().startsWith("is") && !field.getType().equals(PsiTypes.booleanType()));

@@ -32,7 +32,7 @@ public class SaysOneButContainsMany extends CEMultiProvider<NoSettings> {
     public List<InlayHintsCollector> buildCollectors(Editor editor) {
         List<InlayHintsCollector> collectors = new ArrayList<>();
 
-        CEFieldCollector fieldCollector = new CEFieldCollector(editor, getKey().getId(), MANY) {
+        CEFieldCollector fieldCollector = new CEFieldCollector(editor, getKeyId(), MANY) {
             @Override
             public boolean checkAddInlay(@NotNull PsiField field) {
                 PsiTypeElement typeElement = field.getTypeElement();
@@ -42,7 +42,7 @@ public class SaysOneButContainsMany extends CEMultiProvider<NoSettings> {
             }
         };
 
-        CELocalVariableCollector localVariableCollector = new CELocalVariableCollector(editor, getKey().getId(), SMALL_NAME) {
+        CELocalVariableCollector localVariableCollector = new CELocalVariableCollector(editor, getKeyId(), SMALL_NAME) {
             @Override
             public boolean checkAddInlay(PsiElement field) {
                 return false;

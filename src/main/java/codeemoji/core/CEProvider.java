@@ -30,12 +30,16 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
         return new SettingsKey<>(getClass().getSimpleName().toLowerCase());
     }
 
+    public final @NotNull String getKeyId() {
+        return getKey().getId();
+    }
+
     @Nls(capitalization = Nls.Capitalization.Sentence)
 
     @Override
     public @NotNull String getName() {
         try {
-            return Objects.requireNonNull(getProperty("inlay." + getKey().getId() + ".name"));
+            return Objects.requireNonNull(getProperty("inlay." + getKeyId() + ".name"));
         } catch (RuntimeException ex) {
             return "<NAME_NOT_DEFINED>";
         }

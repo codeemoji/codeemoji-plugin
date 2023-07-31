@@ -29,7 +29,7 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings
 
     @Override
     public InlayHintsCollector buildCollector(Editor editor) {
-        return new CEMethodCollector(editor, getKey().getId(), MANY) {
+        return new CEMethodCollector(editor, getKeyId(), MANY) {
             @Override
             public boolean checkAddInlay(PsiMethod method) {
                 if (method != null &&

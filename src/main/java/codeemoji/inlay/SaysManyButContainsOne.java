@@ -23,7 +23,7 @@ public class SaysManyButContainsOne extends CEProvider<NoSettings> {
 
     @Override
     public InlayHintsCollector buildCollector(Editor editor) {
-        return new CEFieldCollector(editor, getKey().getId(), ONE) {
+        return new CEFieldCollector(editor, getKeyId(), ONE) {
             @Override
             public boolean checkAddInlay(PsiField field) {
                 PsiTypeElement typeElement = field.getTypeElement();
