@@ -7,6 +7,7 @@ import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiTypes;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -28,12 +29,8 @@ public class TransformMethodDoesNotReturn extends CEProvider<NoSettings> {
     public InlayHintsCollector buildCollector(Editor editor) {
         return new CEMethodCollector(editor, getKeyId(), CONFUSED) {
             @Override
-            public boolean checkAddInlay(PsiMethod method) {
-                return method != null &&
-                        (method.getName().startsWith("translate") ||
-                                method.getName().startsWith("transform") ||
-                                method.getName().startsWith("convert")) &&
-                        Objects.equals(method.getReturnType(), PsiTypes.voidType());
+            public boolean putHintHere(@NotNull PsiMethod element) {
+                return (element.getName().startsWith("translate") || element.getName().startsWith("transform") || element.getName().startsWith("convert")) && Objects.equals(element.getReturnType(), PsiTypes.voidType());
             }
         };
     }

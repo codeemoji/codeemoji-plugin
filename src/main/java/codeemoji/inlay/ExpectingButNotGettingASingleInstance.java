@@ -9,6 +9,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.PsiTypes;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -31,12 +32,9 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings
     public InlayHintsCollector buildCollector(Editor editor) {
         return new CEMethodCollector(editor, getKeyId(), MANY) {
             @Override
-            public boolean checkAddInlay(PsiMethod method) {
-                if (method != null &&
-                        (method.getName().startsWith("get") || method.getName().startsWith("return")) &&
-                        !Objects.equals(method.getReturnType(), PsiTypes.voidType()) &&
-                        !CEUtil.isPluralForm(method.getName())) {
-                    PsiTypeElement typeElement = method.getReturnTypeElement();
+            public boolean putHintHere(@NotNull PsiMethod element) {
+                if ((element.getName().startsWith("get") || element.getName().startsWith("return")) && !Objects.equals(element.getReturnType(), PsiTypes.voidType()) && !CEUtil.isPluralForm(element.getName())) {
+                    PsiTypeElement typeElement = element.getReturnTypeElement();
                     return CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement);
                 }
                 return false;

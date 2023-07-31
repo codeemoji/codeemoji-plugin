@@ -2,10 +2,7 @@ package codeemoji.core;
 
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.JavaRecursiveElementVisitor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiIdentifier;
+import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class CEFieldCollector extends CECollector<PsiField, PsiIdentifier> {
@@ -27,25 +24,18 @@ public abstract class CEFieldCollector extends CECollector<PsiField, PsiIdentifi
     }
 
     @Override
-    public final boolean collectInPreviewEditor(PsiElement element, InlayHintsSink sink) {
-        if (element instanceof PsiField field) {
-            checkAddInlay(field);
+    public boolean collect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+        if (psiElement instanceof PsiJavaFile) {
+            psiElement.accept(new JavaRecursiveElementVisitor() {
+                @Override
+                public void visitField(@NotNull PsiField field) {
+                    if (putHintHere(field)) {
+                        addInlayOnEditor(field.getNameIdentifier(), inlayHintsSink);
+                    }
+                    super.visitField(field);
+                }
+            });
         }
         return false;
     }
-
-    @Override
-    public final boolean collectInDefaultEditor(@NotNull PsiElement element, InlayHintsSink sink) {
-        element.accept(new JavaRecursiveElementVisitor() {
-            @Override
-            public void visitField(@NotNull PsiField field) {
-                if (checkAddInlay(field)) {
-                    addInlayOnEditor(field.getNameIdentifier(), sink);
-                }
-                super.visitField(field);
-            }
-        });
-        return false;
-    }
-
 }

@@ -9,8 +9,6 @@ import com.intellij.psi.PsiElement;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-
 @Getter
 public abstract class CECollector<P extends PsiElement, A extends PsiElement> extends FactoryInlayHintsCollector {
 
@@ -20,7 +18,7 @@ public abstract class CECollector<P extends PsiElement, A extends PsiElement> ex
     public CECollector(Editor editor, String keyId) {
         super(editor);
         this.keyId = keyId;
-        inlay = buildInlay();
+        inlay = buildInlay(new CEInlay());
     }
 
     public CECollector(Editor editor, String keyId, CEInlay ceInlay) {
@@ -41,17 +39,6 @@ public abstract class CECollector<P extends PsiElement, A extends PsiElement> ex
         this.inlay = buildInlay(new CEInlay(symbol));
     }
 
-    @Override
-    public final boolean collect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
-        try {
-            return CEUtil.isPreviewEditor(editor) ?
-                    collectInPreviewEditor(psiElement, inlayHintsSink) : collectInDefaultEditor(psiElement, inlayHintsSink);
-        } catch (RuntimeException ex) {
-            System.out.println(psiElement + ": " + Arrays.toString(ex.getStackTrace()));
-        }
-        return false;
-    }
-
     public String getTooltip() {
         try {
             return CEBundle.getInstance().getBundle().getString("inlay." + getKeyId() + ".tooltip");
@@ -66,10 +53,6 @@ public abstract class CECollector<P extends PsiElement, A extends PsiElement> ex
         }
     }
 
-    private InlayPresentation buildInlay() {
-        return buildInlay(new CEInlay());
-    }
-
     private InlayPresentation buildInlay(@NotNull CEInlay ceInlay) {
         PresentationFactory factory = getFactory();
         var inlay = factory.text(CEUtil.generateEmoji(ceInlay.getCodePoint(), ceInlay.getModifier(), ceInlay.isBackground()));
@@ -81,9 +64,5 @@ public abstract class CECollector<P extends PsiElement, A extends PsiElement> ex
         return inlay;
     }
 
-    public abstract boolean collectInPreviewEditor(PsiElement element, InlayHintsSink sink);
-
-    public abstract boolean collectInDefaultEditor(PsiElement element, InlayHintsSink sink);
-
-    public abstract boolean checkAddInlay(P element);
+    public abstract boolean putHintHere(@NotNull P element);
 }

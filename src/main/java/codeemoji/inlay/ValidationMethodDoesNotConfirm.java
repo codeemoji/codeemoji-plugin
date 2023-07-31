@@ -7,6 +7,7 @@ import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiTypes;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -30,10 +31,8 @@ public class ValidationMethodDoesNotConfirm extends CEProvider<NoSettings> {
     public InlayHintsCollector buildCollector(Editor editor) {
         return new CEMethodCollector(editor, getKeyId(), CONFUSED) {
             @Override
-            public boolean checkAddInlay(PsiMethod method) {
-                return method != null &&
-                        (method.getName().startsWith("validate") || method.getName().startsWith("check") || method.getName().startsWith("ensure")) &&
-                        !(Objects.equals(method.getReturnType(), PsiTypes.booleanType()));
+            public boolean putHintHere(@NotNull PsiMethod element) {
+                return (element.getName().startsWith("validate") || element.getName().startsWith("check") || element.getName().startsWith("ensure")) && !Objects.equals(element.getReturnType(), PsiTypes.booleanType());
             }
         };
 

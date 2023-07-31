@@ -8,6 +8,7 @@ import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiTypeElement;
+import org.jetbrains.annotations.NotNull;
 
 import static codeemoji.core.CESymbol.ONE;
 
@@ -25,10 +26,10 @@ public class SaysManyButContainsOne extends CEProvider<NoSettings> {
     public InlayHintsCollector buildCollector(Editor editor) {
         return new CEFieldCollector(editor, getKeyId(), ONE) {
             @Override
-            public boolean checkAddInlay(PsiField field) {
-                PsiTypeElement typeElement = field.getTypeElement();
+            public boolean putHintHere(@NotNull PsiField element) {
+                PsiTypeElement typeElement = element.getTypeElement();
                 return typeElement != null &&
-                        CEUtil.isPluralForm(field.getName()) &&
+                        CEUtil.isPluralForm(element.getName()) &&
                         CEUtil.isNotGenericType(typeElement) &&
                         CEUtil.isNotNumericType(typeElement) &&
                         !CEUtil.isArrayType(typeElement) &&

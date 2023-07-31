@@ -7,6 +7,7 @@ import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiTypes;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -38,11 +39,9 @@ public class GetMoreThanAccessor extends CEProvider<NoSettings> {
     public InlayHintsCollector buildCollector(Editor editor) {
         return new CEMethodCollector(editor, getKeyId(), CONFUSED) {
             @Override
-            public boolean checkAddInlay(PsiMethod method) {
-                if (method != null && method.getName().startsWith("get") &&
-                        !(Objects.equals(method.getReturnType(), PsiTypes.voidType())) &&
-                        method.getBody() != null) {
-                    return method.getBody().getStatements().length > 1 && !method.getName().equalsIgnoreCase("getInstance");
+            public boolean putHintHere(@NotNull PsiMethod element) {
+                if (element.getName().startsWith("get") && !Objects.equals(element.getReturnType(), PsiTypes.voidType()) && element.getBody() != null) {
+                    return element.getBody().getStatements().length > 1 && !element.getName().equalsIgnoreCase("getInstance");
                 }
                 return false;
             }

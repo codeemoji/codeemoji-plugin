@@ -10,6 +10,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -167,5 +168,16 @@ public class CEUtil {
                 || PsiTypes.doubleType().isAssignableFrom(type)
                 || PsiTypes.byteType().isAssignableFrom(type)
                 || PsiTypes.shortType().isAssignableFrom(type));
+    }
+
+    public static @Nullable PsiElement identifyFirstQualifier(@NotNull PsiElement element) {
+        PsiElement child = element.getFirstChild();
+        if (child != null && (!(child instanceof PsiReferenceExpression) || child.getChildren().length > 0)) {
+            if (child instanceof PsiReferenceParameterList) {
+                return element;
+            }
+            return identifyFirstQualifier(child);
+        }
+        return child;
     }
 }

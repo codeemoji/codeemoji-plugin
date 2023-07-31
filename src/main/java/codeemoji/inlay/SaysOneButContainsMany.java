@@ -7,8 +7,8 @@ import codeemoji.core.CEUtil;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiTypeElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static codeemoji.core.CESymbol.MANY;
-import static codeemoji.core.CESymbol.SMALL_NAME;
 
 public class SaysOneButContainsMany extends CEMultiProvider<NoSettings> {
 
@@ -34,18 +33,21 @@ public class SaysOneButContainsMany extends CEMultiProvider<NoSettings> {
 
         CEFieldCollector fieldCollector = new CEFieldCollector(editor, getKeyId(), MANY) {
             @Override
-            public boolean checkAddInlay(@NotNull PsiField field) {
-                PsiTypeElement typeElement = field.getTypeElement();
-                return !CEUtil.isPluralForm(field.getName()) &&
-                        !CEUtil.sameNameAsType(typeElement, field.getName()) &&
+            public boolean putHintHere(@NotNull PsiField element) {
+                PsiTypeElement typeElement = element.getTypeElement();
+                return !CEUtil.isPluralForm(element.getName()) &&
+                        !CEUtil.sameNameAsType(typeElement, element.getName()) &&
                         (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement));
             }
         };
 
-        CELocalVariableCollector localVariableCollector = new CELocalVariableCollector(editor, getKeyId(), SMALL_NAME) {
+        CELocalVariableCollector localVariableCollector = new CELocalVariableCollector(editor, getKeyId(), MANY) {
             @Override
-            public boolean checkAddInlay(PsiElement field) {
-                return false;
+            public boolean putHintHere(@NotNull PsiLocalVariable element) {
+                PsiTypeElement typeElement = element.getTypeElement();
+                return !CEUtil.isPluralForm(element.getName()) &&
+                        !CEUtil.sameNameAsType(typeElement, element.getName()) &&
+                        (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement));
             }
         };
 

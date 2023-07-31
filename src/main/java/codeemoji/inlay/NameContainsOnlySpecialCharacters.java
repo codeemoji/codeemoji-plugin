@@ -7,6 +7,7 @@ import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiField;
+import org.jetbrains.annotations.NotNull;
 
 import static codeemoji.core.CESymbol.CONFUSED;
 
@@ -24,8 +25,8 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NoSettings> {
     public InlayHintsCollector buildCollector(Editor editor) {
         return new CEFieldCollector(editor, getKeyId(), CONFUSED) {
             @Override
-            public boolean checkAddInlay(PsiField field) {
-                return field != null && CEUtil.containsOnlySpecialCharacters(field.getName());
+            public boolean putHintHere(@NotNull PsiField element) {
+                return CEUtil.containsOnlySpecialCharacters(element.getName());
             }
         };
     }
