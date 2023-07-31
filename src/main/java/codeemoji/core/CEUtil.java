@@ -159,8 +159,13 @@ public class CEUtil {
         return true;
     }
 
-    public static boolean isNotNumericType(PsiTypeElement typeElement) {
-        //TODO: Implement
-        return true;
+    public static boolean isNotNumericType(@NotNull PsiTypeElement typeElement) {
+        PsiType type = typeElement.getType();
+        return !(PsiTypes.intType().isAssignableFrom(type)
+                || PsiTypes.longType().isAssignableFrom(type)
+                || PsiTypes.floatType().isAssignableFrom(type)
+                || PsiTypes.doubleType().isAssignableFrom(type)
+                || PsiTypes.byteType().isAssignableFrom(type)
+                || PsiTypes.shortType().isAssignableFrom(type));
     }
 }
