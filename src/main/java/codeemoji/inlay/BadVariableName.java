@@ -32,7 +32,7 @@ public class BadVariableName extends CEProvider<BadVariableNameSettings> {
     public InlayHintsCollector buildCollector(Editor editor) {
         return new CELocalVariableCollector(editor, getKeyId(), SMALL_NAME) {
             @Override
-            public boolean putHintHere(@NotNull PsiLocalVariable element) {
+            public boolean isHintable(@NotNull PsiLocalVariable element) {
                 if (element.getNameIdentifier() != null) {
                     return getSettings().getNumberOfLetters() >= element.getNameIdentifier().getTextLength();
                 }

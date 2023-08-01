@@ -26,7 +26,7 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NoSettings> {
     public InlayHintsCollector buildCollector(Editor editor) {
         return new CEFieldCollector(editor, getKeyId(), CONFUSED) {
             @Override
-            public boolean putHintHere(@NotNull PsiField element) {
+            public boolean isHintable(@NotNull PsiField element) {
                 return CEUtil.containsOnlySpecialCharacters(element.getName());
             }
         };

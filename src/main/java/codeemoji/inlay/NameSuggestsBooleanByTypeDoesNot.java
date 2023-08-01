@@ -26,7 +26,7 @@ public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NoSettings> {
     public InlayHintsCollector buildCollector(Editor editor) {
         return new CEFieldCollector(editor, getKeyId(), CONFUSED) {
             @Override
-            public boolean putHintHere(@NotNull PsiField element) {
+            public boolean isHintable(@NotNull PsiField element) {
                 return element.getName().startsWith("is") && !element.getType().equals(PsiTypes.booleanType());
             }
         };

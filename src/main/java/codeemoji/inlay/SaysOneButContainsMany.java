@@ -33,7 +33,7 @@ public class SaysOneButContainsMany extends CEMultiProvider<NoSettings> {
 
         CEFieldCollector fieldCollector = new CEFieldCollector(editor, getKeyId(), MANY) {
             @Override
-            public boolean putHintHere(@NotNull PsiField element) {
+            public boolean isHintable(@NotNull PsiField element) {
                 PsiTypeElement typeElement = element.getTypeElement();
                 return !CEUtil.isPluralForm(element.getName()) &&
                         !CEUtil.sameNameAsType(typeElement, element.getName()) &&
@@ -43,7 +43,7 @@ public class SaysOneButContainsMany extends CEMultiProvider<NoSettings> {
 
         CELocalVariableCollector localVariableCollector = new CELocalVariableCollector(editor, getKeyId(), MANY) {
             @Override
-            public boolean putHintHere(@NotNull PsiLocalVariable element) {
+            public boolean isHintable(@NotNull PsiLocalVariable element) {
                 PsiTypeElement typeElement = element.getTypeElement();
                 return !CEUtil.isPluralForm(element.getName()) &&
                         !CEUtil.sameNameAsType(typeElement, element.getName()) &&

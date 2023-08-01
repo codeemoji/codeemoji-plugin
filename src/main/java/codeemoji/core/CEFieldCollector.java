@@ -29,7 +29,7 @@ public abstract class CEFieldCollector extends CECollector<PsiField, PsiIdentifi
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
                 public void visitField(@NotNull PsiField field) {
-                    if (putHintHere(field)) {
+                    if (isHintable(field)) {
                         addInlayOnEditor(field.getNameIdentifier(), inlayHintsSink);
                     }
                     super.visitField(field);

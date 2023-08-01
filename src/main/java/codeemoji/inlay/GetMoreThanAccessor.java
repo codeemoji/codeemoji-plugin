@@ -39,7 +39,7 @@ public class GetMoreThanAccessor extends CEProvider<NoSettings> {
     public InlayHintsCollector buildCollector(Editor editor) {
         return new CEMethodCollector(editor, getKeyId(), CONFUSED) {
             @Override
-            public boolean putHintHere(@NotNull PsiMethod element) {
+            public boolean isHintable(@NotNull PsiMethod element) {
                 if (element.getName().startsWith("get") && !Objects.equals(element.getReturnType(), PsiTypes.voidType()) && element.getBody() != null) {
                     return element.getBody().getStatements().length > 1 && !element.getName().equalsIgnoreCase("getInstance");
                 }

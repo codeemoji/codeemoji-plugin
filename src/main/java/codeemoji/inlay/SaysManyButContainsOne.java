@@ -27,7 +27,7 @@ public class SaysManyButContainsOne extends CEProvider<NoSettings> {
     public InlayHintsCollector buildCollector(Editor editor) {
         return new CEFieldCollector(editor, getKeyId(), ONE) {
             @Override
-            public boolean putHintHere(@NotNull PsiField element) {
+            public boolean isHintable(@NotNull PsiField element) {
                 PsiTypeElement typeElement = element.getTypeElement();
                 return typeElement != null &&
                         CEUtil.isPluralForm(element.getName()) &&

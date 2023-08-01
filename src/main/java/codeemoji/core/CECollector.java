@@ -64,5 +64,5 @@ public abstract class CECollector<P extends PsiElement, A extends PsiElement> ex
         return inlay;
     }
 
-    public abstract boolean putHintHere(@NotNull P element);
+    public abstract boolean isHintable(@NotNull P element);
 }

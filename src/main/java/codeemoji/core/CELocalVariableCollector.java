@@ -31,7 +31,7 @@ public abstract class CELocalVariableCollector extends CECollector<PsiLocalVaria
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
                 public void visitLocalVariable(@NotNull PsiLocalVariable variable) {
-                    if (putHintHere(variable)) {
+                    if (isHintable(variable)) {
                         addInlayOnEditor(variable.getNameIdentifier(), inlayHintsSink);
                         psiElement.accept(new JavaRecursiveElementVisitor() {
                             @Override

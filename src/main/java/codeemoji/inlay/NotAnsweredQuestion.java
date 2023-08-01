@@ -29,7 +29,7 @@ public class NotAnsweredQuestion extends CEProvider<NoSettings> {
     public InlayHintsCollector buildCollector(Editor editor) {
         return new CEMethodCollector(editor, getKeyId(), CONFUSED) {
             @Override
-            public boolean putHintHere(@NotNull PsiMethod element) {
+            public boolean isHintable(@NotNull PsiMethod element) {
                 return element.getName().startsWith("is") && Objects.equals(element.getReturnType(), PsiTypes.voidType());
             }
         };
