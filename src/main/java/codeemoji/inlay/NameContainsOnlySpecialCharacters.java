@@ -18,6 +18,7 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NoSettings> {
         return """
                 public class Customer {
                   private int ___;
+                  //...
                 }""";
     }
 
