@@ -1,11 +1,11 @@
 package codeemoji.inlay;
 
-import codeemoji.core.CELocalVariableCollector;
 import codeemoji.core.CEProvider;
+import codeemoji.core.CEVariableCollector;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiLocalVariable;
+import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
 import static codeemoji.core.CESymbol.SMALL_NAME;
@@ -30,9 +30,9 @@ public class BadVariableName extends CEProvider<BadVariableNameSettings> {
 
     @Override
     public InlayHintsCollector buildCollector(Editor editor) {
-        return new CELocalVariableCollector(editor, getKeyId(), SMALL_NAME) {
+        return new CEVariableCollector(editor, getKeyId(), SMALL_NAME) {
             @Override
-            public boolean isHintable(@NotNull PsiLocalVariable element) {
+            public boolean isHintable(@NotNull PsiVariable element) {
                 if (element.getNameIdentifier() != null) {
                     return getSettings().getNumberOfLetters() >= element.getNameIdentifier().getTextLength();
                 }
