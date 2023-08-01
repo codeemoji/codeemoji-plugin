@@ -25,8 +25,8 @@ import static codeemoji.core.CESymbol.COLOR_BACKGROUND;
 
 public class CEUtil {
 
-    public static boolean isPreviewEditor(@NotNull Editor editor) {
-        return editor.getEditorKind().name().equalsIgnoreCase("UNTYPED");
+    public static boolean isNotPreviewEditor(@NotNull Editor editor) {
+        return !editor.getEditorKind().name().equalsIgnoreCase("UNTYPED");
     }
 
     @Contract("_, _, _ -> new")

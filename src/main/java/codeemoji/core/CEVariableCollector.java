@@ -9,21 +9,21 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public abstract class CELocalVariableCollector extends CECollector<PsiLocalVariable, PsiElement> {
+public abstract class CEVariableCollector extends CECollector<PsiVariable, PsiElement> {
 
-    public CELocalVariableCollector(Editor editor, String keyId) {
+    public CEVariableCollector(Editor editor, String keyId) {
         super(editor, keyId);
     }
 
-    public CELocalVariableCollector(Editor editor, String keyId, CEInlay ceInlay) {
+    public CEVariableCollector(Editor editor, String keyId, CEInlay ceInlay) {
         super(editor, keyId, ceInlay);
     }
 
-    public CELocalVariableCollector(Editor editor, String keyId, int codePoint) {
+    public CEVariableCollector(Editor editor, String keyId, int codePoint) {
         super(editor, keyId, codePoint);
     }
 
-    public CELocalVariableCollector(Editor editor, String keyId, CESymbol symbol) {
+    public CEVariableCollector(Editor editor, String keyId, CESymbol symbol) {
         super(editor, keyId, symbol);
     }
 
@@ -32,7 +32,7 @@ public abstract class CELocalVariableCollector extends CECollector<PsiLocalVaria
         if (psiElement instanceof PsiJavaFile) {
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
-                public void visitLocalVariable(@NotNull PsiLocalVariable variable) {
+                public void visitVariable(@NotNull PsiVariable variable) {
                     if (isHintable(variable)) {
                         addInlayOnEditor(variable.getNameIdentifier(), inlayHintsSink);
                         if (CEUtil.isNotPreviewEditor(editor)) {
@@ -45,11 +45,11 @@ public abstract class CELocalVariableCollector extends CECollector<PsiLocalVaria
                             processReferencesInPreviewEditor(variable);
                         }
                     }
-                    super.visitLocalVariable(variable);
+                    super.visitVariable(variable);
                 }
 
                 //TODO: reimplement using GlobalSearchScope
-                private void processReferencesInPreviewEditor(PsiLocalVariable variable) {
+                private void processReferencesInPreviewEditor(PsiVariable variable) {
                     psiElement.accept(new JavaRecursiveElementVisitor() {
                         @Override
                         public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
