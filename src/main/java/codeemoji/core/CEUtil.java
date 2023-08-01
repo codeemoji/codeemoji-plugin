@@ -31,20 +31,20 @@ public class CEUtil {
 
     @Contract("_, _, _ -> new")
     public static @NotNull String generateEmoji(int codePoint, int modifier, boolean addColor) {
-        char[] codePointChar = Character.toChars(codePoint);
-        char[] withoutColor = codePointChar;
+        char[] codePointChars = Character.toChars(codePoint);
+        char[] withoutColorChars = codePointChars;
         if (modifier > 0) {
-            char[] modifierChar = Character.toChars(modifier);
-            withoutColor = Arrays.copyOf(codePointChar, codePointChar.length + modifierChar.length);
-            System.arraycopy(modifierChar, 0, withoutColor, codePointChar.length, modifierChar.length);
+            char[] modifierChars = Character.toChars(modifier);
+            withoutColorChars = Arrays.copyOf(codePointChars, codePointChars.length + modifierChars.length);
+            System.arraycopy(modifierChars, 0, withoutColorChars, codePointChars.length, modifierChars.length);
         }
         if (addColor) {
-            char[] addColorChar = Character.toChars(COLOR_BACKGROUND.getValue());
-            char[] withColor = Arrays.copyOf(withoutColor, withoutColor.length + addColorChar.length);
-            System.arraycopy(addColorChar, 0, withColor, withoutColor.length, addColorChar.length);
-            return new String(withColor);
+            char[] addColorChars = Character.toChars(COLOR_BACKGROUND.getValue());
+            char[] withColorChars = Arrays.copyOf(withoutColorChars, withoutColorChars.length + addColorChars.length);
+            System.arraycopy(addColorChars, 0, withColorChars, withoutColorChars.length, addColorChars.length);
+            return new String(withColorChars);
         }
-        return new String(withoutColor);
+        return new String(withoutColorChars);
     }
 
     public static boolean isIterableType(PsiTypeElement typeElement) {
