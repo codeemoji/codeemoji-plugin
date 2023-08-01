@@ -3,14 +3,18 @@
 # Intellij codƎEmoji Plugin
 
 **codƎEmoji** is an Intellij IDE plugin that inserts inlay hints in the context of code augmentation. The inlay hints inserted with the plugin
-are made from emojis for anti-pattern cases, allowing the developer to identify name violations in the code. The cases implemented in the plugin are
-listed below. The plugin works for the Java programming language.
+are made from emojis for anti-pattern cases, allowing the developer to identify name violations in the code. The plugin works for the Java
+programming language.
+
+####
+
+The cases implemented in the plugin are listed below.
 
 ### Bad Variable Name
 
 Instead of a descriptive name, the variable's name consists of a few letters.
 
-![Bad Variable Name](./src/main/resources/docs/images/badvariablename.png)
+![Bad Variable Name](https://raw.githubusercontent.com/codeemoji/codeemoji-plugin/develop/src/main/resources/docs/images/badvariablename.png)
 
 ### Getter More Than Accessor
 
@@ -68,9 +72,11 @@ The name of an attribute suggests multiple instances, but its type suggests a si
 
 The identifier's name is made up entirely of non-alphanumeric characters. Adapted from Peruma et al.(2021).
 
+###
+
 ### Acknowledgements
 
-This work was supported by the Free University of Bozen-Bolzano - UNIBZ
+This work was supported by the **Free University of Bozen-Bolzano - UNIBZ**.
 
 ### References
 
