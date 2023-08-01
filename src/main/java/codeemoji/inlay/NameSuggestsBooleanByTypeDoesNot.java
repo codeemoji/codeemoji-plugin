@@ -18,6 +18,7 @@ public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NoSettings> {
         return """
                 public class Customer {
                   private int isPattern;
+                  //...
                 }""";
     }
 

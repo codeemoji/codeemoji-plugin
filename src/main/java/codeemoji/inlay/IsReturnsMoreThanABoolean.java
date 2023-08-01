@@ -20,7 +20,6 @@ public class IsReturnsMoreThanABoolean extends CEProvider<NoSettings> {
         return """
                 public class Customer {
                     public String isHuman() {
-                        doSomething();
                         return "Yes";
                     }
                 }""";

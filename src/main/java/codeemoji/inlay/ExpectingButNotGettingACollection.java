@@ -21,7 +21,7 @@ public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
     public String getPreviewText() {
         return """
                 public class Customer {
-                    public byte getBytes(byte[] buffer) {
+                    public byte getBytes() {
                         doSomething();
                     }
                 }""";

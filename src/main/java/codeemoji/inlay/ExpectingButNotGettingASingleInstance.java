@@ -22,8 +22,7 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings
         return """
                 public class Customer {
                     public Object[] getParameter() {
-                        Object[] array = doSomething();
-                        return array;
+                        doSomething();
                     }
                 }""";
     }

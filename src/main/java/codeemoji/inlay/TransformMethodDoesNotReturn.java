@@ -20,7 +20,7 @@ public class TransformMethodDoesNotReturn extends CEProvider<NoSettings> {
         return """
                 public class Customer {
                     public void translateText(String text) {
-                        doSomething();
+                        text = doSomething(text);
                     }
                 }""";
     }

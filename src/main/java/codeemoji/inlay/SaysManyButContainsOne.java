@@ -19,6 +19,7 @@ public class SaysManyButContainsOne extends CEProvider<NoSettings> {
         return """
                 public class Customer {
                   private String names;
+                  //...
                 }""";
     }
 

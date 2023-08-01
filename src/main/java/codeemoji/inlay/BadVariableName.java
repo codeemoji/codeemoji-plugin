@@ -17,10 +17,11 @@ public class BadVariableName extends CEProvider<BadVariableNameSettings> {
         return """
                 public class Customer {
                   public String statement() {
+                    String result = "";
                     while (rentals.hasMoreElements()) {
                       Rental a = (Rental) rentals.nextElement();
                       result += a.getMovie().getTitle() + ": "
-                        + String.valueOf(a.calculateAmount());
+                        + String.valueOf(a.calculateAmount()) +"\\n";
                     }
                     return result;
                   }
