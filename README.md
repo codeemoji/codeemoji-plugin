@@ -25,7 +25,7 @@ A getter that doesn't just return the corresponding attribute but also takes oth
 A method's name is a predicate that denotes a true/false value that will be returned. The return type, however, is a more complex type than boolean.
 Adapted from Peruma et al.(2021).
 
-![_Is_ Returns More Than a Boolean](https://raw.githubusercontent.com/codeemoji/codeemoji-plugin/develop/docs/images/isreturnsmorethanaboolean.png)
+![Is Returns More Than a Boolean](https://raw.githubusercontent.com/codeemoji/codeemoji-plugin/develop/docs/images/isreturnsmorethanaboolean.png)
 
 ### Setter Method Returns
 
@@ -57,7 +57,7 @@ actually void. Adapted from Peruma et al.(2021).
 
 A method's name takes the form of a predicate, but its return type is not boolean. Adapted from Peruma et al.(2021).
 
-![Not Answered Question](https://raw.githubusercontent.com/codeemoji/codeemoji-plugin/develop/docs/images/noteansweredquestion.png)
+![Not Answered Question](https://raw.githubusercontent.com/codeemoji/codeemoji-plugin/develop/docs/images/notansweredquestion.png)
 
 ### Transform Method Does Not Return
 
