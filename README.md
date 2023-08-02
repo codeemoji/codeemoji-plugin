@@ -6,6 +6,35 @@
 are made from emojis for anti-pattern cases, allowing the developer to identify name violations in the code. The plugin works for the **Java**
 programming language.
 
+<!-- TOC -->
+
+* [Setup and Use <a name="setup_and_use"></a>](#setup-and-use-a-namesetupandusea)
+    * [Prerequisites](#prerequisites)
+    * [How to install](#how-to-install)
+    * [How to configure](#how-to-configure)
+* [Naming Violation Cases](#naming-violation-cases)
+    * [Short Descriptive Name](#short-descriptive-name)
+    * [Getter More Than Accessor](#getter-more-than-accessor)
+    * [_Is_ Returns More Than a Boolean](#is-returns-more-than-a-boolean)
+    * [Setter Method Returns](#setter-method-returns)
+    * [Expecting But Not Getting a Single Instance](#expecting-but-not-getting-a-single-instance)
+    * [Validation Method Does Not Confirm](#validation-method-does-not-confirm)
+    * [Getter Does Not Return](#getter-does-not-return)
+    * [Not Answered Question](#not-answered-question)
+    * [Transform Method Does Not Return](#transform-method-does-not-return)
+    * [Expecting But Not Getting a Collection](#expecting-but-not-getting-a-collection)
+    * [Says One But Contains Many](#says-one-but-contains-many)
+    * [Name Suggests Boolean By Type Does Not](#name-suggests-boolean-by-type-does-not)
+    * [Says Many But Contains One](#says-many-but-contains-one)
+    * [Name Contains Only Special Characters](#name-contains-only-special-characters)
+* [Invisible Features Cases](#invisible-features-cases)
+* [Invisible Annotations Cases](#invisible-annotations-cases)
+* [How to Extend](#how-to-extend)
+* [Acknowledgements](#acknowledgements)
+* [References](#references)
+
+<!-- TOC -->
+
 ## Setup and Use
 
 ### Prerequisites
