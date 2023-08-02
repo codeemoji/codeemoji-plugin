@@ -49,7 +49,7 @@ from [Releases](https://github.com/codeemoji/codeemoji-plugin/releases), where *
 
 ![How to Download](https://raw.githubusercontent.com/codeemoji/codeemoji-plugin/develop/docs/images/howtodownload.png)
 
-Open Intellij IDEA and navigate to **_"File > Settings > Plugins"_** menu. Click on the gear icon and the "**_Install Plugin From Disk..._**" option.
+Open Intellij IDEA and navigate to **_"File>Settings>Plugins"_** menu. Click on the gear icon and the "**_Install Plugin From Disk..._**" option.
 Select the downloaded zip file and click "**_OK_**".
 
 ![How to Install](https://raw.githubusercontent.com/codeemoji/codeemoji-plugin/develop/docs/images/howtoinstall.png)
@@ -66,6 +66,8 @@ that are available for each one, go to "**_File>Settings>Editor>Inlay Hints_**".
 ### Short Descriptive Name
 
 Instead of a descriptive name, the variable's name consists of a few letters.
+
+**Configuration options:** Number of letters
 
 _**Impacted identifiers: Fields, Method Parameters and Local Variables**_
 
