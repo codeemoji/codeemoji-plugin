@@ -2,7 +2,7 @@
 
     <id>codeemoji-plugin</id>
     <name><![CDATA[codƎEmoji]]></name>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <vendor email="eduardo.martinsguerra@unibz.it" url="https://www.unibz.it">Free University of Bozen-Bolzano - UNIBZ</vendor>
 
     <resource-bundle>CEBundle</resource-bundle>
