@@ -1,18 +1,24 @@
 package codeemoji.core;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
-@AllArgsConstructor
-public enum CESymbol {
-    DEFAULT(0x2757),
-    COLOR_BACKGROUND(0x0FE0F),
-    SMALL_NAME(0x1F90F),
-    CONFUSED(0x1F937),
-    MANY(0x1F590),
-    ONE(0x261D);
+@Data
+public class CESymbol {
 
-    private final int value;
+    private int codePoint = 0x2757;
+    private int modifier = 0;
+    private boolean background = true;
 
+    public CESymbol() {
+    }
+
+    public CESymbol(int codePoint) {
+        this.codePoint = codePoint;
+    }
+
+    public CESymbol(int codePoint, int modifier, boolean background) {
+        this.codePoint = codePoint;
+        this.modifier = modifier;
+        this.background = background;
+    }
 }

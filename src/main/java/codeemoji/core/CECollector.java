@@ -8,35 +8,18 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Getter
-public abstract class CECollector<P extends PsiElement, A extends PsiElement> extends FactoryInlayHintsCollector {
+public abstract class CECollector<H extends PsiElement, A extends PsiElement> extends FactoryInlayHintsCollector {
 
     private final String keyId;
     private final InlayPresentation inlay;
 
-    public CECollector(Editor editor, String keyId) {
+    public CECollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor);
         this.keyId = keyId;
-        inlay = buildInlay(new CEInlay());
-    }
-
-    public CECollector(Editor editor, String keyId, CEInlay ceInlay) {
-        super(editor);
-        this.keyId = keyId;
-        this.inlay = buildInlay(ceInlay);
-    }
-
-    public CECollector(Editor editor, String keyId, int codePoint) {
-        super(editor);
-        this.keyId = keyId;
-        this.inlay = buildInlay(new CEInlay(codePoint));
-    }
-
-    public CECollector(Editor editor, String keyId, CESymbol symbol) {
-        super(editor);
-        this.keyId = keyId;
-        this.inlay = buildInlay(new CEInlay(symbol));
+        this.inlay = buildInlay(symbol);
     }
 
     public String getTooltip() {
@@ -53,9 +36,12 @@ public abstract class CECollector<P extends PsiElement, A extends PsiElement> ex
         }
     }
 
-    private InlayPresentation buildInlay(@NotNull CEInlay ceInlay) {
+    private InlayPresentation buildInlay(@Nullable CESymbol symbol) {
+        if (symbol == null) {
+            symbol = new CESymbol();
+        }
         PresentationFactory factory = getFactory();
-        var inlay = factory.text(CEUtil.generateEmoji(ceInlay.getCodePoint(), ceInlay.getModifier(), ceInlay.isBackground()));
+        var inlay = factory.text(CEUtil.generateEmoji(symbol.getCodePoint(), symbol.getModifier(), symbol.isBackground()));
         inlay = factory.roundWithBackgroundAndSmallInset(inlay);
         String tooltip = getTooltip();
         if (tooltip != null) {
@@ -64,5 +50,5 @@ public abstract class CECollector<P extends PsiElement, A extends PsiElement> ex
         return inlay;
     }
 
-    public abstract boolean isHintable(@NotNull P element);
+    public abstract boolean isHintable(@NotNull H element);
 }

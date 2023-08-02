@@ -8,7 +8,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
-import static codeemoji.core.CESymbol.SMALL_NAME;
+import static codeemoji.core.CEConstants.SMALL_NAME;
 
 public class BadVariableName extends CEProvider<BadVariableNameSettings> {
 

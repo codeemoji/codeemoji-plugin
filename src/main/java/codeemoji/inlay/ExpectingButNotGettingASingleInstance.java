@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-import static codeemoji.core.CESymbol.MANY;
+import static codeemoji.core.CEConstants.MANY;
 
 public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings> {
 

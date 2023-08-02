@@ -10,7 +10,7 @@ import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
-import static codeemoji.core.CESymbol.MANY;
+import static codeemoji.core.CEConstants.MANY;
 
 public class SaysOneButContainsMany extends CEProvider<NoSettings> {
 
@@ -44,6 +44,7 @@ public class SaysOneButContainsMany extends CEProvider<NoSettings> {
                         !CEUtil.sameNameAsType(typeElement, element.getName()) &&
                         (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement));
             }
+
         };
     }
 }

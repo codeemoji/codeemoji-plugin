@@ -4,22 +4,15 @@ import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class CEMethodCollector extends CECollector<PsiMethod, PsiIdentifier> {
 
-    public CEMethodCollector(Editor editor, String keyId) {
-        super(editor, keyId);
+    public CEMethodCollector(@NotNull Editor editor, @NotNull String keyId) {
+        super(editor, keyId, new CESymbol());
     }
 
-    public CEMethodCollector(Editor editor, String keyId, CEInlay ceInlay) {
-        super(editor, keyId, ceInlay);
-    }
-
-    public CEMethodCollector(Editor editor, String keyId, int codePoint) {
-        super(editor, keyId, codePoint);
-    }
-
-    public CEMethodCollector(Editor editor, String keyId, CESymbol symbol) {
+    public CEMethodCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);
     }
 

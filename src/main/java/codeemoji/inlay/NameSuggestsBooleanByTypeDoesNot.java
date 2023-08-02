@@ -9,7 +9,7 @@ import com.intellij.psi.PsiTypes;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
-import static codeemoji.core.CESymbol.CONFUSED;
+import static codeemoji.core.CEConstants.CONFUSED;
 
 public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NoSettings> {
 
@@ -27,7 +27,10 @@ public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NoSettings> {
         return new CEVariableCollector(editor, getKeyId(), CONFUSED) {
             @Override
             public boolean isHintable(@NotNull PsiVariable element) {
-                return element.getName().startsWith("is") && !element.getType().equals(PsiTypes.booleanType());
+                if (element.getName() != null) {
+                    return element.getName().startsWith("is") && !element.getType().equals(PsiTypes.booleanType());
+                }
+                return false;
             }
         };
     }

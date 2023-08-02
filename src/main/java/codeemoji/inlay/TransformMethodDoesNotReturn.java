@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-import static codeemoji.core.CESymbol.CONFUSED;
+import static codeemoji.core.CEConstants.CONFUSED;
 
 public class TransformMethodDoesNotReturn extends CEProvider<NoSettings> {
 

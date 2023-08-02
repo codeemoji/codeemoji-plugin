@@ -21,8 +21,6 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static codeemoji.core.CESymbol.COLOR_BACKGROUND;
-
 public class CEUtil {
 
     public static boolean isNotPreviewEditor(@NotNull Editor editor) {
@@ -39,7 +37,7 @@ public class CEUtil {
             System.arraycopy(modifierChars, 0, withoutColorChars, codePointChars.length, modifierChars.length);
         }
         if (addColor) {
-            char[] addColorChars = Character.toChars(COLOR_BACKGROUND.getValue());
+            char[] addColorChars = Character.toChars(0x0FE0F);
             char[] withColorChars = Arrays.copyOf(withoutColorChars, withoutColorChars.length + addColorChars.length);
             System.arraycopy(addColorChars, 0, withColorChars, withoutColorChars.length, addColorChars.length);
             return new String(withColorChars);
