@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 
-public record BadVariableNameConfigurable(BadVariableNameSettings settings) implements ImmediateConfigurable {
+public record ShortDescriptiveNameConfigurable(ShortDescriptiveNameSettings settings) implements ImmediateConfigurable {
 
     @Override
     public @NotNull JComponent createComponent(@NotNull ChangeListener changeListener) {

@@ -10,17 +10,20 @@ import org.jetbrains.annotations.NotNull;
 
 import static codeemoji.core.CEConstants.SMALL_NAME;
 
-public class BadVariableName extends CEProvider<BadVariableNameSettings> {
+public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSettings> {
 
     @Override
     public String getPreviewText() {
         return """
                 public class Customer {
-                  public String statement() {
-                    String result = "";
+                                
+                  private String s = ": ";
+                                
+                  public String statement(String p) {
+                    String result = p + "-> ";
                     while (rentals.hasMoreElements()) {
                       Rental a = (Rental) rentals.nextElement();
-                      result += a.getMovie().getTitle() + ": "
+                      result += a.getMovie().getTitle() + s
                         + String.valueOf(a.calculateAmount()) +"\\n";
                     }
                     return result;
@@ -42,7 +45,7 @@ public class BadVariableName extends CEProvider<BadVariableNameSettings> {
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull BadVariableNameSettings settings) {
-        return new BadVariableNameConfigurable(settings);
+    public @NotNull ImmediateConfigurable createConfigurable(@NotNull ShortDescriptiveNameSettings settings) {
+        return new ShortDescriptiveNameConfigurable(settings);
     }
 }

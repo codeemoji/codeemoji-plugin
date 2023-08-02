@@ -28,7 +28,7 @@ public class SaysOneButContainsMany extends CEProvider<NoSettings> {
                   
                   public List<Object> transformValue(int value) {
                     List<Object> item = new ArrayList<>();
-                    item.addAll(doSomething(value));
+                    item.addAll(doSomething(name, value));
                     return item;
                   }
                 }""";

@@ -8,18 +8,18 @@ import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
 @Data
-@State(name = "BadVariableNameSettings", storages = @Storage("bad-variable-name-settings.xml"))
-public class BadVariableNameSettings implements PersistentStateComponent<BadVariableNameSettings> {
+@State(name = "ShortDescriptiveNameSettings", storages = @Storage("short-descriptive-name-settings.xml"))
+public class ShortDescriptiveNameSettings implements PersistentStateComponent<ShortDescriptiveNameSettings> {
 
     private Integer numberOfLetters = 1;
 
     @Override
-    public BadVariableNameSettings getState() {
+    public ShortDescriptiveNameSettings getState() {
         return this;
     }
 
     @Override
-    public void loadState(@NotNull BadVariableNameSettings state) {
+    public void loadState(@NotNull ShortDescriptiveNameSettings state) {
         XmlSerializerUtil.copyBean(state, this);
     }
 }

@@ -16,9 +16,19 @@ public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NoSettings> {
     @Override
     public String getPreviewText() {
         return """
+                import java.util.*;
+                        
                 public class Customer {
-                  private int isPattern;
-                  //...
+                    private String isActive;
+                     
+                    public String getItem(int isItemEnabled) {
+                        return doSomething(isItemEnabled);
+                    }
+                 
+                    public int buildMyObject(Double value) {
+                        Integer isActiveForField = parseName(isActive);
+                        return isActiveForField.intValue();
+                    }
                 }""";
     }
 

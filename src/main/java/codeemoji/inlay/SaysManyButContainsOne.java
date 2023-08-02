@@ -17,9 +17,20 @@ public class SaysManyButContainsOne extends CEProvider<NoSettings> {
     @Override
     public String getPreviewText() {
         return """
+                import java.util.*;
+                        
                 public class Customer {
-                  private String names;
-                  //...
+                    private String names;
+                      
+                    public String getItem(String buffers, int devices) {
+                        return doSomething(buffers, devices);
+                    }
+                     
+                    public Object buildMyObject(int value) {
+                        Object items = new MyObject();
+                        items.calcData(names, value);
+                        return item;
+                    }
                 }""";
     }
 

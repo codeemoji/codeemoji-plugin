@@ -33,7 +33,7 @@ public abstract class CEVariableCollector extends CECollector<PsiVariable, PsiEl
                 @Override
                 public void visitField(@NotNull PsiField field) {
                     if (isActiveField()) {
-                        collectForField(file, field, editor, inlayHintsSink);
+                        collectForField(field, editor, inlayHintsSink);
                     }
                     super.visitField(field);
                 }
@@ -41,7 +41,7 @@ public abstract class CEVariableCollector extends CECollector<PsiVariable, PsiEl
                 @Override
                 public void visitParameter(@NotNull PsiParameter parameter) {
                     if (isActiveParam()) {
-                        collectForParam(file, parameter, editor, inlayHintsSink);
+                        collectForParam(parameter, editor, inlayHintsSink);
                     }
                     super.visitParameter(parameter);
                 }
@@ -49,7 +49,7 @@ public abstract class CEVariableCollector extends CECollector<PsiVariable, PsiEl
                 @Override
                 public void visitLocalVariable(@NotNull PsiLocalVariable localVariable) {
                     if (isActiveLocal()) {
-                        collectForLocal(file, localVariable, editor, inlayHintsSink);
+                        collectForLocal(localVariable, editor, inlayHintsSink);
                     }
                     super.visitLocalVariable(localVariable);
                 }
@@ -58,19 +58,19 @@ public abstract class CEVariableCollector extends CECollector<PsiVariable, PsiEl
         return false;
     }
 
-    public void collectForField(@NotNull PsiJavaFile file, @NotNull PsiField field, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
-        process(file, field, editor, sink);
+    public void collectForField(@NotNull PsiField field, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
+        process(field, editor, sink);
     }
 
-    public void collectForParam(@NotNull PsiJavaFile file, @NotNull PsiParameter param, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
-        process(file, param, editor, sink);
+    public void collectForParam(@NotNull PsiParameter param, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
+        process(param, editor, sink);
     }
 
-    public void collectForLocal(@NotNull PsiJavaFile file, @NotNull PsiLocalVariable local, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
-        process(file, local, editor, sink);
+    public void collectForLocal(@NotNull PsiLocalVariable local, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
+        process(local, editor, sink);
     }
 
-    private void process(@NotNull PsiJavaFile file, @NotNull PsiVariable variable, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
+    private void process(@NotNull PsiVariable variable, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
         if (isHintable(variable)) {
             addInlayOnEditor(variable.getNameIdentifier(), sink);
             if (CEUtil.isNotPreviewEditor(editor)) {
@@ -80,19 +80,19 @@ public abstract class CEVariableCollector extends CECollector<PsiVariable, PsiEl
                     addInlayOnEditor(ref.getElement(), sink);
                 }
             } else {
-                //TODO: reimplement using GlobalSearchScope
-                processReferencesInPreviewEditor(file, variable, sink);
+                processReferencesInPreviewEditor(variable, sink);
             }
         }
     }
 
-    private void processReferencesInPreviewEditor(@NotNull PsiJavaFile file, @NotNull PsiVariable variable, @NotNull InlayHintsSink inlayHintsSink) {
-        file.accept(new JavaRecursiveElementVisitor() {
+    private void processReferencesInPreviewEditor(@NotNull PsiVariable variable, @NotNull InlayHintsSink inlayHintsSink) {
+        variable.getContainingFile().accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
-                PsiElement qualifier = CEUtil.identifyFirstQualifier(expression);
-                if (qualifier != null && Objects.equals(qualifier.getText(), variable.getName())) {
-                    addInlayOnEditor(qualifier, inlayHintsSink);
+                if (CEUtil.hasAUniqueQualifier(expression)) {
+                    if (Objects.equals(expression.getText(), variable.getName())) {
+                        addInlayOnEditor(expression, inlayHintsSink);
+                    }
                 }
                 super.visitReferenceExpression(expression);
             }

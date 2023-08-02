@@ -11,8 +11,8 @@
     <depends>com.intellij.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="codeemoji.inlay.BadVariableNameSettings"/>
-        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.BadVariableName"/>
+        <applicationService serviceImplementation="codeemoji.inlay.ShortDescriptiveNameSettings"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.ShortDescriptiveName"/>
         <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.GetMoreThanAccessor"/>
         <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.IsReturnsMoreThanABoolean"/>
         <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.SetMethodReturns"/>

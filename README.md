@@ -8,11 +8,11 @@ programming language.
 
 The cases implemented in the plugin are listed below.
 
-### Bad Variable Name
+### Short Descriptive Name
 
 Instead of a descriptive name, the variable's name consists of a few letters.
 
-![Bad Variable Name](https://raw.githubusercontent.com/codeemoji/codeemoji-plugin/develop/docs/images/badvariablename.png)
+![Short Descriptive Name](https://raw.githubusercontent.com/codeemoji/codeemoji-plugin/develop/docs/images/shortdescriptivename.png)
 
 ### Getter More Than Accessor
 

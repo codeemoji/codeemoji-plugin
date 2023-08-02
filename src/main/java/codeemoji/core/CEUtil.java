@@ -98,8 +98,8 @@ public class CEUtil {
     }
 
     public static boolean isPluralForm(String name) {
-        if (name != null) {
-            String word = getLastWordWithUpperCase(name);
+        if (name != null && name.trim().length() > 1) {
+            String word = identifyLastWordWithUpperCase(name);
             if (isIrregularPluralForm(word)) {
                 return true;
             } else return isCommonPluralForm(word);
@@ -107,7 +107,7 @@ public class CEUtil {
         return false;
     }
 
-    private static String getLastWordWithUpperCase(String name) {
+    private static String identifyLastWordWithUpperCase(String name) {
         String result = null;
         Pattern pattern = Pattern.compile("\\b[A-Z][a-zA-Z]*\\b");
         Matcher matcher = pattern.matcher(name);
@@ -177,5 +177,9 @@ public class CEUtil {
             return identifyFirstQualifier(child);
         }
         return child;
+    }
+
+    public static boolean hasAUniqueQualifier(@NotNull PsiReferenceExpression expression) {
+        return !expression.getText().contains(".");
     }
 }
