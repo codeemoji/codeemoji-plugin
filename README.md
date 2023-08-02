@@ -8,7 +8,7 @@ programming language.
 
 <!-- TOC -->
 
-* [Setup and Use <a name="setup_and_use"></a>](#setup-and-use-a-namesetupandusea)
+* [Setup and Use](#setup-and-use)
     * [Prerequisites](#prerequisites)
     * [How to install](#how-to-install)
     * [How to configure](#how-to-configure)
