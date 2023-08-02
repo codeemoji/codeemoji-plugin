@@ -59,13 +59,26 @@ tasks {
         untilBuild.set(properties("pluginUntilBuild"))
         pluginDescription.set(
             projectDir.resolve("README.md").readText().lines().run {
-                val start = "<!-- Plugin description -->"
-                val end = "<!-- Plugin description end -->"
+                val start = "<!-- DESCRIPTION HEADER BEGIN -->"
+                val end = "<!-- DESCRIPTION HEADER END -->"
                 if (!containsAll(listOf(start, end))) {
-                    throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
+                    throw GradleException("DESCRIPTION HEADER section not found in README.md:\n$start ... $end")
                 }
                 subList(indexOf(start) + 1, indexOf(end))
-            }.joinToString("\n").run { markdownToHTML(this) }
+            }.joinToString("\n").run {
+                val header = markdownToHTML(this)
+                projectDir.resolve("FOOTER.md").readText().lines().run {
+                    val start = "<!-- DESCRIPTION FOOTER BEGIN -->"
+                    val end = "<!-- DESCRIPTION FOOTER END -->"
+                    if (!containsAll(listOf(start, end))) {
+                        throw GradleException("DESCRIPTION FOOTER section not found in FOOTER.md:\n$start ... $end")
+                    }
+                    subList(indexOf(start) + 1, indexOf(end))
+                }.joinToString("\n").run {
+                    header + markdownToHTML(this)
+
+                }
+            }
         )
         changeNotes.set(changelog.renderItem(changelog.getLatest(), Changelog.OutputType.HTML))
     }

@@ -1,10 +1,13 @@
-<!-- Plugin description -->
+<!-- DESCRIPTION HEADER BEGIN -->
 
 # Intellij codƎEmoji Plugin
 
-**codƎEmoji** is an Intellij IDE plugin that inserts inlay hints in the context of code augmentation. The inlay hints inserted with the plugin
-are made from emojis for anti-pattern cases, allowing the developer to identify name violations in the code. The plugin works for the **Java**
-programming language.
+**codƎEmoji** is an Intellij IDE plugin for Java, that inserts inlay hints in the context of code augmentation. The inlay hints inserted with the
+plugin are made from emojis for anti-pattern cases, allowing the mainer to identify name violations in the code. In future versions, the plugin
+will be able to insert inlay hints with emojis for invisible feature cases, in addition to displaying inlay hints without emojis for invisible
+annotations.
+
+<!-- DESCRIPTION HEADER END -->
 
 <!-- TOC -->
 
@@ -44,22 +47,24 @@ programming language.
 
 ### How to install
 
-Download the latest release zip file (**codEEmojiPlugin-x.x.x.zip**) available
-from [Releases](https://github.com/codeemoji/codeemoji-plugin/releases), where **x.x.x** is the version number.
+- Download the latest release zip file (**codEEmojiPlugin-x.x.x.zip**) available
+  from [Releases](https://github.com/codeemoji/codeemoji-plugin/releases), where **x.x.x** is the version number.
 
-![How to Download](https://raw.githubusercontent.com/codeemoji/codeemoji-plugin/develop/docs/images/howtodownload.png)
+![How to Download](https://raw.githubusercontent.com/codeemoji/codeemoji-plugin/main/docs/images/howtodownload.png)
 
-Open Intellij IDEA and navigate to **_"File>Settings>Plugins"_** menu. Click on the gear icon and the "**_Install Plugin From Disk..._**" option.
-Select the downloaded zip file and click "**_OK_**".
+- Open Intellij IDEA and navigate to **_"File>Settings>Plugins"_** menu. Click on the gear icon and the "**_Install Plugin From Disk..._**" option.
+  Select the downloaded zip file and click "**_OK_**".
 
-![How to Install](https://raw.githubusercontent.com/codeemoji/codeemoji-plugin/develop/docs/images/howtoinstall.png)
+![How to Install](https://raw.githubusercontent.com/codeemoji/codeemoji-plugin/main/docs/images/howtoinstall.png)
+
+- Restart IDE.
 
 ### How to configure
 
 The plugin creates new Inlay Hints. **All are enabled by default when installing the plugin**. To disable hinlay hints or configure options
 that are available for each one, go to "**_File>Settings>Editor>Inlay Hints_**". Click "**_Other>Java_**".
 
-![How to Configure](https://raw.githubusercontent.com/codeemoji/codeemoji-plugin/develop/docs/images/howtoconfigure.png)
+![How to Configure](https://raw.githubusercontent.com/codeemoji/codeemoji-plugin/main/docs/images/howtoconfigure.png)
 
 ## Naming Violation Cases
 
@@ -201,9 +206,6 @@ This work was supported by the **Free University of Bozen-Bolzano - UNIBZ**.
 
 ## References
 
-Arnaoudova, Venera, Massimiliano Di Penta, and Giuliano Antoniol. "Linguistic antipatterns: What they are and how developers perceive them."
-_Empirical
-Software Engineering_ 21 (2016): 104-158.
-
-<!-- Plugin description end -->
+Arnaoudova, Venera, Massimiliano Di Penta, and Giuliano Antoniol. "Linguistic antipatterns: What they are and how mainers perceive them."
+_Empirical Software Engineering_ 21 (2016): 104-158.
 
