@@ -38,7 +38,8 @@ public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NoSettings> {
             @Override
             public boolean isHintable(@NotNull PsiVariable element) {
                 if (element.getName() != null) {
-                    return element.getName().startsWith("is") && !element.getType().equals(PsiTypes.booleanType());
+                    return element.getName().length() > 2 &&
+                            element.getName().startsWith("is") && !element.getType().equals(PsiTypes.booleanType());
                 }
                 return false;
             }

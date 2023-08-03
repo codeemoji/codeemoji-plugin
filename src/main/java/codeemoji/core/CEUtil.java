@@ -133,6 +133,9 @@ public class CEUtil {
     }
 
     private static boolean isCommonPluralForm(String word) {
+        if (isSuffixWhiteList(word)) {
+            return false;
+        }
         String[] pluralPatterns = {
                 ".*s$", ".*[aeiou]ys$", ".*[^s]ses$", ".*[^z]zes$", ".*[^i]xes$",
                 ".*[cs]hes$", ".*[^aeiou]ies$", ".*[^aeiou]ices$", ".*[aeiou]es$",
@@ -147,25 +150,26 @@ public class CEUtil {
     }
 
     public static boolean containsOnlySpecialCharacters(String name) {
-        String alphaNumericChars = "^[^a-zA-Z0-9]+$";
-        Pattern pattern = Pattern.compile(alphaNumericChars);
+        String regex = "^[^a-zA-Z0-9]+$";
+        Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(name);
         return matcher.matches();
     }
 
-    public static boolean isNotGenericType(PsiTypeElement typeElement) {
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean isGenericType(PsiTypeElement typeElement) {
         //TODO: Implement
-        return true;
+        return false;
     }
 
-    public static boolean isNotNumericType(@NotNull PsiTypeElement typeElement) {
+    public static boolean isNumericType(@NotNull PsiTypeElement typeElement) {
         PsiType type = typeElement.getType();
-        return !(PsiTypes.intType().isAssignableFrom(type)
+        return PsiTypes.intType().isAssignableFrom(type)
                 || PsiTypes.longType().isAssignableFrom(type)
                 || PsiTypes.floatType().isAssignableFrom(type)
                 || PsiTypes.doubleType().isAssignableFrom(type)
                 || PsiTypes.byteType().isAssignableFrom(type)
-                || PsiTypes.shortType().isAssignableFrom(type));
+                || PsiTypes.shortType().isAssignableFrom(type);
     }
 
     public static @Nullable PsiElement identifyFirstQualifier(@NotNull PsiElement element) {
@@ -181,5 +185,20 @@ public class CEUtil {
 
     public static boolean hasAUniqueQualifier(@NotNull PsiReferenceExpression expression) {
         return !expression.getText().contains(".");
+    }
+
+    private static boolean isSuffixWhiteList(@NotNull String name) {
+        String formattedName = name.trim().toLowerCase();
+        if (formattedName.isEmpty()) {
+            return false;
+        }
+        //TODO: implement configuration option
+        String[] whiteListWords = {"class", "list", "is"};
+        for (String word : whiteListWords) {
+            if (formattedName.endsWith(word)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -30,10 +30,17 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> ex
         }
     }
 
-    public void addInlayOnEditor(A element, InlayHintsSink sink) {
+    public void addInlayOnEditor(@Nullable A element, InlayHintsSink sink) {
         if (element != null) {
-            sink.addInlineElement(element.getTextOffset() + element.getTextLength(), false, getInlay(), false);
+            sink.addInlineElement(calcOffset(element), false, getInlay(), false);
         }
+    }
+
+    public int calcOffset(@Nullable A element) {
+        if (element != null) {
+            return element.getTextOffset() + element.getTextLength();
+        }
+        return 0;
     }
 
     private InlayPresentation buildInlay(@Nullable CESymbol symbol) {

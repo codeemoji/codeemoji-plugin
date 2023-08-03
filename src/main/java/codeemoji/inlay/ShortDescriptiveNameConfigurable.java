@@ -16,7 +16,7 @@ public record ShortDescriptiveNameConfigurable(ShortDescriptiveNameSettings sett
         jSpinner.setValue(settings().getNumberOfLetters());
         jSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             @Override
-            public void stateChanged(ChangeEvent e) {
+            public void stateChanged(ChangeEvent event) {
                 settings().setNumberOfLetters((Integer) jSpinner.getValue());
                 changeListener.settingsChanged();
             }

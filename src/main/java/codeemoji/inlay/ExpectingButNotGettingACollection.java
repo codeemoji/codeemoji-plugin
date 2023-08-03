@@ -34,7 +34,7 @@ public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
             public boolean isHintable(@NotNull PsiMethod element) {
                 if ((element.getName().startsWith("get") || element.getName().startsWith("return")) && CEUtil.isPluralForm(element.getName())) {
                     PsiTypeElement typeElement = element.getReturnTypeElement();
-                    return CEUtil.isNotGenericType(typeElement) &&
+                    return !CEUtil.isGenericType(typeElement) &&
                             (Objects.equals(element.getReturnType(), PsiTypes.voidType()) ||
                                     (!CEUtil.isArrayType(typeElement) && !CEUtil.isIterableType(typeElement)));
                 }
