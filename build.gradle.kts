@@ -67,7 +67,7 @@ tasks {
                 subList(indexOf(start) + 1, indexOf(end))
             }.joinToString("\n").run {
                 val header = markdownToHTML(this)
-                projectDir.resolve("FOOTER.md").readText().lines().run {
+                projectDir.resolve("docs/FOOTER.md").readText().lines().run {
                     val start = "<!-- DESCRIPTION FOOTER BEGIN -->"
                     val end = "<!-- DESCRIPTION FOOTER END -->"
                     if (!containsAll(listOf(start, end))) {
