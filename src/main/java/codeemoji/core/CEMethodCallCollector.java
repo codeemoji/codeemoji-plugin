@@ -6,13 +6,13 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class CEMethodCallExpressionCollector extends CECollector<PsiMethod, PsiMethodCallExpression> {
+public abstract class CEMethodCallCollector extends CECollector<PsiMethod, PsiMethodCallExpression> {
 
-    public CEMethodCallExpressionCollector(@NotNull Editor editor, @NotNull String keyId) {
+    public CEMethodCallCollector(@NotNull Editor editor, @NotNull String keyId) {
         super(editor, keyId, new CESymbol());
     }
 
-    public CEMethodCallExpressionCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    public CEMethodCallCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);
     }
 

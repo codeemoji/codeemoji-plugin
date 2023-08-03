@@ -1,6 +1,6 @@
 package codeemoji.inlay;
 
-import codeemoji.core.CEMethodCallExpressionCollector;
+import codeemoji.core.CEMethodCallCollector;
 import codeemoji.core.CEProvider;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
@@ -38,7 +38,7 @@ public class ShowingSynchronizedModifier extends CEProvider<NoSettings> {
 
     @Override
     public InlayHintsCollector buildCollector(Editor editor) {
-        return new CEMethodCallExpressionCollector(editor, getKeyId(), SEMAPHORE) {
+        return new CEMethodCallCollector(editor, getKeyId(), SEMAPHORE) {
             @Override
             public boolean isHintable(@NotNull PsiMethod element) {
                 return element.getModifierList().hasExplicitModifier(SYNCHRONIZED);
