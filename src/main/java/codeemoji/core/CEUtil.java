@@ -158,19 +158,35 @@ public class CEUtil<S> {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isGenericType(@NotNull PsiElement element, PsiTypeElement typeElement) {
-        PsiElement parent = element.getParent();
-        if (parent instanceof PsiClass clazz) {
-            PsiTypeParameterList tpl = clazz.getTypeParameterList();
-            if (tpl != null) {
-                PsiTypeParameter[] tps = tpl.getTypeParameters();
-                for (PsiTypeParameter tp : tps) {
-                    if (typeElement.getText().equalsIgnoreCase(tp.getText())) {
-                        return true;
-                    }
+        PsiTypeParameterList tpl = searchGenericTypesList(element);
+        if (tpl != null) {
+            PsiTypeParameter[] tps = tpl.getTypeParameters();
+            for (PsiTypeParameter tp : tps) {
+                if (typeElement.getText().equalsIgnoreCase(tp.getText())) {
+                    return true;
                 }
             }
         }
+
         return false;
+    }
+
+    @Nullable
+    private static PsiTypeParameterList searchGenericTypesList(@NotNull PsiElement son) {
+        PsiTypeParameterList result = null;
+        PsiElement father = son.getParent();
+        if (father instanceof PsiClass clazz) {
+            result = clazz.getTypeParameterList();
+        } else if (father instanceof PsiParameterList plist) {
+            PsiElement gramFather = plist.getParent();
+            if (gramFather instanceof PsiMethod method) {
+                PsiElement greatGramFather = method.getParent();
+                if (greatGramFather instanceof PsiClass clazz) {
+                    result = clazz.getTypeParameterList();
+                }
+            }
+        }
+        return result;
     }
 
     public static boolean isNumericType(@NotNull PsiTypeElement typeElement) {
