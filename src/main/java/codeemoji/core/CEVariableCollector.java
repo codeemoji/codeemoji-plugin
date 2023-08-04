@@ -98,4 +98,16 @@ public abstract class CEVariableCollector extends CECollector<PsiVariable, PsiEl
             }
         });
     }
+
+    public int calcOffset(@Nullable PsiElement element) {
+        if (element != null) {
+            int length = element.getTextLength();
+            String attr = "this.";
+            if (element.getText().contains(attr)) {
+                length -= attr.length();
+            }
+            return element.getTextOffset() + length;
+        }
+        return 0;
+    }
 }

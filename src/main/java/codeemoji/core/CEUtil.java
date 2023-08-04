@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CEUtil {
+public class CEUtil<S> {
 
     public static boolean isNotPreviewEditor(@NotNull Editor editor) {
         return !editor.getEditorKind().name().equalsIgnoreCase("UNTYPED");
@@ -100,6 +100,9 @@ public class CEUtil {
     public static boolean isPluralForm(String name) {
         if (name != null && name.trim().length() > 1) {
             String word = identifyLastWordWithUpperCase(name);
+            if (isSuffixWhiteList(name)) {
+                return false;
+            }
             if (isIrregularPluralForm(word)) {
                 return true;
             } else return isCommonPluralForm(word);
@@ -133,9 +136,6 @@ public class CEUtil {
     }
 
     private static boolean isCommonPluralForm(String word) {
-        if (isSuffixWhiteList(word)) {
-            return false;
-        }
         String[] pluralPatterns = {
                 ".*s$", ".*[aeiou]ys$", ".*[^s]ses$", ".*[^z]zes$", ".*[^i]xes$",
                 ".*[cs]hes$", ".*[^aeiou]ies$", ".*[^aeiou]ices$", ".*[aeiou]es$",
@@ -157,8 +157,19 @@ public class CEUtil {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean isGenericType(PsiTypeElement typeElement) {
-        //TODO: Implement
+    public static boolean isGenericType(@NotNull PsiElement element, PsiTypeElement typeElement) {
+        PsiElement parent = element.getParent();
+        if (parent instanceof PsiClass clazz) {
+            PsiTypeParameterList tpl = clazz.getTypeParameterList();
+            if (tpl != null) {
+                PsiTypeParameter[] tps = tpl.getTypeParameters();
+                for (PsiTypeParameter tp : tps) {
+                    if (typeElement.getText().equalsIgnoreCase(tp.getText())) {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 

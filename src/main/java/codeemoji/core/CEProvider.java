@@ -35,7 +35,6 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
     }
 
     @Nls(capitalization = Nls.Capitalization.Sentence)
-
     @Override
     public @NotNull String getName() {
         try {
@@ -77,8 +76,8 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
                     throw new RuntimeException("Settings must be 'NoSettings' or 'PersistentStateComponent' type.");
                 }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                     NoSuchMethodException e) {
-                throw new RuntimeException(e);
+                     NoSuchMethodException ex) {
+                throw new RuntimeException(ex);
             }
         }
         return settings;

@@ -42,7 +42,7 @@ public class SaysManyButContainsOne extends CEProvider<NoSettings> {
                 PsiTypeElement typeElement = element.getTypeElement();
                 return typeElement != null &&
                         CEUtil.isPluralForm(element.getName()) &&
-                        !CEUtil.isGenericType(typeElement) &&
+                        !CEUtil.isGenericType(element, typeElement) &&
                         !CEUtil.isNumericType(typeElement) &&
                         !CEUtil.isArrayType(typeElement) &&
                         !CEUtil.isIterableType(typeElement) &&
