@@ -1,4 +1,4 @@
-package codeemoji.inlay;
+package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.CEMethodCollector;
 import codeemoji.core.CEProvider;
@@ -13,14 +13,16 @@ import java.util.Objects;
 
 import static codeemoji.core.CEConstants.CONFUSED;
 
-public class NotAnsweredQuestion extends CEProvider<NoSettings> {
+public class ValidationMethodDoesNotConfirm extends CEProvider<NoSettings> {
 
     @Override
     public String getPreviewText() {
         return """
                 public class Customer {
-                    public void isHuman() {
-                        doSomething();
+                    private void checkClose() {
+                        if(connection.isFinished()){
+                            close();
+                        }
                     }
                 }""";
     }
@@ -30,7 +32,7 @@ public class NotAnsweredQuestion extends CEProvider<NoSettings> {
         return new CEMethodCollector(editor, getKeyId(), CONFUSED) {
             @Override
             public boolean isHintable(@NotNull PsiMethod element) {
-                return element.getName().startsWith("is") && Objects.equals(element.getReturnType(), PsiTypes.voidType());
+                return (element.getName().startsWith("validate") || element.getName().startsWith("check") || element.getName().startsWith("ensure")) && !Objects.equals(element.getReturnType(), PsiTypes.booleanType());
             }
         };
 

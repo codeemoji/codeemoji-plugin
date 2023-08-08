@@ -1,4 +1,4 @@
-package codeemoji.inlay;
+package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.CEMethodCollector;
 import codeemoji.core.CEProvider;
@@ -13,15 +13,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-import static codeemoji.core.CEConstants.MANY;
+import static codeemoji.core.CEConstants.ONE;
 
-public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings> {
+public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
 
     @Override
     public String getPreviewText() {
         return """
                 public class Customer {
-                    public Object[] getParameter() {
+                    public byte getBytes() {
                         doSomething();
                     }
                 }""";
@@ -29,15 +29,18 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings
 
     @Override
     public InlayHintsCollector buildCollector(Editor editor) {
-        return new CEMethodCollector(editor, getKeyId(), MANY) {
+        return new CEMethodCollector(editor, getKeyId(), ONE) {
             @Override
             public boolean isHintable(@NotNull PsiMethod element) {
-                if ((element.getName().startsWith("get") || element.getName().startsWith("return")) && !Objects.equals(element.getReturnType(), PsiTypes.voidType()) && !CEUtil.isPluralForm(element.getName())) {
+                if ((element.getName().startsWith("get") || element.getName().startsWith("return")) && CEUtil.isPluralForm(element.getName())) {
                     PsiTypeElement typeElement = element.getReturnTypeElement();
-                    return CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement);
+                    return !CEUtil.isGenericType(element, typeElement) &&
+                            (Objects.equals(element.getReturnType(), PsiTypes.voidType()) ||
+                                    (!CEUtil.isArrayType(typeElement) && !CEUtil.isIterableType(typeElement)));
                 }
                 return false;
             }
+
         };
     }
 }

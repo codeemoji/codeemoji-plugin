@@ -1,4 +1,4 @@
-package codeemoji.inlay;
+package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.CEMethodCollector;
 import codeemoji.core.CEProvider;

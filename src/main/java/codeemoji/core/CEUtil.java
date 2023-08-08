@@ -82,6 +82,7 @@ public class CEUtil<S> {
         return false;
     }
 
+    @Contract("_, null -> false")
     public static boolean sameNameAsType(PsiTypeElement typeElement, String fieldName) {
         if (fieldName != null) {
             try {
@@ -90,11 +91,17 @@ public class CEUtil<S> {
                 if (index > 0) {
                     typeName = typeName.substring(0, index);
                 }
+                typeName = calcLastWordCapitalized(typeName);
                 return fieldName.equalsIgnoreCase(typeName);
             } catch (RuntimeException ignored) {
             }
         }
         return false;
+    }
+
+    private static String calcLastWordCapitalized(@NotNull String word) {
+        String[] words = word.split("(?=[A-Z])");
+        return words[words.length - 1];
     }
 
     public static boolean isPluralForm(String name) {

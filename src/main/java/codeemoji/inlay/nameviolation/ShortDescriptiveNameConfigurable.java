@@ -1,4 +1,4 @@
-package codeemoji.inlay;
+package codeemoji.inlay.nameviolation;
 
 import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;

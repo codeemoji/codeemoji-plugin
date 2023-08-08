@@ -93,4 +93,5 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
     }
 
     public abstract InlayHintsCollector buildCollector(Editor editor);
+
 }

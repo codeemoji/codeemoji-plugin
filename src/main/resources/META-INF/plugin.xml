@@ -11,21 +11,22 @@
     <depends>com.intellij.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="codeemoji.inlay.ShortDescriptiveNameSettings"/>
-        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.ShortDescriptiveName"/>
-        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.GetMoreThanAccessor"/>
-        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.IsReturnsMoreThanABoolean"/>
-        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.SetMethodReturns"/>
-        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.ExpectingButNotGettingASingleInstance"/>
-        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.ValidationMethodDoesNotConfirm"/>
-        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.GetMethodDoesNotReturn"/>
-        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.NotAnsweredQuestion"/>
-        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.TransformMethodDoesNotReturn"/>
-        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.ExpectingButNotGettingACollection"/>
-        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.SaysOneButContainsMany"/>
-        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.NameSuggestsBooleanByTypeDoesNot"/>
-        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.SaysManyButContainsOne"/>
-        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.NameContainsOnlySpecialCharacters"/>
-        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.ShowingSynchronizedModifier"/>
+        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.ShortDescriptiveNameSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.invisiblefeatures.ShowingModifiersSettings"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.ShortDescriptiveName"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.GetMoreThanAccessor"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.IsReturnsMoreThanABoolean"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.SetMethodReturns"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.ExpectingButNotGettingASingleInstance"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.ValidationMethodDoesNotConfirm"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.GetMethodDoesNotReturn"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.NotAnsweredQuestion"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.TransformMethodDoesNotReturn"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.ExpectingButNotGettingACollection"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.SaysOneButContainsMany"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.NameSuggestsBooleanByTypeDoesNot"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.SaysManyButContainsOne"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.NameContainsOnlySpecialCharacters"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.invisiblefeatures.ShowingModifiers"/>
     </extensions>
 </idea-plugin>

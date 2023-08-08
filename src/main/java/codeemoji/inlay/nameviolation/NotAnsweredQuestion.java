@@ -1,4 +1,4 @@
-package codeemoji.inlay;
+package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.CEMethodCollector;
 import codeemoji.core.CEProvider;
@@ -13,14 +13,14 @@ import java.util.Objects;
 
 import static codeemoji.core.CEConstants.CONFUSED;
 
-public class TransformMethodDoesNotReturn extends CEProvider<NoSettings> {
+public class NotAnsweredQuestion extends CEProvider<NoSettings> {
 
     @Override
     public String getPreviewText() {
         return """
                 public class Customer {
-                    public void translateText(String text) {
-                        text = doSomething(text);
+                    public void isHuman() {
+                        doSomething();
                     }
                 }""";
     }
@@ -30,9 +30,10 @@ public class TransformMethodDoesNotReturn extends CEProvider<NoSettings> {
         return new CEMethodCollector(editor, getKeyId(), CONFUSED) {
             @Override
             public boolean isHintable(@NotNull PsiMethod element) {
-                return (element.getName().startsWith("translate") || element.getName().startsWith("transform") || element.getName().startsWith("convert")) && Objects.equals(element.getReturnType(), PsiTypes.voidType());
+                return element.getName().startsWith("is") && Objects.equals(element.getReturnType(), PsiTypes.voidType());
             }
         };
+
     }
 }
 

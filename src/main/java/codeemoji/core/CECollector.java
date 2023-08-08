@@ -22,12 +22,12 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> ex
         this.inlay = buildInlay(symbol);
     }
 
-    public String getTooltip() {
-        try {
-            return CEBundle.getInstance().getBundle().getString("inlay." + getKeyId() + ".tooltip");
-        } catch (RuntimeException ex) {
-            return null;
+    @Override
+    public boolean collect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+        if (isEnabled()) {
+            return processCollect(psiElement, editor, inlayHintsSink);
         }
+        return false;
     }
 
     public void addInlayOnEditor(@Nullable A element, InlayHintsSink sink) {
@@ -56,6 +56,20 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> ex
         }
         return inlay;
     }
+
+    private @Nullable String getTooltip() {
+        try {
+            return CEBundle.getInstance().getBundle().getString("inlay." + getKeyId() + ".tooltip");
+        } catch (RuntimeException ex) {
+            return null;
+        }
+    }
+
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public abstract boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink);
 
     public abstract boolean isHintable(@NotNull H element);
 }

@@ -1,4 +1,4 @@
-package codeemoji.inlay;
+package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.CEProvider;
 import codeemoji.core.CEUtil;
@@ -46,6 +46,7 @@ public class SaysManyButContainsOne extends CEProvider<NoSettings> {
                         !CEUtil.isNumericType(typeElement) &&
                         !CEUtil.isArrayType(typeElement) &&
                         !CEUtil.isIterableType(typeElement) &&
+                        !CEUtil.sameNameAsType(typeElement, element.getName()) &&
                         !CEUtil.containsOnlySpecialCharacters(typeElement.getText());
             }
         };
