@@ -23,6 +23,13 @@ public class ShowingModifiers extends CEMultiProvider<ShowingModifiersSettings> 
     public List<InlayHintsCollector> buildCollectors(Editor editor) {
         List<InlayHintsCollector> list = new ArrayList<>();
 
+        //class
+        list.add(new ClassModifierCollector(editor, GLOBE, PUBLIC, getSettings().isPublicClass()));
+        list.add(new ClassModifierCollector(editor, WHITE_CIRCLE, ABSTRACT, getSettings().isAbstractClass()));
+        list.add(new ClassModifierCollector(editor, MEDAL, FINAL, getSettings().isFinalClass()));
+        list.add(new ClassModifierCollector(editor, HASHTAG, STRICTFP, getSettings().isStrictFPClass()));
+        list.add(new ClassModifierCollector(editor, WHITE_FLAG, DEFAULT, getSettings().isDefaultClass()));
+
         //fields
         list.add(new FieldModifierCollector(editor, GLOBE, PUBLIC, getSettings().isPublicField()));
         list.add(new FieldModifierCollector(editor, SHIELD, PROTECTED, getSettings().isProtectedField()));

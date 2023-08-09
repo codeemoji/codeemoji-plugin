@@ -1,24 +1,24 @@
 package codeemoji.inlay.invisiblefeatures;
 
-import codeemoji.core.CEFieldReferenceCollector;
+import codeemoji.core.CEClassReferenceCollector;
 import codeemoji.core.CESymbol;
 import codeemoji.core.CEUtil;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiModifierList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static com.intellij.psi.PsiModifier.DEFAULT;
 
-public class FieldModifierCollector extends CEFieldReferenceCollector {
+public class ClassModifierCollector extends CEClassReferenceCollector {
 
     final boolean activated;
     final String modifier;
 
-    public FieldModifierCollector(@NotNull Editor editor, @Nullable CESymbol symbol,
+    public ClassModifierCollector(@NotNull Editor editor, @Nullable CESymbol symbol,
                                   String modifier, boolean activated) {
-        super(editor, modifier + "fieldmodifier", symbol);
+        super(editor, modifier + "classmodifier", symbol);
         this.activated = activated;
         this.modifier = modifier;
     }
@@ -29,7 +29,7 @@ public class FieldModifierCollector extends CEFieldReferenceCollector {
     }
 
     @Override
-    public boolean isHintable(@NotNull PsiField element) {
+    public boolean isHintable(@NotNull PsiClass element) {
         PsiModifierList psiModifierList = element.getModifierList();
         if (psiModifierList != null) {
             if (modifier.equalsIgnoreCase(DEFAULT)) {

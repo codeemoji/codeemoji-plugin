@@ -21,6 +21,8 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.intellij.psi.PsiModifier.*;
+
 public class CEUtil<S> {
 
     public static boolean isNotPreviewEditor(@NotNull Editor editor) {
@@ -215,6 +217,12 @@ public class CEUtil<S> {
             return identifyFirstQualifier(child);
         }
         return child;
+    }
+
+    public static boolean checkDefaultModifier(@NotNull PsiModifierList psiModifierList) {
+        return !(psiModifierList.hasModifierProperty(PUBLIC) ||
+                psiModifierList.hasModifierProperty(PROTECTED) ||
+                psiModifierList.hasModifierProperty(PRIVATE));
     }
 
     public static boolean hasAUniqueQualifier(@NotNull PsiReferenceExpression expression) {

@@ -18,11 +18,13 @@ public abstract class CEMethodCallCollector extends CECollector<PsiMethod, PsiMe
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
                 public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
-                    if (callExpression instanceof PsiMethodCallExpression mexp) {
-                        PsiMethod method = mexp.resolveMethod();
-                        if (method != null) {
-                            if (isHintable(method)) {
-                                addInlayOnEditor(mexp, inlayHintsSink);
+                    if (CEUtil.isNotPreviewEditor(editor)) {
+                        if (callExpression instanceof PsiMethodCallExpression mexp) {
+                            PsiMethod method = mexp.resolveMethod();
+                            if (method != null) {
+                                if (isHintable(method)) {
+                                    addInlayOnEditor(mexp, inlayHintsSink);
+                                }
                             }
                         }
                     }

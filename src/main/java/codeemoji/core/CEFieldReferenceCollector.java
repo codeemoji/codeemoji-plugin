@@ -2,14 +2,11 @@ package codeemoji.core;
 
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.JavaRecursiveElementVisitor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiJavaFile;
-import com.intellij.psi.PsiReferenceExpression;
+import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class CEFieldReferenceCollector extends CECollector<PsiReferenceExpression, PsiReferenceExpression> {
+public abstract class CEFieldReferenceCollector extends CECollector<PsiField, PsiReferenceExpression> {
 
     public CEFieldReferenceCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);
@@ -22,11 +19,15 @@ public abstract class CEFieldReferenceCollector extends CECollector<PsiReference
                 @Override
                 public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
                     if (CEUtil.isNotPreviewEditor(editor)) {
-                        if (isHintable(expression)) {
-                            addInlayOnEditor(expression, inlayHintsSink);
+                        PsiReference reference = expression.getReference();
+                        if (reference != null) {
+                            PsiElement resolveElement = reference.resolve();
+                            if (resolveElement instanceof PsiField field) {
+                                if (isHintable(field)) {
+                                    addInlayOnEditor(expression, inlayHintsSink);
+                                }
+                            }
                         }
-                    } else {
-                        //TODO: implement for preview editor
                     }
                     super.visitReferenceExpression(expression);
                 }
