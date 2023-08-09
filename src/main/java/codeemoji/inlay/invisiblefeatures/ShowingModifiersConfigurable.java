@@ -1,5 +1,6 @@
 package codeemoji.inlay.invisiblefeatures;
 
+import codeemoji.core.CEModifier;
 import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.util.ui.FormBuilder;
@@ -10,6 +11,7 @@ import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 
+import static codeemoji.core.CEModifier.*;
 import static com.intellij.psi.PsiModifier.*;
 
 public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) implements ImmediateConfigurable {
@@ -25,16 +27,19 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
         var classPanel = new JPanel();
         classPanel.setLayout(new GridLayout(9, 1));
         classPanel.setBorder(BorderFactory.createTitledBorder(emptyBorder, "Classes"));
+
         var publicClass = new JCheckBox(PUBLIC, settings().isPublicClass());
         var abstractClass = new JCheckBox(ABSTRACT, settings().isAbstractClass());
         var finalClass = new JCheckBox(FINAL, settings().isFinalClass());
         var strictFPClass = new JCheckBox(STRICTFP, settings().isStrictFPClass());
         var defaultClass = new JCheckBox(DEFAULT, settings().isDefaultClass());
-        addChangeListener(publicClass, "publicClass", changeListener);
-        addChangeListener(abstractClass, "abstractClass", changeListener);
-        addChangeListener(finalClass, "finalClass", changeListener);
-        addChangeListener(strictFPClass, "strictFPClass", changeListener);
-        addChangeListener(defaultClass, "defaultClass", changeListener);
+
+        addChangeListener(publicClass, PUBLIC_CLASS, changeListener);
+        addChangeListener(abstractClass, ABSTRACT_CLASS, changeListener);
+        addChangeListener(finalClass, FINAL_CLASS, changeListener);
+        addChangeListener(strictFPClass, STRICTFP_CLASS, changeListener);
+        addChangeListener(defaultClass, DEFAULT_CLASS, changeListener);
+
         classPanel.add(publicClass, BorderLayout.CENTER);
         classPanel.add(abstractClass, BorderLayout.CENTER);
         classPanel.add(finalClass, BorderLayout.CENTER);
@@ -45,6 +50,7 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
         var fieldsPanel = new JPanel();
         fieldsPanel.setLayout(new GridLayout(9, 1));
         fieldsPanel.setBorder(BorderFactory.createTitledBorder(emptyBorder, "Fields"));
+
         var publicField = new JCheckBox(PUBLIC, settings().isPublicField());
         var protectedField = new JCheckBox(PROTECTED, settings().isProtectedField());
         var defaultField = new JCheckBox(DEFAULT, settings().isDefaultField());
@@ -54,15 +60,17 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
         var transientField = new JCheckBox(TRANSIENT, settings().isTransientField());
         var volatileField = new JCheckBox(VOLATILE, settings().isVolatileField());
         var nativeField = new JCheckBox(NATIVE, settings().isNativeField());
-        addChangeListener(publicField, "publicField", changeListener);
-        addChangeListener(protectedField, "protectedField", changeListener);
-        addChangeListener(defaultField, "defaultField", changeListener);
-        addChangeListener(privateField, "privateField", changeListener);
-        addChangeListener(finalField, "finalField", changeListener);
-        addChangeListener(staticField, "staticField", changeListener);
-        addChangeListener(transientField, "transientField", changeListener);
-        addChangeListener(volatileField, "volatileField", changeListener);
-        addChangeListener(nativeField, "nativeField", changeListener);
+
+        addChangeListener(publicField, PUBLIC_FIELD, changeListener);
+        addChangeListener(protectedField, PROTECTED_FIELD, changeListener);
+        addChangeListener(defaultField, DEFAULT_FIELD, changeListener);
+        addChangeListener(privateField, PRIVATE_FIELD, changeListener);
+        addChangeListener(finalField, FINAL_FIELD, changeListener);
+        addChangeListener(staticField, STATIC_FIELD, changeListener);
+        addChangeListener(transientField, TRANSIENT_FIELD, changeListener);
+        addChangeListener(volatileField, VOLATILE_FIELD, changeListener);
+        addChangeListener(nativeField, NATIVE_FIELD, changeListener);
+
         fieldsPanel.add(publicField, BorderLayout.CENTER);
         fieldsPanel.add(protectedField, BorderLayout.CENTER);
         fieldsPanel.add(defaultField, BorderLayout.CENTER);
@@ -77,6 +85,7 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
         var methodsPanel = new JPanel();
         methodsPanel.setLayout(new GridLayout(9, 1));
         methodsPanel.setBorder(BorderFactory.createTitledBorder(emptyBorder, "Methods"));
+
         var publicMethod = new JCheckBox(PUBLIC, settings().isPublicMethod());
         var protectedMethod = new JCheckBox(PROTECTED, settings().isProtectedMethod());
         var defaultMethod = new JCheckBox(DEFAULT, settings().isDefaultMethod());
@@ -85,16 +94,18 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
         var synchronizedMethod = new JCheckBox(SYNCHRONIZED, settings().isSynchronizedMethod());
         var nativeMethod = new JCheckBox(NATIVE, settings().isNativeMethod());
         var strictFPMethod = new JCheckBox(STRICTFP, settings().isStrictFPMethod());
-        var defaultInInterfacesMethod = new JCheckBox(DEFAULT + " (in interfaces)", settings().isDefaultInInterfacesMethod());
-        addChangeListener(publicMethod, "publicMethod", changeListener);
-        addChangeListener(protectedMethod, "protectedMethod", changeListener);
-        addChangeListener(defaultMethod, "defaultMethod", changeListener);
-        addChangeListener(privateMethod, "privateMethod", changeListener);
-        addChangeListener(abstractMethod, "abstractMethod", changeListener);
-        addChangeListener(synchronizedMethod, "synchronizedMethod", changeListener);
-        addChangeListener(nativeMethod, "nativeMethod", changeListener);
-        addChangeListener(strictFPMethod, "strictFPMethod", changeListener);
-        addChangeListener(defaultInInterfacesMethod, "defaultInInterfacesMethod", changeListener);
+        var defaultInterfaceMethod = new JCheckBox(DEFAULT + " (in interfaces)", settings().isDefaultInterfaceMethod());
+
+        addChangeListener(publicMethod, PUBLIC_METHOD, changeListener);
+        addChangeListener(protectedMethod, PROTECTED_METHOD, changeListener);
+        addChangeListener(defaultMethod, DEFAULT_METHOD, changeListener);
+        addChangeListener(privateMethod, PRIVATE_METHOD, changeListener);
+        addChangeListener(abstractMethod, ABSTRACT_METHOD, changeListener);
+        addChangeListener(synchronizedMethod, SYNCHRONIZED_METHOD, changeListener);
+        addChangeListener(nativeMethod, NATIVE_METHOD, changeListener);
+        addChangeListener(strictFPMethod, STRICTFP_METHOD, changeListener);
+        addChangeListener(defaultInterfaceMethod, DEFAULT_INTERFACE_METHOD, changeListener);
+
         methodsPanel.add(publicMethod, BorderLayout.CENTER);
         methodsPanel.add(protectedMethod, BorderLayout.CENTER);
         methodsPanel.add(defaultMethod, BorderLayout.CENTER);
@@ -103,7 +114,7 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
         methodsPanel.add(synchronizedMethod, BorderLayout.CENTER);
         methodsPanel.add(nativeMethod, BorderLayout.CENTER);
         methodsPanel.add(strictFPMethod, BorderLayout.CENTER);
-        methodsPanel.add(defaultInInterfacesMethod, BorderLayout.CENTER);
+        methodsPanel.add(defaultInterfaceMethod, BorderLayout.CENTER);
 
         mainPanel.add(classPanel);
         mainPanel.add(fieldsPanel);
@@ -114,82 +125,83 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
                 .getPanel();
     }
 
-    private void addChangeListener(@NotNull JCheckBox checkBox, @NotNull String name, @NotNull ChangeListener changeListener) {
+    private void addChangeListener(@NotNull JCheckBox checkBox, @NotNull CEModifier ceModifier, @NotNull ChangeListener changeListener) {
         checkBox.addChangeListener(new javax.swing.event.ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent event) {
-                switch (name) {
+                var state = checkBox.isSelected();
+                switch (ceModifier) {
                     //classes
-                    case "publicClass" -> {
-                        settings().setPublicClass(checkBox.isSelected());
+                    case PUBLIC_CLASS -> {
+                        settings().setPublicClass(state);
                     }
-                    case "abstractClass" -> {
-                        settings().setAbstractClass(checkBox.isSelected());
+                    case ABSTRACT_CLASS -> {
+                        settings().setAbstractClass(state);
                     }
-                    case "finalClass" -> {
-                        settings().setFinalClass(checkBox.isSelected());
+                    case FINAL_CLASS -> {
+                        settings().setFinalClass(state);
                     }
-                    case "strictFPClass" -> {
-                        settings().setStrictFPClass(checkBox.isSelected());
+                    case STRICTFP_CLASS -> {
+                        settings().setStrictFPClass(state);
                     }
-                    case "defaultClass" -> {
-                        settings().setDefaultClass(checkBox.isSelected());
+                    case DEFAULT_CLASS -> {
+                        settings().setDefaultClass(state);
                     }
                     //fields
-                    case "publicField" -> {
-                        settings().setPublicField(checkBox.isSelected());
+                    case PUBLIC_FIELD -> {
+                        settings().setPublicField(state);
                     }
-                    case "protectedField" -> {
-                        settings().setProtectedField(checkBox.isSelected());
+                    case PROTECTED_FIELD -> {
+                        settings().setProtectedField(state);
                     }
-                    case "defaultField" -> {
-                        settings().setDefaultField(checkBox.isSelected());
+                    case DEFAULT_FIELD -> {
+                        settings().setDefaultField(state);
                     }
-                    case "privateField" -> {
-                        settings().setPrivateField(checkBox.isSelected());
+                    case PRIVATE_FIELD -> {
+                        settings().setPrivateField(state);
                     }
-                    case "finalField" -> {
-                        settings().setFinalField(checkBox.isSelected());
+                    case FINAL_FIELD -> {
+                        settings().setFinalField(state);
                     }
-                    case "staticField" -> {
-                        settings().setStaticField(checkBox.isSelected());
+                    case STATIC_FIELD -> {
+                        settings().setStaticField(state);
                     }
-                    case "transientField" -> {
-                        settings().setTransientField(checkBox.isSelected());
+                    case TRANSIENT_FIELD -> {
+                        settings().setTransientField(state);
                     }
-                    case "volatileField" -> {
-                        settings().setVolatileField(checkBox.isSelected());
+                    case VOLATILE_FIELD -> {
+                        settings().setVolatileField(state);
                     }
-                    case "nativeField" -> {
-                        settings().setNativeField(checkBox.isSelected());
+                    case NATIVE_FIELD -> {
+                        settings().setNativeField(state);
                     }
                     //methods
-                    case "publicMethod" -> {
-                        settings().setPublicMethod(checkBox.isSelected());
+                    case PUBLIC_METHOD -> {
+                        settings().setPublicMethod(state);
                     }
-                    case "protectedMethod" -> {
-                        settings().setProtectedMethod(checkBox.isSelected());
+                    case PROTECTED_METHOD -> {
+                        settings().setProtectedMethod(state);
                     }
-                    case "defaultMethod" -> {
-                        settings().setDefaultMethod(checkBox.isSelected());
+                    case DEFAULT_METHOD -> {
+                        settings().setDefaultMethod(state);
                     }
-                    case "privateMethod" -> {
-                        settings().setPrivateMethod(checkBox.isSelected());
+                    case PRIVATE_METHOD -> {
+                        settings().setPrivateMethod(state);
                     }
-                    case "abstractMethod" -> {
-                        settings().setAbstractMethod(checkBox.isSelected());
+                    case ABSTRACT_METHOD -> {
+                        settings().setAbstractMethod(state);
                     }
-                    case "synchronizedMethod" -> {
-                        settings().setSynchronizedMethod(checkBox.isSelected());
+                    case SYNCHRONIZED_METHOD -> {
+                        settings().setSynchronizedMethod(state);
                     }
-                    case "nativeMethod" -> {
-                        settings().setNativeMethod(checkBox.isSelected());
+                    case NATIVE_METHOD -> {
+                        settings().setNativeMethod(state);
                     }
-                    case "strictFPMethod" -> {
-                        settings().setStrictFPMethod(checkBox.isSelected());
+                    case STRICTFP_METHOD -> {
+                        settings().setStrictFPMethod(state);
                     }
-                    case "defaultInInterfacesMethod" -> {
-                        settings().setDefaultInInterfacesMethod(checkBox.isSelected());
+                    case DEFAULT_INTERFACE_METHOD -> {
+                        settings().setDefaultInterfaceMethod(state);
                     }
                 }
                 changeListener.settingsChanged();
