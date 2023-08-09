@@ -2,12 +2,17 @@ package codeemoji.core;
 
 import com.intellij.codeInsight.hints.FactoryInlayHintsCollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
-import com.intellij.codeInsight.hints.presentation.*;
+import com.intellij.codeInsight.hints.presentation.DynamicInsetPresentation;
+import com.intellij.codeInsight.hints.presentation.InlayPresentation;
+import com.intellij.codeInsight.hints.presentation.InlayTextMetricsStorage;
+import com.intellij.codeInsight.hints.presentation.InsetValueProvider;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 @Getter
 public abstract class CECollector<H extends PsiElement, A extends PsiElement> extends FactoryInlayHintsCollector {
@@ -44,12 +49,27 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> ex
         return 0;
     }
 
+    private InlayPresentation buildInlayWithIcon(@NotNull Icon icon) {
+        var inlay = getFactory().smallScaledIcon(icon);
+        return formatInlay(inlay);
+    }
+
+    private InlayPresentation buildInlayWithSymbol(@NotNull CESymbol symbol) {
+        String text = CEUtil.generateEmoji(symbol.getCodePoint(), symbol.getModifier(), symbol.isBackground());
+        var inlay = getFactory().smallText(text);
+        return formatInlay(inlay);
+    }
+
     private InlayPresentation buildInlay(@Nullable CESymbol symbol) {
         if (symbol == null) {
             symbol = new CESymbol();
+        } else if (symbol.getIcon() != null) {
+            return buildInlayWithIcon(symbol.getIcon());
         }
-        PresentationFactory factory = getFactory();
-        var inlay = factory.smallText(CEUtil.generateEmoji(symbol.getCodePoint(), symbol.getModifier(), symbol.isBackground()));
+        return buildInlayWithSymbol(symbol);
+    }
+
+    private InlayPresentation formatInlay(@NotNull InlayPresentation inlay) {
         InsetValueProvider inset = new InsetValueProvider() {
             @Override
             public int getTop() {
@@ -59,7 +79,7 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> ex
         inlay = new DynamicInsetPresentation(inlay, inset);
         String tooltip = getTooltip();
         if (tooltip != null) {
-            inlay = factory.withTooltip(tooltip, inlay);
+            inlay = getFactory().withTooltip(tooltip, inlay);
         }
         return inlay;
     }

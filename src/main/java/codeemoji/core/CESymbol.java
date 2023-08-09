@@ -1,6 +1,9 @@
 package codeemoji.core;
 
 import lombok.Data;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 @Data
 public class CESymbol {
@@ -8,8 +11,16 @@ public class CESymbol {
     private int codePoint = 0x2757;
     private int modifier = 0;
     private boolean background = true;
+    private Icon icon = null;
 
     public CESymbol() {
+    }
+
+    public CESymbol(@Nullable Icon icon) {
+        try {
+            this.icon = icon;
+        } catch (RuntimeException ignored) {
+        }
     }
 
     public CESymbol(int codePoint) {

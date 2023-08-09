@@ -1,5 +1,8 @@
 package codeemoji.core;
 
+import javax.swing.*;
+import java.util.Objects;
+
 public class CEConstants {
 
     public static final CESymbol SMALL_NAME = new CESymbol(0x1F90F);
@@ -19,4 +22,6 @@ public class CEConstants {
     public static final CESymbol BALLOON = new CESymbol(0x1F4AD);
     public static final CESymbol MEDAL = new CESymbol(0x1F947);
     public static final CESymbol RAISED_HAND = new CESymbol(0x270A);
+
+    public static final CESymbol FINAL_ICON = new CESymbol(new ImageIcon(Objects.requireNonNull(CEConstants.class.getResource("/icons/final.png"))));
 }

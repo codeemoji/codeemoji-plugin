@@ -35,7 +35,7 @@ public class ShowingModifiers extends CEMultiProvider<ShowingModifiersSettings> 
         list.add(new FieldModifierCollector(editor, SHIELD, PROTECTED, getSettings().isProtectedField()));
         list.add(new FieldModifierCollector(editor, WHITE_FLAG, DEFAULT, getSettings().isDefaultField()));
         list.add(new FieldModifierCollector(editor, KEY, PRIVATE, getSettings().isPrivateField()));
-        list.add(new FieldModifierCollector(editor, MEDAL, FINAL, getSettings().isFinalField()));
+        list.add(new FieldModifierCollector(editor, FINAL_ICON, FINAL, getSettings().isFinalField()));
         list.add(new FieldModifierCollector(editor, RAISED_HAND, STATIC, getSettings().isStaticField()));
         list.add(new FieldModifierCollector(editor, BALLOON, TRANSIENT, getSettings().isTransientField()));
         list.add(new FieldModifierCollector(editor, SPARKLE, VOLATILE, getSettings().isVolatileField()));
