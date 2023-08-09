@@ -2,8 +2,7 @@ package codeemoji.core;
 
 import com.intellij.codeInsight.hints.FactoryInlayHintsCollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
-import com.intellij.codeInsight.hints.presentation.PresentationFactory;
+import com.intellij.codeInsight.hints.presentation.*;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import lombok.Getter;
@@ -13,11 +12,13 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 public abstract class CECollector<H extends PsiElement, A extends PsiElement> extends FactoryInlayHintsCollector {
 
+    private final Editor editor;
     private final String keyId;
     private final InlayPresentation inlay;
 
     public CECollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor);
+        this.editor = editor;
         this.keyId = keyId;
         this.inlay = buildInlay(symbol);
     }
@@ -48,8 +49,14 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> ex
             symbol = new CESymbol();
         }
         PresentationFactory factory = getFactory();
-        var inlay = factory.text(CEUtil.generateEmoji(symbol.getCodePoint(), symbol.getModifier(), symbol.isBackground()));
-        inlay = factory.roundWithBackgroundAndSmallInset(inlay);
+        var inlay = factory.smallText(CEUtil.generateEmoji(symbol.getCodePoint(), symbol.getModifier(), symbol.isBackground()));
+        InsetValueProvider inset = new InsetValueProvider() {
+            @Override
+            public int getTop() {
+                return (new InlayTextMetricsStorage(getEditor())).getFontMetrics(true).offsetFromTop();
+            }
+        };
+        inlay = new DynamicInsetPresentation(inlay, inset);
         String tooltip = getTooltip();
         if (tooltip != null) {
             inlay = factory.withTooltip(tooltip, inlay);

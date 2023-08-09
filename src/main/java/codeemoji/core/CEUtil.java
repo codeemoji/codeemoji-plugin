@@ -82,7 +82,7 @@ public class CEUtil<S> {
         return false;
     }
 
-    @Contract("_, null -> false")
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean sameNameAsType(PsiTypeElement typeElement, String fieldName) {
         if (fieldName != null) {
             try {
@@ -92,6 +92,7 @@ public class CEUtil<S> {
                     typeName = typeName.substring(0, index);
                 }
                 typeName = calcLastWordCapitalized(typeName);
+                fieldName = calcLastWordCapitalized(fieldName);
                 return fieldName.equalsIgnoreCase(typeName);
             } catch (RuntimeException ignored) {
             }
@@ -174,7 +175,6 @@ public class CEUtil<S> {
                 }
             }
         }
-
         return false;
     }
 
