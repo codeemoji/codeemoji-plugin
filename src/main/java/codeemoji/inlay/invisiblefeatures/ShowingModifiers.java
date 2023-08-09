@@ -22,6 +22,19 @@ public class ShowingModifiers extends CEMultiProvider<ShowingModifiersSettings> 
     @Override
     public List<InlayHintsCollector> buildCollectors(Editor editor) {
         List<InlayHintsCollector> list = new ArrayList<>();
+
+        //fields
+        list.add(new FieldModifierCollector(editor, GLOBE, PUBLIC, getSettings().isPublicField()));
+        list.add(new FieldModifierCollector(editor, SHIELD, PROTECTED, getSettings().isProtectedField()));
+        list.add(new FieldModifierCollector(editor, WHITE_FLAG, DEFAULT, getSettings().isDefaultField()));
+        list.add(new FieldModifierCollector(editor, KEY, PRIVATE, getSettings().isPrivateField()));
+        list.add(new FieldModifierCollector(editor, MEDAL, FINAL, getSettings().isFinalField()));
+        list.add(new FieldModifierCollector(editor, RAISED_HAND, STATIC, getSettings().isStaticField()));
+        list.add(new FieldModifierCollector(editor, BALLOON, TRANSIENT, getSettings().isTransientField()));
+        list.add(new FieldModifierCollector(editor, SPARKLE, VOLATILE, getSettings().isVolatileField()));
+        list.add(new FieldModifierCollector(editor, GEAR, NATIVE, getSettings().isNativeField()));
+
+        //methods
         list.add(new MethodModifierCollector(editor, GLOBE, PUBLIC, getSettings().isPublicMethod()));
         list.add(new MethodModifierCollector(editor, SHIELD, PROTECTED, getSettings().isProtectedMethod()));
         list.add(new MethodModifierCollector(editor, WHITE_FLAG, DEFAULT, getSettings().isDefaultMethod()));
@@ -31,6 +44,7 @@ public class ShowingModifiers extends CEMultiProvider<ShowingModifiersSettings> 
         list.add(new MethodModifierCollector(editor, GEAR, NATIVE, getSettings().isNativeMethod()));
         list.add(new MethodModifierCollector(editor, HASHTAG, STRICTFP, getSettings().isStrictFPMethod()));
         //list.add(new MethodModifierCollector(editor, "defaultininterfacesmethodmodifier", ORANGE_CIRCLE, DEFAULT,getSettings().isDefaultInInterfacesMethod()));
+
         return list;
     }
 

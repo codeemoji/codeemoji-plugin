@@ -8,10 +8,6 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class CEClassCollector extends CECollector<PsiClass, PsiIdentifier> {
 
-    public CEClassCollector(@NotNull Editor editor, @NotNull String keyId) {
-        super(editor, keyId, new CESymbol());
-    }
-
     public CEClassCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);
     }

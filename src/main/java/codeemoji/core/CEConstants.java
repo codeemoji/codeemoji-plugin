@@ -15,4 +15,8 @@ public class CEConstants {
     public static final CESymbol WHITE_FLAG = new CESymbol(0x1F3F3);
     public static final CESymbol GEAR = new CESymbol(0x2699);
     public static final CESymbol HASHTAG = new CESymbol(0x0023);
+    public static final CESymbol SPARKLE = new CESymbol(0x2728);
+    public static final CESymbol BALLOON = new CESymbol(0x1F4AD);
+    public static final CESymbol MEDAL = new CESymbol(0x1F947);
+    public static final CESymbol RAISED_HAND = new CESymbol(0x270A);
 }

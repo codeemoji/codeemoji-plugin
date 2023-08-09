@@ -14,13 +14,9 @@ import java.util.Objects;
 @Getter
 public abstract class CEVariableCollector extends CECollector<PsiVariable, PsiElement> {
 
-    private final boolean activeField = true;
-    private final boolean activeParam = true;
-    private final boolean activeLocal = true;
-
-    public CEVariableCollector(@NotNull Editor editor, @NotNull String keyId) {
-        super(editor, keyId, new CESymbol());
-    }
+    private final boolean enabledForField = true;
+    private final boolean enabledForParam = true;
+    private final boolean enabledForLocalVariable = true;
 
     public CEVariableCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);
@@ -32,7 +28,7 @@ public abstract class CEVariableCollector extends CECollector<PsiVariable, PsiEl
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
                 public void visitField(@NotNull PsiField field) {
-                    if (isActiveField()) {
+                    if (isEnabledForField()) {
                         collectForField(field, editor, inlayHintsSink);
                     }
                     super.visitField(field);
@@ -40,7 +36,7 @@ public abstract class CEVariableCollector extends CECollector<PsiVariable, PsiEl
 
                 @Override
                 public void visitParameter(@NotNull PsiParameter parameter) {
-                    if (isActiveParam()) {
+                    if (isEnabledForParam()) {
                         collectForParam(parameter, editor, inlayHintsSink);
                     }
                     super.visitParameter(parameter);
@@ -48,7 +44,7 @@ public abstract class CEVariableCollector extends CECollector<PsiVariable, PsiEl
 
                 @Override
                 public void visitLocalVariable(@NotNull PsiLocalVariable localVariable) {
-                    if (isActiveLocal()) {
+                    if (isEnabledForLocalVariable()) {
                         collectForLocal(localVariable, editor, inlayHintsSink);
                     }
                     super.visitLocalVariable(localVariable);
