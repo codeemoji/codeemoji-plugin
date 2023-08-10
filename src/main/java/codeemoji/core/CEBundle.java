@@ -1,6 +1,7 @@
 package codeemoji.core;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ResourceBundle;
 
@@ -14,7 +15,7 @@ public class CEBundle {
         this.bundle = ResourceBundle.getBundle("CEBundle");
     }
 
-    public static CEBundle getInstance() {
+    private static CEBundle getInstance() {
         if (INSTANCE == null) {
             synchronized (CEBundle.class) {
                 if (INSTANCE == null) {
@@ -23,5 +24,9 @@ public class CEBundle {
             }
         }
         return INSTANCE;
+    }
+
+    public static @NotNull String getString(String key) {
+        return getInstance().getBundle().getString(key);
     }
 }

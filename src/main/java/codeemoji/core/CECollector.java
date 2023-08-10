@@ -85,7 +85,7 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> ex
 
     private @Nullable String getTooltip() {
         try {
-            return CEBundle.getInstance().getBundle().getString("inlay." + getKeyId() + ".tooltip");
+            return CEBundle.getString("inlay." + getKeyId() + ".tooltip");
         } catch (RuntimeException ex) {
             return null;
         }

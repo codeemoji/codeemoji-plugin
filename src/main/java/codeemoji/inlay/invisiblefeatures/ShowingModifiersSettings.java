@@ -34,7 +34,7 @@ public class ShowingModifiersSettings implements PersistentStateComponent<Showin
     boolean abstractMethod = false;
     boolean synchronizedMethod = true;
     boolean nativeMethod = true;
-    boolean defaultInterfaceMethod = true;
+    boolean defaultInterfaceMethod = false;
 
     @Override
     public ShowingModifiersSettings getState() {

@@ -1,5 +1,6 @@
 package codeemoji.inlay.invisiblefeatures;
 
+import codeemoji.core.CEBundle;
 import codeemoji.core.CEModifier;
 import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
@@ -21,23 +22,34 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
     public @NotNull JComponent createComponent(@NotNull ChangeListener changeListener) {
 
         var mainPanel = new JPanel();
-        mainPanel.setBorder(BorderFactory.createTitledBorder("Modifiers"));
+        var classPanel = new JPanel();
+        var fieldsPanel = new JPanel();
+        var methodsPanel = new JPanel();
+
+        classPanel.setLayout(new GridLayout(10, 1));
+        fieldsPanel.setLayout(new GridLayout(10, 1));
+        methodsPanel.setLayout(new GridLayout(10, 1));
+
+        mainPanel.setBorder(BorderFactory.createTitledBorder(
+                CEBundle.getString("inlay.showingmodifiers.options.title.modifiers")));
         Border emptyBorder = BorderFactory.createEmptyBorder(2, 5, 2, 5);
+        classPanel.setBorder(BorderFactory.createTitledBorder(emptyBorder,
+                CEBundle.getString("inlay.showingmodifiers.options.title.classes")));
+        fieldsPanel.setBorder(BorderFactory.createTitledBorder(emptyBorder,
+                CEBundle.getString("inlay.showingmodifiers.options.title.fields")));
+        methodsPanel.setBorder(BorderFactory.createTitledBorder(emptyBorder,
+                CEBundle.getString("inlay.showingmodifiers.options.title.methods")));
 
         //classes
-        var classPanel = new JPanel();
-        classPanel.setLayout(new GridLayout(10, 1));
-        classPanel.setBorder(BorderFactory.createTitledBorder(emptyBorder, "Classes"));
-
-        var publicClass = new JCheckBox(PUBLIC_SYM.getEmoji() + PUBLIC, settings().isPublicClass());
-        var defaultClass = new JCheckBox(DEFAULT_SYM.getEmoji() + DEFAULT, settings().isDefaultClass());
-        var finalClass = new JCheckBox(FINAL_SYM.getEmoji() + FINAL, settings().isFinalClass());
-        var abstractClass = new JCheckBox(ABSTRACT_SYM.getEmoji() + ABSTRACT, settings().isAbstractClass());
+        var publicClass = new JCheckBox(PUBLIC_SYMBOL.getEmoji() + PUBLIC, settings().isPublicClass());
+        var defaultClass = new JCheckBox(DEFAULT_SYMBOL.getEmoji() + DEFAULT, settings().isDefaultClass());
+        var finalClass = new JCheckBox(FINAL_SYMBOL.getEmoji() + FINAL, settings().isFinalClass());
+        var abstractClass = new JCheckBox(ABSTRACT_SYMBOL.getEmoji() + ABSTRACT, settings().isAbstractClass());
 
         addChangeListener(publicClass, PUBLIC_CLASS, changeListener);
-        addChangeListener(abstractClass, ABSTRACT_CLASS, changeListener);
-        addChangeListener(finalClass, FINAL_CLASS, changeListener);
         addChangeListener(defaultClass, DEFAULT_CLASS, changeListener);
+        addChangeListener(finalClass, FINAL_CLASS, changeListener);
+        addChangeListener(abstractClass, ABSTRACT_CLASS, changeListener);
 
         classPanel.add(publicClass, BorderLayout.CENTER);
         classPanel.add(defaultClass, BorderLayout.CENTER);
@@ -45,27 +57,23 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
         classPanel.add(abstractClass, BorderLayout.CENTER);
 
         //fields
-        var fieldsPanel = new JPanel();
-        fieldsPanel.setLayout(new GridLayout(10, 1));
-        fieldsPanel.setBorder(BorderFactory.createTitledBorder(emptyBorder, "Fields"));
-
-        var publicField = new JCheckBox(PUBLIC_SYM.getEmoji() + PUBLIC, settings().isPublicField());
-        var defaultField = new JCheckBox(DEFAULT_SYM.getEmoji() + DEFAULT, settings().isDefaultField());
-        var finalField = new JCheckBox(FINAL_SYM.getEmoji() + FINAL, settings().isFinalField());
-        var protectedField = new JCheckBox(PROTECTED_SYM.getEmoji() + PROTECTED, settings().isProtectedField());
-        var privateField = new JCheckBox(PRIVATE_SYM.getEmoji() + PRIVATE, settings().isPrivateField());
-        var staticField = new JCheckBox(STATIC_SYM.getEmoji() + STATIC, settings().isStaticField());
-        var transientField = new JCheckBox(TRANSIENT_SYM.getEmoji() + TRANSIENT, settings().isTransientField());
-        var volatileField = new JCheckBox(VOLATILE_SYM.getEmoji() + VOLATILE, settings().isVolatileField());
+        var publicField = new JCheckBox(PUBLIC_SYMBOL.getEmoji() + PUBLIC, settings().isPublicField());
+        var defaultField = new JCheckBox(DEFAULT_SYMBOL.getEmoji() + DEFAULT, settings().isDefaultField());
+        var finalField = new JCheckBox(FINAL_SYMBOL.getEmoji() + FINAL, settings().isFinalField());
+        var protectedField = new JCheckBox(PROTECTED_SYMBOL.getEmoji() + PROTECTED, settings().isProtectedField());
+        var privateField = new JCheckBox(PRIVATE_SYMBOL.getEmoji() + PRIVATE, settings().isPrivateField());
+        var staticField = new JCheckBox(STATIC_SYMBOL.getEmoji() + STATIC, settings().isStaticField());
+        var volatileField = new JCheckBox(VOLATILE_SYMBOL.getEmoji() + VOLATILE, settings().isVolatileField());
+        var transientField = new JCheckBox(TRANSIENT_SYMBOL.getEmoji() + TRANSIENT, settings().isTransientField());
 
         addChangeListener(publicField, PUBLIC_FIELD, changeListener);
-        addChangeListener(protectedField, PROTECTED_FIELD, changeListener);
         addChangeListener(defaultField, DEFAULT_FIELD, changeListener);
-        addChangeListener(privateField, PRIVATE_FIELD, changeListener);
         addChangeListener(finalField, FINAL_FIELD, changeListener);
+        addChangeListener(protectedField, PROTECTED_FIELD, changeListener);
+        addChangeListener(privateField, PRIVATE_FIELD, changeListener);
         addChangeListener(staticField, STATIC_FIELD, changeListener);
-        addChangeListener(transientField, TRANSIENT_FIELD, changeListener);
         addChangeListener(volatileField, VOLATILE_FIELD, changeListener);
+        addChangeListener(transientField, TRANSIENT_FIELD, changeListener);
 
         fieldsPanel.add(publicField, BorderLayout.CENTER);
         fieldsPanel.add(defaultField, BorderLayout.CENTER);
@@ -77,27 +85,23 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
         fieldsPanel.add(transientField, BorderLayout.CENTER);
 
         //methods
-        var methodsPanel = new JPanel();
-        methodsPanel.setLayout(new GridLayout(10, 1));
-        methodsPanel.setBorder(BorderFactory.createTitledBorder(emptyBorder, "Methods"));
-
-        var publicMethod = new JCheckBox(PUBLIC_SYM.getEmoji() + PUBLIC, settings().isPublicMethod());
-        var defaultMethod = new JCheckBox(DEFAULT_SYM.getEmoji() + DEFAULT, settings().isDefaultMethod());
-        var finalMethod = new JCheckBox(FINAL_SYM.getEmoji() + FINAL, settings().isPrivateMethod());
-        var abstractMethod = new JCheckBox(ABSTRACT_SYM.getEmoji() + ABSTRACT, settings().isAbstractMethod());
-        var protectedMethod = new JCheckBox(PROTECTED_SYM.getEmoji() + PROTECTED, settings().isProtectedMethod());
-        var privateMethod = new JCheckBox(PRIVATE_SYM.getEmoji() + PRIVATE, settings().isPrivateMethod());
-        var staticMethod = new JCheckBox(STATIC_SYM.getEmoji() + STATIC, settings().isPrivateMethod());
-        var synchronizedMethod = new JCheckBox(SYNCHRONIZED_SYM.getEmoji() + SYNCHRONIZED, settings().isSynchronizedMethod());
-        var nativeMethod = new JCheckBox(NATIVE_SYM.getEmoji() + NATIVE, settings().isNativeMethod());
-        var defaultInterfaceMethod = new JCheckBox(DEFAULT_INTERFACE_SYM.getEmoji() + DEFAULT + " (in interfaces)", settings().isDefaultInterfaceMethod());
+        var publicMethod = new JCheckBox(PUBLIC_SYMBOL.getEmoji() + PUBLIC, settings().isPublicMethod());
+        var defaultMethod = new JCheckBox(DEFAULT_SYMBOL.getEmoji() + DEFAULT, settings().isDefaultMethod());
+        var finalMethod = new JCheckBox(FINAL_SYMBOL.getEmoji() + FINAL, settings().isPrivateMethod());
+        var protectedMethod = new JCheckBox(PROTECTED_SYMBOL.getEmoji() + PROTECTED, settings().isProtectedMethod());
+        var privateMethod = new JCheckBox(PRIVATE_SYMBOL.getEmoji() + PRIVATE, settings().isPrivateMethod());
+        var staticMethod = new JCheckBox(STATIC_SYMBOL.getEmoji() + STATIC, settings().isPrivateMethod());
+        var abstractMethod = new JCheckBox(ABSTRACT_SYMBOL.getEmoji() + ABSTRACT, settings().isAbstractMethod());
+        var synchronizedMethod = new JCheckBox(SYNCHRONIZED_SYMBOL.getEmoji() + SYNCHRONIZED, settings().isSynchronizedMethod());
+        var nativeMethod = new JCheckBox(NATIVE_SYMBOL.getEmoji() + NATIVE, settings().isNativeMethod());
+        var defaultInterfaceMethod = new JCheckBox(DEFAULT_INTERFACE_SYMBOL.getEmoji() + DEFAULT + " (in interfaces)", settings().isDefaultInterfaceMethod());
 
         addChangeListener(publicMethod, PUBLIC_METHOD, changeListener);
-        addChangeListener(protectedMethod, PROTECTED_METHOD, changeListener);
         addChangeListener(defaultMethod, DEFAULT_METHOD, changeListener);
+        addChangeListener(finalMethod, FINAL_METHOD, changeListener);
+        addChangeListener(protectedMethod, PROTECTED_METHOD, changeListener);
         addChangeListener(privateMethod, PRIVATE_METHOD, changeListener);
         addChangeListener(staticMethod, STATIC_METHOD, changeListener);
-        addChangeListener(finalMethod, FINAL_METHOD, changeListener);
         addChangeListener(abstractMethod, ABSTRACT_METHOD, changeListener);
         addChangeListener(synchronizedMethod, SYNCHRONIZED_METHOD, changeListener);
         addChangeListener(nativeMethod, NATIVE_METHOD, changeListener);

@@ -47,7 +47,7 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
     @Nls
     @Override
     public String getProperty(@NotNull String key) {
-        return CEBundle.getInstance().getBundle().getString(key);
+        return CEBundle.getString(key);
     }
 
     @Override
