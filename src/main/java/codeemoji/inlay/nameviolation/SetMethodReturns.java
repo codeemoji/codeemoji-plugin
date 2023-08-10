@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-import static codeemoji.core.CEConstants.CONFUSED;
+import static codeemoji.inlay.nameviolation.NameViolationConstants.CONFUSED;
 
 public class SetMethodReturns extends CEProvider<NoSettings> {
 

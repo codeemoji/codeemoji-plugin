@@ -8,7 +8,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
-import static codeemoji.core.CEConstants.SMALL_NAME;
+import static codeemoji.inlay.nameviolation.NameViolationConstants.SMALL_NAME;
 
 public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSettings> {
 

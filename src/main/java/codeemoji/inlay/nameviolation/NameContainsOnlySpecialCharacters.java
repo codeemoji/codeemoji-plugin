@@ -9,7 +9,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
-import static codeemoji.core.CEConstants.CONFUSED;
+import static codeemoji.inlay.nameviolation.NameViolationConstants.CONFUSED;
 
 public class NameContainsOnlySpecialCharacters extends CEProvider<NoSettings> {
 

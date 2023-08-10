@@ -45,4 +45,35 @@ public class ShowingModifiersSettings implements PersistentStateComponent<Showin
     public void loadState(@NotNull ShowingModifiersSettings state) {
         XmlSerializerUtil.copyBean(state, this);
     }
+
+    public void change(ShowingModifiers.@NotNull Modifier modifier, boolean value) {
+        switch (modifier) {
+            //classes
+            case PUBLIC_CLASS -> setPublicClass(value);
+            case DEFAULT_CLASS -> setDefaultClass(value);
+            case FINAL_CLASS -> setFinalClass(value);
+            case ABSTRACT_CLASS -> setAbstractClass(value);
+            //fields
+            case PUBLIC_FIELD -> setPublicField(value);
+            case DEFAULT_FIELD -> setDefaultField(value);
+            case FINAL_FIELD -> setFinalField(value);
+            case PROTECTED_FIELD -> setProtectedField(value);
+            case PRIVATE_FIELD -> setPrivateField(value);
+            case STATIC_FIELD -> setStaticField(value);
+            case VOLATILE_FIELD -> setVolatileField(value);
+            case TRANSIENT_FIELD -> setTransientField(value);
+            //methods
+            case PUBLIC_METHOD -> setPublicMethod(value);
+            case DEFAULT_METHOD -> setDefaultMethod(value);
+            case FINAL_METHOD -> setFinalMethod(value);
+            case PROTECTED_METHOD -> setProtectedMethod(value);
+            case PRIVATE_METHOD -> setPrivateMethod(value);
+            case STATIC_METHOD -> setStaticMethod(value);
+            case ABSTRACT_METHOD -> setAbstractMethod(value);
+            case SYNCHRONIZED_METHOD -> setSynchronizedMethod(value);
+            case NATIVE_METHOD -> setNativeMethod(value);
+            case DEFAULT_INTERFACE_METHOD -> setDefaultInterfaceMethod(value);
+        }
+
+    }
 }

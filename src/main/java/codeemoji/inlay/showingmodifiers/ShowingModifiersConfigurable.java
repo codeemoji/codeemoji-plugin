@@ -1,7 +1,6 @@
 package codeemoji.inlay.showingmodifiers;
 
 import codeemoji.core.CEBundle;
-import codeemoji.core.CEModifier;
 import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.util.ui.FormBuilder;
@@ -9,11 +8,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.ChangeEvent;
 import java.awt.*;
 
-import static codeemoji.core.CEConstants.*;
-import static codeemoji.core.CEModifier.*;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiers.Modifier.*;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiersConstants.*;
 import static com.intellij.psi.PsiModifier.*;
 
 public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) implements ImmediateConfigurable {
@@ -41,10 +39,10 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
                 CEBundle.getString("inlay.showingmodifiers.options.title.methods")));
 
         //classes
-        var publicClass = new JCheckBox(PUBLIC_SYMBOL.getEmoji() + PUBLIC, settings().isPublicClass());
-        var defaultClass = new JCheckBox(DEFAULT_SYMBOL.getEmoji() + DEFAULT, settings().isDefaultClass());
-        var finalClass = new JCheckBox(FINAL_SYMBOL.getEmoji() + FINAL, settings().isFinalClass());
-        var abstractClass = new JCheckBox(ABSTRACT_SYMBOL.getEmoji() + ABSTRACT, settings().isAbstractClass());
+        var publicClass = new JCheckBox(PUBLIC_SYMBOL_EMOJI + PUBLIC, settings().isPublicClass());
+        var defaultClass = new JCheckBox(DEFAULT_SYMBOL_EMOJI + DEFAULT, settings().isDefaultClass());
+        var finalClass = new JCheckBox(FINAL_SYMBOL_EMOJI + FINAL, settings().isFinalClass());
+        var abstractClass = new JCheckBox(ABSTRACT_SYMBOL_EMOJI + ABSTRACT, settings().isAbstractClass());
 
         addChangeListener(publicClass, PUBLIC_CLASS, changeListener);
         addChangeListener(defaultClass, DEFAULT_CLASS, changeListener);
@@ -57,14 +55,14 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
         classPanel.add(abstractClass, BorderLayout.CENTER);
 
         //fields
-        var publicField = new JCheckBox(PUBLIC_SYMBOL.getEmoji() + PUBLIC, settings().isPublicField());
-        var defaultField = new JCheckBox(DEFAULT_SYMBOL.getEmoji() + DEFAULT, settings().isDefaultField());
-        var finalField = new JCheckBox(FINAL_SYMBOL.getEmoji() + FINAL, settings().isFinalField());
-        var protectedField = new JCheckBox(PROTECTED_SYMBOL.getEmoji() + PROTECTED, settings().isProtectedField());
-        var privateField = new JCheckBox(PRIVATE_SYMBOL.getEmoji() + PRIVATE, settings().isPrivateField());
-        var staticField = new JCheckBox(STATIC_SYMBOL.getEmoji() + STATIC, settings().isStaticField());
-        var volatileField = new JCheckBox(VOLATILE_SYMBOL.getEmoji() + VOLATILE, settings().isVolatileField());
-        var transientField = new JCheckBox(TRANSIENT_SYMBOL.getEmoji() + TRANSIENT, settings().isTransientField());
+        var publicField = new JCheckBox(PUBLIC_SYMBOL_EMOJI + PUBLIC, settings().isPublicField());
+        var defaultField = new JCheckBox(DEFAULT_SYMBOL_EMOJI + DEFAULT, settings().isDefaultField());
+        var finalField = new JCheckBox(FINAL_SYMBOL_EMOJI + FINAL, settings().isFinalField());
+        var protectedField = new JCheckBox(PROTECTED_SYMBOL_EMOJI + PROTECTED, settings().isProtectedField());
+        var privateField = new JCheckBox(PRIVATE_SYMBOL_EMOJI + PRIVATE, settings().isPrivateField());
+        var staticField = new JCheckBox(STATIC_SYMBOL_EMOJI + STATIC, settings().isStaticField());
+        var volatileField = new JCheckBox(VOLATILE_SYMBOL_EMOJI + VOLATILE, settings().isVolatileField());
+        var transientField = new JCheckBox(TRANSIENT_SYMBOL_EMOJI + TRANSIENT, settings().isTransientField());
 
         addChangeListener(publicField, PUBLIC_FIELD, changeListener);
         addChangeListener(defaultField, DEFAULT_FIELD, changeListener);
@@ -85,16 +83,16 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
         fieldsPanel.add(transientField, BorderLayout.CENTER);
 
         //methods
-        var publicMethod = new JCheckBox(PUBLIC_SYMBOL.getEmoji() + PUBLIC, settings().isPublicMethod());
-        var defaultMethod = new JCheckBox(DEFAULT_SYMBOL.getEmoji() + DEFAULT, settings().isDefaultMethod());
-        var finalMethod = new JCheckBox(FINAL_SYMBOL.getEmoji() + FINAL, settings().isPrivateMethod());
-        var protectedMethod = new JCheckBox(PROTECTED_SYMBOL.getEmoji() + PROTECTED, settings().isProtectedMethod());
-        var privateMethod = new JCheckBox(PRIVATE_SYMBOL.getEmoji() + PRIVATE, settings().isPrivateMethod());
-        var staticMethod = new JCheckBox(STATIC_SYMBOL.getEmoji() + STATIC, settings().isPrivateMethod());
-        var abstractMethod = new JCheckBox(ABSTRACT_SYMBOL.getEmoji() + ABSTRACT, settings().isAbstractMethod());
-        var synchronizedMethod = new JCheckBox(SYNCHRONIZED_SYMBOL.getEmoji() + SYNCHRONIZED, settings().isSynchronizedMethod());
-        var nativeMethod = new JCheckBox(NATIVE_SYMBOL.getEmoji() + NATIVE, settings().isNativeMethod());
-        var defaultInterfaceMethod = new JCheckBox(DEFAULT_INTERFACE_SYMBOL.getEmoji() + DEFAULT + " (in interfaces)", settings().isDefaultInterfaceMethod());
+        var publicMethod = new JCheckBox(PUBLIC_SYMBOL_EMOJI + PUBLIC, settings().isPublicMethod());
+        var defaultMethod = new JCheckBox(DEFAULT_SYMBOL_EMOJI + DEFAULT, settings().isDefaultMethod());
+        var finalMethod = new JCheckBox(FINAL_SYMBOL_EMOJI + FINAL, settings().isPrivateMethod());
+        var protectedMethod = new JCheckBox(PROTECTED_SYMBOL_EMOJI + PROTECTED, settings().isProtectedMethod());
+        var privateMethod = new JCheckBox(PRIVATE_SYMBOL_EMOJI + PRIVATE, settings().isPrivateMethod());
+        var staticMethod = new JCheckBox(STATIC_SYMBOL_EMOJI + STATIC, settings().isPrivateMethod());
+        var abstractMethod = new JCheckBox(ABSTRACT_SYMBOL_EMOJI + ABSTRACT, settings().isAbstractMethod());
+        var synchronizedMethod = new JCheckBox(SYNCHRONIZED_SYMBOL_EMOJI + SYNCHRONIZED, settings().isSynchronizedMethod());
+        var nativeMethod = new JCheckBox(NATIVE_SYMBOL_EMOJI + NATIVE, settings().isNativeMethod());
+        var defaultInterfaceMethod = new JCheckBox(DEFAULT_INTERFACE_SYMBOL_EMOJI + DEFAULT + " (in interfaces)", settings().isDefaultInterfaceMethod());
 
         addChangeListener(publicMethod, PUBLIC_METHOD, changeListener);
         addChangeListener(defaultMethod, DEFAULT_METHOD, changeListener);
@@ -127,84 +125,10 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
                 .getPanel();
     }
 
-    private void addChangeListener(@NotNull JCheckBox checkBox, @NotNull CEModifier ceModifier, @NotNull ChangeListener changeListener) {
-        checkBox.addChangeListener(new javax.swing.event.ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent event) {
-                var state = checkBox.isSelected();
-                switch (ceModifier) {
-                    //classes
-                    case PUBLIC_CLASS -> {
-                        settings().setPublicClass(state);
-                    }
-                    case ABSTRACT_CLASS -> {
-                        settings().setAbstractClass(state);
-                    }
-                    case FINAL_CLASS -> {
-                        settings().setFinalClass(state);
-                    }
-                    case DEFAULT_CLASS -> {
-                        settings().setDefaultClass(state);
-                    }
-                    //fields
-                    case PUBLIC_FIELD -> {
-                        settings().setPublicField(state);
-                    }
-                    case PROTECTED_FIELD -> {
-                        settings().setProtectedField(state);
-                    }
-                    case DEFAULT_FIELD -> {
-                        settings().setDefaultField(state);
-                    }
-                    case PRIVATE_FIELD -> {
-                        settings().setPrivateField(state);
-                    }
-                    case FINAL_FIELD -> {
-                        settings().setFinalField(state);
-                    }
-                    case STATIC_FIELD -> {
-                        settings().setStaticField(state);
-                    }
-                    case TRANSIENT_FIELD -> {
-                        settings().setTransientField(state);
-                    }
-                    case VOLATILE_FIELD -> {
-                        settings().setVolatileField(state);
-                    }
-                    //methods
-                    case PUBLIC_METHOD -> {
-                        settings().setPublicMethod(state);
-                    }
-                    case PROTECTED_METHOD -> {
-                        settings().setProtectedMethod(state);
-                    }
-                    case DEFAULT_METHOD -> {
-                        settings().setDefaultMethod(state);
-                    }
-                    case PRIVATE_METHOD -> {
-                        settings().setPrivateMethod(state);
-                    }
-                    case STATIC_METHOD -> {
-                        settings().setStaticMethod(state);
-                    }
-                    case FINAL_METHOD -> {
-                        settings().setFinalMethod(state);
-                    }
-                    case ABSTRACT_METHOD -> {
-                        settings().setAbstractMethod(state);
-                    }
-                    case SYNCHRONIZED_METHOD -> {
-                        settings().setSynchronizedMethod(state);
-                    }
-                    case NATIVE_METHOD -> {
-                        settings().setNativeMethod(state);
-                    }
-                    case DEFAULT_INTERFACE_METHOD -> {
-                        settings().setDefaultInterfaceMethod(state);
-                    }
-                }
-                changeListener.settingsChanged();
-            }
+    private void addChangeListener(@NotNull JCheckBox checkBox, @NotNull ShowingModifiers.Modifier modifier, @NotNull ChangeListener changeListener) {
+        checkBox.addChangeListener(event -> {
+            settings.change(modifier, checkBox.isSelected());
+            changeListener.settingsChanged();
         });
     }
 

@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static codeemoji.core.CEConstants.*;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiersConstants.*;
 import static com.intellij.psi.PsiModifier.*;
 
 public class ShowingModifiers extends CEMultiProvider<ShowingModifiersSettings> {
@@ -54,6 +54,12 @@ public class ShowingModifiers extends CEMultiProvider<ShowingModifiersSettings> 
     @Override
     public @NotNull ImmediateConfigurable createConfigurable(@NotNull ShowingModifiersSettings settings) {
         return new ShowingModifiersConfigurable(settings);
+    }
+
+    public enum Modifier {
+        PUBLIC_CLASS, DEFAULT_CLASS, FINAL_CLASS, ABSTRACT_CLASS,
+        PUBLIC_FIELD, DEFAULT_FIELD, FINAL_FIELD, PROTECTED_FIELD, PRIVATE_FIELD, STATIC_FIELD, VOLATILE_FIELD, TRANSIENT_FIELD,
+        PUBLIC_METHOD, DEFAULT_METHOD, FINAL_METHOD, PROTECTED_METHOD, PRIVATE_METHOD, STATIC_METHOD, ABSTRACT_METHOD, SYNCHRONIZED_METHOD, NATIVE_METHOD, DEFAULT_INTERFACE_METHOD
     }
 }
 
