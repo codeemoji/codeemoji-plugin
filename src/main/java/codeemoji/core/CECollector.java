@@ -49,24 +49,23 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> ex
         return 0;
     }
 
-    private InlayPresentation buildInlayWithIcon(@NotNull Icon icon) {
-        var inlay = getFactory().smallScaledIcon(icon);
-        return formatInlay(inlay);
-    }
-
-    private InlayPresentation buildInlayWithSymbol(@NotNull CESymbol symbol) {
-        String text = CEUtil.generateEmoji(symbol.getCodePoint(), symbol.getModifier(), symbol.isBackground());
-        var inlay = getFactory().smallText(text);
-        return formatInlay(inlay);
-    }
-
     private InlayPresentation buildInlay(@Nullable CESymbol symbol) {
         if (symbol == null) {
             symbol = new CESymbol();
         } else if (symbol.getIcon() != null) {
             return buildInlayWithIcon(symbol.getIcon());
         }
-        return buildInlayWithSymbol(symbol);
+        return buildInlayWithSymbol(symbol.getEmoji());
+    }
+
+    private InlayPresentation buildInlayWithIcon(@NotNull Icon icon) {
+        var inlay = getFactory().smallScaledIcon(icon);
+        return formatInlay(inlay);
+    }
+
+    private InlayPresentation buildInlayWithSymbol(@NotNull String emoji) {
+        var inlay = getFactory().smallText(emoji);
+        return formatInlay(inlay);
     }
 
     private InlayPresentation formatInlay(@NotNull InlayPresentation inlay) {

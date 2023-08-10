@@ -31,6 +31,8 @@ public class ShowingModifiersSettings implements PersistentStateComponent<Showin
     boolean protectedMethod = false;
     boolean defaultMethod = false;
     boolean privateMethod = false;
+    boolean staticMethod = false;
+    boolean finalMethod = false;
     boolean abstractMethod = false;
     boolean synchronizedMethod = true;
     boolean nativeMethod = true;

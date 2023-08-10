@@ -8,7 +8,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,35 +15,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.intellij.psi.PsiModifier.*;
 
-public class CEUtil<S> {
+public class CEUtil {
 
     public static boolean isNotPreviewEditor(@NotNull Editor editor) {
         return !editor.getEditorKind().name().equalsIgnoreCase("UNTYPED");
-    }
-
-    @Contract("_, _, _ -> new")
-    public static @NotNull String generateEmoji(int codePoint, int modifier, boolean addColor) {
-        char[] codePointChars = Character.toChars(codePoint);
-        char[] withoutColorChars = codePointChars;
-        if (modifier > 0) {
-            char[] modifierChars = Character.toChars(modifier);
-            withoutColorChars = Arrays.copyOf(codePointChars, codePointChars.length + modifierChars.length);
-            System.arraycopy(modifierChars, 0, withoutColorChars, codePointChars.length, modifierChars.length);
-        }
-        if (addColor) {
-            char[] addColorChars = Character.toChars(0x0FE0F);
-            char[] withColorChars = Arrays.copyOf(withoutColorChars, withoutColorChars.length + addColorChars.length);
-            System.arraycopy(addColorChars, 0, withColorChars, withoutColorChars.length, addColorChars.length);
-            return new String(withColorChars);
-        }
-        return new String(withoutColorChars);
     }
 
     public static boolean isIterableType(PsiTypeElement typeElement) {
