@@ -24,32 +24,32 @@ public class ShowingModifiers extends CEMultiProvider<ShowingModifiersSettings> 
         List<InlayHintsCollector> list = new ArrayList<>();
 
         //class
-        list.add(new ClassModifierCollector(editor, GLOBE, PUBLIC, getSettings().isPublicClass()));
-        list.add(new ClassModifierCollector(editor, WHITE_CIRCLE, ABSTRACT, getSettings().isAbstractClass()));
-        list.add(new ClassModifierCollector(editor, MEDAL, FINAL, getSettings().isFinalClass()));
-        list.add(new ClassModifierCollector(editor, HASHTAG, STRICTFP, getSettings().isStrictFPClass()));
-        list.add(new ClassModifierCollector(editor, WHITE_FLAG, DEFAULT, getSettings().isDefaultClass()));
+        list.add(new ClassModifierCollector(editor, PUBLIC_SYMBOL, PUBLIC, getSettings().isPublicClass()));
+        list.add(new ClassModifierCollector(editor, ABSTRACT_SYMBOL, ABSTRACT, getSettings().isAbstractClass()));
+        list.add(new ClassModifierCollector(editor, FINAL_SYMBOL, FINAL, getSettings().isFinalClass()));
+        list.add(new ClassModifierCollector(editor, STRICTFP_SYMBOL, STRICTFP, getSettings().isStrictFPClass()));
+        list.add(new ClassModifierCollector(editor, DEFAULT_SYMBOL, DEFAULT, getSettings().isDefaultClass()));
 
         //fields
-        list.add(new FieldModifierCollector(editor, GLOBE, PUBLIC, getSettings().isPublicField()));
-        list.add(new FieldModifierCollector(editor, SHIELD, PROTECTED, getSettings().isProtectedField()));
-        list.add(new FieldModifierCollector(editor, WHITE_FLAG, DEFAULT, getSettings().isDefaultField()));
-        list.add(new FieldModifierCollector(editor, KEY, PRIVATE, getSettings().isPrivateField()));
-        list.add(new FieldModifierCollector(editor, FINAL_ICON, FINAL, getSettings().isFinalField()));
-        list.add(new FieldModifierCollector(editor, RAISED_HAND, STATIC, getSettings().isStaticField()));
-        list.add(new FieldModifierCollector(editor, BALLOON, TRANSIENT, getSettings().isTransientField()));
-        list.add(new FieldModifierCollector(editor, SPARKLE, VOLATILE, getSettings().isVolatileField()));
-        list.add(new FieldModifierCollector(editor, GEAR, NATIVE, getSettings().isNativeField()));
+        list.add(new FieldModifierCollector(editor, PUBLIC_SYMBOL, PUBLIC, getSettings().isPublicField()));
+        list.add(new FieldModifierCollector(editor, PROTECTED_SYMBOL, PROTECTED, getSettings().isProtectedField()));
+        list.add(new FieldModifierCollector(editor, DEFAULT_SYMBOL, DEFAULT, getSettings().isDefaultField()));
+        list.add(new FieldModifierCollector(editor, PRIVATE_SYMBOL, PRIVATE, getSettings().isPrivateField()));
+        list.add(new FieldModifierCollector(editor, FINAL_SYMBOL, FINAL, getSettings().isFinalField()));
+        list.add(new FieldModifierCollector(editor, STATIC_SYMBOL, STATIC, getSettings().isStaticField()));
+        list.add(new FieldModifierCollector(editor, TRANSIENT_SYMBOL, TRANSIENT, getSettings().isTransientField()));
+        list.add(new FieldModifierCollector(editor, VOLATILE_SYMBOL, VOLATILE, getSettings().isVolatileField()));
+        list.add(new FieldModifierCollector(editor, NATIVE_SYMBOL, NATIVE, getSettings().isNativeField()));
 
         //methods
-        list.add(new MethodModifierCollector(editor, GLOBE, PUBLIC, getSettings().isPublicMethod()));
-        list.add(new MethodModifierCollector(editor, SHIELD, PROTECTED, getSettings().isProtectedMethod()));
-        list.add(new MethodModifierCollector(editor, WHITE_FLAG, DEFAULT, getSettings().isDefaultMethod()));
-        list.add(new MethodModifierCollector(editor, KEY, PRIVATE, getSettings().isPrivateMethod()));
-        list.add(new MethodModifierCollector(editor, WHITE_CIRCLE, ABSTRACT, getSettings().isAbstractMethod()));
-        list.add(new MethodModifierCollector(editor, SEMAPHORE, SYNCHRONIZED, getSettings().isSynchronizedMethod()));
-        list.add(new MethodModifierCollector(editor, GEAR, NATIVE, getSettings().isNativeMethod()));
-        list.add(new MethodModifierCollector(editor, HASHTAG, STRICTFP, getSettings().isStrictFPMethod()));
+        list.add(new MethodModifierCollector(editor, PUBLIC_SYMBOL, PUBLIC, getSettings().isPublicMethod()));
+        list.add(new MethodModifierCollector(editor, PROTECTED_SYMBOL, PROTECTED, getSettings().isProtectedMethod()));
+        list.add(new MethodModifierCollector(editor, DEFAULT_SYMBOL, DEFAULT, getSettings().isDefaultMethod()));
+        list.add(new MethodModifierCollector(editor, PRIVATE_SYMBOL, PRIVATE, getSettings().isPrivateMethod()));
+        list.add(new MethodModifierCollector(editor, ABSTRACT_SYMBOL, ABSTRACT, getSettings().isAbstractMethod()));
+        list.add(new MethodModifierCollector(editor, SYNCHRONIZED_SYMBOL, SYNCHRONIZED, getSettings().isSynchronizedMethod()));
+        list.add(new MethodModifierCollector(editor, NATIVE_SYMBOL, NATIVE, getSettings().isNativeMethod()));
+        list.add(new MethodModifierCollector(editor, STRICTFP_SYMBOL, STRICTFP, getSettings().isStrictFPMethod()));
         //list.add(new MethodModifierCollector(editor, "defaultininterfacesmethodmodifier", ORANGE_CIRCLE, DEFAULT,getSettings().isDefaultInInterfacesMethod()));
 
         return list;
