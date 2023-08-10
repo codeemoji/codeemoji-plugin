@@ -11,27 +11,27 @@ import org.jetbrains.annotations.NotNull;
 @State(name = "ShowingModifiersSettings", storages = @Storage("showing-modifiers-settings.xml"))
 public class ShowingModifiersSettings implements PersistentStateComponent<ShowingModifiersSettings> {
     //classes
-    boolean publicClass = true;
-    boolean abstractClass = true;
-    boolean finalClass = true;
+    boolean publicClass = false;
+    boolean abstractClass = false;
+    boolean finalClass = false;
     boolean strictFPClass = true;
-    boolean defaultClass = true;
+    boolean defaultClass = false;
     // fields
-    boolean publicField = true;
-    boolean protectedField = true;
-    boolean defaultField = true;
-    boolean privateField = true;
-    boolean finalField = true;
-    boolean staticField = true;
+    boolean publicField = false;
+    boolean protectedField = false;
+    boolean defaultField = false;
+    boolean privateField = false;
+    boolean finalField = false;
+    boolean staticField = false;
     boolean transientField = true;
     boolean volatileField = true;
     boolean nativeField = true;
     // methods
-    boolean publicMethod = true;
-    boolean protectedMethod = true;
-    boolean defaultMethod = true;
-    boolean privateMethod = true;
-    boolean abstractMethod = true;
+    boolean publicMethod = false;
+    boolean protectedMethod = false;
+    boolean defaultMethod = false;
+    boolean privateMethod = false;
+    boolean abstractMethod = false;
     boolean synchronizedMethod = true;
     boolean nativeMethod = true;
     boolean strictFPMethod = true;
