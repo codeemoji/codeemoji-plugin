@@ -39,10 +39,9 @@ public class CEUtil {
                 } catch (RuntimeException | ClassNotFoundException ignored) {
                     Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
                     for (Project proj : openProjects) {
-                        Project project = typeElement.getProject();
                         GlobalSearchScope scope = psiTypeClass.getResolveScope();
-                        PsiClass psiUserClass = JavaPsiFacade.getInstance(project).findClass(qualifiedName, scope);
-                        PsiClassType iteratorType = JavaPsiFacade.getElementFactory(project).createTypeByFQClassName("java.lang.Iterable", scope);
+                        PsiClass psiUserClass = JavaPsiFacade.getInstance(proj).findClass(qualifiedName, scope);
+                        PsiClassType iteratorType = JavaPsiFacade.getElementFactory(proj).createTypeByFQClassName("java.lang.Iterable", scope);
                         PsiClass iteratorClass = iteratorType.resolve();
                         if (iteratorClass != null && psiUserClass != null && psiUserClass.isInheritor(iteratorClass, true)) {
                             return true;

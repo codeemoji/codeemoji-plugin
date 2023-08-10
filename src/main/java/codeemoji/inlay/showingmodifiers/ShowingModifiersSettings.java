@@ -1,4 +1,4 @@
-package codeemoji.inlay.invisiblefeatures;
+package codeemoji.inlay.showingmodifiers;
 
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;

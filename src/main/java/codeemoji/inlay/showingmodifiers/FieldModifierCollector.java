@@ -1,4 +1,4 @@
-package codeemoji.inlay.invisiblefeatures;
+package codeemoji.inlay.showingmodifiers;
 
 import codeemoji.core.CEFieldReferenceCollector;
 import codeemoji.core.CESymbol;
@@ -18,7 +18,7 @@ public class FieldModifierCollector extends CEFieldReferenceCollector {
 
     public FieldModifierCollector(@NotNull Editor editor, @Nullable CESymbol symbol,
                                   String modifier, boolean activated) {
-        super(editor, modifier + "fieldmodifier", symbol);
+        super(editor, "showingmodifiers.field." + modifier, symbol);
         this.activated = activated;
         this.modifier = modifier;
     }

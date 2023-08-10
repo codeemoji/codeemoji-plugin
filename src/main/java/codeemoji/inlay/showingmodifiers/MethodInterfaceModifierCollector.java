@@ -1,4 +1,4 @@
-package codeemoji.inlay.invisiblefeatures;
+package codeemoji.inlay.showingmodifiers;
 
 import codeemoji.core.CEMethodCallCollector;
 import codeemoji.core.CESymbol;
@@ -17,7 +17,7 @@ public class MethodInterfaceModifierCollector extends CEMethodCallCollector {
 
     public MethodInterfaceModifierCollector(@NotNull Editor editor, @Nullable CESymbol symbol,
                                             String modifier, boolean activated) {
-        super(editor, modifier + "methodinterfacemodifier", symbol);
+        super(editor, "showingmodifiers.method." + modifier + "interface", symbol);
         this.activated = activated;
         this.modifier = modifier;
     }

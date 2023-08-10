@@ -57,7 +57,10 @@ public abstract class CEClassReferenceCollector extends CECollector<PsiClass, Ps
     @Override
     public int calcOffset(@Nullable PsiElement element) {
         if (element instanceof PsiVariable variable) {
-            return variable.getNameIdentifier().getTextOffset() - 1;
+            var varName = variable.getNameIdentifier();
+            if (varName != null) {
+                return varName.getTextOffset() - 1;
+            }
         }
         return super.calcOffset(element);
     }

@@ -1,4 +1,4 @@
-package codeemoji.inlay.invisiblefeatures;
+package codeemoji.inlay.showingmodifiers;
 
 import codeemoji.core.CEMultiProvider;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;

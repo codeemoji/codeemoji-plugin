@@ -1,4 +1,4 @@
-package codeemoji.inlay.invisiblefeatures;
+package codeemoji.inlay.showingmodifiers;
 
 import codeemoji.core.CEClassReferenceCollector;
 import codeemoji.core.CESymbol;
@@ -18,7 +18,7 @@ public class ClassModifierCollector extends CEClassReferenceCollector {
 
     public ClassModifierCollector(@NotNull Editor editor, @Nullable CESymbol symbol,
                                   String modifier, boolean activated) {
-        super(editor, modifier + "classmodifier", symbol);
+        super(editor, "showingmodifiers.class." + modifier, symbol);
         this.activated = activated;
         this.modifier = modifier;
     }
