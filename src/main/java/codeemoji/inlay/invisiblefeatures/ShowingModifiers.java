@@ -16,7 +16,7 @@ public class ShowingModifiers extends CEMultiProvider<ShowingModifiersSettings> 
 
     @Override
     public String getPreviewText() {
-        return "";
+        return null;
     }
 
     @Override
