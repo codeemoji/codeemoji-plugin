@@ -38,7 +38,6 @@ public class ShowingModifiers extends CEMultiProvider<ShowingModifiersSettings> 
         list.add(new FieldModifierCollector(editor, STATIC_SYM, STATIC, getSettings().isStaticField()));
         list.add(new FieldModifierCollector(editor, TRANSIENT_SYM, TRANSIENT, getSettings().isTransientField()));
         list.add(new FieldModifierCollector(editor, VOLATILE_SYM, VOLATILE, getSettings().isVolatileField()));
-        list.add(new FieldModifierCollector(editor, NATIVE_SYM, NATIVE, getSettings().isNativeField()));
 
         //methods
         list.add(new MethodModifierCollector(editor, PUBLIC_SYM, PUBLIC, getSettings().isPublicMethod()));

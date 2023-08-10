@@ -14,7 +14,6 @@ public class ShowingModifiersSettings implements PersistentStateComponent<Showin
     boolean publicClass = false;
     boolean abstractClass = false;
     boolean finalClass = false;
-    boolean strictFPClass = true;
     boolean defaultClass = false;
     // fields
     boolean publicField = false;
@@ -25,7 +24,6 @@ public class ShowingModifiersSettings implements PersistentStateComponent<Showin
     boolean staticField = false;
     boolean transientField = true;
     boolean volatileField = true;
-    boolean nativeField = true;
     // methods
     boolean publicMethod = false;
     boolean protectedMethod = false;
@@ -36,7 +34,6 @@ public class ShowingModifiersSettings implements PersistentStateComponent<Showin
     boolean abstractMethod = false;
     boolean synchronizedMethod = true;
     boolean nativeMethod = true;
-    boolean strictFPMethod = true;
     boolean defaultInterfaceMethod = true;
 
     @Override
