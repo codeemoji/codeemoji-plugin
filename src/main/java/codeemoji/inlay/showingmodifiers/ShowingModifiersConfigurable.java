@@ -24,29 +24,40 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
     @Override
     public @NotNull JComponent createComponent(@NotNull ChangeListener changeListener) {
         var modifiersPanel = new JPanel();
-        //var projectsPanel = new JPanel();
+        var projectsPanel = new JPanel();
         var classPanel = prepareClassPanel(changeListener);
         var fieldPanel = prepareFieldPanel(changeListener);
         var methodPanel = prepareMethodPanel(changeListener);
-        //var openProjectsPanel = prepareOpenProjectsPanel(changeListener);
+        var openProjectsPanel = prepareOpenProjectsPanel(changeListener);
 
         modifiersPanel.setBorder(BorderFactory.createTitledBorder(CEBundle.getString("inlay.showingmodifiers.options.title.modifiers")));
-        //projectsPanel.setBorder(BorderFactory.createTitledBorder(CEBundle.getString("inlay.showingmodifiers.options.title.openprojects")));
-        //projectsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        projectsPanel.setBorder(BorderFactory.createTitledBorder(CEBundle.getString("inlay.showingmodifiers.options.title.openprojects")));
+        projectsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         modifiersPanel.add(classPanel);
         modifiersPanel.add(fieldPanel);
         modifiersPanel.add(methodPanel);
-        //projectsPanel.add(openProjectsPanel);
+        projectsPanel.add(openProjectsPanel);
 
         return FormBuilder.createFormBuilder()
                 .addComponent(modifiersPanel)
-                //.addComponent(projectsPanel)
+                .addComponent(projectsPanel)
                 .getPanel();
     }
 
     private @NotNull JPanel createBasicInnerPanel(@NotNull String typeTitle, int rows, int columns, boolean withBorder) {
         var result = new JPanel(new GridLayout(rows, columns));
+        var title = CEBundle.getString("inlay.showingmodifiers.options.title." + typeTitle);
+        if (withBorder) {
+            result.setBorder(BorderFactory.createTitledBorder(title));
+        } else {
+            result.setBorder(BorderFactory.createTitledBorder(emptyBorder(), title));
+        }
+        return result;
+    }
+
+    private @NotNull JPanel createBasicInnerBagPanel(@NotNull String typeTitle, boolean withBorder) {
+        var result = new JPanel(new GridBagLayout());
         var title = CEBundle.getString("inlay.showingmodifiers.options.title." + typeTitle);
         if (withBorder) {
             result.setBorder(BorderFactory.createTitledBorder(title));
@@ -150,25 +161,14 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
     }
 
     private @NotNull JPanel prepareOpenProjectsPanel(@NotNull ChangeListener changeListener) {
-        var result = new JPanel(new GridLayout(5, 1));
+        var result = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
 
         var selectProjectPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        var classPanel = createBasicInnerPanel("classes", 3, 1, true);
-        var fieldPanel = createBasicInnerPanel("fields", 2, 1, true);
-        var methodPanel = createBasicInnerPanel("methods", 2, 1, true);
-        var variablePanel = createBasicInnerPanel("variables", 1, 1, true);
-
-        var classImplementsInterfacePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        var classExtendsSuperclassPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        var classAnnotationPresencePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
-        var fieldAnnotationPresencePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        var fieldIsTypePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
-        var methodAnnotationPresencePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        var methodReturnsTypePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
-        var variableIsTypePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        var classPanel = createBasicInnerBagPanel("classes", true);
+        var fieldPanel = createBasicInnerBagPanel("fields", true);
+        var methodPanel = createBasicInnerBagPanel("methods", true);
+        var variablePanel = createBasicInnerBagPanel("variables", true);
 
         //selectProjectPanel
         var selectProjectLabel = new JLabel("Select: ");
@@ -189,43 +189,83 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
         var fieldIsOfTypeLabel = new JLabel("Is of type: ");
         var variableIsOfTypeLabel = new JLabel("Is of type: ");
         var methodReturnsTypeLabel = new JLabel("Returns of the type: ");
+        var textClassImplementsInterface = new JTextField(16);
+        var textClassExtendsSuperclass = new JTextField(16);
+        var textClassAnnotationPresence = new JTextField(16);
+        var textFieldAnnotationPresence = new JTextField(16);
+        var textFieldIsType = new JTextField(16);
+        var textMethodAnnotationPresence = new JTextField(16);
+        var textMethodReturnsType = new JTextField(16);
+        var textVariableIsTypePanel = new JTextField(16);
 
-        var text = new JTextField();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        classPanel.add(classImplementsInterfaceLabel, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        classPanel.add(textClassImplementsInterface, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        classPanel.add(classExtendsSuperclassLabel, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        classPanel.add(textClassExtendsSuperclass, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        classPanel.add(classPresenceOfAnnotationLabel, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        classPanel.add(textClassAnnotationPresence, gbc);
 
-        classImplementsInterfacePanel.add(classImplementsInterfaceLabel);
-        classImplementsInterfacePanel.add(text);
-        classExtendsSuperclassPanel.add(classExtendsSuperclassLabel);
-        classExtendsSuperclassPanel.add(text);
-        classAnnotationPresencePanel.add(classPresenceOfAnnotationLabel);
-        classAnnotationPresencePanel.add(text);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        fieldPanel.add(fieldPresenceOfAnnotationLabel, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        fieldPanel.add(textFieldAnnotationPresence, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        fieldPanel.add(fieldIsOfTypeLabel, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        fieldPanel.add(textFieldIsType, gbc);
 
-        fieldAnnotationPresencePanel.add(fieldPresenceOfAnnotationLabel);
-        fieldAnnotationPresencePanel.add(text);
-        fieldIsTypePanel.add(fieldIsOfTypeLabel);
-        fieldIsTypePanel.add(text);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        methodPanel.add(methodPresenceOfAnnotationLabel, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        methodPanel.add(textMethodAnnotationPresence, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        methodPanel.add(methodReturnsTypeLabel, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        methodPanel.add(textMethodReturnsType, gbc);
 
-        methodAnnotationPresencePanel.add(methodPresenceOfAnnotationLabel);
-        methodAnnotationPresencePanel.add(text);
-        methodReturnsTypePanel.add(methodReturnsTypeLabel);
-        methodReturnsTypePanel.add(text);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        variablePanel.add(variableIsOfTypeLabel, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        variablePanel.add(textVariableIsTypePanel, gbc);
 
-        variableIsTypePanel.add(variableIsOfTypeLabel);
-        variableIsTypePanel.add(text);
-
-        classPanel.add(classImplementsInterfacePanel);
-        classPanel.add(classExtendsSuperclassPanel);
-        classPanel.add(classAnnotationPresencePanel);
-        fieldPanel.add(fieldAnnotationPresencePanel);
-        fieldPanel.add(fieldIsTypePanel);
-        methodPanel.add(methodAnnotationPresencePanel);
-        methodPanel.add(methodReturnsTypePanel);
-        variablePanel.add(variableIsTypePanel);
-
-        result.add(selectProjectPanel);
-        result.add(classPanel);
-        result.add(fieldPanel);
-        result.add(methodPanel);
-        result.add(variablePanel);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        result.add(selectProjectPanel, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        result.add(classPanel, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        result.add(fieldPanel, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        result.add(methodPanel, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        result.add(variablePanel, gbc);
 
         return result;
     }
