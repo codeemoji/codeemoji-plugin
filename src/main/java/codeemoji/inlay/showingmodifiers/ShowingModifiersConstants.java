@@ -9,8 +9,8 @@ public class ShowingModifiersConstants {
     public static final CESymbol FINAL_SYMBOL = new CESymbol(0x1F512); //locked
     public static final CESymbol PROTECTED_SYMBOL = new CESymbol(0x1F6E1); //shield
     public static final CESymbol PRIVATE_SYMBOL = new CESymbol(0x1F510); //padlock with key
-    public static final CESymbol STATIC_SYMBOL = new CESymbol(0x2699); //gear
-    public static final CESymbol ABSTRACT_SYMBOL = new CESymbol(0x1F3A8); //artist palette
+    public static final CESymbol STATIC_SYMBOL = new CESymbol(0x1F5FF); //moai
+    public static final CESymbol ABSTRACT_SYMBOL = new CESymbol(0x1F3D7); //building construction
     public static final CESymbol SYNCHRONIZED_SYMBOL = new CESymbol(0x1F6A6); //traffic light
     public static final CESymbol NATIVE_SYMBOL = new CESymbol(0x1F4BB); //laptop
     public static final CESymbol DEFAULT_INTERFACE_SYMBOL = new CESymbol(0x1F503); //arrow curving
