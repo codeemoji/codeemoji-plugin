@@ -18,13 +18,13 @@ import java.util.Objects;
 public class ShowingModifiersSettings implements PersistentStateComponent<ShowingModifiersSettings> {
 
     @XMap
-    private final HashMap<ShowingModifiers.Modifier, Boolean> basicModifiersMap = new HashMap<>();
+    private final HashMap<ShowingModifiers.ScopeModifier, Boolean> basicModifiersMap = new HashMap<>();
 
     public ShowingModifiersSettings() {
-        basicModifiersMap.put(ShowingModifiers.Modifier.VOLATILE_FIELD, true);
-        basicModifiersMap.put(ShowingModifiers.Modifier.TRANSIENT_FIELD, true);
-        basicModifiersMap.put(ShowingModifiers.Modifier.SYNCHRONIZED_METHOD, true);
-        basicModifiersMap.put(ShowingModifiers.Modifier.NATIVE_METHOD, true);
+        basicModifiersMap.put(ShowingModifiers.ScopeModifier.VOLATILE_FIELD, true);
+        basicModifiersMap.put(ShowingModifiers.ScopeModifier.TRANSIENT_FIELD, true);
+        basicModifiersMap.put(ShowingModifiers.ScopeModifier.SYNCHRONIZED_METHOD, true);
+        basicModifiersMap.put(ShowingModifiers.ScopeModifier.NATIVE_METHOD, true);
     }
 
     @Override
@@ -36,12 +36,12 @@ public class ShowingModifiersSettings implements PersistentStateComponent<Showin
         XmlSerializerUtil.copyBean(state, this);
     }
 
-    public synchronized boolean query(@NotNull ShowingModifiers.Modifier modifier) {
-        return Objects.requireNonNullElse(basicModifiersMap.get(modifier), false);
+    public synchronized boolean query(@NotNull ShowingModifiers.ScopeModifier scopeModifier) {
+        return Objects.requireNonNullElse(basicModifiersMap.get(scopeModifier), false);
     }
 
-    public synchronized void update(@NotNull ShowingModifiers.Modifier modifier, boolean value) {
-        basicModifiersMap.put(modifier, value);
+    public synchronized void update(@NotNull ShowingModifiers.ScopeModifier scopeModifier, boolean value) {
+        basicModifiersMap.put(scopeModifier, value);
     }
 
 }

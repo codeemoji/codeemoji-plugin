@@ -18,18 +18,4 @@ public class ShowingModifiersConstants {
     public static final CESymbol VOLATILE_SYMBOL = new CESymbol(0x26A1); //high voltage
     public static final CESymbol TRANSIENT_SYMBOL = new CESymbol(0x23F3); //hourglass
 
-    public static final String PUBLIC_SYMBOL_EMOJI = PUBLIC_SYMBOL.getEmoji();
-    public static final String DEFAULT_SYMBOL_EMOJI = DEFAULT_SYMBOL.getEmoji();
-    public static final String FINAL_SYMBOL_EMOJI = FINAL_SYMBOL.getEmoji();
-    public static final String FINAL_VAR_SYMBOL_EMOJI = FINAL_VAR_SYMBOL.getEmoji();
-    public static final String PROTECTED_SYMBOL_EMOJI = PROTECTED_SYMBOL.getEmoji();
-    public static final String PRIVATE_SYMBOL_EMOJI = PRIVATE_SYMBOL.getEmoji();
-    public static final String STATIC_SYMBOL_EMOJI = STATIC_SYMBOL.getEmoji();
-    public static final String ABSTRACT_SYMBOL_EMOJI = ABSTRACT_SYMBOL.getEmoji();
-    public static final String SYNCHRONIZED_SYMBOL_EMOJI = SYNCHRONIZED_SYMBOL.getEmoji();
-    public static final String NATIVE_SYMBOL_EMOJI = NATIVE_SYMBOL.getEmoji();
-    public static final String DEFAULT_INTERFACE_SYMBOL_EMOJI = DEFAULT_INTERFACE_SYMBOL.getEmoji();
-    public static final String VOLATILE_SYMBOL_EMOJI = VOLATILE_SYMBOL.getEmoji();
-    public static final String TRANSIENT_SYMBOL_EMOJI = TRANSIENT_SYMBOL.getEmoji();
-
 }
