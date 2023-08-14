@@ -4,20 +4,19 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import com.intellij.util.xmlb.annotations.XMap;
+import com.intellij.util.xmlb.annotations.MapAnnotation;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 @ToString
 @EqualsAndHashCode
 @State(name = "ShowingModifiersSettings", storages = @Storage("showing-modifiers-settings.xml"))
 public class ShowingModifiersSettings implements PersistentStateComponent<ShowingModifiersSettings> {
 
-    @XMap
+    @MapAnnotation
     private final HashMap<ShowingModifiers.ScopeModifier, Boolean> basicModifiersMap = new HashMap<>();
 
     public ShowingModifiersSettings() {
@@ -37,7 +36,8 @@ public class ShowingModifiersSettings implements PersistentStateComponent<Showin
     }
 
     public synchronized boolean query(@NotNull ShowingModifiers.ScopeModifier scopeModifier) {
-        return Objects.requireNonNullElse(basicModifiersMap.get(scopeModifier), false);
+        basicModifiersMap.putIfAbsent(scopeModifier, false);
+        return basicModifiersMap.get(scopeModifier);
     }
 
     public synchronized void update(@NotNull ShowingModifiers.ScopeModifier scopeModifier, boolean value) {
