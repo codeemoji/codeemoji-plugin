@@ -25,30 +25,30 @@ public class ShowingModifiers extends CEMultiProvider<ShowingModifiersSettings> 
     public List<InlayHintsCollector> buildCollectors(Editor editor) {
         List<InlayHintsCollector> list = new ArrayList<>();
         //class
-        list.add(new ClassModifierCollector(editor, PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_CLASS)));
-        list.add(new ClassModifierCollector(editor, DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_CLASS)));
-        list.add(new ClassModifierCollector(editor, FINAL_SYMBOL, FINAL, getSettings().query(FINAL_CLASS)));
-        list.add(new ClassModifierCollector(editor, ABSTRACT_SYMBOL, ABSTRACT, getSettings().query(ABSTRACT_CLASS)));
+        list.add(new ClassModifierCollector(editor, getKeyId(), PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_CLASS)));
+        list.add(new ClassModifierCollector(editor, getKeyId(), DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_CLASS)));
+        list.add(new ClassModifierCollector(editor, getKeyId(), FINAL_SYMBOL, FINAL, getSettings().query(FINAL_CLASS)));
+        list.add(new ClassModifierCollector(editor, getKeyId(), ABSTRACT_SYMBOL, ABSTRACT, getSettings().query(ABSTRACT_CLASS)));
         //fields
-        list.add(new FieldModifierCollector(editor, PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_FIELD)));
-        list.add(new FieldModifierCollector(editor, DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_FIELD)));
-        list.add(new FieldModifierCollector(editor, FINAL_VAR_SYMBOL, FINAL, getSettings().query(FINAL_FIELD)));
-        list.add(new FieldModifierCollector(editor, PROTECTED_SYMBOL, PROTECTED, getSettings().query(PROTECTED_FIELD)));
-        list.add(new FieldModifierCollector(editor, PRIVATE_SYMBOL, PRIVATE, getSettings().query(PRIVATE_FIELD)));
-        list.add(new FieldModifierCollector(editor, STATIC_SYMBOL, STATIC, getSettings().query(STATIC_FIELD)));
-        list.add(new FieldModifierCollector(editor, VOLATILE_SYMBOL, VOLATILE, getSettings().query(VOLATILE_FIELD)));
-        list.add(new FieldModifierCollector(editor, TRANSIENT_SYMBOL, TRANSIENT, getSettings().query(TRANSIENT_FIELD)));
+        list.add(new FieldModifierCollector(editor, getKeyId(), PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_FIELD)));
+        list.add(new FieldModifierCollector(editor, getKeyId(), DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_FIELD)));
+        list.add(new FieldModifierCollector(editor, getKeyId(), FINAL_VAR_SYMBOL, FINAL, getSettings().query(FINAL_FIELD)));
+        list.add(new FieldModifierCollector(editor, getKeyId(), PROTECTED_SYMBOL, PROTECTED, getSettings().query(PROTECTED_FIELD)));
+        list.add(new FieldModifierCollector(editor, getKeyId(), PRIVATE_SYMBOL, PRIVATE, getSettings().query(PRIVATE_FIELD)));
+        list.add(new FieldModifierCollector(editor, getKeyId(), STATIC_SYMBOL, STATIC, getSettings().query(STATIC_FIELD)));
+        list.add(new FieldModifierCollector(editor, getKeyId(), VOLATILE_SYMBOL, VOLATILE, getSettings().query(VOLATILE_FIELD)));
+        list.add(new FieldModifierCollector(editor, getKeyId(), TRANSIENT_SYMBOL, TRANSIENT, getSettings().query(TRANSIENT_FIELD)));
         //methods
-        list.add(new MethodModifierCollector(editor, PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_METHOD)));
-        list.add(new MethodModifierCollector(editor, DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_METHOD)));
-        list.add(new MethodModifierCollector(editor, FINAL_SYMBOL, FINAL, getSettings().query(FINAL_METHOD)));
-        list.add(new MethodModifierCollector(editor, PROTECTED_SYMBOL, PROTECTED, getSettings().query(PROTECTED_METHOD)));
-        list.add(new MethodModifierCollector(editor, PRIVATE_SYMBOL, PRIVATE, getSettings().query(PRIVATE_METHOD)));
-        list.add(new MethodModifierCollector(editor, STATIC_SYMBOL, STATIC, getSettings().query(STATIC_METHOD)));
-        list.add(new MethodModifierCollector(editor, ABSTRACT_SYMBOL, ABSTRACT, getSettings().query(ABSTRACT_METHOD)));
-        list.add(new MethodModifierCollector(editor, SYNCHRONIZED_SYMBOL, SYNCHRONIZED, getSettings().query(SYNCHRONIZED_METHOD)));
-        list.add(new MethodModifierCollector(editor, NATIVE_SYMBOL, NATIVE, getSettings().query(NATIVE_METHOD)));
-        list.add(new MethodInterfaceModifierCollector(editor, DEFAULT_INTERFACE_SYMBOL, DEFAULT, getSettings().query(DEFAULT_INTERFACE_METHOD)));
+        list.add(new MethodModifierCollector(editor, getKeyId(), PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_METHOD)));
+        list.add(new MethodModifierCollector(editor, getKeyId(), DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_METHOD)));
+        list.add(new MethodModifierCollector(editor, getKeyId(), FINAL_SYMBOL, FINAL, getSettings().query(FINAL_METHOD)));
+        list.add(new MethodModifierCollector(editor, getKeyId(), PROTECTED_SYMBOL, PROTECTED, getSettings().query(PROTECTED_METHOD)));
+        list.add(new MethodModifierCollector(editor, getKeyId(), PRIVATE_SYMBOL, PRIVATE, getSettings().query(PRIVATE_METHOD)));
+        list.add(new MethodModifierCollector(editor, getKeyId(), STATIC_SYMBOL, STATIC, getSettings().query(STATIC_METHOD)));
+        list.add(new MethodModifierCollector(editor, getKeyId(), ABSTRACT_SYMBOL, ABSTRACT, getSettings().query(ABSTRACT_METHOD)));
+        list.add(new MethodModifierCollector(editor, getKeyId(), SYNCHRONIZED_SYMBOL, SYNCHRONIZED, getSettings().query(SYNCHRONIZED_METHOD)));
+        list.add(new MethodModifierCollector(editor, getKeyId(), NATIVE_SYMBOL, NATIVE, getSettings().query(NATIVE_METHOD)));
+        list.add(new MethodInterfaceModifierCollector(editor, getKeyId(), DEFAULT_INTERFACE_SYMBOL, DEFAULT, getSettings().query(DEFAULT_INTERFACE_METHOD)));
 
         return list;
     }

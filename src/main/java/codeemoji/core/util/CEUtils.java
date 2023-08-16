@@ -1,4 +1,4 @@
-package codeemoji.core;
+package codeemoji.core.util;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 
 import static com.intellij.psi.PsiModifier.*;
 
-public class CEUtil {
+public class CEUtils {
 
     public static boolean isNotPreviewEditor(@NotNull Editor editor) {
         return !editor.getEditorKind().name().equalsIgnoreCase("UNTYPED");
@@ -110,7 +110,7 @@ public class CEUtil {
     }
 
     private static boolean isIrregularPluralForm(String word) {
-        ClassLoader classLoader = CEUtil.class.getClassLoader();
+        ClassLoader classLoader = CEUtils.class.getClassLoader();
         try (InputStream is = classLoader.getResourceAsStream("irregular_plural.json")) {
             if (is != null) {
                 Reader reader = new InputStreamReader(is);

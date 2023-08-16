@@ -15,9 +15,9 @@ public class MethodInterfaceModifierCollector extends CEMethodCallCollector {
     private final boolean activated;
     private final String modifier;
 
-    public MethodInterfaceModifierCollector(@NotNull Editor editor, @Nullable CESymbol symbol,
+    public MethodInterfaceModifierCollector(@NotNull Editor editor, @NotNull String mainKeyId, @Nullable CESymbol symbol,
                                             String modifier, boolean activated) {
-        super(editor, "showingmodifiers.method." + modifier + "interface", symbol);
+        super(editor, mainKeyId + ".method." + modifier + "interface", symbol);
         this.activated = activated;
         this.modifier = modifier;
     }

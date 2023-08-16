@@ -1,5 +1,6 @@
 package codeemoji.core;
 
+import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
@@ -18,7 +19,7 @@ public abstract class CEMethodCallCollector extends CECollector<PsiMethod, PsiMe
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
                 public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
-                    if (CEUtil.isNotPreviewEditor(editor)) {
+                    if (CEUtils.isNotPreviewEditor(editor)) {
                         if (callExpression instanceof PsiMethodCallExpression mexp) {
                             PsiMethod method = mexp.resolveMethod();
                             if (method != null) {

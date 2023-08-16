@@ -28,5 +28,6 @@
         <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.SaysManyButContainsOne"/>
         <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.NameContainsOnlySpecialCharacters"/>
         <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.showingmodifiers.ShowingModifiers"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.showingspecifics.ShowingSpecifics"/>
     </extensions>
 </idea-plugin>

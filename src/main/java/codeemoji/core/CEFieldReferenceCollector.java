@@ -1,5 +1,6 @@
 package codeemoji.core;
 
+import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
@@ -18,7 +19,7 @@ public abstract class CEFieldReferenceCollector extends CECollector<PsiField, Ps
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
                 public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
-                    if (CEUtil.isNotPreviewEditor(editor)) {
+                    if (CEUtils.isNotPreviewEditor(editor)) {
                         PsiReference reference = expression.getReference();
                         if (reference != null) {
                             PsiElement resolveElement = reference.resolve();

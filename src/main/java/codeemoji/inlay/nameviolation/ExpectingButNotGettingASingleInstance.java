@@ -2,7 +2,7 @@ package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.CEMethodCollector;
 import codeemoji.core.CEProvider;
-import codeemoji.core.CEUtil;
+import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
@@ -32,9 +32,9 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings
         return new CEMethodCollector(editor, getKeyId(), MANY) {
             @Override
             public boolean isHintable(@NotNull PsiMethod element) {
-                if ((element.getName().startsWith("get") || element.getName().startsWith("return")) && !Objects.equals(element.getReturnType(), PsiTypes.voidType()) && !CEUtil.isPluralForm(element.getName())) {
+                if ((element.getName().startsWith("get") || element.getName().startsWith("return")) && !Objects.equals(element.getReturnType(), PsiTypes.voidType()) && !CEUtils.isPluralForm(element.getName())) {
                     PsiTypeElement typeElement = element.getReturnTypeElement();
-                    return CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement);
+                    return CEUtils.isArrayType(typeElement) || CEUtils.isIterableType(typeElement);
                 }
                 return false;
             }

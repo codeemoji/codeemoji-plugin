@@ -2,7 +2,7 @@ package codeemoji.inlay.showingmodifiers;
 
 import codeemoji.core.CEFieldReferenceCollector;
 import codeemoji.core.CESymbol;
-import codeemoji.core.CEUtil;
+import codeemoji.core.util.CEUtils;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiModifierList;
@@ -16,9 +16,9 @@ public class FieldModifierCollector extends CEFieldReferenceCollector {
     final boolean activated;
     final String modifier;
 
-    public FieldModifierCollector(@NotNull Editor editor, @Nullable CESymbol symbol,
+    public FieldModifierCollector(@NotNull Editor editor, @NotNull String mainKeyId, @Nullable CESymbol symbol,
                                   String modifier, boolean activated) {
-        super(editor, "showingmodifiers.field." + modifier, symbol);
+        super(editor, mainKeyId + ".field." + modifier, symbol);
         this.activated = activated;
         this.modifier = modifier;
     }
@@ -33,7 +33,7 @@ public class FieldModifierCollector extends CEFieldReferenceCollector {
         PsiModifierList psiModifierList = element.getModifierList();
         if (psiModifierList != null) {
             if (modifier.equalsIgnoreCase(DEFAULT)) {
-                return CEUtil.checkDefaultModifier(psiModifierList);
+                return CEUtils.checkDefaultModifier(psiModifierList);
             } else {
                 return psiModifierList.hasModifierProperty(modifier);
             }

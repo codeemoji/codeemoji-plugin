@@ -1,0 +1,66 @@
+{
+  "project_rules": [
+    {
+      "element": "class",
+      "feature": "annotations",
+      "values": [
+        "@Log",
+        "@Stateless"
+      ]
+    },
+    {
+      "element": "class",
+      "feature": "extends",
+      "values": [
+        "Triangle",
+        "Rectangle"
+      ]
+    },
+    {
+      "element": "class",
+      "feature": "implements",
+      "values": [
+        "Shape",
+        "Figure",
+        "Chart"
+      ]
+    },
+    {
+      "element": "field",
+      "feature": "annotations",
+      "values": [
+        "@Xyz",
+        "@Float"
+      ]
+    },
+    {
+      "element": "field",
+      "feature": "types",
+      "values": [
+        "Circle"
+      ]
+    },
+    {
+      "element": "method",
+      "feature": "annotations",
+      "values": [
+        "@Protected"
+      ]
+    },
+    {
+      "element": "method",
+      "feature": "returns",
+      "values": [
+        "MyType",
+        "YourType"
+      ]
+    },
+    {
+      "element": "localvariable",
+      "feature": "types",
+      "values": [
+        "ThatType"
+      ]
+    }
+  ]
+}

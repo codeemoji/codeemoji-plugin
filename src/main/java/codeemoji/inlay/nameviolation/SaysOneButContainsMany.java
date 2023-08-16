@@ -1,8 +1,8 @@
 package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.CEProvider;
-import codeemoji.core.CEUtil;
 import codeemoji.core.CEVariableCollector;
+import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
@@ -40,9 +40,9 @@ public class SaysOneButContainsMany extends CEProvider<NoSettings> {
             @Override
             public boolean isHintable(@NotNull PsiVariable element) {
                 PsiTypeElement typeElement = element.getTypeElement();
-                return !CEUtil.isPluralForm(element.getName()) &&
-                        !CEUtil.sameNameAsType(typeElement, element.getName()) &&
-                        (CEUtil.isArrayType(typeElement) || CEUtil.isIterableType(typeElement));
+                return !CEUtils.isPluralForm(element.getName()) &&
+                        !CEUtils.sameNameAsType(typeElement, element.getName()) &&
+                        (CEUtils.isArrayType(typeElement) || CEUtils.isIterableType(typeElement));
             }
 
         };

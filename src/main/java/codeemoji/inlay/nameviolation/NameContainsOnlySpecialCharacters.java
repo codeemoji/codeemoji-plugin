@@ -1,8 +1,8 @@
 package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.CEProvider;
-import codeemoji.core.CEUtil;
 import codeemoji.core.CEVariableCollector;
+import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
@@ -36,7 +36,7 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NoSettings> {
         return new CEVariableCollector(editor, getKeyId(), CONFUSED) {
             @Override
             public boolean isHintable(@NotNull PsiVariable element) {
-                return CEUtil.containsOnlySpecialCharacters(element.getName());
+                return CEUtils.containsOnlySpecialCharacters(element.getName());
             }
         };
     }

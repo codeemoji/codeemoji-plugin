@@ -1,5 +1,6 @@
 package codeemoji.core;
 
+import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
@@ -69,7 +70,7 @@ public abstract class CEVariableCollector extends CECollector<PsiVariable, PsiEl
     private void process(@NotNull PsiVariable variable, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
         if (isHintable(variable)) {
             addInlayOnEditor(variable.getNameIdentifier(), sink);
-            if (CEUtil.isNotPreviewEditor(editor)) {
+            if (CEUtils.isNotPreviewEditor(editor)) {
                 GlobalSearchScope scope = GlobalSearchScope.fileScope(variable.getContainingFile());
                 PsiReference[] refs = ReferencesSearch.search(variable, scope, false).toArray(PsiReference.EMPTY_ARRAY);
                 for (PsiReference ref : refs) {
@@ -85,7 +86,7 @@ public abstract class CEVariableCollector extends CECollector<PsiVariable, PsiEl
         variable.getContainingFile().accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
-                if (CEUtil.hasAUniqueQualifier(expression)) {
+                if (CEUtils.hasAUniqueQualifier(expression)) {
                     if (Objects.equals(expression.getText(), variable.getName())) {
                         addInlayOnEditor(expression, inlayHintsSink);
                     }
