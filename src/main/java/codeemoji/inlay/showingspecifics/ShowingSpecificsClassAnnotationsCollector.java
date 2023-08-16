@@ -14,16 +14,24 @@ import static codeemoji.core.config.CEFeatureRule.ANNOTATIONS;
 
 public class ShowingSpecificsClassAnnotationsCollector extends CEClassCollector {
 
-    public ShowingSpecificsClassAnnotationsCollector(@NotNull Editor editor, @NotNull String mainKeyId, CESymbol symbol, List<String> ruleValues) {
+    private final List<String> featureValues;
+
+    public ShowingSpecificsClassAnnotationsCollector(@NotNull Editor editor, @NotNull String mainKeyId, CESymbol symbol, List<String> featureValues) {
         super(editor, mainKeyId + "." + CLASS.getValue() + "." + ANNOTATIONS.getValue(), symbol);
+        this.featureValues = featureValues;
     }
 
     @Override
     public boolean isHintable(@NotNull PsiClass element) {
         PsiAnnotation[] annotations = element.getAnnotations();
         for (PsiAnnotation type : annotations) {
-            System.out.println(type.getNameReferenceElement());
+            for (String value : featureValues) {
+                String qualifiedName = type.getQualifiedName();
+                if (qualifiedName != null && qualifiedName.equalsIgnoreCase(value)) {
+                    return true;
+                }
+            }
         }
-        return true;
+        return false;
     }
 }

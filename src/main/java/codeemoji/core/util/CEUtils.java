@@ -222,4 +222,24 @@ public class CEUtils {
         }
         return false;
     }
+
+    public static @Nullable String resolveQualifiedName(@NotNull PsiClassType psiType) {
+        try {
+            PsiClass psiTypeClass = Objects.requireNonNull(psiType.resolve());
+            String qualifiedName = Objects.requireNonNull(psiTypeClass.getQualifiedName());
+            try {
+                Class<?> typeClass = Class.forName(qualifiedName);
+                return typeClass.getName();
+            } catch (RuntimeException | ClassNotFoundException ignored) {
+                Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+                for (Project proj : openProjects) {
+                    GlobalSearchScope scope = psiTypeClass.getResolveScope();
+                    PsiClass psiUserClass = JavaPsiFacade.getInstance(proj).findClass(qualifiedName, scope);
+                    return psiUserClass != null ? psiUserClass.getQualifiedName() : null;
+                }
+            }
+        } catch (RuntimeException ignored) {
+        }
+        return null;
+    }
 }

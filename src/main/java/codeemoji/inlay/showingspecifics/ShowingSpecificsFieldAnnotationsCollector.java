@@ -13,12 +13,15 @@ import static codeemoji.core.config.CEFeatureRule.ANNOTATIONS;
 
 public class ShowingSpecificsFieldAnnotationsCollector extends CEVariableCollector {
 
-    public ShowingSpecificsFieldAnnotationsCollector(@NotNull Editor editor, @NotNull String mainKeyId, CESymbol symbol, List<String> ruleValues) {
+    private final List<String> featureValues;
+
+    public ShowingSpecificsFieldAnnotationsCollector(@NotNull Editor editor, @NotNull String mainKeyId, CESymbol symbol, List<String> featureValues) {
         super(editor, mainKeyId + "." + FIELD.getValue() + "." + ANNOTATIONS.getValue(), symbol);
+        this.featureValues = featureValues;
     }
 
     @Override
     public boolean isHintable(@NotNull PsiVariable element) {
-        return true;
+        return false;
     }
 }
