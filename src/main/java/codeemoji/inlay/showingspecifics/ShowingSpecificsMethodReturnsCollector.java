@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static codeemoji.core.enums.CEElementRule.METHOD;
-import static codeemoji.core.enums.CEFeatureRule.RETURNS;
+import static codeemoji.core.config.CEElementRule.METHOD;
+import static codeemoji.core.config.CEFeatureRule.RETURNS;
 
 public class ShowingSpecificsMethodReturnsCollector extends CEMethodCollector {
 

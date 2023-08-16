@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static codeemoji.core.enums.CEElementRule.FIELD;
-import static codeemoji.core.enums.CEFeatureRule.TYPES;
+import static codeemoji.core.config.CEElementRule.FIELD;
+import static codeemoji.core.config.CEFeatureRule.TYPES;
 
 public class ShowingSpecificsFieldTypesCollector extends CEVariableCollector {
 

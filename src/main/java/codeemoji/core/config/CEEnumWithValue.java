@@ -1,4 +1,4 @@
-package codeemoji.core.enums;
+package codeemoji.core.config;
 
 public interface CEEnumWithValue {
     Object getValue();

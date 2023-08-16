@@ -9,8 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static codeemoji.core.enums.CEElementRule.CLASS;
-import static codeemoji.core.enums.CEFeatureRule.ANNOTATIONS;
+import static codeemoji.core.config.CEElementRule.CLASS;
+import static codeemoji.core.config.CEFeatureRule.ANNOTATIONS;
 
 public class ShowingSpecificsClassAnnotationsCollector extends CEClassCollector {
 

@@ -10,8 +10,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static codeemoji.core.enums.CEElementRule.CLASS;
-import static codeemoji.core.enums.CEFeatureRule.IMPLEMENTS;
+import static codeemoji.core.config.CEElementRule.CLASS;
+import static codeemoji.core.config.CEFeatureRule.IMPLEMENTS;
 
 public class ShowingSpecificsClassImplementsCollector extends CEClassCollector {
 

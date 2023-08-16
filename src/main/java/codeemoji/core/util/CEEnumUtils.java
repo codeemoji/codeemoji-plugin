@@ -1,6 +1,6 @@
 package codeemoji.core.util;
 
-import codeemoji.core.enums.CEEnumWithValue;
+import codeemoji.core.config.CEEnumWithValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

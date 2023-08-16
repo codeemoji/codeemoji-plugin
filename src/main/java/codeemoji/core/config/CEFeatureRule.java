@@ -1,4 +1,4 @@
-package codeemoji.core.enums;
+package codeemoji.core.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

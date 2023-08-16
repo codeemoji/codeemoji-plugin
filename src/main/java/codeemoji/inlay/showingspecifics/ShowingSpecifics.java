@@ -2,9 +2,9 @@ package codeemoji.inlay.showingspecifics;
 
 import codeemoji.core.CEMultiProvider;
 import codeemoji.core.config.CEConfigFile;
+import codeemoji.core.config.CEElementRule;
+import codeemoji.core.config.CEFeatureRule;
 import codeemoji.core.config.CEProjectRule;
-import codeemoji.core.enums.CEElementRule;
-import codeemoji.core.enums.CEFeatureRule;
 import codeemoji.core.util.CEEnumUtils;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
