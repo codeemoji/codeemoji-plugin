@@ -2,8 +2,11 @@ package codeemoji.inlay.showingspecifics;
 
 import codeemoji.core.CEMethodCollector;
 import codeemoji.core.CESymbol;
+import codeemoji.core.util.CEUtils;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -22,6 +25,20 @@ public class ShowingSpecificsMethodReturnsCollector extends CEMethodCollector {
 
     @Override
     public boolean isHintable(@NotNull PsiMethod element) {
+        if (!element.isConstructor()) {
+            PsiType psiType = element.getReturnType();
+            for (String value : featureValues) {
+                String qualifiedName = "";
+                if (psiType instanceof PsiClassType classType) {
+                    qualifiedName = CEUtils.resolveQualifiedName(classType);
+                } else {
+                    qualifiedName = psiType.getPresentableText();
+                }
+                if (qualifiedName != null && qualifiedName.equalsIgnoreCase(value)) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 }

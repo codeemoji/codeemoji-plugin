@@ -229,7 +229,7 @@ public class CEUtils {
             String qualifiedName = Objects.requireNonNull(psiTypeClass.getQualifiedName());
             try {
                 Class<?> typeClass = Class.forName(qualifiedName);
-                return typeClass.getName();
+                return typeClass.getCanonicalName();
             } catch (RuntimeException | ClassNotFoundException ignored) {
                 Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
                 for (Project proj : openProjects) {
@@ -237,9 +237,10 @@ public class CEUtils {
                     PsiClass psiUserClass = JavaPsiFacade.getInstance(proj).findClass(qualifiedName, scope);
                     return psiUserClass != null ? psiUserClass.getQualifiedName() : null;
                 }
+                return null;
             }
         } catch (RuntimeException ignored) {
+            return psiType.getName();
         }
-        return null;
     }
 }
