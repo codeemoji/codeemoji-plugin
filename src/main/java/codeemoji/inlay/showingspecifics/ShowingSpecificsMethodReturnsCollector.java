@@ -1,7 +1,7 @@
 package codeemoji.inlay.showingspecifics;
 
-import codeemoji.core.CEMethodCollector;
-import codeemoji.core.CESymbol;
+import codeemoji.core.collector.basic.CEMethodCollector;
+import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClassType;
@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static codeemoji.core.config.CEElementRule.METHOD;
-import static codeemoji.core.config.CEFeatureRule.RETURNS;
+import static codeemoji.core.collector.project.config.CEElementRule.METHOD;
+import static codeemoji.core.collector.project.config.CEFeatureRule.RETURNS;
 
 public class ShowingSpecificsMethodReturnsCollector extends CEMethodCollector {
 

@@ -1,4 +1,4 @@
-package codeemoji.core.config;
+package codeemoji.core.collector.project.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

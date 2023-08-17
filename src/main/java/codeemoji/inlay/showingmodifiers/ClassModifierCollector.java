@@ -1,7 +1,7 @@
 package codeemoji.inlay.showingmodifiers;
 
-import codeemoji.core.CEClassReferenceCollector;
-import codeemoji.core.CESymbol;
+import codeemoji.core.collector.reference.CEClassReferenceCollector;
+import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;

@@ -1,12 +1,14 @@
-package codeemoji.core;
+package codeemoji.core.collector.basic;
 
+import codeemoji.core.collector.CESingleCollector;
+import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class CEMethodCollector extends CECollector<PsiMethod, PsiIdentifier> {
+public abstract class CEMethodCollector extends CESingleCollector<PsiMethod, PsiIdentifier> {
 
     public CEMethodCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);

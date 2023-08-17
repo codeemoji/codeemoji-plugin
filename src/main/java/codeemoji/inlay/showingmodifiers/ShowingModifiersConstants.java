@@ -1,6 +1,6 @@
 package codeemoji.inlay.showingmodifiers;
 
-import codeemoji.core.CESymbol;
+import codeemoji.core.util.CESymbol;
 
 public class ShowingModifiersConstants {
 

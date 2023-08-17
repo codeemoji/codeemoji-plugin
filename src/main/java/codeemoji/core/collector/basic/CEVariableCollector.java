@@ -1,5 +1,7 @@
-package codeemoji.core;
+package codeemoji.core.collector.basic;
 
+import codeemoji.core.collector.CESingleCollector;
+import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
@@ -13,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 @Getter
-public abstract class CEVariableCollector extends CECollector<PsiVariable, PsiElement> {
+public abstract class CEVariableCollector extends CESingleCollector<PsiVariable, PsiElement> {
 
     private final boolean enabledForField = true;
     private final boolean enabledForParam = true;

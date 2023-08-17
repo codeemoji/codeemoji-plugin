@@ -1,4 +1,4 @@
-package codeemoji.core;
+package codeemoji.core.util;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;

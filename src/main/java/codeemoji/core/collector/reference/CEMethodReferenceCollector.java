@@ -1,5 +1,7 @@
-package codeemoji.core;
+package codeemoji.core.collector.reference;
 
+import codeemoji.core.collector.CESingleCollector;
+import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
@@ -7,9 +9,9 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class CEMethodCallCollector extends CECollector<PsiMethod, PsiMethodCallExpression> {
+public abstract class CEMethodReferenceCollector extends CESingleCollector<PsiMethod, PsiMethodCallExpression> {
 
-    public CEMethodCallCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    public CEMethodReferenceCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);
     }
 

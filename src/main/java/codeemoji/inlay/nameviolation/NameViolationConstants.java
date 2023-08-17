@@ -1,6 +1,6 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.CESymbol;
+import codeemoji.core.util.CESymbol;
 
 public class NameViolationConstants {
 

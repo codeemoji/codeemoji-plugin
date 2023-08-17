@@ -1,6 +1,6 @@
 package codeemoji.inlay.showingmodifiers;
 
-import codeemoji.core.CEBundle;
+import codeemoji.core.util.CEBundle;
 import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.util.ui.FormBuilder;

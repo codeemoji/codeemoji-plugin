@@ -1,5 +1,6 @@
-package codeemoji.core;
+package codeemoji.core.provider;
 
+import codeemoji.core.util.CEBundle;
 import com.intellij.codeInsight.hints.*;
 import com.intellij.lang.Language;
 import com.intellij.openapi.application.ApplicationManager;

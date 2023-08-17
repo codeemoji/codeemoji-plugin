@@ -1,5 +1,7 @@
-package codeemoji.core;
+package codeemoji.core.collector;
 
+import codeemoji.core.util.CEBundle;
+import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.FactoryInlayHintsCollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.presentation.DynamicInsetPresentation;
@@ -15,17 +17,13 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 @Getter
-public abstract class CECollector<H extends PsiElement, A extends PsiElement> extends FactoryInlayHintsCollector {
+public abstract class CECollector<A extends PsiElement> extends FactoryInlayHintsCollector {
 
     private final Editor editor;
-    private final String keyId;
-    private final InlayPresentation inlay;
 
-    public CECollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    public CECollector(@NotNull Editor editor) {
         super(editor);
         this.editor = editor;
-        this.keyId = keyId;
-        this.inlay = buildInlay(symbol);
     }
 
     @Override
@@ -36,9 +34,9 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> ex
         return false;
     }
 
-    public void addInlayOnEditor(@Nullable A element, InlayHintsSink sink) {
+    public void addInlayOnEditor(@Nullable A element, InlayHintsSink sink, InlayPresentation inlay) {
         if (element != null) {
-            sink.addInlineElement(calcOffset(element), false, getInlay(), false);
+            sink.addInlineElement(calcOffset(element), false, inlay, false);
         }
     }
 
@@ -49,26 +47,30 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> ex
         return 0;
     }
 
-    private InlayPresentation buildInlay(@Nullable CESymbol symbol) {
+    public InlayPresentation buildInlay(@Nullable CESymbol symbol, @NotNull String keyTooltip) {
+        return buildInlay(symbol, keyTooltip, null);
+    }
+
+    public InlayPresentation buildInlay(@Nullable CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         if (symbol == null) {
             symbol = new CESymbol();
         } else if (symbol.getIcon() != null) {
-            return buildInlayWithIcon(symbol.getIcon());
+            return buildInlayWithIcon(symbol.getIcon(), keyTooltip, suffixTooltip);
         }
-        return buildInlayWithSymbol(symbol.getEmoji());
+        return buildInlayWithSymbol(symbol.getEmoji(), keyTooltip, suffixTooltip);
     }
 
-    private InlayPresentation buildInlayWithIcon(@NotNull Icon icon) {
+    private InlayPresentation buildInlayWithIcon(@NotNull Icon icon, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         var inlay = getFactory().smallScaledIcon(icon);
-        return formatInlay(inlay);
+        return formatInlay(inlay, keyTooltip, suffixTooltip);
     }
 
-    private InlayPresentation buildInlayWithSymbol(@NotNull String emoji) {
+    private InlayPresentation buildInlayWithSymbol(@NotNull String emoji, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         var inlay = getFactory().smallText(emoji);
-        return formatInlay(inlay);
+        return formatInlay(inlay, keyTooltip, suffixTooltip);
     }
 
-    private InlayPresentation formatInlay(@NotNull InlayPresentation inlay) {
+    private InlayPresentation formatInlay(@NotNull InlayPresentation inlay, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         InsetValueProvider inset = new InsetValueProvider() {
             @Override
             public int getTop() {
@@ -76,16 +78,19 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> ex
             }
         };
         inlay = new DynamicInsetPresentation(inlay, inset);
-        String tooltip = getTooltip();
+        String tooltip = getTooltip(keyTooltip);
         if (tooltip != null) {
+            if (suffixTooltip != null) {
+                tooltip += " " + suffixTooltip;
+            }
             inlay = getFactory().withTooltip(tooltip, inlay);
         }
         return inlay;
     }
 
-    private @Nullable String getTooltip() {
+    private @Nullable String getTooltip(@NotNull String key) {
         try {
-            return CEBundle.getString("inlay." + getKeyId() + ".tooltip");
+            return CEBundle.getString(key);
         } catch (RuntimeException ex) {
             return null;
         }
@@ -97,5 +102,4 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> ex
 
     public abstract boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink);
 
-    public abstract boolean isHintable(@NotNull H element);
 }

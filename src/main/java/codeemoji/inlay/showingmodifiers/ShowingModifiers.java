@@ -1,6 +1,6 @@
 package codeemoji.inlay.showingmodifiers;
 
-import codeemoji.core.CEMultiProvider;
+import codeemoji.core.provider.CEMultiProvider;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;

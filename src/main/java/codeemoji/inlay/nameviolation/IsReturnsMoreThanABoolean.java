@@ -1,7 +1,7 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.CEMethodCollector;
-import codeemoji.core.CEProvider;
+import codeemoji.core.collector.basic.CEMethodCollector;
+import codeemoji.core.provider.CEProvider;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;

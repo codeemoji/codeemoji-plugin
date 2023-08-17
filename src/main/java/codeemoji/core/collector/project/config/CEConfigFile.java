@@ -1,4 +1,4 @@
-package codeemoji.core.config;
+package codeemoji.core.collector.project.config;
 
 import com.google.gson.Gson;
 import com.intellij.openapi.editor.Editor;

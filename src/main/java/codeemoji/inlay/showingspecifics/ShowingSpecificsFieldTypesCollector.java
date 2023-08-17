@@ -1,7 +1,7 @@
 package codeemoji.inlay.showingspecifics;
 
-import codeemoji.core.CESymbol;
-import codeemoji.core.CEVariableCollector;
+import codeemoji.core.collector.basic.CEVariableCollector;
+import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClassType;
@@ -12,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static codeemoji.core.config.CEElementRule.FIELD;
-import static codeemoji.core.config.CEFeatureRule.TYPES;
+import static codeemoji.core.collector.project.config.CEElementRule.FIELD;
+import static codeemoji.core.collector.project.config.CEFeatureRule.TYPES;
 
 public class ShowingSpecificsFieldTypesCollector extends CEVariableCollector {
 

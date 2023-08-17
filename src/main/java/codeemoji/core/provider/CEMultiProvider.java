@@ -1,5 +1,6 @@
-package codeemoji.core;
+package codeemoji.core.provider;
 
+import codeemoji.core.collector.CEMultiCollector;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
 import lombok.Getter;

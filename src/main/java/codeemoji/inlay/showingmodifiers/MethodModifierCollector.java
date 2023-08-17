@@ -1,7 +1,7 @@
 package codeemoji.inlay.showingmodifiers;
 
-import codeemoji.core.CEMethodCallCollector;
-import codeemoji.core.CESymbol;
+import codeemoji.core.collector.reference.CEMethodReferenceCollector;
+import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiMethod;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.intellij.psi.PsiModifier.DEFAULT;
 
-public class MethodModifierCollector extends CEMethodCallCollector {
+public class MethodModifierCollector extends CEMethodReferenceCollector {
 
     private final boolean activated;
     private final String modifier;
