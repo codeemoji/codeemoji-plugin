@@ -28,13 +28,12 @@ public class MethodInterfaceModifierCollector extends CEMethodReferenceCollector
     }
 
     @Override
-    public boolean isHintable(@NotNull PsiMethod element) {
+    public boolean checkHint(@NotNull PsiMethod element) {
         PsiElement parent = element.getParent();
-        if (parent instanceof PsiClass clazz) {
-            if (clazz.isInterface()) {
-                PsiModifierList psiModifierList = element.getModifierList();
-                return psiModifierList.hasModifierProperty(modifier);
-            }
+        if (parent instanceof PsiClass clazz && (clazz.isInterface())) {
+            PsiModifierList psiModifierList = element.getModifierList();
+            return psiModifierList.hasModifierProperty(modifier);
+
         }
         return false;
     }

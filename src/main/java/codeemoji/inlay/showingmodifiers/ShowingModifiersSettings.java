@@ -9,7 +9,11 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
+import java.util.EnumMap;
+import java.util.Map;
+
+import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.*;
 
 @ToString
 @EqualsAndHashCode
@@ -17,13 +21,13 @@ import java.util.HashMap;
 public class ShowingModifiersSettings implements PersistentStateComponent<ShowingModifiersSettings> {
 
     @MapAnnotation
-    private final HashMap<ShowingModifiers.ScopeModifier, Boolean> basicModifiersMap = new HashMap<>();
+    private final Map<ScopeModifier, Boolean> basicModifiersMap = new EnumMap<>(ScopeModifier.class);
 
     public ShowingModifiersSettings() {
-        basicModifiersMap.put(ShowingModifiers.ScopeModifier.VOLATILE_FIELD, true);
-        basicModifiersMap.put(ShowingModifiers.ScopeModifier.TRANSIENT_FIELD, true);
-        basicModifiersMap.put(ShowingModifiers.ScopeModifier.SYNCHRONIZED_METHOD, true);
-        basicModifiersMap.put(ShowingModifiers.ScopeModifier.NATIVE_METHOD, true);
+        basicModifiersMap.put(VOLATILE_FIELD, true);
+        basicModifiersMap.put(TRANSIENT_FIELD, true);
+        basicModifiersMap.put(SYNCHRONIZED_METHOD, true);
+        basicModifiersMap.put(NATIVE_METHOD, true);
     }
 
     @Override
@@ -35,12 +39,12 @@ public class ShowingModifiersSettings implements PersistentStateComponent<Showin
         XmlSerializerUtil.copyBean(state, this);
     }
 
-    public synchronized boolean query(@NotNull ShowingModifiers.ScopeModifier scopeModifier) {
+    public synchronized boolean query(@NotNull ScopeModifier scopeModifier) {
         basicModifiersMap.putIfAbsent(scopeModifier, false);
         return basicModifiersMap.get(scopeModifier);
     }
 
-    public synchronized void update(@NotNull ShowingModifiers.ScopeModifier scopeModifier, boolean value) {
+    public synchronized void update(@NotNull ScopeModifier scopeModifier, boolean value) {
         basicModifiersMap.put(scopeModifier, value);
     }
 

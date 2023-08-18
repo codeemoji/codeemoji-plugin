@@ -1,8 +1,5 @@
 package codeemoji.inlay.showingspecifics;
 
-import codeemoji.core.collector.project.CEClassProjectCollector;
-import codeemoji.core.collector.project.CEMethodProjectCollector;
-import codeemoji.core.collector.project.CEVariableProjectCollector;
 import codeemoji.core.provider.CEMultiProvider;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
@@ -24,9 +21,9 @@ public class ShowingSpecifics extends CEMultiProvider<NoSettings> {
     public List<InlayHintsCollector> buildCollectors(Editor editor) {
         List<InlayHintsCollector> list = new ArrayList<>();
 
-        list.add(new CEClassProjectCollector(editor));
-        list.add(new CEMethodProjectCollector(editor));
-        list.add(new CEVariableProjectCollector(editor));
+        list.add(new ClassProjectCollector(editor));
+        list.add(new MethodProjectCollector(editor));
+        list.add(new VariableProjectCollector(editor));
 
         return list;
     }

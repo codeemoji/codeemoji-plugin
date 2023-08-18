@@ -14,14 +14,14 @@ public abstract class CESingleCollector<H extends PsiElement, A extends PsiEleme
 
     private final InlayPresentation inlay;
 
-    public CESingleCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    protected CESingleCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor);
         this.inlay = buildInlay(symbol, "inlay." + keyId + ".tooltip");
     }
 
-    public void addInlayOnEditor(@Nullable A element, InlayHintsSink sink) {
-        addInlayOnEditor(element, sink, getInlay());
+    public void addInlay(@Nullable A element, InlayHintsSink sink) {
+        addInlay(element, sink, getInlay());
     }
 
-    public abstract boolean isHintable(@NotNull H element);
+    public abstract boolean checkHint(@NotNull H element);
 }

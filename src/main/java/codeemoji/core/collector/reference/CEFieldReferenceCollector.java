@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class CEFieldReferenceCollector extends CESingleCollector<PsiField, PsiReferenceExpression> {
 
-    public CEFieldReferenceCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    protected CEFieldReferenceCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);
     }
 
@@ -25,10 +25,8 @@ public abstract class CEFieldReferenceCollector extends CESingleCollector<PsiFie
                         PsiReference reference = expression.getReference();
                         if (reference != null) {
                             PsiElement resolveElement = reference.resolve();
-                            if (resolveElement instanceof PsiField field) {
-                                if (isHintable(field)) {
-                                    addInlayOnEditor(expression, inlayHintsSink);
-                                }
+                            if (resolveElement instanceof PsiField field && checkHint(field)) {
+                                addInlay(expression, inlayHintsSink);
                             }
                         }
                     }

@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class CEClassCollector extends CESingleCollector<PsiClass, PsiIdentifier> {
 
-    public CEClassCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    protected CEClassCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);
     }
 
@@ -20,8 +20,8 @@ public abstract class CEClassCollector extends CESingleCollector<PsiClass, PsiId
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
                 public void visitClass(@NotNull PsiClass clazz) {
-                    if (isHintable(clazz)) {
-                        addInlayOnEditor(clazz.getNameIdentifier(), inlayHintsSink);
+                    if (checkHint(clazz)) {
+                        addInlay(clazz.getNameIdentifier(), inlayHintsSink);
                     }
                     super.visitClass(clazz);
                 }

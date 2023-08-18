@@ -3,13 +3,14 @@ package codeemoji.core.collector.project;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiJvmModifiersOwner;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
-public class CEVariableProjectCollector extends CEProjectCollector {
+public abstract class CEVariableProjectCollector extends CEProjectCollector<PsiJvmModifiersOwner, PsiElement> {
 
-    public CEVariableProjectCollector(@NotNull Editor editor) {
+    protected CEVariableProjectCollector(@NotNull Editor editor) {
         super(editor);
     }
 

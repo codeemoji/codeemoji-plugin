@@ -25,7 +25,7 @@ public class ShowingSpecificsFieldTypesCollector extends CEVariableCollector {
     }
 
     @Override
-    public boolean isHintable(@NotNull PsiVariable element) {
+    public boolean checkHint(@NotNull PsiVariable element) {
         PsiTypeElement typeElement = element.getTypeElement();
         PsiType psiType = typeElement.getType();
         for (String value : featureValues) {

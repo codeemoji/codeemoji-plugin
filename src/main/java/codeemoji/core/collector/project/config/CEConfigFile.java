@@ -33,7 +33,7 @@ public class CEConfigFile {
                 try (InputStream is = file.getInputStream()) {
                     try (Reader isr = new InputStreamReader(is)) {
                         Gson gson = new Gson();
-                        Map<String, Object> map = gson.fromJson(isr, Map.class);
+                        @SuppressWarnings("unchecked") Map<String, Object> map = gson.fromJson(isr, Map.class);
                         for (Map.Entry<String, Object> entry : map.entrySet()) {
                             if (Objects.equals(entry.getKey(), PROJECT_RULES)) {
                                 CEProjectRule[] rules = gson.fromJson(String.valueOf(entry.getValue()), CEProjectRule[].class);

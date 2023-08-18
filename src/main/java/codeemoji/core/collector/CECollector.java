@@ -21,7 +21,7 @@ public abstract class CECollector<A extends PsiElement> extends FactoryInlayHint
 
     private final Editor editor;
 
-    public CECollector(@NotNull Editor editor) {
+    protected CECollector(@NotNull Editor editor) {
         super(editor);
         this.editor = editor;
     }
@@ -34,7 +34,7 @@ public abstract class CECollector<A extends PsiElement> extends FactoryInlayHint
         return false;
     }
 
-    public void addInlayOnEditor(@Nullable A element, InlayHintsSink sink, InlayPresentation inlay) {
+    public void addInlay(@Nullable A element, InlayHintsSink sink, InlayPresentation inlay) {
         if (element != null) {
             sink.addInlineElement(calcOffset(element), false, inlay, false);
         }

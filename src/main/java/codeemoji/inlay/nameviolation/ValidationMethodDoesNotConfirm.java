@@ -31,7 +31,7 @@ public class ValidationMethodDoesNotConfirm extends CEProvider<NoSettings> {
     public InlayHintsCollector buildCollector(Editor editor) {
         return new CEMethodCollector(editor, getKeyId(), CONFUSED) {
             @Override
-            public boolean isHintable(@NotNull PsiMethod element) {
+            public boolean checkHint(@NotNull PsiMethod element) {
                 return (element.getName().startsWith("validate") || element.getName().startsWith("check") || element.getName().startsWith("ensure")) && !Objects.equals(element.getReturnType(), PsiTypes.booleanType());
             }
         };

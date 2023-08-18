@@ -17,12 +17,16 @@ import java.util.Objects;
 @Getter
 public abstract class CEVariableCollector extends CESingleCollector<PsiVariable, PsiElement> {
 
-    private final boolean enabledForField = true;
-    private final boolean enabledForParam = true;
-    private final boolean enabledForLocalVariable = true;
+    private final boolean enabledForField;
+    private final boolean enabledForParam;
+    private final boolean enabledForLocalVariable;
 
-    public CEVariableCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    protected CEVariableCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);
+        enabledForField = true;
+        enabledForParam = true;
+        enabledForLocalVariable = true;
+
     }
 
     @Override
@@ -70,13 +74,13 @@ public abstract class CEVariableCollector extends CESingleCollector<PsiVariable,
     }
 
     private void process(@NotNull PsiVariable variable, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
-        if (isHintable(variable)) {
-            addInlayOnEditor(variable.getNameIdentifier(), sink);
+        if (checkHint(variable)) {
+            addInlay(variable.getNameIdentifier(), sink);
             if (CEUtils.isNotPreviewEditor(editor)) {
                 GlobalSearchScope scope = GlobalSearchScope.fileScope(variable.getContainingFile());
                 PsiReference[] refs = ReferencesSearch.search(variable, scope, false).toArray(PsiReference.EMPTY_ARRAY);
                 for (PsiReference ref : refs) {
-                    addInlayOnEditor(ref.getElement(), sink);
+                    addInlay(ref.getElement(), sink);
                 }
             } else {
                 processReferencesInPreviewEditor(variable, sink);
@@ -88,16 +92,16 @@ public abstract class CEVariableCollector extends CESingleCollector<PsiVariable,
         variable.getContainingFile().accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
-                if (CEUtils.hasAUniqueQualifier(expression)) {
-                    if (Objects.equals(expression.getText(), variable.getName())) {
-                        addInlayOnEditor(expression, inlayHintsSink);
-                    }
+                if (CEUtils.hasAUniqueQualifier(expression)
+                        && Objects.equals(expression.getText(), variable.getName())) {
+                    addInlay(expression, inlayHintsSink);
                 }
                 super.visitReferenceExpression(expression);
             }
         });
     }
 
+    @Override
     public int calcOffset(@Nullable PsiElement element) {
         if (element != null) {
             int length = element.getTextLength();

@@ -24,7 +24,7 @@ public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSetting
                     while (rentals.hasMoreElements()) {
                       Rental a = (Rental) rentals.nextElement();
                       result += a.getMovie().getTitle() + s
-                        + String.valueOf(a.calculateAmount()) +"\\n";
+                        + String.valueOf(a.calculateAmount());
                     }
                     return result;
                   }
@@ -35,7 +35,7 @@ public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSetting
     public InlayHintsCollector buildCollector(Editor editor) {
         return new CEVariableCollector(editor, getKeyId(), SMALL_NAME) {
             @Override
-            public boolean isHintable(@NotNull PsiVariable element) {
+            public boolean checkHint(@NotNull PsiVariable element) {
                 if (element.getNameIdentifier() != null) {
                     return getSettings().getNumberOfLetters() >= element.getNameIdentifier().getTextLength();
                 }

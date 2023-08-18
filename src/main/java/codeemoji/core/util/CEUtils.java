@@ -21,7 +21,10 @@ import java.util.regex.Pattern;
 
 import static com.intellij.psi.PsiModifier.*;
 
-public class CEUtils {
+public final class CEUtils {
+
+    private CEUtils() {
+    }
 
     public static boolean isNotPreviewEditor(@NotNull Editor editor) {
         return !editor.getEditorKind().name().equalsIgnoreCase("UNTYPED");
@@ -33,23 +36,28 @@ public class CEUtils {
             if (fieldType instanceof PsiClassType psiType) {
                 PsiClass psiTypeClass = Objects.requireNonNull(psiType.resolve());
                 String qualifiedName = Objects.requireNonNull(psiTypeClass.getQualifiedName());
-                try {
-                    Class<?> typeClass = Class.forName(qualifiedName);
-                    return Iterable.class.isAssignableFrom(typeClass);
-                } catch (RuntimeException | ClassNotFoundException ignored) {
-                    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-                    for (Project proj : openProjects) {
-                        GlobalSearchScope scope = psiTypeClass.getResolveScope();
-                        PsiClass psiUserClass = JavaPsiFacade.getInstance(proj).findClass(qualifiedName, scope);
-                        PsiClassType iteratorType = JavaPsiFacade.getElementFactory(proj).createTypeByFQClassName("java.lang.Iterable", scope);
-                        PsiClass iteratorClass = iteratorType.resolve();
-                        if (iteratorClass != null && psiUserClass != null && psiUserClass.isInheritor(iteratorClass, true)) {
-                            return true;
-                        }
-                    }
-                }
+                return isIterableType(qualifiedName, psiTypeClass);
             }
         } catch (RuntimeException ignored) {
+        }
+        return false;
+    }
+
+    private static boolean isIterableType(@NotNull String qualifiedName, @NotNull PsiClass psiTypeClass) {
+        try {
+            Class<?> typeClass = Class.forName(qualifiedName);
+            return Iterable.class.isAssignableFrom(typeClass);
+        } catch (RuntimeException | ClassNotFoundException ignored) {
+            Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+            for (Project proj : openProjects) {
+                GlobalSearchScope scope = psiTypeClass.getResolveScope();
+                PsiClass psiUserClass = JavaPsiFacade.getInstance(proj).findClass(qualifiedName, scope);
+                PsiClassType iteratorType = JavaPsiFacade.getElementFactory(proj).createTypeByFQClassName("java.lang.Iterable", scope);
+                PsiClass iteratorClass = iteratorType.resolve();
+                if (iteratorClass != null && psiUserClass != null && psiUserClass.isInheritor(iteratorClass, true)) {
+                    return true;
+                }
+            }
         }
         return false;
     }
@@ -133,7 +141,9 @@ public class CEUtils {
         for (String pattern : pluralPatterns) {
             Pattern pat = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
             Matcher mat = pat.matcher(word);
-            return mat.matches();
+            if (mat.matches()) {
+                return true;
+            }
         }
         return false;
     }
@@ -213,7 +223,7 @@ public class CEUtils {
         if (formattedName.isEmpty()) {
             return false;
         }
-        //TODO: implement configuration option
+        //TODO: implement configuration options
         String[] whiteListWords = {"class", "list", "is"};
         for (String word : whiteListWords) {
             if (formattedName.endsWith(word)) {
@@ -227,20 +237,26 @@ public class CEUtils {
         try {
             PsiClass psiTypeClass = Objects.requireNonNull(psiType.resolve());
             String qualifiedName = Objects.requireNonNull(psiTypeClass.getQualifiedName());
-            try {
-                Class<?> typeClass = Class.forName(qualifiedName);
-                return typeClass.getCanonicalName();
-            } catch (RuntimeException | ClassNotFoundException ignored) {
-                Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-                for (Project proj : openProjects) {
-                    GlobalSearchScope scope = psiTypeClass.getResolveScope();
-                    PsiClass psiUserClass = JavaPsiFacade.getInstance(proj).findClass(qualifiedName, scope);
-                    return psiUserClass != null ? psiUserClass.getQualifiedName() : null;
-                }
-                return null;
-            }
+            return resolveQualifiedName(qualifiedName, psiTypeClass);
         } catch (RuntimeException ignored) {
             return psiType.getName();
+        }
+    }
+
+    private static @Nullable String resolveQualifiedName(@NotNull String qualifiedName, @NotNull PsiClass psiTypeClass) {
+        try {
+            Class<?> typeClass = Class.forName(qualifiedName);
+            return typeClass.getCanonicalName();
+        } catch (RuntimeException | ClassNotFoundException ignored) {
+            Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+            for (Project proj : openProjects) {
+                GlobalSearchScope scope = psiTypeClass.getResolveScope();
+                PsiClass psiUserClass = JavaPsiFacade.getInstance(proj).findClass(qualifiedName, scope);
+                if (psiUserClass != null) {
+                    return psiUserClass.getQualifiedName();
+                }
+            }
+            return null;
         }
     }
 }

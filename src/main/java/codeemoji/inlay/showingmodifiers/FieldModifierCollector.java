@@ -29,7 +29,7 @@ public class FieldModifierCollector extends CEFieldReferenceCollector {
     }
 
     @Override
-    public boolean isHintable(@NotNull PsiField element) {
+    public boolean checkHint(@NotNull PsiField element) {
         PsiModifierList psiModifierList = element.getModifierList();
         if (psiModifierList != null) {
             if (modifier.equalsIgnoreCase(DEFAULT)) {

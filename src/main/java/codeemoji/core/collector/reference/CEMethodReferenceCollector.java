@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class CEMethodReferenceCollector extends CESingleCollector<PsiMethod, PsiMethodCallExpression> {
 
-    public CEMethodReferenceCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    protected CEMethodReferenceCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);
     }
 
@@ -21,15 +21,14 @@ public abstract class CEMethodReferenceCollector extends CESingleCollector<PsiMe
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
                 public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
-                    if (CEUtils.isNotPreviewEditor(editor)) {
-                        if (callExpression instanceof PsiMethodCallExpression mexp) {
-                            PsiMethod method = mexp.resolveMethod();
-                            if (method != null) {
-                                if (isHintable(method)) {
-                                    addInlayOnEditor(mexp, inlayHintsSink);
-                                }
-                            }
+                    if (CEUtils.isNotPreviewEditor(editor) &&
+                            (callExpression instanceof PsiMethodCallExpression mexp)) {
+                        PsiMethod method = mexp.resolveMethod();
+                        if (method != null && (checkHint(method))) {
+                            addInlay(mexp, inlayHintsSink);
+
                         }
+
                     }
                     super.visitCallExpression(callExpression);
                 }

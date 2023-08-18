@@ -24,7 +24,7 @@ public class ShowingSpecificsMethodReturnsCollector extends CEMethodCollector {
     }
 
     @Override
-    public boolean isHintable(@NotNull PsiMethod element) {
+    public boolean checkHint(@NotNull PsiMethod element) {
         if (!element.isConstructor()) {
             PsiType psiType = element.getReturnType();
             for (String value : featureValues) {

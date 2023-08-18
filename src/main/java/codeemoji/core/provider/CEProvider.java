@@ -22,7 +22,7 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
 
     private S settings;
 
-    public CEProvider() {
+    protected CEProvider() {
         this.settings = createSettings();
     }
 
@@ -77,7 +77,7 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
                 }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                      NoSuchMethodException ex) {
-                throw new RuntimeException(ex);
+                ex.printStackTrace();
             }
         }
         return settings;

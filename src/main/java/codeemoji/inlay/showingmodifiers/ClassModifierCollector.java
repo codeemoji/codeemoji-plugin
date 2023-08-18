@@ -29,7 +29,7 @@ public class ClassModifierCollector extends CEClassReferenceCollector {
     }
 
     @Override
-    public boolean isHintable(@NotNull PsiClass element) {
+    public boolean checkHint(@NotNull PsiClass element) {
         PsiModifierList psiModifierList = element.getModifierList();
         if (psiModifierList != null) {
             if (modifier.equalsIgnoreCase(DEFAULT)) {

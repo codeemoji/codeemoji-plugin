@@ -20,10 +20,7 @@ public class CESymbol {
     }
 
     public CESymbol(@Nullable Icon icon) {
-        try {
-            this.icon = icon;
-        } catch (RuntimeException ignored) {
-        }
+        this.icon = icon;
     }
 
     public CESymbol(int codePoint) {

@@ -29,7 +29,7 @@ public class MethodModifierCollector extends CEMethodReferenceCollector {
     }
 
     @Override
-    public boolean isHintable(@NotNull PsiMethod element) {
+    public boolean checkHint(@NotNull PsiMethod element) {
         PsiModifierList psiModifierList = element.getModifierList();
         if (modifier.equalsIgnoreCase(DEFAULT)) {
             return CEUtils.checkDefaultModifier(psiModifierList);

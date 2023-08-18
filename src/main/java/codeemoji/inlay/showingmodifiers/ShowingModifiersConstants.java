@@ -2,7 +2,7 @@ package codeemoji.inlay.showingmodifiers;
 
 import codeemoji.core.util.CESymbol;
 
-public class ShowingModifiersConstants {
+public final class ShowingModifiersConstants {
 
     public static final CESymbol PUBLIC_SYMBOL = new CESymbol(0x1F30E); //globe
     public static final CESymbol DEFAULT_SYMBOL = new CESymbol(0x1F310); //globe with meridians
@@ -17,5 +17,8 @@ public class ShowingModifiersConstants {
     public static final CESymbol DEFAULT_INTERFACE_SYMBOL = new CESymbol(0x1F503); //arrow curving
     public static final CESymbol VOLATILE_SYMBOL = new CESymbol(0x26A1); //high voltage
     public static final CESymbol TRANSIENT_SYMBOL = new CESymbol(0x23F3); //hourglass
+    
+    private ShowingModifiersConstants() {
+    }
 
 }

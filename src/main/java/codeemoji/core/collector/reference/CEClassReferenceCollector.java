@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class CEClassReferenceCollector extends CESingleCollector<PsiClass, PsiElement> {
 
-    public CEClassReferenceCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    protected CEClassReferenceCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);
     }
 
@@ -25,10 +25,8 @@ public abstract class CEClassReferenceCollector extends CESingleCollector<PsiCla
                         PsiReference reference = expression.getReference();
                         if (reference != null) {
                             PsiElement resolveElement = reference.resolve();
-                            if (resolveElement instanceof PsiClass clazz) {
-                                if (isHintable(clazz)) {
-                                    addInlayOnEditor(expression, inlayHintsSink);
-                                }
+                            if (resolveElement instanceof PsiClass clazz && checkHint(clazz)) {
+                                addInlay(expression, inlayHintsSink);
                             }
                         }
                     }
@@ -38,17 +36,14 @@ public abstract class CEClassReferenceCollector extends CESingleCollector<PsiCla
                 @Override
                 public void visitVariable(@NotNull PsiVariable variable) {
                     PsiTypeElement typeElement = variable.getTypeElement();
-                    if (typeElement != null) {
-                        if (!typeElement.isInferredType()) {
-                            if (typeElement.getType() instanceof PsiClassType classType) {
-                                PsiClass clazz = classType.resolve();
-                                if (clazz != null) {
-                                    if (isHintable(clazz)) {
-                                        addInlayOnEditor(variable, inlayHintsSink);
-                                    }
-                                }
-                            }
+                    if (typeElement != null && !typeElement.isInferredType()
+                            && typeElement.getType() instanceof PsiClassType classType) {
+                        PsiClass clazz = classType.resolve();
+                        if (clazz != null && (checkHint(clazz))) {
+                            addInlay(variable, inlayHintsSink);
+
                         }
+
                     }
                     super.visitVariable(variable);
                 }
