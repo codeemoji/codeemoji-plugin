@@ -13,18 +13,8 @@ import static codeemoji.inlay.showingspecifics.ShowingSpecificsConstants.TYPES_S
 @Getter
 public class ProjectFieldCollector extends CEProjectVariableCollector {
 
-    public ProjectFieldCollector(@NotNull Editor editor) {
-        super(editor, FIELD);
-    }
-
-    @Override
-    public @NotNull String getTooltipKeyAnnotations() {
-        return "inlay.showingspecifics.field.annotations.tooltip";
-    }
-
-    @Override
-    public @NotNull String getTooltipKeyTypes() {
-        return "inlay.showingspecifics.field.types.tooltip";
+    public ProjectFieldCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
+        super(editor, FIELD, mainKeyId);
     }
 
     @Override
@@ -36,4 +26,5 @@ public class ProjectFieldCollector extends CEProjectVariableCollector {
     public @NotNull CESymbol getSymbolTypes() {
         return TYPES_SYMBOL;
     }
+
 }

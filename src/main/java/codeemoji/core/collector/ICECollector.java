@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public interface CECollector<A extends PsiElement> {
+public interface ICECollector<A extends PsiElement> {
 
     PresentationFactory getFactory();
 

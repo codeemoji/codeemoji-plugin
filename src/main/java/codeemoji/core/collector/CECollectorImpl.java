@@ -8,7 +8,7 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
-public abstract class CECollectorImpl<A extends PsiElement> extends FactoryInlayHintsCollector implements CECollector<A> {
+public abstract class CECollectorImpl<A extends PsiElement> extends FactoryInlayHintsCollector implements ICECollector<A> {
 
     private final Editor editor;
 

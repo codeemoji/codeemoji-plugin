@@ -13,18 +13,8 @@ import static codeemoji.inlay.showingspecifics.ShowingSpecificsConstants.TYPES_S
 @Getter
 public class ProjectParameterCollector extends CEProjectVariableCollector {
 
-    public ProjectParameterCollector(@NotNull Editor editor) {
-        super(editor, PARAMETER);
-    }
-
-    @Override
-    public @NotNull String getTooltipKeyAnnotations() {
-        return "inlay.showingspecifics.parameter.annotations.tooltip";
-    }
-
-    @Override
-    public @NotNull String getTooltipKeyTypes() {
-        return "inlay.showingspecifics.parameter.types.tooltip";
+    public ProjectParameterCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
+        super(editor, PARAMETER, mainKeyId);
     }
 
     @Override

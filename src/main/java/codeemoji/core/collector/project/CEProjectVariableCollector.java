@@ -1,7 +1,6 @@
 package codeemoji.core.collector.project;
 
 import codeemoji.core.collector.project.config.CEElementRule;
-import codeemoji.core.collector.project.config.CEFeatureRule;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
@@ -13,24 +12,22 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import static codeemoji.core.collector.project.config.CEElementRule.METHOD;
 import static codeemoji.core.collector.project.config.CEFeatureRule.TYPES;
 
 @Getter
-public abstract class CEProjectVariableCollector extends CEProjectCollector<PsiVariable, PsiReferenceExpression> {
+public abstract class CEProjectVariableCollector extends CEProjectCollector<PsiVariable, PsiReferenceExpression>
+        implements ICEProjectTypes<PsiReferenceExpression> {
 
     private final CEElementRule elementRule;
-    private final String tooltipKeyTypes;
+    private final String keyTypes;
     private final CESymbol symbolTypes;
 
-    protected CEProjectVariableCollector(@NotNull Editor editor, @NotNull CEElementRule elementRule) {
-        super(editor);
+    protected CEProjectVariableCollector(@NotNull Editor editor, @NotNull CEElementRule elementRule, @NotNull String mainKeyId) {
+        super(editor, mainKeyId + "." + elementRule.getValue());
         this.elementRule = elementRule;
-        this.tooltipKeyTypes = "";
+        this.keyTypes = getMainKeyId() + "." + TYPES.getValue() + ".tooltip";
         this.symbolTypes = new CESymbol();
     }
 
@@ -51,59 +48,40 @@ public abstract class CEProjectVariableCollector extends CEProjectCollector<PsiV
                     }
                     super.visitReferenceExpression(expression);
                 }
-
-                @Contract(pure = true)
-                private @Nullable Class<? extends PsiVariable> getClassByElementRule() {
-                    switch (elementRule) {
-                        case FIELD -> {
-                            return PsiField.class;
-                        }
-                        case LOCALVARIABLE -> {
-                            return PsiLocalVariable.class;
-                        }
-                        case PARAMETER -> {
-                            return PsiParameter.class;
-                        }
-                        default -> {
-                            return null;
-                        }
-                    }
-                }
             });
         }
         return false;
     }
 
-    @Override
-    public void processHint(@NotNull PsiReferenceExpression addHintElement, @NotNull PsiVariable evaluationElement, @NotNull InlayHintsSink sink) {
-        processAnnotationsFR(METHOD, evaluationElement, addHintElement, sink);
-        addInlayVariableTypesFR(addHintElement, needsHintVariableFR(evaluationElement.getType()), sink);
-    }
-
-    public @NotNull List<String> needsHintVariableFR(@NotNull PsiType type) {
-        Map<CEFeatureRule, List<String>> rules = getRules(getElementRule());
-        List<String> featureValues = rules.get(TYPES);
-        List<String> hintValues = new ArrayList<>();
-        if (featureValues != null) {
-            for (String value : featureValues) {
-                String qualifiedName = "";
-                if (type instanceof PsiClassType classType) {
-                    qualifiedName = CEUtils.resolveQualifiedName(classType);
-                } else {
-                    qualifiedName = type.getPresentableText();
-                }
-                if (qualifiedName != null && qualifiedName.equalsIgnoreCase(value)) {
-                    hintValues.add(value);
-                }
+    @Contract(pure = true)
+    private @Nullable Class<? extends PsiVariable> getClassByElementRule() {
+        switch (elementRule) {
+            case FIELD -> {
+                return PsiField.class;
+            }
+            case LOCALVARIABLE -> {
+                return PsiLocalVariable.class;
+            }
+            case PARAMETER -> {
+                return PsiParameter.class;
+            }
+            default -> {
+                return null;
             }
         }
-        return hintValues;
     }
 
-    private void addInlayVariableTypesFR(@NotNull PsiReferenceExpression addHintElement, @NotNull List<String> hintValues,
-                                         @NotNull InlayHintsSink sink) {
+    @Override
+    public void processHint(@NotNull PsiReferenceExpression addHintElement, @NotNull PsiVariable evaluationElement, @NotNull InlayHintsSink sink) {
+        processAnnotationsFR(getElementRule(), evaluationElement, addHintElement, sink);
+        processTypesFR(getElementRule(), TYPES, evaluationElement.getType(), addHintElement, sink, getSymbolTypes(), getKeyTypes());
+    }
+
+    @Override
+    public void addInlayTypesFR(@NotNull PsiReferenceExpression addHintElement, @NotNull List<String> hintValues,
+                                @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
-            InlayPresentation inlay = buildInlay(getSymbolTypes(), getTooltipKeyTypes(), String.valueOf(hintValues));
+            InlayPresentation inlay = buildInlay(symbol, keyTooltip, String.valueOf(hintValues));
             addInlay(addHintElement, sink, inlay);
         }
     }

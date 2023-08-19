@@ -1,6 +1,5 @@
 package codeemoji.core.collector.project;
 
-import codeemoji.core.collector.project.config.CEFeatureRule;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
@@ -11,26 +10,25 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static codeemoji.core.collector.project.config.CEElementRule.CLASS;
 import static codeemoji.core.collector.project.config.CEFeatureRule.EXTENDS;
 import static codeemoji.core.collector.project.config.CEFeatureRule.IMPLEMENTS;
 
 @Getter
-public abstract class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiElement> {
+public abstract class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiElement>
+        implements ICEProjectReferenceList<PsiReferenceList, PsiElement> {
 
-    private final String tooltipKeyExtends;
-    private final String tooltipKeyImplements;
+    private final String keyExtends;
+    private final String keyImplements;
     private final CESymbol symbolExtends;
     private final CESymbol symbolImplements;
 
-    protected CEProjectClassCollector(@NotNull Editor editor) {
-        super(editor);
-        tooltipKeyExtends = "";
-        tooltipKeyImplements = "";
+    protected CEProjectClassCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
+        super(editor, mainKeyId + ".class");
+        keyExtends = getMainKeyId() + "." + EXTENDS.getValue() + ".tooltip";
+        keyImplements = getMainKeyId() + "." + IMPLEMENTS.getValue() + ".tooltip";
         symbolExtends = new CESymbol();
         symbolImplements = new CESymbol();
     }
@@ -75,33 +73,13 @@ public abstract class CEProjectClassCollector extends CEProjectCollector<PsiClas
     @Override
     public void processHint(@NotNull PsiElement addHintElement, @NotNull PsiClass evaluationElement, @NotNull InlayHintsSink sink) {
         processAnnotationsFR(CLASS, evaluationElement, addHintElement, sink);
-        addInlayClassFR(addHintElement, needsHintClassFR(EXTENDS, evaluationElement.getExtendsList()), sink,
-                getSymbolExtends(), getTooltipKeyExtends());
-        addInlayClassFR(addHintElement, needsHintClassFR(IMPLEMENTS, evaluationElement.getImplementsList()), sink,
-                getSymbolImplements(), getTooltipKeyImplements());
+        processReferenceListFR(EXTENDS, evaluationElement.getExtendsList(), addHintElement, sink, getSymbolExtends(), getKeyExtends());
+        processReferenceListFR(IMPLEMENTS, evaluationElement.getImplementsList(), addHintElement, sink, getSymbolImplements(), getKeyImplements());
     }
 
-    private @NotNull List<String> needsHintClassFR(@NotNull CEFeatureRule featureRule, PsiReferenceList refList) {
-        Map<CEFeatureRule, List<String>> rules = getRules(CLASS);
-        List<String> featureValues = rules.get(featureRule);
-        List<String> hintValues = new ArrayList<>();
-        if (featureValues != null && (refList != null)) {
-            PsiClassType[] refs = refList.getReferencedTypes();
-            for (PsiClassType psiType : refs) {
-                for (String value : featureValues) {
-                    String qualifiedName = CEUtils.resolveQualifiedName(psiType);
-                    if (qualifiedName != null && qualifiedName.equalsIgnoreCase(value)) {
-                        hintValues.add(value);
-                    }
-                }
-            }
-
-        }
-        return hintValues;
-    }
-
-    private void addInlayClassFR(@NotNull PsiElement addHintElement, @NotNull List<String> hintValues,
-                                 @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
+    @Override
+    public void addInlayReferenceListFR(@NotNull PsiElement addHintElement, @NotNull List<String> hintValues,
+                                        @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
             InlayPresentation inlay = buildInlay(symbol, keyTooltip, String.valueOf(hintValues));
             addInlay(addHintElement, sink, inlay);

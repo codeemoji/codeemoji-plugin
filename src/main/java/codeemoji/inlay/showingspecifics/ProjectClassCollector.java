@@ -11,23 +11,8 @@ import static codeemoji.inlay.showingspecifics.ShowingSpecificsConstants.*;
 @Getter
 public class ProjectClassCollector extends CEProjectClassCollector {
 
-    public ProjectClassCollector(@NotNull Editor editor) {
-        super(editor);
-    }
-
-    @Override
-    public @NotNull String getTooltipKeyAnnotations() {
-        return "inlay.showingspecifics.class.annotations.tooltip";
-    }
-
-    @Override
-    public @NotNull String getTooltipKeyExtends() {
-        return "inlay.showingspecifics.class.extends.tooltip";
-    }
-
-    @Override
-    public @NotNull String getTooltipKeyImplements() {
-        return "inlay.showingspecifics.class.implements.tooltip";
+    public ProjectClassCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
+        super(editor, mainKeyId);
     }
 
     @Override

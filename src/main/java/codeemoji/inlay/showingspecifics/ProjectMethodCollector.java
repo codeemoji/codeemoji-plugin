@@ -12,18 +12,8 @@ import static codeemoji.inlay.showingspecifics.ShowingSpecificsConstants.RETURNS
 @Getter
 public class ProjectMethodCollector extends CEProjectMethodCollector {
 
-    public ProjectMethodCollector(@NotNull Editor editor) {
-        super(editor);
-    }
-
-    @Override
-    public @NotNull String getTooltipKeyAnnotations() {
-        return "inlay.showingspecifics.method.annotations.tooltip";
-    }
-
-    @Override
-    public @NotNull String getTooltipKeyReturns() {
-        return "inlay.showingspecifics.method.returns.tooltip";
+    public ProjectMethodCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
+        super(editor, mainKeyId);
     }
 
     @Override
