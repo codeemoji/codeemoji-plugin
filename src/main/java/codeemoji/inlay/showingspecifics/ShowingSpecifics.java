@@ -21,11 +21,11 @@ public class ShowingSpecifics extends CEMultiProvider<NoSettings> {
     public List<InlayHintsCollector> buildCollectors(Editor editor) {
         List<InlayHintsCollector> list = new ArrayList<>();
 
-        //list.add(new ClassProjectCollector(editor));
-        //list.add(new MethodProjectCollector(editor));
-        //list.add(new FieldProjectCollector(editor));
-        //list.add(new LocalVariableProjectCollector(editor));
-        list.add(new ParameterProjectCollector(editor));
+        list.add(new ProjectClassCollector(editor));
+        list.add(new ProjectMethodCollector(editor));
+        list.add(new ProjectFieldCollector(editor));
+        list.add(new ProjectLocalVariableCollector(editor));
+        list.add(new ProjectParameterCollector(editor));
 
         return list;
     }

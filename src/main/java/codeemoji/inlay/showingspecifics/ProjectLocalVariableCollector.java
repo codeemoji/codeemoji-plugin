@@ -1,20 +1,19 @@
 package codeemoji.inlay.showingspecifics;
 
-import codeemoji.core.collector.project.CEVariableProjectCollector;
+import codeemoji.core.collector.project.CEProjectVariableCollector;
 import codeemoji.core.util.CESymbol;
 import com.intellij.openapi.editor.Editor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import static codeemoji.core.collector.project.config.CEElementRule.FIELD;
 import static codeemoji.core.collector.project.config.CEElementRule.LOCALVARIABLE;
 import static codeemoji.inlay.showingspecifics.ShowingSpecificsConstants.ANNOTATIONS_SYMBOL;
 import static codeemoji.inlay.showingspecifics.ShowingSpecificsConstants.TYPES_SYMBOL;
 
 @Getter
-public class LocalVariableProjectCollector extends CEVariableProjectCollector {
+public class ProjectLocalVariableCollector extends CEProjectVariableCollector {
 
-    public LocalVariableProjectCollector(@NotNull Editor editor) {
+    public ProjectLocalVariableCollector(@NotNull Editor editor) {
         super(editor, LOCALVARIABLE);
     }
 

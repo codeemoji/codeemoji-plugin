@@ -20,7 +20,7 @@ public abstract class CEMethodCollector extends CESingleCollector<PsiMethod, Psi
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
                 public void visitMethod(@NotNull PsiMethod method) {
-                    if (checkHint(method)) {
+                    if (needsHint(method)) {
                         addInlay(method.getNameIdentifier(), inlayHintsSink);
                     }
                     super.visitMethod(method);

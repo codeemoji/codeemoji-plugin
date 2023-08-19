@@ -1,6 +1,6 @@
 package codeemoji.core.collector.project;
 
-import codeemoji.core.collector.CECollector;
+import codeemoji.core.collector.CECollectorImpl;
 import codeemoji.core.collector.project.config.CEConfigFile;
 import codeemoji.core.collector.project.config.CEElementRule;
 import codeemoji.core.collector.project.config.CEFeatureRule;
@@ -24,7 +24,7 @@ import java.util.Map;
 import static codeemoji.core.collector.project.config.CEFeatureRule.ANNOTATIONS;
 
 @Getter
-public abstract class CEProjectCollector<H extends PsiModifierListOwner, A extends PsiElement> extends CECollector<A> {
+public abstract class CEProjectCollector<H extends PsiModifierListOwner, A extends PsiElement> extends CECollectorImpl<A> {
 
     protected final CEConfigFile configFile;
     private final String tooltipKeyAnnotations;
@@ -53,25 +53,36 @@ public abstract class CEProjectCollector<H extends PsiModifierListOwner, A exten
         return configFile.getProjectConfigs().get(key);
     }
 
-    public void processHintAnnotations(@NotNull CEElementRule elementRule, @NotNull A hintElement, @NotNull H evaluationElement, @NotNull InlayHintsSink sink) {
+    public void processAnnotationsFR(@NotNull CEElementRule elementRule, @NotNull H evaluationElement,
+                                     @NotNull A hintElement, @NotNull InlayHintsSink sink) {
+        addInlayAnnotationsFeatureByElement(hintElement, needsHintAnnotationsFeatureByElement(elementRule, evaluationElement), sink);
+    }
+
+    private @NotNull List<String> needsHintAnnotationsFeatureByElement(@NotNull CEElementRule elementRule, @NotNull H evaluationElement) {
         Map<CEFeatureRule, List<String>> rules = getRules(elementRule);
         List<String> featureValues = rules.get(ANNOTATIONS);
         List<String> hintValues = new ArrayList<>();
-        PsiAnnotation[] annotations = evaluationElement.getAnnotations();
-        for (PsiAnnotation type : annotations) {
-            for (String value : featureValues) {
-                String qualifiedName = type.getQualifiedName();
-                if (qualifiedName != null && qualifiedName.equalsIgnoreCase(value)) {
-                    hintValues.add(value);
+        if (featureValues != null) {
+            PsiAnnotation[] annotations = evaluationElement.getAnnotations();
+            for (PsiAnnotation type : annotations) {
+                for (String value : featureValues) {
+                    String qualifiedName = type.getQualifiedName();
+                    if (qualifiedName != null && qualifiedName.equalsIgnoreCase(value)) {
+                        hintValues.add(value);
+                    }
                 }
             }
         }
+        return hintValues;
+    }
+
+    private void addInlayAnnotationsFeatureByElement(@NotNull A hintElement, @NotNull List<String> hintValues, @NotNull InlayHintsSink sink) {
         if (!hintValues.isEmpty()) {
             InlayPresentation inlay = buildInlay(getSymbolAnnotations(), getTooltipKeyAnnotations(), String.valueOf(hintValues));
             addInlay(hintElement, sink, inlay);
         }
     }
 
-    public abstract void checkHint(@NotNull A hintElement, @NotNull H evaluationElement, @NotNull InlayHintsSink sink);
+    public abstract void processHint(@NotNull A addHintElement, @NotNull H evaluationElement, @NotNull InlayHintsSink sink);
 
 }

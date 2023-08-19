@@ -74,7 +74,7 @@ public abstract class CEVariableCollector extends CESingleCollector<PsiVariable,
     }
 
     private void process(@NotNull PsiVariable variable, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
-        if (checkHint(variable)) {
+        if (needsHint(variable)) {
             addInlay(variable.getNameIdentifier(), sink);
             if (CEUtils.isNotPreviewEditor(editor)) {
                 GlobalSearchScope scope = GlobalSearchScope.fileScope(variable.getContainingFile());

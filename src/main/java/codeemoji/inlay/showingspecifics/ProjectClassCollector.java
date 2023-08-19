@@ -1,6 +1,6 @@
 package codeemoji.inlay.showingspecifics;
 
-import codeemoji.core.collector.project.CEClassProjectCollector;
+import codeemoji.core.collector.project.CEProjectClassCollector;
 import codeemoji.core.util.CESymbol;
 import com.intellij.openapi.editor.Editor;
 import lombok.Getter;
@@ -9,9 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import static codeemoji.inlay.showingspecifics.ShowingSpecificsConstants.*;
 
 @Getter
-public class ClassProjectCollector extends CEClassProjectCollector {
+public class ProjectClassCollector extends CEProjectClassCollector {
 
-    public ClassProjectCollector(@NotNull Editor editor) {
+    public ProjectClassCollector(@NotNull Editor editor) {
         super(editor);
     }
 

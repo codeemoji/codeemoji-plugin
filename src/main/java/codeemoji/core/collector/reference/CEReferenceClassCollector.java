@@ -9,9 +9,9 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class CEClassReferenceCollector extends CESingleCollector<PsiClass, PsiElement> {
+public abstract class CEReferenceClassCollector extends CESingleCollector<PsiClass, PsiElement> {
 
-    protected CEClassReferenceCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    protected CEReferenceClassCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);
     }
 
@@ -25,7 +25,7 @@ public abstract class CEClassReferenceCollector extends CESingleCollector<PsiCla
                         PsiReference reference = expression.getReference();
                         if (reference != null) {
                             PsiElement resolveElement = reference.resolve();
-                            if (resolveElement instanceof PsiClass clazz && checkHint(clazz)) {
+                            if (resolveElement instanceof PsiClass clazz && needsHint(clazz)) {
                                 addInlay(expression, inlayHintsSink);
                             }
                         }
@@ -39,7 +39,7 @@ public abstract class CEClassReferenceCollector extends CESingleCollector<PsiCla
                     if (typeElement != null && !typeElement.isInferredType()
                             && typeElement.getType() instanceof PsiClassType classType) {
                         PsiClass clazz = classType.resolve();
-                        if (clazz != null && (checkHint(clazz))) {
+                        if (clazz != null && (needsHint(clazz))) {
                             addInlay(variable, inlayHintsSink);
 
                         }

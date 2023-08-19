@@ -9,9 +9,9 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class CEFieldReferenceCollector extends CESingleCollector<PsiField, PsiReferenceExpression> {
+public abstract class CEReferenceFieldCollector extends CESingleCollector<PsiField, PsiReferenceExpression> {
 
-    protected CEFieldReferenceCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    protected CEReferenceFieldCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);
     }
 
@@ -25,7 +25,7 @@ public abstract class CEFieldReferenceCollector extends CESingleCollector<PsiFie
                         PsiReference reference = expression.getReference();
                         if (reference != null) {
                             PsiElement resolveElement = reference.resolve();
-                            if (resolveElement instanceof PsiField field && checkHint(field)) {
+                            if (resolveElement instanceof PsiField field && needsHint(field)) {
                                 addInlay(expression, inlayHintsSink);
                             }
                         }

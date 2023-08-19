@@ -20,14 +20,14 @@ import static codeemoji.core.collector.project.config.CEFeatureRule.EXTENDS;
 import static codeemoji.core.collector.project.config.CEFeatureRule.IMPLEMENTS;
 
 @Getter
-public abstract class CEClassProjectCollector extends CEProjectCollector<PsiClass, PsiElement> {
+public abstract class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiElement> {
 
     private final String tooltipKeyExtends;
     private final String tooltipKeyImplements;
     private final CESymbol symbolExtends;
     private final CESymbol symbolImplements;
 
-    protected CEClassProjectCollector(@NotNull Editor editor) {
+    protected CEProjectClassCollector(@NotNull Editor editor) {
         super(editor);
         tooltipKeyExtends = "";
         tooltipKeyImplements = "";
@@ -35,6 +35,7 @@ public abstract class CEClassProjectCollector extends CEProjectCollector<PsiClas
         symbolImplements = new CESymbol();
     }
 
+    @Override
     public boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
         if (psiElement instanceof PsiJavaFile) {
             psiElement.accept(new JavaRecursiveElementVisitor() {
@@ -45,7 +46,7 @@ public abstract class CEClassProjectCollector extends CEProjectCollector<PsiClas
                         if (reference != null) {
                             PsiElement resolveElement = reference.resolve();
                             if (resolveElement instanceof PsiClass clazz) {
-                                checkHint(expression, clazz, inlayHintsSink);
+                                processHint(expression, clazz, inlayHintsSink);
                             }
                         }
                     }
@@ -60,7 +61,7 @@ public abstract class CEClassProjectCollector extends CEProjectCollector<PsiClas
                             typeElement.getType() instanceof PsiClassType classType) {
                         PsiClass clazz = classType.resolve();
                         if (clazz != null) {
-                            checkHint(variable, clazz, inlayHintsSink);
+                            processHint(variable, clazz, inlayHintsSink);
                         }
 
                     }
@@ -71,38 +72,40 @@ public abstract class CEClassProjectCollector extends CEProjectCollector<PsiClas
         return false;
     }
 
-    public void checkHint(@NotNull PsiElement hintElement, @NotNull PsiClass evaluationElement, @NotNull InlayHintsSink sink) {
-        Map<CEFeatureRule, List<String>> rules = getRules(CLASS);
-
-        processHintAnnotations(CLASS, hintElement, evaluationElement, sink);
-
-        List<String> hintValues = checkHintClassRefTypes(rules.get(EXTENDS), evaluationElement.getExtendsList());
-        if (!hintValues.isEmpty()) {
-            InlayPresentation inlay = buildInlay(getSymbolExtends(), getTooltipKeyExtends(), String.valueOf(hintValues));
-            addInlay(hintElement, sink, inlay);
-        }
-
-        hintValues = checkHintClassRefTypes(rules.get(IMPLEMENTS), evaluationElement.getImplementsList());
-        if (!hintValues.isEmpty()) {
-            InlayPresentation inlay = buildInlay(getSymbolImplements(), getTooltipKeyImplements(), String.valueOf(hintValues));
-            addInlay(hintElement, sink, inlay);
-        }
+    @Override
+    public void processHint(@NotNull PsiElement addHintElement, @NotNull PsiClass evaluationElement, @NotNull InlayHintsSink sink) {
+        processAnnotationsFR(CLASS, evaluationElement, addHintElement, sink);
+        addInlayClassFR(addHintElement, needsHintClassFR(EXTENDS, evaluationElement.getExtendsList()), sink,
+                getSymbolExtends(), getTooltipKeyExtends());
+        addInlayClassFR(addHintElement, needsHintClassFR(IMPLEMENTS, evaluationElement.getImplementsList()), sink,
+                getSymbolImplements(), getTooltipKeyImplements());
     }
 
-    private @NotNull List<String> checkHintClassRefTypes(@NotNull List<String> featureValues, PsiReferenceList refList) {
-        List<String> result = new ArrayList<>();
-        if (refList != null) {
+    private @NotNull List<String> needsHintClassFR(@NotNull CEFeatureRule featureRule, PsiReferenceList refList) {
+        Map<CEFeatureRule, List<String>> rules = getRules(CLASS);
+        List<String> featureValues = rules.get(featureRule);
+        List<String> hintValues = new ArrayList<>();
+        if (featureValues != null && (refList != null)) {
             PsiClassType[] refs = refList.getReferencedTypes();
             for (PsiClassType psiType : refs) {
                 for (String value : featureValues) {
                     String qualifiedName = CEUtils.resolveQualifiedName(psiType);
                     if (qualifiedName != null && qualifiedName.equalsIgnoreCase(value)) {
-                        result.add(value);
+                        hintValues.add(value);
                     }
                 }
             }
+
         }
-        return result;
+        return hintValues;
+    }
+
+    private void addInlayClassFR(@NotNull PsiElement addHintElement, @NotNull List<String> hintValues,
+                                 @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
+        if (!hintValues.isEmpty()) {
+            InlayPresentation inlay = buildInlay(symbol, keyTooltip, String.valueOf(hintValues));
+            addInlay(addHintElement, sink, inlay);
+        }
     }
 
     @Override

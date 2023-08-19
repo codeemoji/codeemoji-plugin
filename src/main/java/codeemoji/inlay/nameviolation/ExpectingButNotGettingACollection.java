@@ -31,7 +31,7 @@ public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
     public InlayHintsCollector buildCollector(Editor editor) {
         return new CEMethodCollector(editor, getKeyId(), ONE) {
             @Override
-            public boolean checkHint(@NotNull PsiMethod element) {
+            public boolean needsHint(@NotNull PsiMethod element) {
                 if ((element.getName().startsWith("get") || element.getName().startsWith("return")) && CEUtils.isPluralForm(element.getName())) {
                     PsiTypeElement typeElement = element.getReturnTypeElement();
                     return !CEUtils.isGenericType(element, typeElement) &&

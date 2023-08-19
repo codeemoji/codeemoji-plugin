@@ -2,56 +2,35 @@ package codeemoji.core.collector;
 
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
-import com.intellij.codeInsight.hints.FactoryInlayHintsCollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
-import com.intellij.codeInsight.hints.presentation.DynamicInsetPresentation;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
-import com.intellij.codeInsight.hints.presentation.InlayTextMetricsStorage;
-import com.intellij.codeInsight.hints.presentation.InsetValueProvider;
+import com.intellij.codeInsight.hints.presentation.*;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-@Getter
-public abstract class CECollector<A extends PsiElement> extends FactoryInlayHintsCollector {
+public interface CECollector<A extends PsiElement> {
 
-    private final Editor editor;
+    PresentationFactory getFactory();
 
-    protected CECollector(@NotNull Editor editor) {
-        super(editor);
-        this.editor = editor;
-    }
+    Editor getEditor();
 
-    @Override
-    public boolean collect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
-        if (isEnabled()) {
-            return processCollect(psiElement, editor, inlayHintsSink);
-        }
-        return false;
-    }
-
-    public void addInlay(@Nullable A element, InlayHintsSink sink, InlayPresentation inlay) {
+    default void addInlay(@Nullable A element, InlayHintsSink sink, InlayPresentation inlay) {
         if (element != null) {
             sink.addInlineElement(calcOffset(element), false, inlay, false);
         }
     }
 
-    public int calcOffset(@Nullable A element) {
+    default int calcOffset(@Nullable A element) {
         if (element != null) {
             return element.getTextOffset() + element.getTextLength();
         }
         return 0;
     }
 
-    public InlayPresentation buildInlay(@Nullable CESymbol symbol, @NotNull String keyTooltip) {
-        return buildInlay(symbol, keyTooltip, null);
-    }
-
-    public InlayPresentation buildInlay(@Nullable CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+    default InlayPresentation buildInlay(@Nullable CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         if (symbol == null) {
             symbol = new CESymbol();
         } else if (symbol.getIcon() != null) {
@@ -96,10 +75,10 @@ public abstract class CECollector<A extends PsiElement> extends FactoryInlayHint
         }
     }
 
-    public boolean isEnabled() {
+    default boolean isEnabled() {
         return true;
     }
 
-    public abstract boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink);
+    boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink);
 
 }

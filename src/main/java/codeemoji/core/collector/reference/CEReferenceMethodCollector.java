@@ -9,9 +9,9 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class CEMethodReferenceCollector extends CESingleCollector<PsiMethod, PsiMethodCallExpression> {
+public abstract class CEReferenceMethodCollector extends CESingleCollector<PsiMethod, PsiMethodCallExpression> {
 
-    protected CEMethodReferenceCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    protected CEReferenceMethodCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);
     }
 
@@ -24,7 +24,7 @@ public abstract class CEMethodReferenceCollector extends CESingleCollector<PsiMe
                     if (CEUtils.isNotPreviewEditor(editor) &&
                             (callExpression instanceof PsiMethodCallExpression mexp)) {
                         PsiMethod method = mexp.resolveMethod();
-                        if (method != null && (checkHint(method))) {
+                        if (method != null && (needsHint(method))) {
                             addInlay(mexp, inlayHintsSink);
 
                         }

@@ -29,7 +29,7 @@ public class TransformMethodDoesNotReturn extends CEProvider<NoSettings> {
     public InlayHintsCollector buildCollector(Editor editor) {
         return new CEMethodCollector(editor, getKeyId(), CONFUSED) {
             @Override
-            public boolean checkHint(@NotNull PsiMethod element) {
+            public boolean needsHint(@NotNull PsiMethod element) {
                 return (element.getName().startsWith("translate") || element.getName().startsWith("transform") || element.getName().startsWith("convert")) && Objects.equals(element.getReturnType(), PsiTypes.voidType());
             }
         };

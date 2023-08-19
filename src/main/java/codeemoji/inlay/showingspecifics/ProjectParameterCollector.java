@@ -1,6 +1,6 @@
 package codeemoji.inlay.showingspecifics;
 
-import codeemoji.core.collector.project.CEVariableProjectCollector;
+import codeemoji.core.collector.project.CEProjectVariableCollector;
 import codeemoji.core.util.CESymbol;
 import com.intellij.openapi.editor.Editor;
 import lombok.Getter;
@@ -11,9 +11,9 @@ import static codeemoji.inlay.showingspecifics.ShowingSpecificsConstants.ANNOTAT
 import static codeemoji.inlay.showingspecifics.ShowingSpecificsConstants.TYPES_SYMBOL;
 
 @Getter
-public class ParameterProjectCollector extends CEVariableProjectCollector {
+public class ProjectParameterCollector extends CEProjectVariableCollector {
 
-    public ParameterProjectCollector(@NotNull Editor editor) {
+    public ProjectParameterCollector(@NotNull Editor editor) {
         super(editor, PARAMETER);
     }
 

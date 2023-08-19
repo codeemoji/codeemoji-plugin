@@ -17,16 +17,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static codeemoji.core.collector.project.config.CEElementRule.METHOD;
 import static codeemoji.core.collector.project.config.CEFeatureRule.TYPES;
 
 @Getter
-public abstract class CEVariableProjectCollector extends CEProjectCollector<PsiVariable, PsiReferenceExpression> {
+public abstract class CEProjectVariableCollector extends CEProjectCollector<PsiVariable, PsiReferenceExpression> {
 
     private final CEElementRule elementRule;
     private final String tooltipKeyTypes;
     private final CESymbol symbolTypes;
 
-    protected CEVariableProjectCollector(@NotNull Editor editor, @NotNull CEElementRule elementRule) {
+    protected CEProjectVariableCollector(@NotNull Editor editor, @NotNull CEElementRule elementRule) {
         super(editor);
         this.elementRule = elementRule;
         this.tooltipKeyTypes = "";
@@ -42,13 +43,9 @@ public abstract class CEVariableProjectCollector extends CEProjectCollector<PsiV
                         PsiReference reference = expression.getReference();
                         if (reference != null) {
                             PsiElement resolveElement = reference.resolve();
-                            Class<? extends PsiVariable> elementRuleType = getClassByCEElement();
-                            if (elementRuleType != null) {
-                                if (elementRuleType.isInstance(resolveElement)) {
-                                    checkHint(expression, (PsiVariable) resolveElement, inlayHintsSink);
-                                }
-                            } else {
-                                System.out.println("CEVariableProjectCollector is implemented only for FIELD, LOCALVARIALBE, and PARAMETER");
+                            Class<? extends PsiVariable> elementRuleType = getClassByElementRule();
+                            if (elementRuleType != null && (elementRuleType.isInstance(resolveElement))) {
+                                processHint(expression, (PsiVariable) resolveElement, inlayHintsSink);
                             }
                         }
                     }
@@ -56,7 +53,7 @@ public abstract class CEVariableProjectCollector extends CEProjectCollector<PsiV
                 }
 
                 @Contract(pure = true)
-                private @Nullable Class<? extends PsiVariable> getClassByCEElement() {
+                private @Nullable Class<? extends PsiVariable> getClassByElementRule() {
                     switch (elementRule) {
                         case FIELD -> {
                             return PsiField.class;
@@ -78,17 +75,16 @@ public abstract class CEVariableProjectCollector extends CEProjectCollector<PsiV
     }
 
     @Override
-    public void checkHint(@NotNull PsiReferenceExpression hintElement, @NotNull PsiVariable evaluationElement, @NotNull InlayHintsSink sink) {
-        processHintAnnotations(getElementRule(), hintElement, evaluationElement, sink);
-        processHintTypes(getElementRule(), hintElement, evaluationElement.getType(), sink);
+    public void processHint(@NotNull PsiReferenceExpression addHintElement, @NotNull PsiVariable evaluationElement, @NotNull InlayHintsSink sink) {
+        processAnnotationsFR(METHOD, evaluationElement, addHintElement, sink);
+        addInlayVariableTypesFR(addHintElement, needsHintVariableFR(evaluationElement.getType()), sink);
     }
 
-    public void processHintTypes(@NotNull CEElementRule elementRule, @NotNull PsiReferenceExpression hintElement, @NotNull PsiType type,
-                                 @NotNull InlayHintsSink sink) {
-        Map<CEFeatureRule, List<String>> rules = getRules(elementRule);
+    public @NotNull List<String> needsHintVariableFR(@NotNull PsiType type) {
+        Map<CEFeatureRule, List<String>> rules = getRules(getElementRule());
         List<String> featureValues = rules.get(TYPES);
+        List<String> hintValues = new ArrayList<>();
         if (featureValues != null) {
-            List<String> hintValues = new ArrayList<>();
             for (String value : featureValues) {
                 String qualifiedName = "";
                 if (type instanceof PsiClassType classType) {
@@ -100,10 +96,15 @@ public abstract class CEVariableProjectCollector extends CEProjectCollector<PsiV
                     hintValues.add(value);
                 }
             }
-            if (!hintValues.isEmpty()) {
-                InlayPresentation inlay = buildInlay(getSymbolTypes(), getTooltipKeyTypes(), String.valueOf(hintValues));
-                addInlay(hintElement, sink, inlay);
-            }
+        }
+        return hintValues;
+    }
+
+    private void addInlayVariableTypesFR(@NotNull PsiReferenceExpression addHintElement, @NotNull List<String> hintValues,
+                                         @NotNull InlayHintsSink sink) {
+        if (!hintValues.isEmpty()) {
+            InlayPresentation inlay = buildInlay(getSymbolTypes(), getTooltipKeyTypes(), String.valueOf(hintValues));
+            addInlay(addHintElement, sink, inlay);
         }
     }
 

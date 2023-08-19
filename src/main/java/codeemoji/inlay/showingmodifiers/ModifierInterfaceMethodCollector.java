@@ -1,6 +1,6 @@
 package codeemoji.inlay.showingmodifiers;
 
-import codeemoji.core.collector.reference.CEMethodReferenceCollector;
+import codeemoji.core.collector.reference.CEReferenceMethodCollector;
 import codeemoji.core.util.CESymbol;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
@@ -10,12 +10,12 @@ import com.intellij.psi.PsiModifierList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class MethodInterfaceModifierCollector extends CEMethodReferenceCollector {
+public class ModifierInterfaceMethodCollector extends CEReferenceMethodCollector {
 
     private final boolean activated;
     private final String modifier;
 
-    public MethodInterfaceModifierCollector(@NotNull Editor editor, @NotNull String mainKeyId, @Nullable CESymbol symbol,
+    public ModifierInterfaceMethodCollector(@NotNull Editor editor, @NotNull String mainKeyId, @Nullable CESymbol symbol,
                                             String modifier, boolean activated) {
         super(editor, mainKeyId + ".method." + modifier + "interface", symbol);
         this.activated = activated;
@@ -28,7 +28,7 @@ public class MethodInterfaceModifierCollector extends CEMethodReferenceCollector
     }
 
     @Override
-    public boolean checkHint(@NotNull PsiMethod element) {
+    public boolean needsHint(@NotNull PsiMethod element) {
         PsiElement parent = element.getParent();
         if (parent instanceof PsiClass clazz && (clazz.isInterface())) {
             PsiModifierList psiModifierList = element.getModifierList();

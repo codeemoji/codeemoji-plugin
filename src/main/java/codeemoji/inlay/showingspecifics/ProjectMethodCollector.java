@@ -1,6 +1,6 @@
 package codeemoji.inlay.showingspecifics;
 
-import codeemoji.core.collector.project.CEMethodProjectCollector;
+import codeemoji.core.collector.project.CEProjectMethodCollector;
 import codeemoji.core.util.CESymbol;
 import com.intellij.openapi.editor.Editor;
 import lombok.Getter;
@@ -10,9 +10,9 @@ import static codeemoji.inlay.showingspecifics.ShowingSpecificsConstants.ANNOTAT
 import static codeemoji.inlay.showingspecifics.ShowingSpecificsConstants.RETURNS_SYMBOL;
 
 @Getter
-public class MethodProjectCollector extends CEMethodProjectCollector {
+public class ProjectMethodCollector extends CEProjectMethodCollector {
 
-    public MethodProjectCollector(@NotNull Editor editor) {
+    public ProjectMethodCollector(@NotNull Editor editor) {
         super(editor);
     }
 

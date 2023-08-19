@@ -20,7 +20,7 @@ public abstract class CEClassCollector extends CESingleCollector<PsiClass, PsiId
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
                 public void visitClass(@NotNull PsiClass clazz) {
-                    if (checkHint(clazz)) {
+                    if (needsHint(clazz)) {
                         addInlay(clazz.getNameIdentifier(), inlayHintsSink);
                     }
                     super.visitClass(clazz);

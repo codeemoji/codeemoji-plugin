@@ -19,12 +19,12 @@ import static codeemoji.core.collector.project.config.CEElementRule.METHOD;
 import static codeemoji.core.collector.project.config.CEFeatureRule.RETURNS;
 
 @Getter
-public abstract class CEMethodProjectCollector extends CEProjectCollector<PsiMethod, PsiMethodCallExpression> {
+public abstract class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiMethodCallExpression> {
 
     private final String tooltipKeyReturns;
     private final CESymbol symbolReturns;
 
-    protected CEMethodProjectCollector(@NotNull Editor editor) {
+    protected CEProjectMethodCollector(@NotNull Editor editor) {
         super(editor);
         tooltipKeyReturns = "";
         symbolReturns = new CESymbol();
@@ -40,7 +40,7 @@ public abstract class CEMethodProjectCollector extends CEProjectCollector<PsiMet
                             (callExpression instanceof PsiMethodCallExpression mexp)) {
                         PsiMethod method = mexp.resolveMethod();
                         if (method != null) {
-                            checkHint(mexp, method, inlayHintsSink);
+                            processHint(mexp, method, inlayHintsSink);
                         }
                     }
                     super.visitCallExpression(callExpression);
@@ -52,34 +52,39 @@ public abstract class CEMethodProjectCollector extends CEProjectCollector<PsiMet
     }
 
     @Override
-    public void checkHint(@NotNull PsiMethodCallExpression hintElement, @NotNull PsiMethod evaluationElement, @NotNull InlayHintsSink sink) {
-        Map<CEFeatureRule, List<String>> rules = getRules(METHOD);
-
-        processHintAnnotations(METHOD, hintElement, evaluationElement, sink);
-
+    public void processHint(@NotNull PsiMethodCallExpression addHintElement, @NotNull PsiMethod evaluationElement, @NotNull InlayHintsSink sink) {
+        processAnnotationsFR(METHOD, evaluationElement, addHintElement, sink);
         if (!evaluationElement.isConstructor()) {
-            List<String> hintValues = checkHintMethodReturns(rules.get(RETURNS), evaluationElement.getReturnType());
-            if (!hintValues.isEmpty()) {
-                InlayPresentation inlay = buildInlay(getSymbolReturns(), getTooltipKeyReturns(), String.valueOf(hintValues));
-                addInlay(hintElement, sink, inlay);
-            }
+            addInlayMethodReturnsFR(addHintElement, needsHintMethodReturnsFR(evaluationElement.getReturnType()), sink);
         }
     }
 
-    private @NotNull List<String> checkHintMethodReturns(@NotNull List<String> featureValues, PsiType returnType) {
+    private @NotNull List<String> needsHintMethodReturnsFR(PsiType type) {
+        Map<CEFeatureRule, List<String>> rules = getRules(METHOD);
+        List<String> featureValues = rules.get(RETURNS);
         List<String> result = new ArrayList<>();
-        for (String value : featureValues) {
-            String qualifiedName = "";
-            if (returnType instanceof PsiClassType classType) {
-                qualifiedName = CEUtils.resolveQualifiedName(classType);
-            } else {
-                qualifiedName = returnType.getPresentableText();
-            }
-            if (qualifiedName != null && qualifiedName.equalsIgnoreCase(value)) {
-                result.add(value);
+        if (featureValues != null) {
+            for (String value : featureValues) {
+                String qualifiedName = "";
+                if (type instanceof PsiClassType classType) {
+                    qualifiedName = CEUtils.resolveQualifiedName(classType);
+                } else {
+                    qualifiedName = type.getPresentableText();
+                }
+                if (qualifiedName != null && qualifiedName.equalsIgnoreCase(value)) {
+                    result.add(value);
+                }
             }
         }
         return result;
+    }
+
+    private void addInlayMethodReturnsFR(@NotNull PsiMethodCallExpression addHintElement, @NotNull List<String> hintValues,
+                                         @NotNull InlayHintsSink sink) {
+        if (!hintValues.isEmpty()) {
+            InlayPresentation inlay = buildInlay(getSymbolReturns(), getTooltipKeyReturns(), String.valueOf(hintValues));
+            addInlay(addHintElement, sink, inlay);
+        }
     }
 
     @Override

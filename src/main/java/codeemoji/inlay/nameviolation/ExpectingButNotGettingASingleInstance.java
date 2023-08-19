@@ -31,7 +31,7 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings
     public InlayHintsCollector buildCollector(Editor editor) {
         return new CEMethodCollector(editor, getKeyId(), MANY) {
             @Override
-            public boolean checkHint(@NotNull PsiMethod element) {
+            public boolean needsHint(@NotNull PsiMethod element) {
                 if ((element.getName().startsWith("get") || element.getName().startsWith("return")) && !Objects.equals(element.getReturnType(), PsiTypes.voidType()) && !CEUtils.isPluralForm(element.getName())) {
                     PsiTypeElement typeElement = element.getReturnTypeElement();
                     return CEUtils.isArrayType(typeElement) || CEUtils.isIterableType(typeElement);
