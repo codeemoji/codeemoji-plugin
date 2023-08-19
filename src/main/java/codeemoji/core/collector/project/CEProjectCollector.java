@@ -8,10 +8,11 @@ import codeemoji.core.collector.project.config.CEProjectRule;
 import codeemoji.core.util.CEEnumUtils;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiJvmModifiersOwner;
+import com.intellij.psi.PsiModifierListOwner;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,8 +21,10 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import static codeemoji.core.collector.project.config.CEFeatureRule.ANNOTATIONS;
+
 @Getter
-public abstract class CEProjectCollector<H extends PsiJvmModifiersOwner, A extends PsiElement> extends CECollector<A> {
+public abstract class CEProjectCollector<H extends PsiModifierListOwner, A extends PsiElement> extends CECollector<A> {
 
     protected final CEConfigFile configFile;
     private final String tooltipKeyAnnotations;
@@ -50,18 +53,23 @@ public abstract class CEProjectCollector<H extends PsiJvmModifiersOwner, A exten
         return configFile.getProjectConfigs().get(key);
     }
 
-    public @NotNull List<String> checkHintAnnotations(@NotNull H element, @NotNull List<String> featureValues) {
-        List<String> result = new ArrayList<>();
-        PsiAnnotation[] annotations = element.getAnnotations();
+    public void processHintAnnotations(@NotNull CEElementRule elementRule, @NotNull A hintElement, @NotNull H evaluationElement, @NotNull InlayHintsSink sink) {
+        Map<CEFeatureRule, List<String>> rules = getRules(elementRule);
+        List<String> featureValues = rules.get(ANNOTATIONS);
+        List<String> hintValues = new ArrayList<>();
+        PsiAnnotation[] annotations = evaluationElement.getAnnotations();
         for (PsiAnnotation type : annotations) {
             for (String value : featureValues) {
                 String qualifiedName = type.getQualifiedName();
                 if (qualifiedName != null && qualifiedName.equalsIgnoreCase(value)) {
-                    result.add(value);
+                    hintValues.add(value);
                 }
             }
         }
-        return result;
+        if (!hintValues.isEmpty()) {
+            InlayPresentation inlay = buildInlay(getSymbolAnnotations(), getTooltipKeyAnnotations(), String.valueOf(hintValues));
+            addInlay(hintElement, sink, inlay);
+        }
     }
 
     public abstract void checkHint(@NotNull A hintElement, @NotNull H evaluationElement, @NotNull InlayHintsSink sink);

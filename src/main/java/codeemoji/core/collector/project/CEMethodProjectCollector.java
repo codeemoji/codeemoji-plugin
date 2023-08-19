@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import static codeemoji.core.collector.project.config.CEElementRule.METHOD;
-import static codeemoji.core.collector.project.config.CEFeatureRule.ANNOTATIONS;
 import static codeemoji.core.collector.project.config.CEFeatureRule.RETURNS;
 
 @Getter
@@ -55,13 +54,11 @@ public abstract class CEMethodProjectCollector extends CEProjectCollector<PsiMet
     @Override
     public void checkHint(@NotNull PsiMethodCallExpression hintElement, @NotNull PsiMethod evaluationElement, @NotNull InlayHintsSink sink) {
         Map<CEFeatureRule, List<String>> rules = getRules(METHOD);
-        List<String> hintValues = checkHintAnnotations(evaluationElement, rules.get(ANNOTATIONS));
-        if (!hintValues.isEmpty()) {
-            InlayPresentation inlay = buildInlay(getSymbolAnnotations(), getTooltipKeyAnnotations(), String.valueOf(hintValues));
-            addInlay(hintElement, sink, inlay);
-        }
+
+        processHintAnnotations(METHOD, hintElement, evaluationElement, sink);
+
         if (!evaluationElement.isConstructor()) {
-            hintValues = checkHintMethodReturns(rules.get(RETURNS), evaluationElement.getReturnType());
+            List<String> hintValues = checkHintMethodReturns(rules.get(RETURNS), evaluationElement.getReturnType());
             if (!hintValues.isEmpty()) {
                 InlayPresentation inlay = buildInlay(getSymbolReturns(), getTooltipKeyReturns(), String.valueOf(hintValues));
                 addInlay(hintElement, sink, inlay);

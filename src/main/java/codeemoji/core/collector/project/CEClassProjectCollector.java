@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import static codeemoji.core.collector.project.config.CEElementRule.CLASS;
-import static codeemoji.core.collector.project.config.CEFeatureRule.*;
+import static codeemoji.core.collector.project.config.CEFeatureRule.EXTENDS;
+import static codeemoji.core.collector.project.config.CEFeatureRule.IMPLEMENTS;
 
 @Getter
 public abstract class CEClassProjectCollector extends CEProjectCollector<PsiClass, PsiElement> {
@@ -72,16 +73,15 @@ public abstract class CEClassProjectCollector extends CEProjectCollector<PsiClas
 
     public void checkHint(@NotNull PsiElement hintElement, @NotNull PsiClass evaluationElement, @NotNull InlayHintsSink sink) {
         Map<CEFeatureRule, List<String>> rules = getRules(CLASS);
-        List<String> hintValues = checkHintAnnotations(evaluationElement, rules.get(ANNOTATIONS));
-        if (!hintValues.isEmpty()) {
-            InlayPresentation inlay = buildInlay(getSymbolAnnotations(), getTooltipKeyAnnotations(), String.valueOf(hintValues));
-            addInlay(hintElement, sink, inlay);
-        }
-        hintValues = checkHintClassRefTypes(rules.get(EXTENDS), evaluationElement.getExtendsList());
+
+        processHintAnnotations(CLASS, hintElement, evaluationElement, sink);
+
+        List<String> hintValues = checkHintClassRefTypes(rules.get(EXTENDS), evaluationElement.getExtendsList());
         if (!hintValues.isEmpty()) {
             InlayPresentation inlay = buildInlay(getSymbolExtends(), getTooltipKeyExtends(), String.valueOf(hintValues));
             addInlay(hintElement, sink, inlay);
         }
+
         hintValues = checkHintClassRefTypes(rules.get(IMPLEMENTS), evaluationElement.getImplementsList());
         if (!hintValues.isEmpty()) {
             InlayPresentation inlay = buildInlay(getSymbolImplements(), getTooltipKeyImplements(), String.valueOf(hintValues));

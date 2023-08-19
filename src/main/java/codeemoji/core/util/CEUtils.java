@@ -133,19 +133,10 @@ public final class CEUtils {
     }
 
     private static boolean isCommonPluralForm(String word) {
-        String[] pluralPatterns = {
-                ".*s$", ".*[aeiou]ys$", ".*[^s]ses$", ".*[^z]zes$", ".*[^i]xes$",
-                ".*[cs]hes$", ".*[^aeiou]ies$", ".*[^aeiou]ices$", ".*[aeiou]es$",
-                ".*[^aeiou]ves$", ".*[^aeiou]a$", ".*[^aeiou]i$", ".*[^aeiou]ae$"
-        };
-        for (String pattern : pluralPatterns) {
-            Pattern pat = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
-            Matcher mat = pat.matcher(word);
-            if (mat.matches()) {
-                return true;
-            }
-        }
-        return false;
+        String pattern = ".*s$";
+        Pattern pat = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
+        Matcher mat = pat.matcher(word);
+        return mat.matches();
     }
 
     public static boolean containsOnlySpecialCharacters(String name) {

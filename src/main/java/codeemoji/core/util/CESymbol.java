@@ -10,7 +10,7 @@ import java.util.Arrays;
 @Data
 public class CESymbol {
 
-    private int codePoint = 0x2757;
+    private int codePoint = 0x26AA; //white circle
     private int qualifier = 0;
     private boolean background = true;
     private String emoji = buildEmoji(codePoint, 0, true);

@@ -57,6 +57,29 @@
     },
     {
       "element": "localvariable",
+      "feature": "annotations",
+      "values": [
+        "@Xyz",
+        "@Float"
+      ]
+    },
+    {
+      "element": "localvariable",
+      "feature": "types",
+      "values": [
+        "ThatType"
+      ]
+    },
+    {
+      "element": "parameter",
+      "feature": "annotations",
+      "values": [
+        "@Xyz",
+        "@Float"
+      ]
+    },
+    {
+      "element": "parameter",
       "feature": "types",
       "values": [
         "ThatType"
