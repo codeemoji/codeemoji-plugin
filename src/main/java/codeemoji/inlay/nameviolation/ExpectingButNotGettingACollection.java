@@ -36,7 +36,9 @@ public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
                     PsiTypeElement typeElement = element.getReturnTypeElement();
                     return !CEUtils.isGenericType(element, typeElement) &&
                             (Objects.equals(element.getReturnType(), PsiTypes.voidType()) ||
-                                    (!CEUtils.isArrayType(typeElement) && !CEUtils.isIterableType(typeElement)));
+                                    (!CEUtils.isArrayType(typeElement) &&
+                                            !CEUtils.isIterableType(typeElement) &&
+                                            !CEUtils.isMappableType(typeElement)));
                 }
                 return false;
             }

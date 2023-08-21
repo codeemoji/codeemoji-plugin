@@ -12,11 +12,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import static codeemoji.core.collector.project.config.CEElementRule.METHOD;
-import static codeemoji.core.collector.project.config.CEFeatureRule.RETURNS;
+import static codeemoji.core.collector.project.config.CEProjectRuleElement.METHOD;
+import static codeemoji.core.collector.project.config.CEProjectRuleFeature.RETURNS;
 
 @Getter
-public abstract class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiMethodCallExpression> implements ICEProjectTypes<PsiMethodCallExpression> {
+public abstract class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiMethodCallExpression> implements CEIProjectTypes<PsiMethodCallExpression> {
 
     private final String returnsKey;
     private final CESymbol returnsSymbol;

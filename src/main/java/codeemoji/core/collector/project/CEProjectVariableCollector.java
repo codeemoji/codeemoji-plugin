@@ -1,6 +1,6 @@
 package codeemoji.core.collector.project;
 
-import codeemoji.core.collector.project.config.CEElementRule;
+import codeemoji.core.collector.project.config.CEProjectRuleElement;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
@@ -14,17 +14,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import static codeemoji.core.collector.project.config.CEFeatureRule.TYPES;
+import static codeemoji.core.collector.project.config.CEProjectRuleFeature.TYPES;
 
 @Getter
 public abstract class CEProjectVariableCollector extends CEProjectCollector<PsiVariable, PsiReferenceExpression>
-        implements ICEProjectTypes<PsiReferenceExpression> {
+        implements CEIProjectTypes<PsiReferenceExpression> {
 
-    private final CEElementRule elementRule;
+    private final CEProjectRuleElement elementRule;
     private final String typesKey;
     private final CESymbol typesSymbol;
 
-    protected CEProjectVariableCollector(@NotNull Editor editor, @NotNull CEElementRule elementRule, @NotNull String mainKeyId) {
+    protected CEProjectVariableCollector(@NotNull Editor editor, @NotNull CEProjectRuleElement elementRule, @NotNull String mainKeyId) {
         super(editor, mainKeyId + "." + elementRule.getValue());
         this.elementRule = elementRule;
         this.typesKey = getMainKeyId() + "." + TYPES.getValue() + ".tooltip";

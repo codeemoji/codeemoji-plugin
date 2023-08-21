@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum CEFeatureRule implements CEEnumWithValue {
+public enum CEProjectRuleFeature implements CEEnumWithValue {
     ANNOTATIONS("annotations"), EXTENDS("extends"), IMPLEMENTS("implements"), TYPES("types"), RETURNS("returns");
     private final String value;
 }

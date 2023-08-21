@@ -6,7 +6,7 @@ import com.intellij.openapi.editor.Editor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import static codeemoji.core.collector.project.config.CEElementRule.PARAMETER;
+import static codeemoji.core.collector.project.config.CEProjectRuleElement.PARAMETER;
 import static codeemoji.inlay.showingspecifics.ShowingSpecificsSymbols.ANNOTATIONS_SYMBOL;
 import static codeemoji.inlay.showingspecifics.ShowingSpecificsSymbols.TYPES_SYMBOL;
 

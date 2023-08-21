@@ -12,13 +12,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import static codeemoji.core.collector.project.config.CEElementRule.CLASS;
-import static codeemoji.core.collector.project.config.CEFeatureRule.EXTENDS;
-import static codeemoji.core.collector.project.config.CEFeatureRule.IMPLEMENTS;
+import static codeemoji.core.collector.project.config.CEProjectRuleElement.CLASS;
+import static codeemoji.core.collector.project.config.CEProjectRuleFeature.EXTENDS;
+import static codeemoji.core.collector.project.config.CEProjectRuleFeature.IMPLEMENTS;
 
 @Getter
 public abstract class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiElement>
-        implements ICEProjectReferenceList<PsiReferenceList, PsiElement> {
+        implements CEIProjectReferenceList<PsiReferenceList, PsiElement> {
 
     private final String extendsKey;
     private final String implementsKey;

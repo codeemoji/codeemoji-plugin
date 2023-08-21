@@ -1,7 +1,7 @@
 package codeemoji.core.collector.project;
 
-import codeemoji.core.collector.project.config.CEElementRule;
-import codeemoji.core.collector.project.config.CEFeatureRule;
+import codeemoji.core.collector.project.config.CEProjectRuleElement;
+import codeemoji.core.collector.project.config.CEProjectRuleFeature;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
@@ -14,17 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public interface ICEProjectTypes<A extends PsiElement> extends ICEProjectConfigFile {
+public interface CEIProjectTypes<A extends PsiElement> extends CEIProjectConfigFile {
 
-    default void processTypesFR(@NotNull CEElementRule elementRule, @NotNull CEFeatureRule featureRule, PsiType type,
+    default void processTypesFR(@NotNull CEProjectRuleElement elementRule, @NotNull CEProjectRuleFeature featureRule, PsiType type,
                                 @NotNull A addHintElement, @NotNull InlayHintsSink sink,
                                 @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         addInlayTypesFR(addHintElement, needsHintTypesFR(elementRule, featureRule, type), sink,
                 symbol, keyTooltip);
     }
 
-    default @NotNull List<String> needsHintTypesFR(@NotNull CEElementRule elementRule, @NotNull CEFeatureRule featureRule, @NotNull PsiType type) {
-        Map<CEFeatureRule, List<String>> rules = getRules(elementRule);
+    default @NotNull List<String> needsHintTypesFR(@NotNull CEProjectRuleElement elementRule, @NotNull CEProjectRuleFeature featureRule, @NotNull PsiType type) {
+        Map<CEProjectRuleFeature, List<String>> rules = readRules(elementRule);
         List<String> featureValues = rules.get(featureRule);
         List<String> results = new ArrayList<>();
         if (featureValues != null) {

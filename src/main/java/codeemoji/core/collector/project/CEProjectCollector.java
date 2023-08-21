@@ -1,10 +1,10 @@
 package codeemoji.core.collector.project;
 
 import codeemoji.core.collector.CECollectorImpl;
-import codeemoji.core.collector.project.config.CEConfigFile;
-import codeemoji.core.collector.project.config.CEElementRule;
-import codeemoji.core.collector.project.config.CEFeatureRule;
+import codeemoji.core.collector.project.config.CEProjectConfigFile;
 import codeemoji.core.collector.project.config.CEProjectRule;
+import codeemoji.core.collector.project.config.CEProjectRuleElement;
+import codeemoji.core.collector.project.config.CEProjectRuleFeature;
 import codeemoji.core.util.CEEnumUtils;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
@@ -19,31 +19,31 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import static codeemoji.core.collector.project.config.CEFeatureRule.ANNOTATIONS;
+import static codeemoji.core.collector.project.config.CEProjectRuleFeature.ANNOTATIONS;
 
 @Getter
 public abstract class CEProjectCollector<H extends PsiModifierListOwner, A extends PsiElement> extends CECollectorImpl<A>
-        implements ICEProjectAnnotations<H, A> {
+        implements CEIProjectAnnotations<H, A> {
 
-    protected final CEConfigFile configFile;
+    protected final CEProjectConfigFile configFile;
     protected final String mainKeyId;
     private final String annotationsKey;
     private final CESymbol annotationsSymbol;
 
     protected CEProjectCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
         super(editor);
-        this.configFile = new CEConfigFile(editor);
+        this.configFile = new CEProjectConfigFile(editor.getProject());
         this.mainKeyId = "inlay." + mainKeyId;
         annotationsKey = getMainKeyId() + "." + ANNOTATIONS.getValue() + ".tooltip";
         annotationsSymbol = new CESymbol();
     }
 
     @Override
-    public Map<CEFeatureRule, List<String>> getRules(@NotNull CEElementRule elementRule) {
-        Map<CEFeatureRule, List<String>> result = new EnumMap<>(CEFeatureRule.class);
+    public Map<CEProjectRuleFeature, List<String>> readRules(@NotNull CEProjectRuleElement elementRule) {
+        Map<CEProjectRuleFeature, List<String>> result = new EnumMap<>(CEProjectRuleFeature.class);
         for (CEProjectRule rule : configFile.getProjectRules()) {
-            CEElementRule element = CEEnumUtils.getEnumByValue(CEElementRule.class, rule.element());
-            CEFeatureRule feature = CEEnumUtils.getEnumByValue(CEFeatureRule.class, rule.feature());
+            CEProjectRuleElement element = CEEnumUtils.getEnumByValue(CEProjectRuleElement.class, rule.element());
+            CEProjectRuleFeature feature = CEEnumUtils.getEnumByValue(CEProjectRuleFeature.class, rule.feature());
             if (element != null && feature != null && (element.equals(elementRule))) {
                 result.put(feature, rule.values());
             }

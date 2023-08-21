@@ -13,6 +13,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="codeemoji.inlay.nameviolation.ShortDescriptiveNameSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.showingmodifiers.ShowingModifiersSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.showingspecifics.ShowingSpecificsSettings"/>
         <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.ShortDescriptiveName"/>
         <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.GetMoreThanAccessor"/>
         <codeInsight.inlayProvider language="JAVA" implementationClass="codeemoji.inlay.nameviolation.IsReturnsMoreThanABoolean"/>

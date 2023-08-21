@@ -1,6 +1,6 @@
 package codeemoji.core.collector.project;
 
-import codeemoji.core.collector.project.config.CEFeatureRule;
+import codeemoji.core.collector.project.config.CEProjectRuleFeature;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
@@ -14,19 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static codeemoji.core.collector.project.config.CEElementRule.CLASS;
+import static codeemoji.core.collector.project.config.CEProjectRuleElement.CLASS;
 
-public interface ICEProjectReferenceList<H extends PsiReferenceList, A extends PsiElement> extends ICEProjectConfigFile {
+public interface CEIProjectReferenceList<H extends PsiReferenceList, A extends PsiElement> extends CEIProjectConfigFile {
 
-    default void processReferenceListFR(@NotNull CEFeatureRule featureRule, @Nullable H evaluationElement,
+    default void processReferenceListFR(@NotNull CEProjectRuleFeature featureRule, @Nullable H evaluationElement,
                                         @NotNull A hintElement, @NotNull InlayHintsSink sink,
                                         @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         addInlayReferenceListFR(hintElement, needsHintReferenceListFR(featureRule, evaluationElement), sink,
                 symbol, keyTooltip);
     }
 
-    default @NotNull List<String> needsHintReferenceListFR(@NotNull CEFeatureRule featureRule, @Nullable PsiReferenceList refList) {
-        Map<CEFeatureRule, List<String>> rules = getRules(CLASS);
+    default @NotNull List<String> needsHintReferenceListFR(@NotNull CEProjectRuleFeature featureRule, @Nullable PsiReferenceList refList) {
+        Map<CEProjectRuleFeature, List<String>> rules = readRules(CLASS);
         List<String> featureValues = rules.get(featureRule);
         List<String> hintValues = new ArrayList<>();
         if (featureValues != null && (refList != null)) {

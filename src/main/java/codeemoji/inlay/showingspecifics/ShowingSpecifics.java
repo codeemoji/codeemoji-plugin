@@ -1,15 +1,16 @@
 package codeemoji.inlay.showingspecifics;
 
 import codeemoji.core.provider.CEMultiProvider;
+import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
-import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShowingSpecifics extends CEMultiProvider<NoSettings> {
+public class ShowingSpecifics extends CEMultiProvider<ShowingSpecificsSettings> {
 
     @Nullable
     @Override
@@ -28,6 +29,11 @@ public class ShowingSpecifics extends CEMultiProvider<NoSettings> {
         list.add(new ProjectParameterCollector(editor, getKeyId()));
 
         return list;
+    }
+
+    @Override
+    public @NotNull ImmediateConfigurable createConfigurable(@NotNull ShowingSpecificsSettings settings) {
+        return new ShowingSpecificsConfigurable(settings);
     }
 
 }
