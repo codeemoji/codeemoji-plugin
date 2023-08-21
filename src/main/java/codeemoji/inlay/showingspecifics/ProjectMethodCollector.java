@@ -17,12 +17,12 @@ public class ProjectMethodCollector extends CEProjectMethodCollector {
     }
 
     @Override
-    public @NotNull CESymbol getSymbolAnnotations() {
+    public @NotNull CESymbol getAnnotationsSymbol() {
         return ANNOTATIONS_SYMBOL;
     }
 
     @Override
-    public @NotNull CESymbol getSymbolReturns() {
+    public @NotNull CESymbol getReturnsSymbol() {
         return RETURNS_SYMBOL;
     }
 

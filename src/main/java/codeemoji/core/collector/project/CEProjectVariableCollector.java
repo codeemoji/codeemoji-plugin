@@ -21,14 +21,14 @@ public abstract class CEProjectVariableCollector extends CEProjectCollector<PsiV
         implements ICEProjectTypes<PsiReferenceExpression> {
 
     private final CEElementRule elementRule;
-    private final String keyTypes;
-    private final CESymbol symbolTypes;
+    private final String typesKey;
+    private final CESymbol typesSymbol;
 
     protected CEProjectVariableCollector(@NotNull Editor editor, @NotNull CEElementRule elementRule, @NotNull String mainKeyId) {
         super(editor, mainKeyId + "." + elementRule.getValue());
         this.elementRule = elementRule;
-        this.keyTypes = getMainKeyId() + "." + TYPES.getValue() + ".tooltip";
-        this.symbolTypes = new CESymbol();
+        this.typesKey = getMainKeyId() + "." + TYPES.getValue() + ".tooltip";
+        this.typesSymbol = new CESymbol();
     }
 
     public boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
@@ -74,7 +74,7 @@ public abstract class CEProjectVariableCollector extends CEProjectCollector<PsiV
     @Override
     public void processHint(@NotNull PsiReferenceExpression addHintElement, @NotNull PsiVariable evaluationElement, @NotNull InlayHintsSink sink) {
         processAnnotationsFR(getElementRule(), evaluationElement, addHintElement, sink);
-        processTypesFR(getElementRule(), TYPES, evaluationElement.getType(), addHintElement, sink, getSymbolTypes(), getKeyTypes());
+        processTypesFR(getElementRule(), TYPES, evaluationElement.getType(), addHintElement, sink, getTypesSymbol(), getTypesKey());
     }
 
     @Override

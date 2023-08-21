@@ -16,17 +16,17 @@ public class ProjectClassCollector extends CEProjectClassCollector {
     }
 
     @Override
-    public @NotNull CESymbol getSymbolAnnotations() {
+    public @NotNull CESymbol getAnnotationsSymbol() {
         return ANNOTATIONS_SYMBOL;
     }
 
     @Override
-    public @NotNull CESymbol getSymbolExtends() {
+    public @NotNull CESymbol getExtendsSymbol() {
         return EXTENDS_SYMBOL;
     }
 
     @Override
-    public @NotNull CESymbol getSymbolImplements() {
+    public @NotNull CESymbol getImplementsSymbol() {
         return IMPLEMENTS_SYMBOL;
     }
 }

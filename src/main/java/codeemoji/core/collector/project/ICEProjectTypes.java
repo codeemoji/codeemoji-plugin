@@ -26,21 +26,21 @@ public interface ICEProjectTypes<A extends PsiElement> extends ICEProjectConfigF
     default @NotNull List<String> needsHintTypesFR(@NotNull CEElementRule elementRule, @NotNull CEFeatureRule featureRule, @NotNull PsiType type) {
         Map<CEFeatureRule, List<String>> rules = getRules(elementRule);
         List<String> featureValues = rules.get(featureRule);
-        List<String> result = new ArrayList<>();
+        List<String> results = new ArrayList<>();
         if (featureValues != null) {
             for (String value : featureValues) {
-                String qualifiedName = "";
+                String qualifiedName;
                 if (type instanceof PsiClassType classType) {
                     qualifiedName = CEUtils.resolveQualifiedName(classType);
                 } else {
                     qualifiedName = type.getPresentableText();
                 }
                 if (qualifiedName != null && qualifiedName.equalsIgnoreCase(value)) {
-                    result.add(value);
+                    results.add(value);
                 }
             }
         }
-        return result;
+        return results;
     }
 
     void addInlayTypesFR(@NotNull A addHintElement, @NotNull List<String> hintValues,

@@ -20,17 +20,17 @@ import static codeemoji.core.collector.project.config.CEFeatureRule.IMPLEMENTS;
 public abstract class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiElement>
         implements ICEProjectReferenceList<PsiReferenceList, PsiElement> {
 
-    private final String keyExtends;
-    private final String keyImplements;
-    private final CESymbol symbolExtends;
-    private final CESymbol symbolImplements;
+    private final String extendsKey;
+    private final String implementsKey;
+    private final CESymbol extendsSymbol;
+    private final CESymbol implementsSymbol;
 
     protected CEProjectClassCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
         super(editor, mainKeyId + ".class");
-        keyExtends = getMainKeyId() + "." + EXTENDS.getValue() + ".tooltip";
-        keyImplements = getMainKeyId() + "." + IMPLEMENTS.getValue() + ".tooltip";
-        symbolExtends = new CESymbol();
-        symbolImplements = new CESymbol();
+        extendsKey = getMainKeyId() + "." + EXTENDS.getValue() + ".tooltip";
+        implementsKey = getMainKeyId() + "." + IMPLEMENTS.getValue() + ".tooltip";
+        extendsSymbol = new CESymbol();
+        implementsSymbol = new CESymbol();
     }
 
     @Override
@@ -65,6 +65,26 @@ public abstract class CEProjectClassCollector extends CEProjectCollector<PsiClas
                     }
                     super.visitVariable(variable);
                 }
+
+                @Override
+                public void visitClass(@NotNull PsiClass psiClass) {
+                    if (CEUtils.isNotPreviewEditor(editor)) {
+                        visitClassForRefs(psiClass.getExtendsList());
+                        visitClassForRefs(psiClass.getImplementsList());
+                    }
+                    super.visitClass(psiClass);
+                }
+
+                private void visitClassForRefs(@Nullable PsiReferenceList list) {
+                    if (list != null) {
+                        for (PsiJavaCodeReferenceElement ref : list.getReferenceElements()) {
+                            PsiElement resolveElement = ref.resolve();
+                            if (resolveElement instanceof PsiClass clazz) {
+                                processHint(ref, clazz, inlayHintsSink);
+                            }
+                        }
+                    }
+                }
             });
         }
         return false;
@@ -73,8 +93,8 @@ public abstract class CEProjectClassCollector extends CEProjectCollector<PsiClas
     @Override
     public void processHint(@NotNull PsiElement addHintElement, @NotNull PsiClass evaluationElement, @NotNull InlayHintsSink sink) {
         processAnnotationsFR(CLASS, evaluationElement, addHintElement, sink);
-        processReferenceListFR(EXTENDS, evaluationElement.getExtendsList(), addHintElement, sink, getSymbolExtends(), getKeyExtends());
-        processReferenceListFR(IMPLEMENTS, evaluationElement.getImplementsList(), addHintElement, sink, getSymbolImplements(), getKeyImplements());
+        processReferenceListFR(EXTENDS, evaluationElement.getExtendsList(), addHintElement, sink, getExtendsSymbol(), getExtendsKey());
+        processReferenceListFR(IMPLEMENTS, evaluationElement.getImplementsList(), addHintElement, sink, getImplementsSymbol(), getImplementsKey());
     }
 
     @Override

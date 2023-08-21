@@ -27,15 +27,15 @@ public abstract class CEProjectCollector<H extends PsiModifierListOwner, A exten
 
     protected final CEConfigFile configFile;
     protected final String mainKeyId;
-    private final String keyAnnotations;
-    private final CESymbol symbolAnnotations;
+    private final String annotationsKey;
+    private final CESymbol annotationsSymbol;
 
     protected CEProjectCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
         super(editor);
         this.configFile = new CEConfigFile(editor);
         this.mainKeyId = "inlay." + mainKeyId;
-        keyAnnotations = getMainKeyId() + "." + ANNOTATIONS.getValue() + ".tooltip";
-        symbolAnnotations = new CESymbol();
+        annotationsKey = getMainKeyId() + "." + ANNOTATIONS.getValue() + ".tooltip";
+        annotationsSymbol = new CESymbol();
     }
 
     @Override
@@ -60,7 +60,7 @@ public abstract class CEProjectCollector<H extends PsiModifierListOwner, A exten
 
     public void addInlayAnnotationsFR(@NotNull A addHintElement, @NotNull List<String> hintValues, @NotNull InlayHintsSink sink) {
         if (!hintValues.isEmpty()) {
-            InlayPresentation inlay = buildInlay(getSymbolAnnotations(), getKeyAnnotations(), String.valueOf(hintValues));
+            InlayPresentation inlay = buildInlay(getAnnotationsSymbol(), getAnnotationsKey(), String.valueOf(hintValues));
             addInlay(addHintElement, sink, inlay);
         }
     }

@@ -18,12 +18,12 @@ public class ProjectLocalVariableCollector extends CEProjectVariableCollector {
     }
 
     @Override
-    public @NotNull CESymbol getSymbolAnnotations() {
+    public @NotNull CESymbol getAnnotationsSymbol() {
         return ANNOTATIONS_SYMBOL;
     }
 
     @Override
-    public @NotNull CESymbol getSymbolTypes() {
+    public @NotNull CESymbol getTypesSymbol() {
         return TYPES_SYMBOL;
     }
 }

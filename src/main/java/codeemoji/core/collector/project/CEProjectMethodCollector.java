@@ -18,13 +18,13 @@ import static codeemoji.core.collector.project.config.CEFeatureRule.RETURNS;
 @Getter
 public abstract class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiMethodCallExpression> implements ICEProjectTypes<PsiMethodCallExpression> {
 
-    private final String keyReturns;
-    private final CESymbol symbolReturns;
+    private final String returnsKey;
+    private final CESymbol returnsSymbol;
 
     protected CEProjectMethodCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
         super(editor, mainKeyId + ".method");
-        keyReturns = getMainKeyId() + "." + RETURNS.getValue() + ".tooltip";
-        symbolReturns = new CESymbol();
+        returnsKey = getMainKeyId() + "." + RETURNS.getValue() + ".tooltip";
+        returnsSymbol = new CESymbol();
     }
 
     @Override
@@ -53,7 +53,7 @@ public abstract class CEProjectMethodCollector extends CEProjectCollector<PsiMet
         processAnnotationsFR(METHOD, evaluationElement, addHintElement, sink);
         PsiType type = evaluationElement.getReturnType();
         if (!evaluationElement.isConstructor() && type != null) {
-            processTypesFR(METHOD, RETURNS, type, addHintElement, sink, getSymbolReturns(), getKeyReturns());
+            processTypesFR(METHOD, RETURNS, type, addHintElement, sink, getReturnsSymbol(), getReturnsKey());
         }
     }
 
