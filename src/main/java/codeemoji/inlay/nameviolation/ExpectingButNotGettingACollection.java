@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-import static codeemoji.inlay.nameviolation.NameViolationConstants.ONE;
+import static codeemoji.inlay.nameviolation.NameViolationSymbols.ONE;
 
 public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
 

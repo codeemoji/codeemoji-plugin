@@ -6,7 +6,7 @@ import com.intellij.openapi.editor.Editor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import static codeemoji.inlay.showingspecifics.ShowingSpecificsConstants.*;
+import static codeemoji.inlay.showingspecifics.ShowingSpecificsSymbols.*;
 
 @Getter
 public class ProjectClassCollector extends CEProjectClassCollector {

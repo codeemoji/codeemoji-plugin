@@ -5,6 +5,7 @@ import com.intellij.codeInsight.hints.*;
 import com.intellij.lang.Language;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ui.FormBuilder;
@@ -19,6 +20,8 @@ import java.util.Objects;
 
 @Getter
 public abstract class CEProvider<S> implements InlayHintsProvider<S> {
+
+    private static final Logger LOG = Logger.getInstance(CEProvider.class);
 
     private S settings;
 
@@ -73,11 +76,11 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
                 } else if (genericType instanceof PersistentStateComponent<?> typeT) {
                     this.settings = (S) ApplicationManager.getApplication().getService(typeT.getClass());
                 } else {
-                    throw new RuntimeException("Settings must be 'NoSettings' or 'PersistentStateComponent' type.");
+                    throw new CEProviderException("Settings must be 'NoSettings' or 'PersistentStateComponent' type.");
                 }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                      NoSuchMethodException ex) {
-                ex.printStackTrace();
+                LOG.error(ex);
             }
         }
         return settings;

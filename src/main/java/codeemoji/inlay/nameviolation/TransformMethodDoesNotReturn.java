@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-import static codeemoji.inlay.nameviolation.NameViolationConstants.CONFUSED;
+import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
 
 public class TransformMethodDoesNotReturn extends CEProvider<NoSettings> {
 

@@ -11,7 +11,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 
 import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.*;
-import static codeemoji.inlay.showingmodifiers.ShowingModifiersConstants.*;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.*;
 import static com.intellij.psi.PsiModifier.*;
 
 public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) implements ImmediateConfigurable {

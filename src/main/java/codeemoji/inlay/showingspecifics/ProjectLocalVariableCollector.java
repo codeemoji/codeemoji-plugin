@@ -7,8 +7,8 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import static codeemoji.core.collector.project.config.CEElementRule.LOCALVARIABLE;
-import static codeemoji.inlay.showingspecifics.ShowingSpecificsConstants.ANNOTATIONS_SYMBOL;
-import static codeemoji.inlay.showingspecifics.ShowingSpecificsConstants.TYPES_SYMBOL;
+import static codeemoji.inlay.showingspecifics.ShowingSpecificsSymbols.ANNOTATIONS_SYMBOL;
+import static codeemoji.inlay.showingspecifics.ShowingSpecificsSymbols.TYPES_SYMBOL;
 
 @Getter
 public class ProjectLocalVariableCollector extends CEProjectVariableCollector {

@@ -10,7 +10,7 @@ import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
-import static codeemoji.inlay.nameviolation.NameViolationConstants.ONE;
+import static codeemoji.inlay.nameviolation.NameViolationSymbols.ONE;
 
 public class SaysManyButContainsOne extends CEProvider<NoSettings> {
 

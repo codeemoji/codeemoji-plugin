@@ -35,7 +35,6 @@ public abstract class CEProjectCollector<H extends PsiModifierListOwner, A exten
         this.configFile = new CEConfigFile(editor);
         this.mainKeyId = "inlay." + mainKeyId;
         keyAnnotations = getMainKeyId() + "." + ANNOTATIONS.getValue() + ".tooltip";
-        System.out.println(keyAnnotations);
         symbolAnnotations = new CESymbol();
     }
 

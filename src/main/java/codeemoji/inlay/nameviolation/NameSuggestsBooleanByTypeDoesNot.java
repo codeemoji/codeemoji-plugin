@@ -9,7 +9,7 @@ import com.intellij.psi.PsiTypes;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
-import static codeemoji.inlay.nameviolation.NameViolationConstants.CONFUSED;
+import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
 
 public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NoSettings> {
 

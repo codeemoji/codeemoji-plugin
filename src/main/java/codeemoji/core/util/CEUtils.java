@@ -3,6 +3,7 @@ package codeemoji.core.util;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -23,6 +24,8 @@ import static com.intellij.psi.PsiModifier.*;
 
 public final class CEUtils {
 
+    private static final Logger LOG = Logger.getInstance(CEUtils.class);
+
     private CEUtils() {
     }
 
@@ -38,7 +41,8 @@ public final class CEUtils {
                 String qualifiedName = Objects.requireNonNull(psiTypeClass.getQualifiedName());
                 return isIterableType(qualifiedName, psiTypeClass);
             }
-        } catch (RuntimeException ignored) {
+        } catch (RuntimeException ex) {
+            LOG.info(ex);
         }
         return false;
     }
@@ -66,7 +70,8 @@ public final class CEUtils {
         try {
             String returnClassSimpleName = Objects.requireNonNull(typeElement).getText();
             return returnClassSimpleName.contains("[]");
-        } catch (RuntimeException ignored) {
+        } catch (RuntimeException ex) {
+            LOG.info(ex);
         }
         return false;
     }
@@ -83,7 +88,8 @@ public final class CEUtils {
                 typeName = calcLastWordCapitalized(typeName);
                 fieldName = calcLastWordCapitalized(fieldName);
                 return fieldName.equalsIgnoreCase(typeName);
-            } catch (RuntimeException ignored) {
+            } catch (RuntimeException ex) {
+                LOG.info(ex);
             }
         }
         return false;
@@ -127,7 +133,8 @@ public final class CEUtils {
                     return je.getAsString() != null;
                 }
             }
-        } catch (RuntimeException | IOException ignored) {
+        } catch (RuntimeException | IOException ex) {
+            LOG.info(ex);
         }
         return false;
     }

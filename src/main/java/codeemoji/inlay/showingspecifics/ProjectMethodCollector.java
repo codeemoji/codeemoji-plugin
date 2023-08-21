@@ -6,8 +6,8 @@ import com.intellij.openapi.editor.Editor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import static codeemoji.inlay.showingspecifics.ShowingSpecificsConstants.ANNOTATIONS_SYMBOL;
-import static codeemoji.inlay.showingspecifics.ShowingSpecificsConstants.RETURNS_SYMBOL;
+import static codeemoji.inlay.showingspecifics.ShowingSpecificsSymbols.ANNOTATIONS_SYMBOL;
+import static codeemoji.inlay.showingspecifics.ShowingSpecificsSymbols.RETURNS_SYMBOL;
 
 @Getter
 public class ProjectMethodCollector extends CEProjectMethodCollector {

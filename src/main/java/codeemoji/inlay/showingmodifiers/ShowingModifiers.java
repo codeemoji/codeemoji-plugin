@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.*;
-import static codeemoji.inlay.showingmodifiers.ShowingModifiersConstants.*;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.*;
 import static com.intellij.psi.PsiModifier.*;
 
 public class ShowingModifiers extends CEMultiProvider<ShowingModifiersSettings> {
