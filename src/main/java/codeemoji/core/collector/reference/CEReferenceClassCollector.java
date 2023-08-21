@@ -35,17 +35,40 @@ public abstract class CEReferenceClassCollector extends CESingleCollector<PsiCla
 
                 @Override
                 public void visitVariable(@NotNull PsiVariable variable) {
-                    PsiTypeElement typeElement = variable.getTypeElement();
-                    if (typeElement != null && !typeElement.isInferredType()
-                            && typeElement.getType() instanceof PsiClassType classType) {
-                        PsiClass clazz = classType.resolve();
-                        if (clazz != null && (needsHint(clazz))) {
-                            addInlay(variable, inlayHintsSink);
+                    if (CEUtils.isNotPreviewEditor(editor)) {
+                        PsiTypeElement typeElement = variable.getTypeElement();
+                        if (typeElement != null && !typeElement.isInferredType()
+                                && typeElement.getType() instanceof PsiClassType classType) {
+                            PsiClass clazz = classType.resolve();
+                            if (clazz != null && (needsHint(clazz))) {
+                                addInlay(variable, inlayHintsSink);
+
+                            }
 
                         }
-
                     }
                     super.visitVariable(variable);
+                }
+
+                @Override
+                public void visitClass(@NotNull PsiClass psiClass) {
+                    if (CEUtils.isNotPreviewEditor(editor)) {
+                        visitClassForRefs(psiClass.getExtendsList());
+                        visitClassForRefs(psiClass.getImplementsList());
+                    }
+                    super.visitClass(psiClass);
+                }
+
+                private void visitClassForRefs(@Nullable PsiReferenceList list) {
+                    if (list != null) {
+                        for (PsiJavaCodeReferenceElement ref : list.getReferenceElements()) {
+                            PsiElement resolveElement = ref.resolve();
+                            if (resolveElement instanceof PsiClass clazz && (needsHint(clazz))) {
+                                addInlay(ref, inlayHintsSink);
+
+                            }
+                        }
+                    }
                 }
             });
         }
