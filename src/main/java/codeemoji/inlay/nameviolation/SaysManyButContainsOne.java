@@ -44,9 +44,11 @@ public class SaysManyButContainsOne extends CEProvider<NoSettings> {
                         CEUtils.isPluralForm(element.getName()) &&
                         !typeElement.isInferredType() && //TODO: detect inferred type name
                         !CEUtils.isGenericType(element, typeElement) &&
+                        !CEUtils.isConstantName(element) &&
                         !CEUtils.isNumericType(typeElement) &&
                         !CEUtils.isArrayType(typeElement) &&
                         !CEUtils.isIterableType(typeElement) &&
+                        !CEUtils.isMappableType(typeElement) &&
                         !CEUtils.sameNameAsType(typeElement, element.getName()) &&
                         !CEUtils.containsOnlySpecialCharacters(typeElement.getText());
             }

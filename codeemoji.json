@@ -13,7 +13,8 @@
       "feature": "extends",
       "values": [
         "Triangle",
-        "Rectangle"
+        "Rectangle",
+        "codeemoji.core.provider.CEProvider"
       ]
     },
     {
@@ -22,7 +23,8 @@
       "values": [
         "Shape",
         "Figure",
-        "Chart"
+        "Chart",
+        "codeemoji.core.provider.CEProvider"
       ]
     },
     {

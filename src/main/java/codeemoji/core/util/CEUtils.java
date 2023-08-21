@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,39 +32,6 @@ public final class CEUtils {
 
     public static boolean isNotPreviewEditor(@NotNull Editor editor) {
         return !editor.getEditorKind().name().equalsIgnoreCase("UNTYPED");
-    }
-
-    public static boolean isIterableType(PsiTypeElement typeElement) {
-        try {
-            PsiType fieldType = Objects.requireNonNull(typeElement).getType();
-            if (fieldType instanceof PsiClassType psiType) {
-                PsiClass psiTypeClass = Objects.requireNonNull(psiType.resolve());
-                String qualifiedName = Objects.requireNonNull(psiTypeClass.getQualifiedName());
-                return isIterableType(qualifiedName, psiTypeClass);
-            }
-        } catch (RuntimeException ex) {
-            LOG.info(ex);
-        }
-        return false;
-    }
-
-    private static boolean isIterableType(@NotNull String qualifiedName, @NotNull PsiClass psiTypeClass) {
-        try {
-            Class<?> typeClass = Class.forName(qualifiedName);
-            return Iterable.class.isAssignableFrom(typeClass);
-        } catch (RuntimeException | ClassNotFoundException ignored) {
-            Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-            for (Project proj : openProjects) {
-                GlobalSearchScope scope = psiTypeClass.getResolveScope();
-                PsiClass psiUserClass = JavaPsiFacade.getInstance(proj).findClass(qualifiedName, scope);
-                PsiClassType iteratorType = JavaPsiFacade.getElementFactory(proj).createTypeByFQClassName("java.lang.Iterable", scope);
-                PsiClass iteratorClass = iteratorType.resolve();
-                if (iteratorClass != null && psiUserClass != null && psiUserClass.isInheritor(iteratorClass, true)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     public static boolean isArrayType(PsiTypeElement typeElement) {
@@ -256,5 +224,56 @@ public final class CEUtils {
             }
             return null;
         }
+    }
+
+    public static boolean isConstantName(@NotNull PsiVariable element) {
+        PsiModifierList psiModifierList = element.getModifierList();
+        if (psiModifierList != null) {
+            return psiModifierList.hasModifierProperty(STATIC) &&
+                    psiModifierList.hasModifierProperty(FINAL) &&
+                    Objects.equals(element.getType().getPresentableText(), "String");
+        }
+        return false;
+    }
+
+    public static boolean isIterableType(PsiTypeElement typeElement) {
+        return checkParentType(typeElement, Iterable.class);
+    }
+
+    public static boolean isMappableType(PsiTypeElement typeElement) {
+        return checkParentType(typeElement, Map.class);
+    }
+
+    private static boolean checkParentType(PsiTypeElement typeElement, @NotNull Class<?> parentTypeClass) {
+        try {
+            PsiType fieldType = Objects.requireNonNull(typeElement).getType();
+            if (fieldType instanceof PsiClassType psiType) {
+                PsiClass psiTypeClass = Objects.requireNonNull(psiType.resolve());
+                String qualifiedName = Objects.requireNonNull(psiTypeClass.getQualifiedName());
+                return isParentType(qualifiedName, psiTypeClass, parentTypeClass);
+            }
+        } catch (RuntimeException ex) {
+            LOG.info(ex);
+        }
+        return false;
+    }
+
+    private static boolean isParentType(@NotNull String qualifiedName, @NotNull PsiClass psiTypeClass, @NotNull Class<?> parentTypeClass) {
+        try {
+            Class<?> typeClass = Class.forName(qualifiedName);
+            return parentTypeClass.isAssignableFrom(typeClass);
+        } catch (RuntimeException | ClassNotFoundException ignored) {
+            Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+            for (Project proj : openProjects) {
+                GlobalSearchScope scope = psiTypeClass.getResolveScope();
+                PsiClass psiUserClass = JavaPsiFacade.getInstance(proj).findClass(qualifiedName, scope);
+                PsiClassType parentType = JavaPsiFacade.getElementFactory(proj).createTypeByFQClassName(parentTypeClass.getCanonicalName(), scope);
+                PsiClass parentClass = parentType.resolve();
+                if (parentClass != null && psiUserClass != null && psiUserClass.isInheritor(parentClass, true)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

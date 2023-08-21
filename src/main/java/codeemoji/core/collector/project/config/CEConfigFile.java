@@ -34,9 +34,9 @@ public class CEConfigFile {
                 VirtualFile file = baseDir.findFileByRelativePath(PROJECT_CONFIG_FILE);
                 if (file != null) {
                     try (InputStream is = file.getInputStream()) {
-                        try (Reader isr = new InputStreamReader(is)) {
+                        try (Reader inputStreamReader = new InputStreamReader(is)) {
                             Gson gson = new Gson();
-                            @SuppressWarnings("unchecked") Map<String, Object> map = gson.fromJson(isr, Map.class);
+                            @SuppressWarnings("unchecked") Map<String, Object> map = gson.fromJson(inputStreamReader, Map.class);
                             for (Map.Entry<String, Object> entry : map.entrySet()) {
                                 if (Objects.equals(entry.getKey(), PROJECT_RULES)) {
                                     CEProjectRule[] rules = gson.fromJson(String.valueOf(entry.getValue()), CEProjectRule[].class);
