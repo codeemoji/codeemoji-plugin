@@ -1,6 +1,6 @@
 package codeemoji.core.collector.project;
 
-import codeemoji.core.collector.project.config.CEProjectRuleFeature;
+import codeemoji.core.collector.project.config.CERuleFeature;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
@@ -12,28 +12,27 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import static codeemoji.core.collector.project.config.CEProjectRuleElement.CLASS;
+import static codeemoji.core.collector.project.config.CERuleElement.CLASS;
 
-public interface CEIProjectReferenceList<H extends PsiReferenceList, A extends PsiElement> extends CEIProjectConfigFile {
+public interface CEIProjectReferenceList<H extends PsiReferenceList, A extends PsiElement> extends CEIProjectConfig {
 
-    default void processReferenceListFR(@NotNull CEProjectRuleFeature featureRule, @Nullable H evaluationElement,
+    default void processReferenceListFR(@NotNull CERuleFeature featureRule, @Nullable H evaluationElement,
                                         @NotNull A hintElement, @NotNull InlayHintsSink sink,
                                         @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         addInlayReferenceListFR(hintElement, needsHintReferenceListFR(featureRule, evaluationElement), sink,
                 symbol, keyTooltip);
     }
 
-    default @NotNull List<String> needsHintReferenceListFR(@NotNull CEProjectRuleFeature featureRule, @Nullable PsiReferenceList refList) {
-        Map<CEProjectRuleFeature, List<String>> rules = readRules(CLASS);
-        List<String> featureValues = rules.get(featureRule);
+    default @NotNull List<String> needsHintReferenceListFR(@NotNull CERuleFeature featureRule, @Nullable PsiReferenceList refList) {
+        var rules = readRuleFeatures(CLASS);
+        var featureValues = rules.get(featureRule);
         List<String> hintValues = new ArrayList<>();
         if (featureValues != null && (refList != null)) {
-            PsiClassType[] refs = refList.getReferencedTypes();
+            var refs = refList.getReferencedTypes();
             for (PsiClassType psiType : refs) {
                 for (String value : featureValues) {
-                    String qualifiedName = CEUtils.resolveQualifiedName(psiType);
+                    var qualifiedName = CEUtils.resolveQualifiedName(psiType);
                     if (qualifiedName != null && qualifiedName.equalsIgnoreCase(value)) {
                         hintValues.add(value);
                     }

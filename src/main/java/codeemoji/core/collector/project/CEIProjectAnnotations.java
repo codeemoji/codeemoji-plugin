@@ -1,7 +1,6 @@
 package codeemoji.core.collector.project;
 
-import codeemoji.core.collector.project.config.CEProjectRuleElement;
-import codeemoji.core.collector.project.config.CEProjectRuleFeature;
+import codeemoji.core.collector.project.config.CERuleElement;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiElement;
@@ -10,26 +9,25 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import static codeemoji.core.collector.project.config.CEProjectRuleFeature.ANNOTATIONS;
+import static codeemoji.core.collector.project.config.CERuleFeature.ANNOTATIONS;
 
-public interface CEIProjectAnnotations<H extends PsiModifierListOwner, A extends PsiElement> extends CEIProjectConfigFile {
+public interface CEIProjectAnnotations<H extends PsiModifierListOwner, A extends PsiElement> extends CEIProjectConfig {
 
-    default void processAnnotationsFR(@NotNull CEProjectRuleElement elementRule, @NotNull H evaluationElement,
+    default void processAnnotationsFR(@NotNull CERuleElement elementRule, @NotNull H evaluationElement,
                                       @NotNull A hintElement, @NotNull InlayHintsSink sink) {
         addInlayAnnotationsFR(hintElement, needsHintAnnotationsFR(elementRule, evaluationElement), sink);
     }
 
-    default @NotNull List<String> needsHintAnnotationsFR(@NotNull CEProjectRuleElement elementRule, @NotNull H evaluationElement) {
-        Map<CEProjectRuleFeature, List<String>> rules = readRules(elementRule);
-        List<String> featureValues = rules.get(ANNOTATIONS);
+    default @NotNull List<String> needsHintAnnotationsFR(@NotNull CERuleElement elementRule, @NotNull H evaluationElement) {
+        var rules = readRuleFeatures(elementRule);
+        var featureValues = rules.get(ANNOTATIONS);
         List<String> hintValues = new ArrayList<>();
         if (featureValues != null) {
-            PsiAnnotation[] annotations = evaluationElement.getAnnotations();
+            var annotations = evaluationElement.getAnnotations();
             for (PsiAnnotation type : annotations) {
                 for (String value : featureValues) {
-                    String qualifiedName = type.getQualifiedName();
+                    var qualifiedName = type.getQualifiedName();
                     if (qualifiedName != null && qualifiedName.equalsIgnoreCase(value)) {
                         hintValues.add(value);
                     }

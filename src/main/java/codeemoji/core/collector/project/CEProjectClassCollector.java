@@ -12,9 +12,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import static codeemoji.core.collector.project.config.CEProjectRuleElement.CLASS;
-import static codeemoji.core.collector.project.config.CEProjectRuleFeature.EXTENDS;
-import static codeemoji.core.collector.project.config.CEProjectRuleFeature.IMPLEMENTS;
+import static codeemoji.core.collector.project.config.CERuleElement.CLASS;
+import static codeemoji.core.collector.project.config.CERuleFeature.EXTENDS;
+import static codeemoji.core.collector.project.config.CERuleFeature.IMPLEMENTS;
 
 @Getter
 public abstract class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiElement>

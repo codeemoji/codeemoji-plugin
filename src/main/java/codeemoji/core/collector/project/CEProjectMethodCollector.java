@@ -12,8 +12,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import static codeemoji.core.collector.project.config.CEProjectRuleElement.METHOD;
-import static codeemoji.core.collector.project.config.CEProjectRuleFeature.RETURNS;
+import static codeemoji.core.collector.project.config.CERuleElement.METHOD;
+import static codeemoji.core.collector.project.config.CERuleFeature.RETURNS;
 
 @Getter
 public abstract class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiMethodCallExpression> implements CEIProjectTypes<PsiMethodCallExpression> {
