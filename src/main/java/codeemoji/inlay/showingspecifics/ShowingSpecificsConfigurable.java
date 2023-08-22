@@ -2,6 +2,7 @@ package codeemoji.inlay.showingspecifics;
 
 import codeemoji.core.collector.project.CEIProjectConfig;
 import codeemoji.core.collector.project.config.CEConfigFile;
+import codeemoji.core.collector.project.config.CERuleElement;
 import codeemoji.core.collector.project.config.CERuleFeature;
 import codeemoji.core.util.CEBundle;
 import com.intellij.codeInsight.hints.ChangeListener;
@@ -27,63 +28,56 @@ public record ShowingSpecificsConfigurable(ShowingSpecificsSettings settings) im
     @Override
     public @NotNull JComponent createComponent(@NotNull ChangeListener changeListener) {
         var specificsPanel = new JPanel();
-        var detailProject = prepareOpenProjectsPanel();
+        var detailProject = initOpenProjectsPanel();
         specificsPanel.add(detailProject);
         return FormBuilder.createFormBuilder()
                 .addComponent(specificsPanel)
                 .getPanel();
     }
 
-    private @NotNull JPanel prepareOpenProjectsPanel() {
+    private @NotNull JPanel initOpenProjectsPanel() {
         Project project = getOpenProject();
         if (!project.isDisposed()) {
-            return readConfigsForOpenProject();
+            return buildPanelsForOpenProject();
         }
         return new JPanel();
     }
 
-    private @NotNull JPanel readConfigsForOpenProject() {
+    private @NotNull JPanel buildPanelsForOpenProject() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
 
         String projectStr = CEBundle.getString("inlay.showingspecifics.options.title.project");
         String loadedRulesStr = CEBundle.getString("inlay.showingspecifics.options.title.loaded_rules");
+        String classTitle = CEBundle.getString("inlay.showingspecifics.options.title.classes");
+        String fieldTitle = CEBundle.getString("inlay.showingspecifics.options.title.fields");
+        String methodTitle = CEBundle.getString("inlay.showingspecifics.options.title.methods");
+        String parameterTitle = CEBundle.getString("inlay.showingspecifics.options.title.parameters");
+        String localVariableTitle = CEBundle.getString("inlay.showingspecifics.options.title.localvariables");
 
         JPanel result = createBasicInnerBagPanel(loadedRulesStr + " - " + projectStr + ": " + getOpenProject().getName(), false);
 
-        JPanel classPanel = createBasicInnerBagPanel("Classes", true);
-        var features = readRuleFeatures(CLASS);
-        buildInnerFeaturePanel(features, classPanel);
-
-        JPanel fieldsPanel = createBasicInnerBagPanel("Fields", true);
-        features = readRuleFeatures(FIELD);
-        buildInnerFeaturePanel(features, fieldsPanel);
-
-        JPanel methodsPanel = createBasicInnerBagPanel("Methods", true);
-        features = readRuleFeatures(METHOD);
-        buildInnerFeaturePanel(features, methodsPanel);
-
-        JPanel parametersPanel = createBasicInnerBagPanel("Parameters", true);
-        features = readRuleFeatures(PARAMETER);
-        buildInnerFeaturePanel(features, parametersPanel);
-
-        JPanel localVariablesPanel = createBasicInnerBagPanel("Local Variables", true);
-        features = readRuleFeatures(LOCALVARIABLE);
-        buildInnerFeaturePanel(features, localVariablesPanel);
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        result.add(classPanel, gbc);
-        gbc.gridy = 1;
-        result.add(fieldsPanel, gbc);
-        gbc.gridy = 2;
-        result.add(methodsPanel, gbc);
-        gbc.gridy = 3;
-        result.add(parametersPanel, gbc);
-        gbc.gridy = 4;
-        result.add(localVariablesPanel, gbc);
+        buildInnerElementPanel(result, gbc, CLASS, classTitle);
+        buildInnerElementPanel(result, gbc, FIELD, fieldTitle);
+        buildInnerElementPanel(result, gbc, METHOD, methodTitle);
+        buildInnerElementPanel(result, gbc, PARAMETER, parameterTitle);
+        buildInnerElementPanel(result, gbc, LOCALVARIABLE, localVariableTitle);
 
         return result;
+    }
+
+    public void buildInnerElementPanel(@NotNull JPanel result, @NotNull GridBagConstraints gbc,
+                                       @NotNull CERuleElement elementRule, @NotNull String panelTitle) {
+        JPanel panel = createBasicInnerBagPanel(panelTitle, true);
+        var features = readRuleFeatures(elementRule);
+        if (!features.isEmpty()) {
+            buildInnerFeaturePanel(features, panel);
+            result.add(panel, gbc);
+            gbc.gridy++;
+        }
+        buildInnerFeaturePanel(features, panel);
     }
 
     private void buildInnerFeaturePanel(@NotNull Map<CERuleFeature, List<String>> features, @NotNull JPanel panel) {
@@ -109,10 +103,6 @@ public record ShowingSpecificsConfigurable(ShowingSpecificsSettings settings) im
         }
     }
 
-    private Project getOpenProject() {
-        return ProjectManager.getInstance().getOpenProjects()[0];
-    }
-
     private @NotNull JPanel createBasicInnerBagPanel(@NotNull String title, boolean withBorder) {
         var result = new JPanel(new GridBagLayout());
         if (withBorder) {
@@ -126,6 +116,10 @@ public record ShowingSpecificsConfigurable(ShowingSpecificsSettings settings) im
     @Contract(value = " -> new", pure = true)
     private @NotNull Border emptyBorder() {
         return BorderFactory.createEmptyBorder(1, 3, 1, 3);
+    }
+
+    private Project getOpenProject() {
+        return ProjectManager.getInstance().getOpenProjects()[0];
     }
 
     @Contract(" -> new")
