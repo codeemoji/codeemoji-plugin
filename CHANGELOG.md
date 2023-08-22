@@ -1,4 +1,4 @@
-# Intellij codƎEmoji Plugin Changelog
+# Intellij codEEmoji Plugin Changelog
 
 ## [1.1.0-SNAPSHOT]
 

@@ -1,8 +1,8 @@
 <!-- DESCRIPTION HEADER BEGIN -->
 
-# Intellij codƎEmoji Plugin
+# Intellij codEEmoji Plugin
 
-**codƎEmoji** is an Intellij IDE plugin for Java, that inserts inlay hints in the context of code augmentation. The inlay hints inserted with the
+**codEEmoji** is an Intellij IDE plugin for Java, that inserts inlay hints in the context of code augmentation. The inlay hints inserted with the
 plugin are made from emojis for anti-pattern cases, allowing the mainer to identify name violations in the code. In future versions, the plugin
 will be able to insert inlay hints with emojis for invisible feature cases, in addition to displaying inlay hints without emojis for invisible
 annotations.
@@ -11,7 +11,7 @@ annotations.
 
 <!-- TOC -->
 
-* [Intellij codƎEmoji Plugin](#intellij-codǝemoji-plugin)
+* [Intellij codEEmoji Plugin](#intellij-codǝemoji-plugin)
     * [Setup and Use](#setup-and-use)
         * [Prerequisites](#prerequisites)
         * [How to install](#how-to-install)
