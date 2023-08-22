@@ -12,16 +12,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static codeemoji.core.collector.project.ProjectRuleSymbol.ANNOTATIONS_SYMBOL;
+import static codeemoji.core.collector.project.ProjectRuleSymbol.RETURNS_SYMBOL;
 import static codeemoji.core.collector.project.config.CERuleElement.METHOD;
+import static codeemoji.core.collector.project.config.CERuleFeature.ANNOTATIONS;
 import static codeemoji.core.collector.project.config.CERuleFeature.RETURNS;
 
 @Getter
-public abstract class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiMethodCallExpression> implements CEIProjectTypes<PsiMethodCallExpression> {
+public class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiMethodCallExpression> implements CEIProjectTypes<PsiMethodCallExpression> {
 
     private final String returnsKey;
     private final CESymbol returnsSymbol;
 
-    protected CEProjectMethodCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
+    public CEProjectMethodCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
         super(editor, mainKeyId + ".method");
         returnsKey = getMainKeyId() + "." + RETURNS.getValue() + ".tooltip";
         returnsSymbol = new CESymbol();
@@ -72,6 +75,15 @@ public abstract class CEProjectMethodCollector extends CEProjectCollector<PsiMet
             return element.getTextOffset() + element.getMethodExpression().getTextLength();
         }
         return 0;
+    }
+
+    @Override
+    public @NotNull CESymbol getAnnotationsSymbol() {
+        return readRuleEmoji(METHOD, ANNOTATIONS, ANNOTATIONS_SYMBOL);
+    }
+
+    public @NotNull CESymbol getReturnsSymbol() {
+        return readRuleEmoji(METHOD, RETURNS, RETURNS_SYMBOL);
     }
 
 }

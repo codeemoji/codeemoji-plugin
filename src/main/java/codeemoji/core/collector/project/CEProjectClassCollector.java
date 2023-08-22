@@ -12,12 +12,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static codeemoji.core.collector.project.ProjectRuleSymbol.*;
 import static codeemoji.core.collector.project.config.CERuleElement.CLASS;
-import static codeemoji.core.collector.project.config.CERuleFeature.EXTENDS;
-import static codeemoji.core.collector.project.config.CERuleFeature.IMPLEMENTS;
+import static codeemoji.core.collector.project.config.CERuleFeature.*;
 
 @Getter
-public abstract class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiElement>
+public class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiElement>
         implements CEIProjectReferenceList<PsiReferenceList, PsiElement> {
 
     private final String extendsKey;
@@ -25,7 +25,7 @@ public abstract class CEProjectClassCollector extends CEProjectCollector<PsiClas
     private final CESymbol extendsSymbol;
     private final CESymbol implementsSymbol;
 
-    protected CEProjectClassCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
+    public CEProjectClassCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
         super(editor, mainKeyId + ".class");
         extendsKey = getMainKeyId() + "." + EXTENDS.getValue() + ".tooltip";
         implementsKey = getMainKeyId() + "." + IMPLEMENTS.getValue() + ".tooltip";
@@ -115,6 +115,19 @@ public abstract class CEProjectClassCollector extends CEProjectCollector<PsiClas
             }
         }
         return super.calcOffset(element);
+    }
+
+    @Override
+    public @NotNull CESymbol getAnnotationsSymbol() {
+        return readRuleEmoji(CLASS, ANNOTATIONS, ANNOTATIONS_SYMBOL);
+    }
+
+    public @NotNull CESymbol getExtendsSymbol() {
+        return readRuleEmoji(CLASS, EXTENDS, EXTENDS_SYMBOL);
+    }
+
+    public @NotNull CESymbol getImplementsSymbol() {
+        return readRuleEmoji(CLASS, IMPLEMENTS, IMPLEMENTS_SYMBOL);
     }
 
 }

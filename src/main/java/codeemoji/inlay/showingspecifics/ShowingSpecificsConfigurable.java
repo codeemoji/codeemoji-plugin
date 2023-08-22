@@ -1,10 +1,12 @@
 package codeemoji.inlay.showingspecifics;
 
 import codeemoji.core.collector.project.CEIProjectConfig;
+import codeemoji.core.collector.project.ProjectRuleSymbol;
 import codeemoji.core.collector.project.config.CEConfigFile;
 import codeemoji.core.collector.project.config.CERuleElement;
 import codeemoji.core.collector.project.config.CERuleFeature;
 import codeemoji.core.util.CEBundle;
+import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.openapi.project.Project;
@@ -73,20 +75,24 @@ public record ShowingSpecificsConfigurable(ShowingSpecificsSettings settings) im
         JPanel panel = createBasicInnerBagPanel(panelTitle, true);
         var features = readRuleFeatures(elementRule);
         if (!features.isEmpty()) {
-            buildInnerFeaturePanel(features, panel);
+            buildInnerFeaturePanel(elementRule, features, panel);
             result.add(panel, gbc);
             gbc.gridy++;
         }
-        buildInnerFeaturePanel(features, panel);
     }
 
-    private void buildInnerFeaturePanel(@NotNull Map<CERuleFeature, List<String>> features, @NotNull JPanel panel) {
+    private void buildInnerFeaturePanel(@NotNull CERuleElement elementRule,
+                                        @NotNull Map<CERuleFeature, List<String>> features,
+                                        @NotNull JPanel panel) {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = WEST;
         int gridX = 0;
         int gridY = 0;
         for (var entry : features.entrySet()) {
-            var key = new JLabel(entry.getKey().getValue() + ": ");
+            CERuleFeature feature = entry.getKey();
+            CESymbol defaultSymbol = ProjectRuleSymbol.detectDefaultSymbol(feature);
+            CESymbol symbol = readRuleEmoji(elementRule, feature, defaultSymbol);
+            var key = new JLabel(symbol.getEmoji() + " " + feature.getValue() + ": ");
             var valuesStr = entry.getValue().toString();
             valuesStr = valuesStr.replace("[", "").replace("]", "");
             var value = new JTextField(valuesStr);
@@ -129,7 +135,7 @@ public record ShowingSpecificsConfigurable(ShowingSpecificsSettings settings) im
     }
 
     @Override
-    public Object getConfig(String key) {
+    public Object readConfig(String key) {
         return getConfigFile().getConfigs().get(key);
     }
 }

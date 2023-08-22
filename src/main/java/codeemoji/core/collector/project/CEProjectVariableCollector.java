@@ -14,17 +14,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static codeemoji.core.collector.project.ProjectRuleSymbol.ANNOTATIONS_SYMBOL;
+import static codeemoji.core.collector.project.ProjectRuleSymbol.TYPES_SYMBOL;
+import static codeemoji.core.collector.project.config.CERuleFeature.ANNOTATIONS;
 import static codeemoji.core.collector.project.config.CERuleFeature.TYPES;
 
 @Getter
-public abstract class CEProjectVariableCollector extends CEProjectCollector<PsiVariable, PsiReferenceExpression>
+public class CEProjectVariableCollector extends CEProjectCollector<PsiVariable, PsiReferenceExpression>
         implements CEIProjectTypes<PsiReferenceExpression> {
 
     private final CERuleElement elementRule;
     private final String typesKey;
     private final CESymbol typesSymbol;
 
-    protected CEProjectVariableCollector(@NotNull Editor editor, @NotNull CERuleElement elementRule, @NotNull String mainKeyId) {
+    public CEProjectVariableCollector(@NotNull Editor editor, @NotNull CERuleElement elementRule, @NotNull String mainKeyId) {
         super(editor, mainKeyId + "." + elementRule.getValue());
         this.elementRule = elementRule;
         this.typesKey = getMainKeyId() + "." + TYPES.getValue() + ".tooltip";
@@ -94,5 +97,14 @@ public abstract class CEProjectVariableCollector extends CEProjectCollector<PsiV
             return lastChild.getTextOffset() + length;
         }
         return 0;
+    }
+
+    @Override
+    public @NotNull CESymbol getAnnotationsSymbol() {
+        return readRuleEmoji(getElementRule(), ANNOTATIONS, ANNOTATIONS_SYMBOL);
+    }
+
+    public @NotNull CESymbol getTypesSymbol() {
+        return readRuleEmoji(getElementRule(), TYPES, TYPES_SYMBOL);
     }
 }

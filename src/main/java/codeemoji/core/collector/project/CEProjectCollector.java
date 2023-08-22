@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static codeemoji.core.collector.project.ProjectRuleSymbol.ANNOTATIONS_SYMBOL;
 import static codeemoji.core.collector.project.config.CERuleFeature.ANNOTATIONS;
 
 @Getter
@@ -29,11 +30,11 @@ public abstract class CEProjectCollector<H extends PsiModifierListOwner, A exten
         this.configFile = new CEConfigFile(editor.getProject());
         this.mainKeyId = "inlay." + mainKeyId;
         annotationsKey = getMainKeyId() + "." + ANNOTATIONS.getValue() + ".tooltip";
-        annotationsSymbol = new CESymbol();
+        annotationsSymbol = ANNOTATIONS_SYMBOL;
     }
 
     @Override
-    public Object getConfig(String key) {
+    public Object readConfig(String key) {
         return configFile.getConfigs().get(key);
     }
 
