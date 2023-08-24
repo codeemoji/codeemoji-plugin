@@ -2,7 +2,7 @@
 
 <!-- DESCRIPTION HEADER BEGIN -->
 
-**codeEEmoji** is a plug-in made for Intellij Idea and useful for Java programming. The plugin defines new sets of inlay hints in the context of code
+**codeEEmoji** is a plugin made for Intellij Idea and useful for Java programming. The plugin defines new sets of inlay hints in the context of code
 augmentation. The new inlay hints use emojis in an innovative way to help the developer. Emojis are displayed for anti-pattern cases such as naming
 violations or bad programming practices. The plugin can also show emojis in the editor indicating the presence of modifiers for classes, fields,
 methods, parameters or local variables that are being used. Likewise, the developer can indicate emojis to display for all these elements, according
