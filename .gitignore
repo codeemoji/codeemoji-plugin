@@ -11,9 +11,7 @@ codeemoji.json
 .idea/compiler.xml
 .idea/libraries/
 .idea/sonarlint/
-.idea/codeStyles
-.idea/dictionaries
-.idea/inspectionProfiles
+
 *.iws
 *.iml
 *.ipr
