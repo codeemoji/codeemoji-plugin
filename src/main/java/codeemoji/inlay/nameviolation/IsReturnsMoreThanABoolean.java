@@ -30,7 +30,9 @@ public class IsReturnsMoreThanABoolean extends CEProvider<NoSettings> {
         return new CEMethodCollector(editor, getKeyId(), CONFUSED) {
             @Override
             public boolean needsHint(@NotNull PsiMethod element) {
-                return element.getName().startsWith("is") && !(Objects.equals(element.getReturnType(), PsiTypes.booleanType()) || Objects.equals(element.getReturnType(), PsiTypes.voidType()));
+                return element.getName().startsWith("is") &&
+                        !(Objects.equals(element.getReturnType(), PsiTypes.booleanType())
+                                || Objects.equals(element.getReturnType(), PsiTypes.voidType()));
             }
         };
 

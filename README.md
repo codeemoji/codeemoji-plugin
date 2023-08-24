@@ -1,6 +1,6 @@
 <!-- DESCRIPTION HEADER BEGIN -->
 
-# Intellij codEEmoji Plugin
+# codEEmoji Plugin
 
 **codeEEmoji** is a plug-in made for Intellij Idea and useful for Java programming. The plugin defines new sets of inlay hints in the context of code
 augmentation. The new inlay hints use emojis in an innovative way to help the developer. Emojis are displayed for anti-pattern cases such as naming
@@ -45,7 +45,7 @@ options that are available for each one, go to "**_File>Settings>Editor>Inlay Hi
 
 ![How to Configure](docs/screenshots/howtoconfigure.png)
 
-## Naming Violation Cases
+## Cases of Naming Violation
 
 ### Short Descriptive Name
 
@@ -167,11 +167,49 @@ _**Impacted identifiers: Fields, Method Parameters and Local Variables**_
 
 ![Name Contains Only Special Character](docs/screenshots/namecontainsonlyspecialcharacters.png)
 
-## Invisible Features Cases
+## Cases of Showing Modifiers
 
-Coming soon...
+This inlay hint allows you to configure the display of emojis for class, field and method modifiers. Emojis are displayed when an element is used in the code, indicating its modifiers. The figure below shows the configuration screen with the options enabled during installation. Then a code snippet is displayed, where all options have been enabled.
 
-## Invisible Annotations Cases
+_**Impacted identifiers: Classes, Fields and Methods**_
+
+![Showing Modifiers](docs/screenshots/showingmodifiers.png)
+
+![Showing Modifiers - Sample](docs/screenshots/showingmodifierssample.png)
+
+## Cases of Showing Specifics of Projects
+
+This inlay hint is displayed according to the specifics of the project. It must be configured by the developer from a file in the root of the 
+project named *"codeemoji.json"*. It allows indicating rules for displaying emojis according to specific features for each element, as follows:
+
+- Element: Class
+  - Features: Annotations, Extends and Implements
+- Element: Field
+  - Features: Annotations, Types
+- Element: Method
+  - Features: Annotations, Returns
+- Element: Parameter
+  - Features: Annotations, Types
+- Element: Local Variable
+  - Features: Annotations, Types
+
+For each element, it is possible to optionally indicate an emoji from the [unicode sequence](https://unicode.org/Public/emoji/15.0/emoji-sequences.txt) that represents it. The *"codeemoji.json"* file follows 
+a simple description pattern, as shown in the following a partial example:
+
+![Showing Specifics for the Projects - File Sample](docs/screenshots/showingspecificsoftheprojectfilesample.png)
+
+Complete example [here](docs/codeemoji.json).
+
+In the configuration screen of this inlay hint, the rules currently defined for the open project are displayed. Look the following figure.
+
+![Showing Specifics for the Projects - Configuration](docs/screenshots/showingspecificsoftheproject.png)
+
+Here's an example of usage from a code snipped:
+
+![Showing Specifics for the Projects - Code Sample](docs/screenshots/showingspecificsoftheprojectcodesample.png)
+
+
+## Cases of Showing Implicit Annotations
 
 Coming soon...
 

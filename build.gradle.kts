@@ -40,6 +40,11 @@ changelog {
 }
 
 tasks {
+
+    buildSearchableOptions {
+        enabled = false
+    }
+
     withType<JavaCompile> {
         sourceCompatibility = "17"
         targetCompatibility = "17"

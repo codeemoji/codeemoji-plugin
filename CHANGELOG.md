@@ -1,8 +1,19 @@
-# Intellij codEEmoji Plugin Changelog
+# codEEmoji Plugin Changelog
 
-## [2.0.0]
+## 2.0.0  (August 24th, 2023)
 
-## [1.0.0]
+### Added
+
+- Cases of showing modifiers
+- Cases of showing specifics of the projects
+
+### Improvements
+
+- Framework refactorings and improvements
+- Performance optimizations
+- False positive fixes for naming violation cases
+
+## 1.0.0 (August 2nd, 2023)
 
 ### Added
 
