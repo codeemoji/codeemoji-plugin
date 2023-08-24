@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("UnstableApiUsage")
 public interface CEIProjectTypes<A extends PsiElement> extends CEIProjectConfig {
 
     default void processTypesFR(@NotNull CERuleElement elementRule, @NotNull CERuleFeature featureRule, PsiType type,
@@ -27,7 +28,7 @@ public interface CEIProjectTypes<A extends PsiElement> extends CEIProjectConfig 
         var featureValues = rules.get(featureRule);
         List<String> results = new ArrayList<>();
         if (featureValues != null) {
-            for (String value : featureValues) {
+            for (var value : featureValues) {
                 String qualifiedName;
                 if (type instanceof PsiClassType classType) {
                     qualifiedName = CEUtils.resolveQualifiedName(classType);

@@ -9,6 +9,7 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("UnstableApiUsage")
 public abstract class CEReferenceClassCollector extends CESingleCollector<PsiClass, PsiElement> {
 
     protected CEReferenceClassCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
@@ -22,9 +23,9 @@ public abstract class CEReferenceClassCollector extends CESingleCollector<PsiCla
                 @Override
                 public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
                     if (CEUtils.isNotPreviewEditor(editor)) {
-                        PsiReference reference = expression.getReference();
+                        var reference = expression.getReference();
                         if (reference != null) {
-                            PsiElement resolveElement = reference.resolve();
+                            var resolveElement = reference.resolve();
                             if (resolveElement instanceof PsiClass clazz && needsHint(clazz)) {
                                 addInlay(expression, inlayHintsSink);
                             }
@@ -36,10 +37,10 @@ public abstract class CEReferenceClassCollector extends CESingleCollector<PsiCla
                 @Override
                 public void visitVariable(@NotNull PsiVariable variable) {
                     if (CEUtils.isNotPreviewEditor(editor)) {
-                        PsiTypeElement typeElement = variable.getTypeElement();
+                        var typeElement = variable.getTypeElement();
                         if (typeElement != null && !typeElement.isInferredType()
                                 && typeElement.getType() instanceof PsiClassType classType) {
-                            PsiClass clazz = classType.resolve();
+                            var clazz = classType.resolve();
                             if (clazz != null && (needsHint(clazz))) {
                                 addInlay(variable, inlayHintsSink);
 
@@ -61,8 +62,8 @@ public abstract class CEReferenceClassCollector extends CESingleCollector<PsiCla
 
                 private void visitClassForRefs(@Nullable PsiReferenceList list) {
                     if (list != null) {
-                        for (PsiJavaCodeReferenceElement ref : list.getReferenceElements()) {
-                            PsiElement resolveElement = ref.resolve();
+                        for (var ref : list.getReferenceElements()) {
+                            var resolveElement = ref.resolve();
                             if (resolveElement instanceof PsiClass clazz && (needsHint(clazz))) {
                                 addInlay(ref, inlayHintsSink);
 

@@ -9,6 +9,7 @@ import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
+import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.util.ui.FormBuilder;
@@ -19,6 +20,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +29,7 @@ import static codeemoji.core.collector.project.config.CERuleElement.*;
 import static java.awt.GridBagConstraints.HORIZONTAL;
 import static java.awt.GridBagConstraints.WEST;
 
+@SuppressWarnings("UnstableApiUsage")
 public record ShowingSpecificsConfigurable(ShowingSpecificsSettings settings) implements ImmediateConfigurable, CEIProjectConfig {
 
     @Override
@@ -38,29 +42,52 @@ public record ShowingSpecificsConfigurable(ShowingSpecificsSettings settings) im
                 .getPanel();
     }
 
-    private @NotNull JPanel initOpenProjectsPanel() {
-        Project project = getOpenProject();
+    private @NotNull JComponent initOpenProjectsPanel() {
+        var project = getOpenProject();
+        var file = new CEConfigFile(project);
+        if (file.getRules().isEmpty()) {
+            return howToConfigurePanel();
+        }
         if (project != null && !project.isDisposed()) {
             return buildPanelsForOpenProject(project);
+        } else {
+            return new JPanel();
         }
-        return new JPanel();
+    }
+
+    private @NotNull JComponent howToConfigurePanel() {
+        var panel = new JPanel();
+        var noRuleLoaded = CEBundle.getString("inlay.showingspecifics.options.title.noruleloaded");
+        var howToConfigure = CEBundle.getString("inlay.showingspecifics.options.title.noruleloaded.howtoconfigure");
+        panel.add(new JLabel(noRuleLoaded + ":"));
+        var button = new JButton();
+        button.setText(new CESymbol(0x1F575).getEmoji() + " " + howToConfigure);
+        button.addActionListener(event -> {
+            try {
+                BrowserUtil.browse(new URI(settings().getHowToConfigureURL()));
+            } catch (URISyntaxException ex) {
+                LOG.info(ex);
+            }
+        });
+        panel.add(button);
+        return panel;
     }
 
     private @NotNull JPanel buildPanelsForOpenProject(@NotNull Project project) {
-        GridBagConstraints gbc = new GridBagConstraints();
+        var gbc = new GridBagConstraints();
         gbc.fill = HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-        String projectStr = CEBundle.getString("inlay.showingspecifics.options.title.project");
-        String loadedRulesStr = CEBundle.getString("inlay.showingspecifics.options.title.loaded_rules");
-        String classTitle = CEBundle.getString("inlay.showingspecifics.options.title.classes");
-        String fieldTitle = CEBundle.getString("inlay.showingspecifics.options.title.fields");
-        String methodTitle = CEBundle.getString("inlay.showingspecifics.options.title.methods");
-        String parameterTitle = CEBundle.getString("inlay.showingspecifics.options.title.parameters");
-        String localVariableTitle = CEBundle.getString("inlay.showingspecifics.options.title.localvariables");
+        var projectStr = CEBundle.getString("inlay.showingspecifics.options.title.project");
+        var loadedRulesStr = CEBundle.getString("inlay.showingspecifics.options.title.loaded_rules");
+        var classTitle = CEBundle.getString("inlay.showingspecifics.options.title.classes");
+        var fieldTitle = CEBundle.getString("inlay.showingspecifics.options.title.fields");
+        var methodTitle = CEBundle.getString("inlay.showingspecifics.options.title.methods");
+        var parameterTitle = CEBundle.getString("inlay.showingspecifics.options.title.parameters");
+        var localVariableTitle = CEBundle.getString("inlay.showingspecifics.options.title.localvariables");
 
-        JPanel result = createBasicInnerBagPanel(loadedRulesStr + " - " + projectStr + ": " + project.getName(), false);
+        var result = createBasicInnerBagPanel(loadedRulesStr + " - " + projectStr + ": " + project.getName(), false);
 
         buildInnerElementPanel(result, gbc, CLASS, classTitle);
         buildInnerElementPanel(result, gbc, FIELD, fieldTitle);
@@ -73,7 +100,7 @@ public record ShowingSpecificsConfigurable(ShowingSpecificsSettings settings) im
 
     public void buildInnerElementPanel(@NotNull JPanel result, @NotNull GridBagConstraints gbc,
                                        @NotNull CERuleElement elementRule, @NotNull String panelTitle) {
-        JPanel panel = createBasicInnerBagPanel(panelTitle, true);
+        var panel = createBasicInnerBagPanel(panelTitle, true);
         var features = readRuleFeatures(elementRule);
         if (!features.isEmpty()) {
             buildInnerFeaturePanel(elementRule, features, panel);
@@ -85,14 +112,14 @@ public record ShowingSpecificsConfigurable(ShowingSpecificsSettings settings) im
     private void buildInnerFeaturePanel(@NotNull CERuleElement elementRule,
                                         @NotNull Map<CERuleFeature, List<String>> features,
                                         @NotNull JPanel panel) {
-        GridBagConstraints gbc = new GridBagConstraints();
+        var gbc = new GridBagConstraints();
         gbc.anchor = WEST;
-        int gridX = 0;
-        int gridY = 0;
+        var gridX = 0;
+        var gridY = 0;
         for (var entry : features.entrySet()) {
-            CERuleFeature feature = entry.getKey();
-            CESymbol defaultSymbol = ProjectRuleSymbol.detectDefaultSymbol(feature);
-            CESymbol symbol = readRuleEmoji(elementRule, feature, defaultSymbol);
+            var feature = entry.getKey();
+            var defaultSymbol = ProjectRuleSymbol.detectDefaultSymbol(feature);
+            var symbol = readRuleEmoji(elementRule, feature, defaultSymbol);
             var key = new JLabel(symbol.getEmoji() + " " + feature.getValue() + ": ");
             var valuesStr = entry.getValue().toString();
             valuesStr = valuesStr.replace("[", "").replace("]", "");
@@ -139,6 +166,7 @@ public record ShowingSpecificsConfigurable(ShowingSpecificsSettings settings) im
         return new CEConfigFile(getOpenProject());
     }
 
+    @SuppressWarnings("unused")
     @Override
     public Object readConfig(String key) {
         return getConfigFile().getConfigs().get(key);

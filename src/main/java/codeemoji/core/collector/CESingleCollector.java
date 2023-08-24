@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
+@SuppressWarnings("UnstableApiUsage")
 public abstract class CESingleCollector<H extends PsiElement, A extends PsiElement> extends CECollectorImpl<A> {
 
     private final InlayPresentation inlay;

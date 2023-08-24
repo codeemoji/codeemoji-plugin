@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
 
+@SuppressWarnings("UnstableApiUsage")
 public class NameContainsOnlySpecialCharacters extends CEProvider<NoSettings> {
 
     @Override

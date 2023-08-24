@@ -4,9 +4,7 @@ import codeemoji.core.collector.reference.CEReferenceMethodCollector;
 import codeemoji.core.util.CESymbol;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiModifierList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,9 +27,9 @@ public class ModifierInterfaceMethodCollector extends CEReferenceMethodCollector
 
     @Override
     public boolean needsHint(@NotNull PsiMethod element) {
-        PsiElement parent = element.getParent();
+        var parent = element.getParent();
         if (parent instanceof PsiClass clazz && (clazz.isInterface())) {
-            PsiModifierList psiModifierList = element.getModifierList();
+            var psiModifierList = element.getModifierList();
             return psiModifierList.hasModifierProperty(modifier);
 
         }

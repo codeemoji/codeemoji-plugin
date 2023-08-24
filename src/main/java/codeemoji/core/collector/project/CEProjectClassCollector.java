@@ -3,7 +3,6 @@ package codeemoji.core.collector.project;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import lombok.Getter;
@@ -17,6 +16,7 @@ import static codeemoji.core.collector.project.config.CERuleElement.CLASS;
 import static codeemoji.core.collector.project.config.CERuleFeature.*;
 
 @Getter
+@SuppressWarnings("UnstableApiUsage")
 public class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiElement>
         implements CEIProjectReferenceList<PsiReferenceList, PsiElement> {
 
@@ -40,9 +40,9 @@ public class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiEle
                 @Override
                 public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
                     if (CEUtils.isNotPreviewEditor(editor)) {
-                        PsiReference reference = expression.getReference();
+                        var reference = expression.getReference();
                         if (reference != null) {
-                            PsiElement resolveElement = reference.resolve();
+                            var resolveElement = reference.resolve();
                             if (resolveElement instanceof PsiClass clazz) {
                                 processHint(expression, clazz, inlayHintsSink);
                             }
@@ -53,11 +53,11 @@ public class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiEle
 
                 @Override
                 public void visitVariable(@NotNull PsiVariable variable) {
-                    PsiTypeElement typeElement = variable.getTypeElement();
+                    var typeElement = variable.getTypeElement();
                     if (typeElement != null &&
                             !typeElement.isInferredType() &&
                             typeElement.getType() instanceof PsiClassType classType) {
-                        PsiClass clazz = classType.resolve();
+                        var clazz = classType.resolve();
                         if (clazz != null) {
                             processHint(variable, clazz, inlayHintsSink);
                         }
@@ -77,8 +77,8 @@ public class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiEle
 
                 private void visitClassForRefs(@Nullable PsiReferenceList list) {
                     if (list != null) {
-                        for (PsiJavaCodeReferenceElement ref : list.getReferenceElements()) {
-                            PsiElement resolveElement = ref.resolve();
+                        for (var ref : list.getReferenceElements()) {
+                            var resolveElement = ref.resolve();
                             if (resolveElement instanceof PsiClass clazz) {
                                 processHint(ref, clazz, inlayHintsSink);
                             }
@@ -101,7 +101,7 @@ public class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiEle
     public void addInlayReferenceListFR(@NotNull PsiElement addHintElement, @NotNull List<String> hintValues,
                                         @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
-            InlayPresentation inlay = buildInlay(symbol, keyTooltip, String.valueOf(hintValues));
+            var inlay = buildInlay(symbol, keyTooltip, String.valueOf(hintValues));
             addInlay(addHintElement, sink, inlay);
         }
     }

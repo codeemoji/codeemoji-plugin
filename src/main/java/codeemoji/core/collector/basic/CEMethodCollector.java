@@ -8,6 +8,7 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("UnstableApiUsage")
 public abstract class CEMethodCollector extends CESingleCollector<PsiMethod, PsiIdentifier> {
 
     protected CEMethodCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {

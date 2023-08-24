@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
+@SuppressWarnings("UnstableApiUsage")
 public record ShortDescriptiveNameConfigurable(ShortDescriptiveNameSettings settings) implements ImmediateConfigurable {
 
     @Override

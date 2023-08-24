@@ -19,6 +19,7 @@ public class CESymbol {
     public CESymbol() {
     }
 
+    @SuppressWarnings("unused")
     public CESymbol(@Nullable Icon icon) {
         this.icon = icon;
     }
@@ -28,6 +29,7 @@ public class CESymbol {
         this.emoji = buildEmoji(getCodePoint(), getQualifier(), isBackground());
     }
 
+    @SuppressWarnings("unused")
     public CESymbol(int codePoint, int qualifier, boolean background) {
         this.codePoint = codePoint;
         this.qualifier = qualifier;
@@ -36,16 +38,16 @@ public class CESymbol {
     }
 
     private @NotNull String buildEmoji(int codePoint, int qualifier, boolean addColor) {
-        char[] codePointChars = Character.toChars(codePoint);
-        char[] withoutColorChars = codePointChars;
+        var codePointChars = Character.toChars(codePoint);
+        var withoutColorChars = codePointChars;
         if (qualifier > 0) {
-            char[] modifierChars = Character.toChars(qualifier);
+            var modifierChars = Character.toChars(qualifier);
             withoutColorChars = Arrays.copyOf(codePointChars, codePointChars.length + modifierChars.length);
             System.arraycopy(modifierChars, 0, withoutColorChars, codePointChars.length, modifierChars.length);
         }
         if (addColor) {
-            char[] addColorChars = Character.toChars(0x0FE0F);
-            char[] withColorChars = Arrays.copyOf(withoutColorChars, withoutColorChars.length + addColorChars.length);
+            var addColorChars = Character.toChars(0x0FE0F);
+            var withColorChars = Arrays.copyOf(withoutColorChars, withoutColorChars.length + addColorChars.length);
             System.arraycopy(addColorChars, 0, withColorChars, withoutColorChars.length, addColorChars.length);
             return new String(withColorChars);
         }

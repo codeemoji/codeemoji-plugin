@@ -14,6 +14,7 @@ import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.*;
 import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.*;
 import static com.intellij.psi.PsiModifier.*;
 
+@SuppressWarnings("UnstableApiUsage")
 public class ShowingModifiers extends CEMultiProvider<ShowingModifiersSettings> {
 
     @Override

@@ -1,16 +1,13 @@
 package codeemoji.core.collector.project.config;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.*;
@@ -26,22 +23,22 @@ public class CEConfigFile {
 
     public CEConfigFile(@Nullable Project project) {
         try {
-            VirtualFile[] contentRoots = ProjectRootManager.getInstance(Objects.requireNonNull(project)).getContentRoots();
-            for (VirtualFile baseDir : contentRoots) {
-                VirtualFile file = baseDir.findFileByRelativePath(FILE);
+            var contentRoots = ProjectRootManager.getInstance(Objects.requireNonNull(project)).getContentRoots();
+            for (var baseDir : contentRoots) {
+                var file = baseDir.findFileByRelativePath(FILE);
                 if (file != null) {
-                    try (InputStream is = file.getInputStream()) {
+                    try (var is = file.getInputStream()) {
                         try (Reader inputStreamReader = new InputStreamReader(is)) {
 
-                            Gson gson = new GsonBuilder()
+                            var gson = new GsonBuilder()
                                     .registerTypeAdapter(CERuleElement.class, new CERuleElement.EnumDeserializer())
                                     .registerTypeAdapter(CERuleFeature.class, new CERuleFeature.EnumDeserializer())
                                     .create();
 
                             @SuppressWarnings("unchecked") Map<String, Object> map = gson.fromJson(inputStreamReader, Map.class);
-                            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                            for (var entry : map.entrySet()) {
                                 if (Objects.equals(entry.getKey(), JSON_HEADER)) {
-                                    CERule[] readRules = gson.fromJson(String.valueOf(entry.getValue()), CERule[].class);
+                                    var readRules = gson.fromJson(String.valueOf(entry.getValue()), CERule[].class);
                                     Collections.addAll(this.rules, readRules);
                                 } else {
                                     configs.put(entry.getKey(), entry.getValue());

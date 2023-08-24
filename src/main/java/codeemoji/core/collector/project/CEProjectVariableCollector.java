@@ -4,7 +4,6 @@ import codeemoji.core.collector.project.config.CERuleElement;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import lombok.Getter;
@@ -20,6 +19,7 @@ import static codeemoji.core.collector.project.config.CERuleFeature.ANNOTATIONS;
 import static codeemoji.core.collector.project.config.CERuleFeature.TYPES;
 
 @Getter
+@SuppressWarnings("UnstableApiUsage")
 public class CEProjectVariableCollector extends CEProjectCollector<PsiVariable, PsiReferenceExpression>
         implements CEIProjectTypes<PsiReferenceExpression> {
 
@@ -40,10 +40,10 @@ public class CEProjectVariableCollector extends CEProjectCollector<PsiVariable, 
                 @Override
                 public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
                     if (CEUtils.isNotPreviewEditor(editor)) {
-                        PsiReference reference = expression.getReference();
+                        var reference = expression.getReference();
                         if (reference != null) {
-                            PsiElement resolveElement = reference.resolve();
-                            Class<? extends PsiVariable> elementRuleType = getClassByElementRule();
+                            var resolveElement = reference.resolve();
+                            var elementRuleType = getClassByElementRule();
                             if (elementRuleType != null && (elementRuleType.isInstance(resolveElement))) {
                                 processHint(expression, (PsiVariable) resolveElement, inlayHintsSink);
                             }
@@ -84,7 +84,7 @@ public class CEProjectVariableCollector extends CEProjectCollector<PsiVariable, 
     public void addInlayTypesFR(@NotNull PsiReferenceExpression addHintElement, @NotNull List<String> hintValues,
                                 @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
-            InlayPresentation inlay = buildInlay(symbol, keyTooltip, String.valueOf(hintValues));
+            var inlay = buildInlay(symbol, keyTooltip, String.valueOf(hintValues));
             addInlay(addHintElement, sink, inlay);
         }
     }
@@ -92,8 +92,8 @@ public class CEProjectVariableCollector extends CEProjectCollector<PsiVariable, 
     @Override
     public int calcOffset(@Nullable PsiReferenceExpression reference) {
         if (reference != null) {
-            PsiElement lastChild = reference.getLastChild();
-            int length = lastChild.getTextLength();
+            var lastChild = reference.getLastChild();
+            var length = lastChild.getTextLength();
             return lastChild.getTextOffset() + length;
         }
         return 0;

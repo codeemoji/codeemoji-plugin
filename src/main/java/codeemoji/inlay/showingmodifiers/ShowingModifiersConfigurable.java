@@ -14,6 +14,7 @@ import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.*;
 import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.*;
 import static com.intellij.psi.PsiModifier.*;
 
+@SuppressWarnings("UnstableApiUsage")
 public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) implements ImmediateConfigurable {
 
     @Override
@@ -43,7 +44,7 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
     }
 
     private @NotNull JPanel prepareClassPanel(@NotNull ChangeListener changeListener) {
-        JPanel result = createBasicInnerPanel("classes");
+        var result = createBasicInnerPanel("classes");
 
         var publicClass = new JCheckBox(PUBLIC_SYMBOL.getEmoji() + PUBLIC, settings().query(PUBLIC_CLASS));
         var defaultClass = new JCheckBox(DEFAULT_SYMBOL.getEmoji() + DEFAULT, settings().query(DEFAULT_CLASS));
@@ -64,7 +65,7 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
     }
 
     private @NotNull JPanel prepareFieldPanel(@NotNull ChangeListener changeListener) {
-        JPanel result = createBasicInnerPanel("fields");
+        var result = createBasicInnerPanel("fields");
 
         var publicField = new JCheckBox(PUBLIC_SYMBOL.getEmoji() + PUBLIC, settings().query(PUBLIC_FIELD));
         var defaultField = new JCheckBox(DEFAULT_SYMBOL.getEmoji() + DEFAULT, settings().query(DEFAULT_FIELD));
@@ -97,7 +98,7 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
     }
 
     private @NotNull JPanel prepareMethodPanel(@NotNull ChangeListener changeListener) {
-        JPanel result = createBasicInnerPanel("methods");
+        var result = createBasicInnerPanel("methods");
 
         var publicMethod = new JCheckBox(PUBLIC_SYMBOL.getEmoji() + PUBLIC, settings().query(PUBLIC_METHOD));
         var defaultMethod = new JCheckBox(DEFAULT_SYMBOL.getEmoji() + DEFAULT, settings().query(DEFAULT_METHOD));

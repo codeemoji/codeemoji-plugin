@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 @Getter
+@SuppressWarnings("UnstableApiUsage")
 public abstract class CEMultiProvider<S> extends CEProvider<S> {
 
     @Contract("_ -> new")

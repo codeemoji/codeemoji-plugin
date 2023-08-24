@@ -19,6 +19,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Objects;
 
 @Getter
+@SuppressWarnings("UnstableApiUsage")
 public abstract class CEProvider<S> implements InlayHintsProvider<S> {
 
     private static final Logger LOG = Logger.getInstance(CEProvider.class);
@@ -69,8 +70,8 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
     public @NotNull S createSettings() {
         if (settings == null) {
             try {
-                Class<S> type = (Class<S>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-                S genericType = type.getDeclaredConstructor().newInstance();
+                var type = (Class<S>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+                var genericType = type.getDeclaredConstructor().newInstance();
                 if (genericType instanceof NoSettings) {
                     this.settings = (S) new NoSettings();
                 } else if (genericType instanceof PersistentStateComponent<?> typeT) {

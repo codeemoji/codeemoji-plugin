@@ -5,7 +5,6 @@ import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiModifierList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +29,7 @@ public class ModifierMethodCollector extends CEReferenceMethodCollector {
 
     @Override
     public boolean needsHint(@NotNull PsiMethod element) {
-        PsiModifierList psiModifierList = element.getModifierList();
+        var psiModifierList = element.getModifierList();
         if (modifier.equalsIgnoreCase(DEFAULT)) {
             return CEUtils.checkDefaultModifier(psiModifierList);
         } else {

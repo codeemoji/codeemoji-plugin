@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
+@SuppressWarnings("UnstableApiUsage")
 public interface ICECollector<A extends PsiElement> {
 
     PresentationFactory getFactory();
@@ -50,14 +51,14 @@ public interface ICECollector<A extends PsiElement> {
     }
 
     private InlayPresentation formatInlay(@NotNull InlayPresentation inlay, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
-        InsetValueProvider inset = new InsetValueProvider() {
+        var inset = new InsetValueProvider() {
             @Override
             public int getTop() {
                 return (new InlayTextMetricsStorage(getEditor())).getFontMetrics(true).offsetFromTop();
             }
         };
         inlay = new DynamicInsetPresentation(inlay, inset);
-        String tooltip = getTooltip(keyTooltip);
+        var tooltip = getTooltip(keyTooltip);
         if (tooltip != null) {
             if (suffixTooltip != null) {
                 tooltip += " " + suffixTooltip;
@@ -79,6 +80,7 @@ public interface ICECollector<A extends PsiElement> {
         return true;
     }
 
+    @SuppressWarnings("SameReturnValue")
     boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink);
 
 }

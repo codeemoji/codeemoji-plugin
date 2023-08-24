@@ -8,6 +8,7 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
+@SuppressWarnings("UnstableApiUsage")
 public abstract class CECollectorImpl<A extends PsiElement> extends FactoryInlayHintsCollector implements ICECollector<A> {
 
     private final Editor editor;

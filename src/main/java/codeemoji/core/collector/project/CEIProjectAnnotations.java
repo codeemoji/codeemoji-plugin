@@ -2,7 +2,6 @@ package codeemoji.core.collector.project;
 
 import codeemoji.core.collector.project.config.CERuleElement;
 import com.intellij.codeInsight.hints.InlayHintsSink;
-import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiModifierListOwner;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +11,7 @@ import java.util.List;
 
 import static codeemoji.core.collector.project.config.CERuleFeature.ANNOTATIONS;
 
+@SuppressWarnings("UnstableApiUsage")
 public interface CEIProjectAnnotations<H extends PsiModifierListOwner, A extends PsiElement> extends CEIProjectConfig {
 
     default void processAnnotationsFR(@NotNull CERuleElement elementRule, @NotNull H evaluationElement,
@@ -25,8 +25,8 @@ public interface CEIProjectAnnotations<H extends PsiModifierListOwner, A extends
         List<String> hintValues = new ArrayList<>();
         if (featureValues != null) {
             var annotations = evaluationElement.getAnnotations();
-            for (PsiAnnotation type : annotations) {
-                for (String value : featureValues) {
+            for (var type : annotations) {
+                for (var value : featureValues) {
                     var qualifiedName = type.getQualifiedName();
                     if (qualifiedName != null && qualifiedName.equalsIgnoreCase(value)) {
                         hintValues.add(value);

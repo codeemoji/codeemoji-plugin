@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 @Getter
+@SuppressWarnings("UnstableApiUsage")
 public abstract class CEVariableCollector extends CESingleCollector<PsiVariable, PsiElement> {
 
     private final boolean enabledForField;
@@ -77,9 +78,9 @@ public abstract class CEVariableCollector extends CESingleCollector<PsiVariable,
         if (needsHint(variable)) {
             addInlay(variable.getNameIdentifier(), sink);
             if (CEUtils.isNotPreviewEditor(editor)) {
-                GlobalSearchScope scope = GlobalSearchScope.fileScope(variable.getContainingFile());
-                PsiReference[] refs = ReferencesSearch.search(variable, scope, false).toArray(PsiReference.EMPTY_ARRAY);
-                for (PsiReference ref : refs) {
+                var scope = GlobalSearchScope.fileScope(variable.getContainingFile());
+                var refs = ReferencesSearch.search(variable, scope, false).toArray(PsiReference.EMPTY_ARRAY);
+                for (var ref : refs) {
                     addInlay(ref.getElement(), sink);
                 }
             } else {
@@ -104,8 +105,8 @@ public abstract class CEVariableCollector extends CESingleCollector<PsiVariable,
     @Override
     public int calcOffset(@Nullable PsiElement element) {
         if (element != null) {
-            int length = element.getTextLength();
-            String attr = "this.";
+            var length = element.getTextLength();
+            var attr = "this.";
             if (element.getText().contains(attr)) {
                 length -= attr.length();
             }

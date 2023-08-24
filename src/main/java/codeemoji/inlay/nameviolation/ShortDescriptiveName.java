@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.SMALL_NAME;
 
+@SuppressWarnings("UnstableApiUsage")
 public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSettings> {
 
     @Override

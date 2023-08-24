@@ -14,6 +14,7 @@ public class CEBundle {
         this.bundle = ResourceBundle.getBundle("CEBundle");
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static CEBundle getInstance() {
         return CEBundleHolder.instance;
     }

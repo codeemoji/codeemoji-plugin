@@ -13,6 +13,7 @@ import java.util.Objects;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
 
+@SuppressWarnings("UnstableApiUsage")
 public class GetMethodDoesNotReturn extends CEProvider<NoSettings> {
 
     @Override

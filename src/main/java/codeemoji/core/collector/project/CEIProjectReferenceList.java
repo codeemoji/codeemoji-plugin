@@ -4,7 +4,6 @@ import codeemoji.core.collector.project.config.CERuleFeature;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
-import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceList;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +14,7 @@ import java.util.List;
 
 import static codeemoji.core.collector.project.config.CERuleElement.CLASS;
 
+@SuppressWarnings("UnstableApiUsage")
 public interface CEIProjectReferenceList<H extends PsiReferenceList, A extends PsiElement> extends CEIProjectConfig {
 
     default void processReferenceListFR(@NotNull CERuleFeature featureRule, @Nullable H evaluationElement,
@@ -30,8 +30,8 @@ public interface CEIProjectReferenceList<H extends PsiReferenceList, A extends P
         List<String> hintValues = new ArrayList<>();
         if (featureValues != null && (refList != null)) {
             var refs = refList.getReferencedTypes();
-            for (PsiClassType psiType : refs) {
-                for (String value : featureValues) {
+            for (var psiType : refs) {
+                for (var value : featureValues) {
                     var qualifiedName = CEUtils.resolveQualifiedName(psiType);
                     if (qualifiedName != null && qualifiedName.equalsIgnoreCase(value)) {
                         hintValues.add(value);

@@ -6,12 +6,12 @@ import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.MANY;
 
+@SuppressWarnings("UnstableApiUsage")
 public class SaysOneButContainsMany extends CEProvider<NoSettings> {
 
     @Override
@@ -39,7 +39,7 @@ public class SaysOneButContainsMany extends CEProvider<NoSettings> {
         return new CEVariableCollector(editor, getKeyId(), MANY) {
             @Override
             public boolean needsHint(@NotNull PsiVariable element) {
-                PsiTypeElement typeElement = element.getTypeElement();
+                var typeElement = element.getTypeElement();
                 return !CEUtils.isPluralForm(element.getName()) &&
                         !CEUtils.sameNameAsType(typeElement, element.getName()) &&
                         (CEUtils.isArrayType(typeElement) || CEUtils.isIterableType(typeElement));

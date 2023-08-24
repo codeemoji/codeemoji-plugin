@@ -15,6 +15,7 @@ import java.util.List;
 
 import static codeemoji.core.collector.project.config.CERuleElement.*;
 
+@SuppressWarnings("UnstableApiUsage")
 public class ShowingSpecifics extends CEMultiProvider<ShowingSpecificsSettings> {
 
     @Nullable

@@ -3,7 +3,6 @@ package codeemoji.core.collector.project;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import lombok.Getter;
@@ -19,6 +18,7 @@ import static codeemoji.core.collector.project.config.CERuleFeature.ANNOTATIONS;
 import static codeemoji.core.collector.project.config.CERuleFeature.RETURNS;
 
 @Getter
+@SuppressWarnings("UnstableApiUsage")
 public class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiMethodCallExpression> implements CEIProjectTypes<PsiMethodCallExpression> {
 
     private final String returnsKey;
@@ -38,7 +38,7 @@ public class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiM
                 public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
                     if (CEUtils.isNotPreviewEditor(editor) &&
                             (callExpression instanceof PsiMethodCallExpression mexp)) {
-                        PsiMethod method = mexp.resolveMethod();
+                        var method = mexp.resolveMethod();
                         if (method != null) {
                             processHint(mexp, method, inlayHintsSink);
                         }
@@ -54,7 +54,7 @@ public class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiM
     @Override
     public void processHint(@NotNull PsiMethodCallExpression addHintElement, @NotNull PsiMethod evaluationElement, @NotNull InlayHintsSink sink) {
         processAnnotationsFR(METHOD, evaluationElement, addHintElement, sink);
-        PsiType type = evaluationElement.getReturnType();
+        var type = evaluationElement.getReturnType();
         if (!evaluationElement.isConstructor() && type != null) {
             processTypesFR(METHOD, RETURNS, type, addHintElement, sink, getReturnsSymbol(), getReturnsKey());
         }
@@ -64,7 +64,7 @@ public class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiM
     public void addInlayTypesFR(@NotNull PsiMethodCallExpression addHintElement, @NotNull List<String> hintValues,
                                 @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
-            InlayPresentation inlay = buildInlay(symbol, keyTooltip, String.valueOf(hintValues));
+            var inlay = buildInlay(symbol, keyTooltip, String.valueOf(hintValues));
             addInlay(addHintElement, sink, inlay);
         }
     }

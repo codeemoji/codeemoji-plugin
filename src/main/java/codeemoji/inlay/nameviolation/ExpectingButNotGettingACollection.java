@@ -7,7 +7,6 @@ import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.PsiTypes;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,6 +14,7 @@ import java.util.Objects;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.ONE;
 
+@SuppressWarnings("UnstableApiUsage")
 public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
 
     @Override
@@ -33,7 +33,7 @@ public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
             @Override
             public boolean needsHint(@NotNull PsiMethod element) {
                 if ((element.getName().startsWith("get") || element.getName().startsWith("return")) && CEUtils.isPluralForm(element.getName())) {
-                    PsiTypeElement typeElement = element.getReturnTypeElement();
+                    var typeElement = element.getReturnTypeElement();
                     return !CEUtils.isGenericType(element, typeElement) &&
                             (Objects.equals(element.getReturnType(), PsiTypes.voidType()) ||
                                     (!CEUtils.isArrayType(typeElement) &&

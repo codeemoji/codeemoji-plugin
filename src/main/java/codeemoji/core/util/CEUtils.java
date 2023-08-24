@@ -1,24 +1,19 @@
 package codeemoji.core.util;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.psi.*;
-import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Map;
 import java.util.Objects;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.intellij.psi.PsiModifier.*;
@@ -36,7 +31,7 @@ public final class CEUtils {
 
     public static boolean isArrayType(PsiTypeElement typeElement) {
         try {
-            String returnClassSimpleName = Objects.requireNonNull(typeElement).getText();
+            var returnClassSimpleName = Objects.requireNonNull(typeElement).getText();
             return returnClassSimpleName.contains("[]");
         } catch (RuntimeException ex) {
             LOG.info(ex);
@@ -48,8 +43,8 @@ public final class CEUtils {
     public static boolean sameNameAsType(PsiTypeElement typeElement, String fieldName) {
         if (fieldName != null) {
             try {
-                String typeName = Objects.requireNonNull(typeElement).getType().getPresentableText();
-                int index = typeName.indexOf("<");
+                var typeName = Objects.requireNonNull(typeElement).getType().getPresentableText();
+                var index = typeName.indexOf("<");
                 if (index > 0) {
                     typeName = typeName.substring(0, index);
                 }
@@ -64,13 +59,13 @@ public final class CEUtils {
     }
 
     private static String calcLastWordCapitalized(@NotNull String word) {
-        String[] words = word.split("(?=[A-Z])");
+        var words = word.split("(?=[A-Z])");
         return words[words.length - 1];
     }
 
     public static boolean isPluralForm(String name) {
         if (name != null && name.trim().length() > 1) {
-            String word = identifyLastWordWithUpperCase(name);
+            var word = identifyLastWordWithUpperCase(name);
             if (isSuffixWhiteList(name)) {
                 return false;
             }
@@ -83,8 +78,8 @@ public final class CEUtils {
 
     private static String identifyLastWordWithUpperCase(String name) {
         String result = null;
-        Pattern pattern = Pattern.compile("\\b[A-Z][a-zA-Z]*\\b");
-        Matcher matcher = pattern.matcher(name);
+        var pattern = Pattern.compile("\\b[A-Z][a-zA-Z]*\\b");
+        var matcher = pattern.matcher(name);
         while (matcher.find()) {
             result = matcher.group();
         }
@@ -92,11 +87,11 @@ public final class CEUtils {
     }
 
     private static boolean isIrregularPluralForm(String word) {
-        ClassLoader classLoader = CEUtils.class.getClassLoader();
-        try (InputStream is = classLoader.getResourceAsStream("irregular_plural.json")) {
+        var classLoader = CEUtils.class.getClassLoader();
+        try (var is = classLoader.getResourceAsStream("irregular_plural.json")) {
             if (is != null) {
                 Reader reader = new InputStreamReader(is);
-                JsonElement je = new Gson().fromJson(reader, JsonObject.class).get(word.trim().toLowerCase());
+                var je = new Gson().fromJson(reader, JsonObject.class).get(word.trim().toLowerCase());
                 if (je != null) {
                     return je.getAsString() != null;
                 }
@@ -108,25 +103,25 @@ public final class CEUtils {
     }
 
     private static boolean isCommonPluralForm(String word) {
-        String pattern = ".*s$";
-        Pattern pat = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
-        Matcher mat = pat.matcher(word);
+        var pattern = ".*s$";
+        var pat = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
+        var mat = pat.matcher(word);
         return mat.matches();
     }
 
     public static boolean containsOnlySpecialCharacters(String name) {
-        String regex = "^[^a-zA-Z0-9]+$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(name);
+        var regex = "^[^a-zA-Z0-9]+$";
+        var pattern = Pattern.compile(regex);
+        var matcher = pattern.matcher(name);
         return matcher.matches();
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isGenericType(@NotNull PsiElement element, PsiTypeElement typeElement) {
-        PsiTypeParameterList tpl = searchGenericTypesList(element);
+        var tpl = searchGenericTypesList(element);
         if (tpl != null) {
-            PsiTypeParameter[] tps = tpl.getTypeParameters();
-            for (PsiTypeParameter tp : tps) {
+            var tps = tpl.getTypeParameters();
+            for (var tp : tps) {
                 if (typeElement.getText().equalsIgnoreCase(tp.getText())) {
                     return true;
                 }
@@ -138,13 +133,13 @@ public final class CEUtils {
     @Nullable
     private static PsiTypeParameterList searchGenericTypesList(@NotNull PsiElement son) {
         PsiTypeParameterList result = null;
-        PsiElement father = son.getParent();
+        var father = son.getParent();
         if (father instanceof PsiClass clazz) {
             result = clazz.getTypeParameterList();
         } else if (father instanceof PsiParameterList plist) {
-            PsiElement gramFather = plist.getParent();
+            var gramFather = plist.getParent();
             if (gramFather instanceof PsiMethod method) {
-                PsiElement greatGramFather = method.getParent();
+                var greatGramFather = method.getParent();
                 if (greatGramFather instanceof PsiClass clazz) {
                     result = clazz.getTypeParameterList();
                 }
@@ -154,7 +149,7 @@ public final class CEUtils {
     }
 
     public static boolean isNumericType(@NotNull PsiTypeElement typeElement) {
-        PsiType type = typeElement.getType();
+        var type = typeElement.getType();
         return PsiTypes.intType().isAssignableFrom(type)
                 || PsiTypes.longType().isAssignableFrom(type)
                 || PsiTypes.floatType().isAssignableFrom(type)
@@ -163,8 +158,9 @@ public final class CEUtils {
                 || PsiTypes.shortType().isAssignableFrom(type);
     }
 
+    @SuppressWarnings("unused")
     public static @Nullable PsiElement identifyFirstQualifier(@NotNull PsiElement element) {
-        PsiElement child = element.getFirstChild();
+        var child = element.getFirstChild();
         if (child != null && (!(child instanceof PsiReferenceExpression) || child.getChildren().length > 0)) {
             if (child instanceof PsiReferenceParameterList) {
                 return element;
@@ -185,13 +181,13 @@ public final class CEUtils {
     }
 
     private static boolean isSuffixWhiteList(@NotNull String name) {
-        String formattedName = name.trim().toLowerCase();
+        var formattedName = name.trim().toLowerCase();
         if (formattedName.isEmpty()) {
             return false;
         }
         //TODO: implement configuration options
-        String[] whiteListWords = {"class", "list", "is"};
-        for (String word : whiteListWords) {
+        var whiteListWords = new String[]{"class", "list", "is"};
+        for (var word : whiteListWords) {
             if (formattedName.endsWith(word)) {
                 return true;
             }
@@ -201,8 +197,8 @@ public final class CEUtils {
 
     public static @Nullable String resolveQualifiedName(@NotNull PsiClassType psiType) {
         try {
-            PsiClass psiTypeClass = Objects.requireNonNull(psiType.resolve());
-            String qualifiedName = Objects.requireNonNull(psiTypeClass.getQualifiedName());
+            var psiTypeClass = Objects.requireNonNull(psiType.resolve());
+            var qualifiedName = Objects.requireNonNull(psiTypeClass.getQualifiedName());
             return resolveQualifiedName(qualifiedName, psiTypeClass);
         } catch (RuntimeException ignored) {
             return psiType.getName();
@@ -211,13 +207,13 @@ public final class CEUtils {
 
     private static @Nullable String resolveQualifiedName(@NotNull String qualifiedName, @NotNull PsiClass psiTypeClass) {
         try {
-            Class<?> typeClass = Class.forName(qualifiedName);
+            var typeClass = Class.forName(qualifiedName);
             return typeClass.getCanonicalName();
         } catch (RuntimeException | ClassNotFoundException ignored) {
-            Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-            for (Project proj : openProjects) {
-                GlobalSearchScope scope = psiTypeClass.getResolveScope();
-                PsiClass psiUserClass = JavaPsiFacade.getInstance(proj).findClass(qualifiedName, scope);
+            var openProjects = ProjectManager.getInstance().getOpenProjects();
+            for (var proj : openProjects) {
+                var scope = psiTypeClass.getResolveScope();
+                var psiUserClass = JavaPsiFacade.getInstance(proj).findClass(qualifiedName, scope);
                 if (psiUserClass != null) {
                     return psiUserClass.getQualifiedName();
                 }
@@ -227,7 +223,7 @@ public final class CEUtils {
     }
 
     public static boolean isConstantName(@NotNull PsiVariable element) {
-        PsiModifierList psiModifierList = element.getModifierList();
+        var psiModifierList = element.getModifierList();
         if (psiModifierList != null) {
             return psiModifierList.hasModifierProperty(STATIC) &&
                     psiModifierList.hasModifierProperty(FINAL) &&
@@ -240,16 +236,17 @@ public final class CEUtils {
         return checkParentType(typeElement, Iterable.class);
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isMappableType(PsiTypeElement typeElement) {
         return checkParentType(typeElement, Map.class);
     }
 
     private static boolean checkParentType(PsiTypeElement typeElement, @NotNull Class<?> parentTypeClass) {
         try {
-            PsiType fieldType = Objects.requireNonNull(typeElement).getType();
+            var fieldType = Objects.requireNonNull(typeElement).getType();
             if (fieldType instanceof PsiClassType psiType) {
-                PsiClass psiTypeClass = Objects.requireNonNull(psiType.resolve());
-                String qualifiedName = Objects.requireNonNull(psiTypeClass.getQualifiedName());
+                var psiTypeClass = Objects.requireNonNull(psiType.resolve());
+                var qualifiedName = Objects.requireNonNull(psiTypeClass.getQualifiedName());
                 return isParentType(qualifiedName, psiTypeClass, parentTypeClass);
             }
         } catch (RuntimeException ex) {
@@ -260,15 +257,15 @@ public final class CEUtils {
 
     private static boolean isParentType(@NotNull String qualifiedName, @NotNull PsiClass psiTypeClass, @NotNull Class<?> parentTypeClass) {
         try {
-            Class<?> typeClass = Class.forName(qualifiedName);
+            var typeClass = Class.forName(qualifiedName);
             return parentTypeClass.isAssignableFrom(typeClass);
         } catch (RuntimeException | ClassNotFoundException ignored) {
-            Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-            for (Project proj : openProjects) {
-                GlobalSearchScope scope = psiTypeClass.getResolveScope();
-                PsiClass psiUserClass = JavaPsiFacade.getInstance(proj).findClass(qualifiedName, scope);
-                PsiClassType parentType = JavaPsiFacade.getElementFactory(proj).createTypeByFQClassName(parentTypeClass.getCanonicalName(), scope);
-                PsiClass parentClass = parentType.resolve();
+            var openProjects = ProjectManager.getInstance().getOpenProjects();
+            for (var proj : openProjects) {
+                var scope = psiTypeClass.getResolveScope();
+                var psiUserClass = JavaPsiFacade.getInstance(proj).findClass(qualifiedName, scope);
+                var parentType = JavaPsiFacade.getElementFactory(proj).createTypeByFQClassName(parentTypeClass.getCanonicalName(), scope);
+                var parentClass = parentType.resolve();
                 if (parentClass != null && psiUserClass != null && psiUserClass.isInheritor(parentClass, true)) {
                     return true;
                 }

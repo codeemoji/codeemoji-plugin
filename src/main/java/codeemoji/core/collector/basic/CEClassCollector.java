@@ -8,8 +8,10 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("UnstableApiUsage")
 public abstract class CEClassCollector extends CESingleCollector<PsiClass, PsiIdentifier> {
 
+    @SuppressWarnings("unused")
     protected CEClassCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);
     }

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 @Getter
+@SuppressWarnings("UnstableApiUsage")
 public class CEMultiCollector extends FactoryInlayHintsCollector {
 
     private final List<InlayHintsCollector> collectors;
@@ -23,7 +24,7 @@ public class CEMultiCollector extends FactoryInlayHintsCollector {
     @Override
     public final boolean collect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
         if (getCollectors() != null) {
-            for (InlayHintsCollector collector : getCollectors()) {
+            for (var collector : getCollectors()) {
                 collector.collect(psiElement, editor, inlayHintsSink);
             }
         }
