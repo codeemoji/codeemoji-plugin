@@ -229,7 +229,7 @@ a simple description pattern, as shown in the following a partial example:
 
 Complete example [here](docs/codeemoji.json).
 
-In the configuration screen of this inlay hint, the rules currently defined for the open project are displayed. Look the following figure.
+In the configuration screen of this inlay hint, the rules currently defined for the open project are displayed. See the following figure.
 
 ![Showing Specifics for the Projects - Configuration](docs/screenshots/showingspecificsoftheprojects.png)
 
