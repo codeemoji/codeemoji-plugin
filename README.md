@@ -1,6 +1,6 @@
-<!-- DESCRIPTION HEADER BEGIN -->
+![codEEmoji Plugin](./docs/logotype.png)
 
-# codEEmoji Plugin
+<!-- DESCRIPTION HEADER BEGIN -->
 
 **codeEEmoji** is a plug-in made for Intellij Idea and useful for Java programming. The plugin defines new sets of inlay hints in the context of code
 augmentation. The new inlay hints use emojis in an innovative way to help the developer. Emojis are displayed for anti-pattern cases such as naming
@@ -13,48 +13,51 @@ annotations for JakartaEE and Spring frameworks.
 <!-- DESCRIPTION HEADER END -->
 
 <!-- TOC -->
-  * [Setup and Use](#setup-and-use)
-    * [Prerequisites](#prerequisites)
-    * [Installation via marketplace](#installation-via-marketplace)
-    * [Manual installation](#manual-installation)
-    * [How to configure](#how-to-configure)
-  * [Cases of Naming Violation](#cases-of-naming-violation)
-    * [Short Descriptive Name](#short-descriptive-name)
-    * [Getter More Than Accessor](#getter-more-than-accessor)
-    * [_Is_ Returns More Than a Boolean](#is-returns-more-than-a-boolean)
-    * [Setter Method Returns](#setter-method-returns)
-    * [Expecting But Not Getting a Single Instance](#expecting-but-not-getting-a-single-instance)
-    * [Validation Method Does Not Confirm](#validation-method-does-not-confirm)
-    * [Getter Does Not Return](#getter-does-not-return)
-    * [Not Answered Question](#not-answered-question)
-    * [Transform Method Does Not Return](#transform-method-does-not-return)
-    * [Expecting But Not Getting a Collection](#expecting-but-not-getting-a-collection)
-    * [Says One But Contains Many](#says-one-but-contains-many)
-    * [Name Suggests Boolean By Type Does Not](#name-suggests-boolean-by-type-does-not)
-    * [Says Many But Contains One](#says-many-but-contains-one)
-    * [Name Contains Only Special Characters](#name-contains-only-special-characters)
-  * [Cases of Showing Modifiers](#cases-of-showing-modifiers)
-  * [Cases of Showing Specifics of Projects](#cases-of-showing-specifics-of-projects)
-  * [Cases of Showing Implicit Annotations](#cases-of-showing-implicit-annotations)
-  * [How to Extend](#how-to-extend)
-  * [Acknowledgements](#acknowledgements)
-  * [References](#references)
+* [Setup and Use](#setup-and-use)
+  * [Prerequisites](#prerequisites)
+  * [How to Install](#how-to-install)
+    * [Via marketplace](#via-marketplace)
+    * [Manual Installation](#manual-installation)
+  * [How to Configure](#how-to-configure)
+* [Cases of Naming Violation](#cases-of-naming-violation)
+  * [Short Descriptive Name](#short-descriptive-name)
+  * [Getter More Than Accessor](#getter-more-than-accessor)
+  * [_Is_ Returns More Than a Boolean](#is-returns-more-than-a-boolean)
+  * [Setter Method Returns](#setter-method-returns)
+  * [Expecting But Not Getting a Single Instance](#expecting-but-not-getting-a-single-instance)
+  * [Validation Method Does Not Confirm](#validation-method-does-not-confirm)
+  * [Getter Does Not Return](#getter-does-not-return)
+  * [Not Answered Question](#not-answered-question)
+  * [Transform Method Does Not Return](#transform-method-does-not-return)
+  * [Expecting But Not Getting a Collection](#expecting-but-not-getting-a-collection)
+  * [Says One But Contains Many](#says-one-but-contains-many)
+  * [Name Suggests Boolean By Type Does Not](#name-suggests-boolean-by-type-does-not)
+  * [Says Many But Contains One](#says-many-but-contains-one)
+  * [Name Contains Only Special Characters](#name-contains-only-special-characters)
+* [Cases of Showing Modifiers](#cases-of-showing-modifiers)
+* [Cases of Showing Specifics of Projects](#cases-of-showing-specifics-of-projects)
+* [Cases of Showing Implicit Annotations](#cases-of-showing-implicit-annotations)
+* [How to Extend](#how-to-extend)
+* [Acknowledgements](#acknowledgements)
+* [References](#references)
 <!-- TOC -->
 
-## Setup and Use
+# Setup and Use
 
-### Prerequisites
+## Prerequisites
 
 - [**IntelliJ IDEA 2023.***](https://www.jetbrains.com/idea/download/other.html) (Ultimate, Community or Educational)
 - JDK 17 [(*Eclipse Temurin - as a suggestion*)](https://github.com/adoptium/temurin17-binaries/releases)
 
-### Installation via marketplace
+## How to Install
+
+### Via marketplace
 
 [JetBrains Marketplace - codEEmoji](https://plugins.jetbrains.com/plugin/22416-cod-emoji)
 
 ![How to Download](docs/screenshots/marketplace_install.png)
 
-### Manual installation
+### Manual Installation
 
 - Download the latest release zip file available from [Releases](https://github.com/codeemoji/codeemoji-plugin/releases).
 
@@ -67,16 +70,16 @@ annotations for JakartaEE and Spring frameworks.
 
 - Restart IDE.
 
-### How to configure
+## How to Configure
 
 The plugin creates new Inlay Hints. All new inlay hints are enabled by default when installing the plugin. To disable inlay hints or configure
 options that are available for each one, go to "**_File>Settings>Editor>Inlay Hints_**". Click "**_Other>Java_**".
 
 ![How to Configure](docs/screenshots/howtoconfigure.png)
 
-## Cases of Naming Violation
+# Cases of Naming Violation
 
-### Short Descriptive Name
+## Short Descriptive Name
 
 Instead of a descriptive name, the variable's name consists of a few letters.
 
@@ -86,7 +89,7 @@ _**Impacted identifiers: Fields, Method Parameters and Local Variables**_
 
 ![Short Descriptive Name](docs/screenshots/shortdescriptivename.png)
 
-### Getter More Than Accessor
+## Getter More Than Accessor
 
 A getter that doesn't just return the corresponding attribute but also takes other actions. Adapted from Arnaoudova et al.(2016).
 
@@ -94,7 +97,7 @@ _**Impacted identifiers: Method Names**_
 
 ![Getter More Than Accessor](docs/screenshots/gettermorethanaccessor.png)
 
-### _Is_ Returns More Than a Boolean
+## _Is_ Returns More Than a Boolean
 
 A method's name is a predicate that denotes a true/false value that will be returned. The return type, however, is a more complex type than boolean.
 Adapted from Arnaoudova et al.(2016).
@@ -103,7 +106,7 @@ _**Impacted identifiers: Method Names**_
 
 ![Is Returns More Than a Boolean](docs/screenshots/isreturnsmorethanaboolean.png)
 
-### Setter Method Returns
+## Setter Method Returns
 
 A setter method that has a return type other than void. Adapted from Arnaoudova et al.(2016).
 
@@ -111,7 +114,7 @@ _**Impacted identifiers: Method Names**_
 
 ![Setter Method Returns](docs/screenshots/settermethodreturns.png)
 
-### Expecting But Not Getting a Single Instance
+## Expecting But Not Getting a Single Instance
 
 Despite the fact that a method's name suggests it will return a single object, it will actually return a collection. Adapted from Arnaoudova et al.(
 2016).
@@ -120,7 +123,7 @@ _**Impacted identifiers: Method Names**_
 
 ![Expecting But Not Getting a Single Instance](docs/screenshots/expectingbutnotgettingasingleinstance.png)
 
-### Validation Method Does Not Confirm
+## Validation Method Does Not Confirm
 
 A validation method (such as one with the words <em>validate,</em> <em>check,</em> or <em>ensure</em>) does not confirm the validation; that is, it
 neither provides a return value indicating whether the validation was successful. Adapted from Arnaoudova et al.(2016).
@@ -129,7 +132,7 @@ _**Impacted identifiers: Method Names**_
 
 ![Validation Method Does Not Confirm](docs/screenshots/validationmethoddoesnotconfirm.png)
 
-### Getter Does Not Return
+## Getter Does Not Return
 
 When a method's name begins with <em>get</em> or <em>return</em>, for example, it might be assumed that it returns something, but the return type is
 actually void. Adapted from Arnaoudova et al.(2016).
@@ -138,7 +141,7 @@ _**Impacted identifiers: Method Names**_
 
 ![Getter Does Not Return](docs/screenshots/getterdoesnotreturn.png)
 
-### Not Answered Question
+## Not Answered Question
 
 A method's name takes the form of a predicate, but its return type is not boolean. Adapted from Arnaoudova et al.(2016).
 
@@ -146,7 +149,7 @@ _**Impacted identifiers: Method Names**_
 
 ![Not Answered Question](docs/screenshots/notansweredquestion.png)
 
-### Transform Method Does Not Return
+## Transform Method Does Not Return
 
 While there is no return value, a method's name implies that an object has been transformed. Adapted from Arnaoudova et al.(2016).
 
@@ -154,7 +157,7 @@ _**Impacted identifiers: Method Names**_
 
 ![Transform Method Does Not Return](docs/screenshots/transformmethoddoesnotreturn.png)
 
-### Expecting But Not Getting a Collection
+## Expecting But Not Getting a Collection
 
 Even though a method's name suggests a collection should be returned, nothing or just one object is instead given. Adapted from Arnaoudova et al.(
 2016).
@@ -163,7 +166,7 @@ _**Impacted identifiers: Method Names**_
 
 ![Expecting But Not Getting a Collection](docs/screenshots/expectingbutnotgettingacollection.png)
 
-### Says One But Contains Many
+## Says One But Contains Many
 
 An attribute's type suggests that it stores a collection of objects, contrary to the name, which suggests a single instance. Adapted from Peruma et
 al.(2021).
@@ -172,7 +175,7 @@ _**Impacted identifiers: Fields, Method Parameters and Local Variables**_
 
 ![Says One But Contains Many](docs/screenshots/saysonebutcontainsmany.png)
 
-### Name Suggests Boolean By Type Does Not
+## Name Suggests Boolean By Type Does Not
 
 An attribute's name implies that its value is true or false, yet its defining type is not boolean. Adapted from Arnaoudova et al.(2016).
 
@@ -180,7 +183,7 @@ _**Impacted identifiers: Fields, Method Parameters and Local Variables**_
 
 ![Name Suggests Boolean By Type Does Not](docs/screenshots/namesuggestsbooleanbytypedoesnot.png)
 
-### Says Many But Contains One
+## Says Many But Contains One
 
 The name of an attribute suggests multiple instances, but its type suggests a single one. Adapted from Arnaoudova et al.(2016).
 
@@ -188,7 +191,7 @@ _**Impacted identifiers: Fields, Method Parameters and Local Variables**_
 
 ![Says Many But Contains One](docs/screenshots/saysmanybutcontainsone.png)
 
-### Name Contains Only Special Characters
+## Name Contains Only Special Characters
 
 The identifier's name is made up entirely of non-alphanumeric characters. Adapted from Arnaoudova et al.(2016).
 
@@ -196,7 +199,7 @@ _**Impacted identifiers: Fields, Method Parameters and Local Variables**_
 
 ![Name Contains Only Special Character](docs/screenshots/namecontainsonlyspecialcharacters.png)
 
-## Cases of Showing Modifiers
+# Cases of Showing Modifiers
 
 This inlay hint allows you to configure the display of emojis for class, field and method modifiers. Emojis are displayed when an element is used in the code, indicating its modifiers. The figure below shows the configuration screen with the options enabled during installation. Then a code snippet is displayed, where all options have been enabled.
 
@@ -206,7 +209,7 @@ _**Impacted identifiers: Classes, Fields and Methods**_
 
 ![Showing Modifiers - Sample](docs/screenshots/showingmodifierssample.png)
 
-## Cases of Showing Specifics of Projects
+# Cases of Showing Specifics of Projects
 
 This inlay hint is displayed according to the specifics of the project. It must be configured by the developer from a file in the root of the 
 project named *"codeemoji.json"*. It allows indicating rules for displaying emojis according to specific features for each element, as follows:
@@ -238,19 +241,19 @@ Here's an example of usage from a code snipped:
 ![Showing Specifics for the Projects - Code Sample](docs/screenshots/showingspecificsoftheprojectcodesample.png)
 
 
-## Cases of Showing Implicit Annotations
+# Cases of Showing Implicit Annotations
 
 Coming soon...
 
-## How to Extend
+# How to Extend
 
 Coming soon...
 
-## Acknowledgements
+# Acknowledgements
 
 This work was supported by the **Free University of Bozen-Bolzano - UNIBZ**.
 
-## References
+# References
 
 Arnaoudova, Venera, Massimiliano Di Penta, and Giuliano Antoniol. "Linguistic antipatterns: What they are and how mainers perceive them."
 _Empirical Software Engineering_ 21 (2016): 104-158.
