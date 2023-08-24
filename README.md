@@ -202,7 +202,7 @@ Complete example [here](docs/codeemoji.json).
 
 In the configuration screen of this inlay hint, the rules currently defined for the open project are displayed. Look the following figure.
 
-![Showing Specifics for the Projects - Configuration](docs/screenshots/showingspecificsoftheproject.png)
+![Showing Specifics for the Projects - Configuration](docs/screenshots/showingspecificsoftheprojects.png)
 
 Here's an example of usage from a code snipped:
 
