@@ -12,6 +12,35 @@ annotations for JakartaEE and Spring frameworks.
 
 <!-- DESCRIPTION HEADER END -->
 
+<!-- TOC -->
+  * [Setup and Use](#setup-and-use)
+    * [Prerequisites](#prerequisites)
+    * [Installation via marketplace](#installation-via-marketplace)
+    * [Manual installation](#manual-installation)
+    * [How to configure](#how-to-configure)
+  * [Cases of Naming Violation](#cases-of-naming-violation)
+    * [Short Descriptive Name](#short-descriptive-name)
+    * [Getter More Than Accessor](#getter-more-than-accessor)
+    * [_Is_ Returns More Than a Boolean](#is-returns-more-than-a-boolean)
+    * [Setter Method Returns](#setter-method-returns)
+    * [Expecting But Not Getting a Single Instance](#expecting-but-not-getting-a-single-instance)
+    * [Validation Method Does Not Confirm](#validation-method-does-not-confirm)
+    * [Getter Does Not Return](#getter-does-not-return)
+    * [Not Answered Question](#not-answered-question)
+    * [Transform Method Does Not Return](#transform-method-does-not-return)
+    * [Expecting But Not Getting a Collection](#expecting-but-not-getting-a-collection)
+    * [Says One But Contains Many](#says-one-but-contains-many)
+    * [Name Suggests Boolean By Type Does Not](#name-suggests-boolean-by-type-does-not)
+    * [Says Many But Contains One](#says-many-but-contains-one)
+    * [Name Contains Only Special Characters](#name-contains-only-special-characters)
+  * [Cases of Showing Modifiers](#cases-of-showing-modifiers)
+  * [Cases of Showing Specifics of Projects](#cases-of-showing-specifics-of-projects)
+  * [Cases of Showing Implicit Annotations](#cases-of-showing-implicit-annotations)
+  * [How to Extend](#how-to-extend)
+  * [Acknowledgements](#acknowledgements)
+  * [References](#references)
+<!-- TOC -->
+
 ## Setup and Use
 
 ### Prerequisites
