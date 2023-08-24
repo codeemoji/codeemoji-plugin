@@ -1,0 +1,89 @@
+{
+  "project_rules": [
+    {
+      "element": "class",
+      "feature": "annotations",
+      "emoji": "1F4D6",
+      "values": [
+        "javax.persistence.Entity",
+        "javax.ejb.Stateless",
+        "javax.ejb.Remote"
+      ]
+    },
+    {
+      "element": "class",
+      "feature": "extends",
+      "values": [
+        "facade.AbstractFacade"
+      ]
+    },
+    {
+      "element": "class",
+      "feature": "implements",
+      "values": [
+        "remote.geo.GeoFacadeRemote"
+      ]
+    },
+    {
+      "element": "field",
+      "feature": "annotations",
+      "values": [
+        "javax.persistence.Column"
+      ]
+    },
+    {
+      "element": "field",
+      "feature": "types",
+      "values": [
+        "java.lang.String",
+        "long"
+      ]
+    },
+    {
+      "element": "method",
+      "feature": "annotations",
+      "values": [
+        "java.lang.Override"
+      ]
+    },
+    {
+      "element": "method",
+      "feature": "returns",
+      "values": [
+        "java.lang.String"
+      ]
+    },
+    {
+      "element": "localvariable",
+      "feature": "annotations",
+      "values": [
+        "java.lang.String",
+        "long"
+      ]
+    },
+    {
+      "element": "localvariable",
+      "feature": "types",
+      "values": [
+        "java.lang.String",
+        "long"
+      ]
+    },
+    {
+      "element": "parameter",
+      "feature": "annotations",
+      "values": [
+        "java.lang.String",
+        "long"
+      ]
+    },
+    {
+      "element": "parameter",
+      "feature": "types",
+      "values": [
+        "java.lang.String",
+        "long"
+      ]
+    }
+  ]
+}
