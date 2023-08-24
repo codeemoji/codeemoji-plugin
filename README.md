@@ -1,4 +1,4 @@
-![codEEmoji Plugin](./docs/logotype.png)
+![codEEmoji Plugin](./docs/logotype_title.png)
 
 <!-- DESCRIPTION HEADER BEGIN -->
 
@@ -230,7 +230,7 @@ a simple description pattern, as shown in the following a partial example:
 
 ![Showing Specifics for the Projects - File Sample](docs/screenshots/showingspecificsoftheprojectfilesample.png)
 
-Complete example [here](docs/codeemoji.json).
+Complete example [here](docs/samples/codeemoji.json).
 
 In the configuration screen of this inlay hint, the rules currently defined for the open project are displayed. See the following figure.
 
