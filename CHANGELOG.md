@@ -1,6 +1,8 @@
 # Intellij codEEmoji Plugin Changelog
 
-## [1.1.0-SNAPSHOT]
+## [2.0.0]
+
+## [1.0.0]
 
 ### Added
 

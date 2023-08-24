@@ -2,54 +2,32 @@
 
 # Intellij codEEmoji Plugin
 
-**codEEmoji** is an Intellij IDE plugin for Java, that inserts inlay hints in the context of code augmentation. The inlay hints inserted with the
-plugin are made from emojis for anti-pattern cases, allowing the mainer to identify name violations in the code. In future versions, the plugin
-will be able to insert inlay hints with emojis for invisible feature cases, in addition to displaying inlay hints without emojis for invisible
-annotations.
+**codeEEmoji** is a plug-in made for Intellij Idea and useful for Java programming. The plugin defines new sets of inlay hints in the context of code
+augmentation. The new inlay hints use emojis in an innovative way to help the developer. Emojis are displayed for anti-pattern cases such as naming
+violations or bad programming practices. The plugin can also show emojis in the editor indicating the presence of modifiers for classes, fields,
+methods, parameters or local variables that are being used. Likewise, the developer can indicate emojis to display for all these elements, according
+to a rule, for example, for a class being instantiated that implements a specific interface, for a method being invoked that is annotated by a certain
+annotation , a local variable of a given type, and so on. For the next version, in addition to emojis, the plugin will be able to show implicit
+annotations for JakartaEE and Spring frameworks.
 
 <!-- DESCRIPTION HEADER END -->
-
-<!-- TOC -->
-
-* [Intellij codEEmoji Plugin](#intellij-codǝemoji-plugin)
-    * [Setup and Use](#setup-and-use)
-        * [Prerequisites](#prerequisites)
-        * [How to install](#how-to-install)
-        * [How to configure](#how-to-configure)
-    * [Naming Violation Cases](#naming-violation-cases)
-        * [Short Descriptive Name](#short-descriptive-name)
-        * [Getter More Than Accessor](#getter-more-than-accessor)
-        * [_Is_ Returns More Than a Boolean](#is-returns-more-than-a-boolean)
-        * [Setter Method Returns](#setter-method-returns)
-        * [Expecting But Not Getting a Single Instance](#expecting-but-not-getting-a-single-instance)
-        * [Validation Method Does Not Confirm](#validation-method-does-not-confirm)
-        * [Getter Does Not Return](#getter-does-not-return)
-        * [Not Answered Question](#not-answered-question)
-        * [Transform Method Does Not Return](#transform-method-does-not-return)
-        * [Expecting But Not Getting a Collection](#expecting-but-not-getting-a-collection)
-        * [Says One But Contains Many](#says-one-but-contains-many)
-        * [Name Suggests Boolean By Type Does Not](#name-suggests-boolean-by-type-does-not)
-        * [Says Many But Contains One](#says-many-but-contains-one)
-        * [Name Contains Only Special Characters](#name-contains-only-special-characters)
-    * [Invisible Features Cases](#invisible-features-cases)
-    * [Invisible Annotations Cases](#invisible-annotations-cases)
-    * [How to Extend](#how-to-extend)
-    * [Acknowledgements](#acknowledgements)
-    * [References](#references)
-
-<!-- TOC -->
 
 ## Setup and Use
 
 ### Prerequisites
 
-- **Intellij IDEA 2023.***
-- Java JDK 17
+- [**IntelliJ IDEA 2023.***](https://www.jetbrains.com/idea/download/other.html) (Ultimate, Community or Educational)
+- JDK 17 [(*Eclipse Temurin - as a suggestion*)](https://github.com/adoptium/temurin17-binaries/releases)
 
-### How to install
+### Installation via marketplace
 
-- Download the latest release zip file (**codEEmojiPlugin-x.x.x.zip**) available
-  from [Releases](https://github.com/codeemoji/codeemoji-plugin/releases), where **x.x.x** is the version number.
+[JetBrains Marketplace - codEEmoji](https://plugins.jetbrains.com/plugin/22416-cod-emoji)
+
+![How to Download](docs/screenshots/marketplace_install.png)
+
+### Manual installation
+
+- Download the latest release zip file available from [Releases](https://github.com/codeemoji/codeemoji-plugin/releases).
 
 ![How to Download](docs/screenshots/howtodownload.png)
 
@@ -62,8 +40,8 @@ annotations.
 
 ### How to configure
 
-The plugin creates new Inlay Hints. **All are enabled by default when installing the plugin**. To disable hinlay hints or configure options
-that are available for each one, go to "**_File>Settings>Editor>Inlay Hints_**". Click "**_Other>Java_**".
+The plugin creates new Inlay Hints. All new inlay hints are enabled by default when installing the plugin. To disable inlay hints or configure
+options that are available for each one, go to "**_File>Settings>Editor>Inlay Hints_**". Click "**_Other>Java_**".
 
 ![How to Configure](docs/screenshots/howtoconfigure.png)
 

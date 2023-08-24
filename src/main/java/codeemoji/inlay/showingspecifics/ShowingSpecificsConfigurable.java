@@ -14,6 +14,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -39,13 +40,13 @@ public record ShowingSpecificsConfigurable(ShowingSpecificsSettings settings) im
 
     private @NotNull JPanel initOpenProjectsPanel() {
         Project project = getOpenProject();
-        if (!project.isDisposed()) {
-            return buildPanelsForOpenProject();
+        if (project != null && !project.isDisposed()) {
+            return buildPanelsForOpenProject(project);
         }
         return new JPanel();
     }
 
-    private @NotNull JPanel buildPanelsForOpenProject() {
+    private @NotNull JPanel buildPanelsForOpenProject(@NotNull Project project) {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = HORIZONTAL;
         gbc.gridx = 0;
@@ -59,7 +60,7 @@ public record ShowingSpecificsConfigurable(ShowingSpecificsSettings settings) im
         String parameterTitle = CEBundle.getString("inlay.showingspecifics.options.title.parameters");
         String localVariableTitle = CEBundle.getString("inlay.showingspecifics.options.title.localvariables");
 
-        JPanel result = createBasicInnerBagPanel(loadedRulesStr + " - " + projectStr + ": " + getOpenProject().getName(), false);
+        JPanel result = createBasicInnerBagPanel(loadedRulesStr + " - " + projectStr + ": " + project.getName(), false);
 
         buildInnerElementPanel(result, gbc, CLASS, classTitle);
         buildInnerElementPanel(result, gbc, FIELD, fieldTitle);
@@ -124,8 +125,12 @@ public record ShowingSpecificsConfigurable(ShowingSpecificsSettings settings) im
         return BorderFactory.createEmptyBorder(1, 3, 1, 3);
     }
 
-    private Project getOpenProject() {
-        return ProjectManager.getInstance().getOpenProjects()[0];
+    private @Nullable Project getOpenProject() {
+        @NotNull Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+        if (openProjects.length > 0) {
+            return openProjects[0];
+        }
+        return null;
     }
 
     @Contract(" -> new")
