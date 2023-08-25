@@ -51,13 +51,13 @@ public interface ICECollector<A extends PsiElement> {
     }
 
     private InlayPresentation formatInlay(@NotNull InlayPresentation inlay, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
-        var inset = new InsetValueProvider() {
+        /*var inset = new InsetValueProvider() {
             @Override
             public int getTop() {
                 return (new InlayTextMetricsStorage(getEditor())).getFontMetrics(true).offsetFromTop();
             }
         };
-        inlay = new DynamicInsetPresentation(inlay, inset);
+        inlay = new DynamicInsetPresentation(inlay, inset);*/
         var tooltip = getTooltip(keyTooltip);
         if (tooltip != null) {
             if (suffixTooltip != null) {
