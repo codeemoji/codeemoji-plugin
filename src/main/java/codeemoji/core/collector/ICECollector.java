@@ -3,13 +3,17 @@ package codeemoji.core.collector;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.InlayHintsUtils;
 import com.intellij.codeInsight.hints.presentation.*;
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
+import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
 @SuppressWarnings("UnstableApiUsage")
 public interface ICECollector<A extends PsiElement> {
@@ -51,13 +55,7 @@ public interface ICECollector<A extends PsiElement> {
     }
 
     private InlayPresentation formatInlay(@NotNull InlayPresentation inlay, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
-        /*var inset = new InsetValueProvider() {
-            @Override
-            public int getTop() {
-                return (new InlayTextMetricsStorage(getEditor())).getFontMetrics(true).offsetFromTop();
-            }
-        };
-        inlay = new DynamicInsetPresentation(inlay, inset);*/
+        inlay = getFactory().withCursorOnHover(inlay, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         var tooltip = getTooltip(keyTooltip);
         if (tooltip != null) {
             if (suffixTooltip != null) {
