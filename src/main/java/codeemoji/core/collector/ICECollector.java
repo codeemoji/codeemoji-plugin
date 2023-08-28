@@ -51,17 +51,17 @@ public interface ICECollector<A extends PsiElement> {
         return buildInlayWithSymbol(symbol.getEmoji(), keyTooltip, suffixTooltip);
     }
 
-    private InlayPresentation buildInlayWithIcon(@NotNull Icon icon, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+    default InlayPresentation buildInlayWithIcon(@NotNull Icon icon, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         var inlay = getFactory().smallScaledIcon(icon);
         return formatInlay(inlay, keyTooltip, suffixTooltip);
     }
 
-    private InlayPresentation buildInlayWithSymbol(@NotNull String emoji, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+    default InlayPresentation buildInlayWithSymbol(@NotNull String emoji, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         var inlay = getFactory().smallText(emoji);
         return formatInlay(inlay, keyTooltip, suffixTooltip);
     }
 
-    private InlayPresentation formatInlay(@NotNull InlayPresentation inlay, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+    default InlayPresentation formatInlay(@NotNull InlayPresentation inlay, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         inlay = getFactory().withCursorOnHover(inlay, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         var tooltip = getTooltip(keyTooltip);
         if (tooltip != null) {
