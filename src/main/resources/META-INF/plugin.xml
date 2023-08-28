@@ -3,7 +3,7 @@
     <id>codeemoji-plugin</id>
     <!--suppress PluginXmlCapitalization -->
     <name><![CDATA[codEEmoji]]></name>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
     <vendor email="eduardo.martinsguerra@unibz.it" url="https://www.unibz.it">Free University of Bozen-Bolzano - UNIBZ</vendor>
 
     <resource-bundle>CEBundle</resource-bundle>
