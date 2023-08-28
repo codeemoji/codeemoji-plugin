@@ -19,6 +19,6 @@ public final class ShowingModifiersSymbols {
     public static final CESymbol TRANSIENT_SYMBOL = new CESymbol(0x23F3); //hourglass
 
     private ShowingModifiersSymbols() {
-    }
 
+    }
 }

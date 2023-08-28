@@ -3,12 +3,10 @@ package codeemoji.core.collector;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
-import com.intellij.codeInsight.hints.InlayHintsUtils;
-import com.intellij.codeInsight.hints.presentation.*;
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+import com.intellij.codeInsight.hints.presentation.InlayPresentation;
+import com.intellij.codeInsight.hints.presentation.PresentationFactory;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
-import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,8 +16,17 @@ import java.awt.*;
 @SuppressWarnings("UnstableApiUsage")
 public interface ICECollector<A extends PsiElement> {
 
+    private static @Nullable String getTooltip(@NotNull String key) {
+        try {
+            return CEBundle.getString(key);
+        } catch (RuntimeException ex) {
+            return null;
+        }
+    }
+
     PresentationFactory getFactory();
 
+    @SuppressWarnings("unused")
     Editor getEditor();
 
     default void addInlay(@Nullable A element, InlayHintsSink sink, InlayPresentation inlay) {
@@ -64,14 +71,6 @@ public interface ICECollector<A extends PsiElement> {
             inlay = getFactory().withTooltip(tooltip, inlay);
         }
         return inlay;
-    }
-
-    private @Nullable String getTooltip(@NotNull String key) {
-        try {
-            return CEBundle.getString(key);
-        } catch (RuntimeException ex) {
-            return null;
-        }
     }
 
     default boolean isEnabled() {

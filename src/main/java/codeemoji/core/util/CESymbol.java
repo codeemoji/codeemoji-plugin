@@ -37,7 +37,7 @@ public class CESymbol {
         this.emoji = buildEmoji(getCodePoint(), getQualifier(), isBackground());
     }
 
-    private @NotNull String buildEmoji(int codePoint, int qualifier, boolean addColor) {
+    private static @NotNull String buildEmoji(int codePoint, int qualifier, boolean addColor) {
         var codePointChars = Character.toChars(codePoint);
         var withoutColorChars = codePointChars;
         if (qualifier > 0) {

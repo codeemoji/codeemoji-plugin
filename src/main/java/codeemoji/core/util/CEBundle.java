@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ResourceBundle;
 
 @Getter
-public class CEBundle {
+public final class CEBundle {
 
     final ResourceBundle bundle;
 

@@ -17,6 +17,17 @@ import static com.intellij.psi.PsiModifier.*;
 @SuppressWarnings("UnstableApiUsage")
 public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) implements ImmediateConfigurable {
 
+    private static @NotNull JPanel createBasicInnerPanel(@NotNull String typeTitle) {
+        var result = new JPanel(new GridLayout(10, 1));
+        var title = CEBundle.getString("inlay.showingmodifiers.options.title." + typeTitle);
+        result.setBorder(BorderFactory.createTitledBorder(emptyBorder(), title));
+        return result;
+    }
+
+    private static @NotNull Border emptyBorder() {
+        return BorderFactory.createEmptyBorder(1, 3, 1, 3);
+    }
+
     @Override
     public @NotNull JComponent createComponent(@NotNull ChangeListener changeListener) {
         var modifiersPanel = new JPanel();
@@ -34,13 +45,6 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
         return FormBuilder.createFormBuilder()
                 .addComponent(modifiersPanel)
                 .getPanel();
-    }
-
-    private @NotNull JPanel createBasicInnerPanel(@NotNull String typeTitle) {
-        var result = new JPanel(new GridLayout(10, 1));
-        var title = CEBundle.getString("inlay.showingmodifiers.options.title." + typeTitle);
-        result.setBorder(BorderFactory.createTitledBorder(emptyBorder(), title));
-        return result;
     }
 
     private @NotNull JPanel prepareClassPanel(@NotNull ChangeListener changeListener) {
@@ -134,10 +138,6 @@ public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) im
         result.add(defaultInterfaceMethod, BorderLayout.CENTER);
 
         return result;
-    }
-
-    private @NotNull Border emptyBorder() {
-        return BorderFactory.createEmptyBorder(1, 3, 1, 3);
     }
 
     private void addChangeListener(@NotNull JCheckBox checkBox, @NotNull ShowingModifiers.ScopeModifier scopeModifier, @NotNull ChangeListener changeListener) {

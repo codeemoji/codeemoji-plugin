@@ -32,6 +32,29 @@ import static java.awt.GridBagConstraints.WEST;
 @SuppressWarnings("UnstableApiUsage")
 public record ShowingSpecificsConfigurable(ShowingSpecificsSettings settings) implements ImmediateConfigurable, CEIProjectConfig {
 
+    private static @NotNull JPanel createBasicInnerBagPanel(@NotNull String title, boolean withBorder) {
+        var result = new JPanel(new GridBagLayout());
+        if (withBorder) {
+            result.setBorder(BorderFactory.createTitledBorder(title));
+        } else {
+            result.setBorder(BorderFactory.createTitledBorder(emptyBorder(), title));
+        }
+        return result;
+    }
+
+    @Contract(value = " -> new", pure = true)
+    private static @NotNull Border emptyBorder() {
+        return BorderFactory.createEmptyBorder(1, 3, 1, 3);
+    }
+
+    private static @Nullable Project getOpenProject() {
+        @NotNull Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+        if (openProjects.length > 0) {
+            return openProjects[0];
+        }
+        return null;
+    }
+
     @Override
     public @NotNull JComponent createComponent(@NotNull ChangeListener changeListener) {
         var specificsPanel = new JPanel();
@@ -135,29 +158,6 @@ public record ShowingSpecificsConfigurable(ShowingSpecificsSettings settings) im
             gridX--;
             gridY++;
         }
-    }
-
-    private @NotNull JPanel createBasicInnerBagPanel(@NotNull String title, boolean withBorder) {
-        var result = new JPanel(new GridBagLayout());
-        if (withBorder) {
-            result.setBorder(BorderFactory.createTitledBorder(title));
-        } else {
-            result.setBorder(BorderFactory.createTitledBorder(emptyBorder(), title));
-        }
-        return result;
-    }
-
-    @Contract(value = " -> new", pure = true)
-    private @NotNull Border emptyBorder() {
-        return BorderFactory.createEmptyBorder(1, 3, 1, 3);
-    }
-
-    private @Nullable Project getOpenProject() {
-        @NotNull Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-        if (openProjects.length > 0) {
-            return openProjects[0];
-        }
-        return null;
     }
 
     @Contract(" -> new")
