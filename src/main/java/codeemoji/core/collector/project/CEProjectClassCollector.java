@@ -17,7 +17,7 @@ import static codeemoji.core.collector.project.config.CERuleFeature.*;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiElement>
+public non-sealed class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiElement>
         implements CEIProjectReferenceList<PsiReferenceList, PsiElement> {
 
     private final String extendsKey;

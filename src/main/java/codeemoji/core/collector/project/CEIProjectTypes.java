@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-public interface CEIProjectTypes<A extends PsiElement> extends CEIProjectConfig {
+public sealed interface CEIProjectTypes<A extends PsiElement> extends CEIProjectConfig
+        permits CEProjectMethodCollector, CEProjectVariableCollector {
 
     default void processTypesFR(@NotNull CERuleElement elementRule, @NotNull CERuleFeature featureRule, PsiType type,
                                 @NotNull A addHintElement, @NotNull InlayHintsSink sink,

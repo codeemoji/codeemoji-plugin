@@ -37,7 +37,7 @@ public abstract non-sealed class CEVariableCollector extends CESimpleCollector<P
                 @Override
                 public void visitField(@NotNull PsiField field) {
                     if (isEnabledForField()) {
-                        collectForField(field, editor, inlayHintsSink);
+                        process(field, editor, inlayHintsSink);
                     }
                     super.visitField(field);
                 }
@@ -45,7 +45,7 @@ public abstract non-sealed class CEVariableCollector extends CESimpleCollector<P
                 @Override
                 public void visitParameter(@NotNull PsiParameter parameter) {
                     if (isEnabledForParam()) {
-                        collectForParam(parameter, editor, inlayHintsSink);
+                        process(parameter, editor, inlayHintsSink);
                     }
                     super.visitParameter(parameter);
                 }
@@ -53,25 +53,13 @@ public abstract non-sealed class CEVariableCollector extends CESimpleCollector<P
                 @Override
                 public void visitLocalVariable(@NotNull PsiLocalVariable localVariable) {
                     if (isEnabledForLocalVariable()) {
-                        collectForLocal(localVariable, editor, inlayHintsSink);
+                        process(localVariable, editor, inlayHintsSink);
                     }
                     super.visitLocalVariable(localVariable);
                 }
             });
         }
         return false;
-    }
-
-    public void collectForField(@NotNull PsiField field, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
-        process(field, editor, sink);
-    }
-
-    public void collectForParam(@NotNull PsiParameter param, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
-        process(param, editor, sink);
-    }
-
-    public void collectForLocal(@NotNull PsiLocalVariable local, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
-        process(local, editor, sink);
     }
 
     private void process(@NotNull PsiVariable variable, @NotNull Editor editor, @NotNull InlayHintsSink sink) {

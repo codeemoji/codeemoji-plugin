@@ -59,7 +59,7 @@ public abstract non-sealed class CECollector<A extends PsiElement> implements CE
     }
 
     @Override
-    public InlayPresentation buildInlay(@Nullable CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+    public final InlayPresentation buildInlay(@Nullable CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         if (symbol == null) {
             symbol = new CESymbol();
         } else if (symbol.getIcon() != null) {

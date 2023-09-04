@@ -19,7 +19,8 @@ import static codeemoji.core.collector.project.config.CERuleFeature.RETURNS;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiMethodCallExpression> implements CEIProjectTypes<PsiMethodCallExpression> {
+public non-sealed class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiMethodCallExpression>
+        implements CEIProjectTypes<PsiMethodCallExpression> {
 
     private final String returnsKey;
     private final CESymbol returnsSymbol;

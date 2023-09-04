@@ -17,8 +17,8 @@ import org.jetbrains.annotations.Nullable;
 @ToString
 @SuppressWarnings("UnstableApiUsage")
 public abstract sealed class CESimpleCollector<H extends PsiElement, A extends PsiElement> extends CECollector<A>
-        permits CEClassCollector, CEReferenceMethodCollector, CEVariableCollector,
-        CEMethodCollector, CEReferenceClassCollector, CEReferenceFieldCollector {
+        permits CEClassCollector, CEMethodCollector, CEVariableCollector,
+        CEReferenceClassCollector, CEReferenceFieldCollector, CEReferenceMethodCollector {
 
     private final InlayPresentation inlay;
 
@@ -27,7 +27,7 @@ public abstract sealed class CESimpleCollector<H extends PsiElement, A extends P
         this.inlay = buildInlay(symbol, "inlay." + keyId + ".tooltip", null);
     }
 
-    protected void addInlay(@Nullable A element, InlayHintsSink sink) {
+    protected final void addInlay(@Nullable A element, InlayHintsSink sink) {
         addInlay(element, sink, getInlay());
     }
 
