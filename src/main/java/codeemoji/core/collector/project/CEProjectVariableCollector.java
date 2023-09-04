@@ -34,6 +34,7 @@ public class CEProjectVariableCollector extends CEProjectCollector<PsiVariable, 
         this.typesSymbol = new CESymbol();
     }
 
+    @Override
     public boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
         if (psiElement instanceof PsiJavaFile) {
             psiElement.accept(new JavaRecursiveElementVisitor() {

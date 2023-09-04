@@ -13,9 +13,10 @@ import java.util.List;
 @SuppressWarnings("UnstableApiUsage")
 public abstract class CEMultiProvider<S> extends CEProvider<S> {
 
+    @Override
     @Contract("_ -> new")
     public final @NotNull InlayHintsCollector buildCollector(Editor editor) {
-        return new CEMultiCollector(editor, buildCollectors(editor));
+        return new CEMultiCollector(buildCollectors(editor));
     }
 
     public abstract List<InlayHintsCollector> buildCollectors(Editor editor);

@@ -17,7 +17,7 @@ import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.*;
 
 @ToString
 @EqualsAndHashCode
-@State(name = "ShowingModifiersSettings", storages = @Storage("showing-modifiers-settings.xml"))
+@State(name = "ShowingModifiersSettings", storages = @Storage("codeemoji-showing-modifiers-settings.xml"))
 public class ShowingModifiersSettings implements PersistentStateComponent<ShowingModifiersSettings> {
 
     @MapAnnotation
@@ -35,6 +35,7 @@ public class ShowingModifiersSettings implements PersistentStateComponent<Showin
         return this;
     }
 
+    @Override
     public void loadState(@NotNull ShowingModifiersSettings state) {
         XmlSerializerUtil.copyBean(state, this);
     }

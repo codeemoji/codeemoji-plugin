@@ -8,7 +8,7 @@ import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
 @Data
-@State(name = "ShortDescriptiveNameSettings", storages = @Storage("short-descriptive-name-settings.xml"))
+@State(name = "ShortDescriptiveNameSettings", storages = @Storage("codeemoji-short-descriptive-name-settings.xml"))
 public class ShortDescriptiveNameSettings implements PersistentStateComponent<ShortDescriptiveNameSettings> {
 
     private Integer numberOfLetters = 1;

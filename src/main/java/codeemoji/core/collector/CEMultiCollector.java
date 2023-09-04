@@ -1,30 +1,20 @@
 package codeemoji.core.collector;
 
-import com.intellij.codeInsight.hints.FactoryInlayHintsCollector;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@Getter
 @SuppressWarnings("UnstableApiUsage")
-public class CEMultiCollector extends FactoryInlayHintsCollector {
-
-    private final List<InlayHintsCollector> collectors;
-
-    public CEMultiCollector(Editor editor, List<InlayHintsCollector> collectors) {
-        super(editor);
-        this.collectors = collectors;
-    }
+public record CEMultiCollector(List<InlayHintsCollector> collectors) implements InlayHintsCollector {
 
     @Override
-    public final boolean collect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
-        if (getCollectors() != null) {
-            for (var collector : getCollectors()) {
+    public boolean collect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+        if (collectors() != null) {
+            for (var collector : collectors()) {
                 collector.collect(psiElement, editor, inlayHintsSink);
             }
         }

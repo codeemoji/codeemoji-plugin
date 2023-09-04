@@ -20,7 +20,7 @@ import java.util.Objects;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public abstract class CEProvider<S> implements InlayHintsProvider<S> {
+public abstract class CEProvider<S> implements CEIProvider<S> {
 
     private static final Logger LOG = Logger.getInstance(CEProvider.class);
 
@@ -33,10 +33,6 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
     @Override
     public @NotNull SettingsKey<S> getKey() {
         return new SettingsKey<>(getClass().getSimpleName().toLowerCase());
-    }
-
-    public final @NotNull String getKeyId() {
-        return getKey().getId();
     }
 
     @Nls(capitalization = Nls.Capitalization.Sentence)
@@ -67,7 +63,7 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public @NotNull S createSettings() {
+    public final @NotNull S createSettings() {
         if (settings == null) {
             try {
                 var type = (Class<S>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
@@ -88,15 +84,18 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
     }
 
     @Override
-    public InlayHintsCollector getCollectorFor(@NotNull PsiFile psiFile, @NotNull Editor editor, @NotNull S settings, @NotNull InlayHintsSink inlayHintsSink) {
+    public final @NotNull String getKeyId() {
+        return getKey().getId();
+    }
+
+    @Override
+    public final InlayHintsCollector getCollectorFor(@NotNull PsiFile psiFile, @NotNull Editor editor, @NotNull S settings, @NotNull InlayHintsSink inlayHintsSink) {
         return buildCollector(editor);
     }
 
     @Override
-    public boolean isLanguageSupported(@NotNull Language language) {
+    public final boolean isLanguageSupported(@NotNull Language language) {
         return "JAVA".equals(language.getID());
     }
-
-    public abstract InlayHintsCollector buildCollector(Editor editor);
 
 }

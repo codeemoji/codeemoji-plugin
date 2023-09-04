@@ -1,6 +1,5 @@
-package codeemoji.core.collector.basic;
+package codeemoji.core.collector.simple;
 
-import codeemoji.core.collector.CESingleCollector;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
@@ -9,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-public abstract class CEClassCollector extends CESingleCollector<PsiClass, PsiIdentifier> {
+public abstract non-sealed class CEClassCollector extends CESimpleCollector<PsiClass, PsiIdentifier> {
 
     @SuppressWarnings("unused")
     protected CEClassCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
@@ -17,7 +16,7 @@ public abstract class CEClassCollector extends CESingleCollector<PsiClass, PsiId
     }
 
     @Override
-    public boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+    public final boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
         if (psiElement instanceof PsiJavaFile) {
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override

@@ -16,7 +16,7 @@ public final class CEBundle {
 
     @SuppressWarnings("SameReturnValue")
     private static CEBundle getInstance() {
-        return CEBundleHolder.instance;
+        return CEBundleHolder.INSTANCE;
     }
 
     public static @NotNull String getString(String key) {
@@ -24,6 +24,6 @@ public final class CEBundle {
     }
 
     private static final class CEBundleHolder {
-        private static final CEBundle instance = new CEBundle();
+        private static final CEBundle INSTANCE = new CEBundle();
     }
 }

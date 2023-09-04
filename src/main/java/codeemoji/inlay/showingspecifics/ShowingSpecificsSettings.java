@@ -8,7 +8,7 @@ import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
 @Data
-@State(name = "ShowingSpecificsSettings", storages = @Storage("showing-specifics-settings.xml"))
+@State(name = "ShowingSpecificsSettings", storages = @Storage("codeemoji-showing-specifics-settings.xml"))
 public class ShowingSpecificsSettings implements PersistentStateComponent<ShowingSpecificsSettings> {
 
     private final String howToConfigureURL;
@@ -22,6 +22,7 @@ public class ShowingSpecificsSettings implements PersistentStateComponent<Showin
         return this;
     }
 
+    @Override
     public void loadState(@NotNull ShowingSpecificsSettings state) {
         XmlSerializerUtil.copyBean(state, this);
     }

@@ -1,6 +1,5 @@
-package codeemoji.core.collector.basic;
+package codeemoji.core.collector.simple;
 
-import codeemoji.core.collector.CESingleCollector;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
@@ -9,29 +8,30 @@ import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 @Getter
+@Setter
 @SuppressWarnings("UnstableApiUsage")
-public abstract class CEVariableCollector extends CESingleCollector<PsiVariable, PsiElement> {
+public abstract non-sealed class CEVariableCollector extends CESimpleCollector<PsiVariable, PsiElement> {
 
-    private final boolean enabledForField;
-    private final boolean enabledForParam;
-    private final boolean enabledForLocalVariable;
+    private boolean enabledForField;
+    private boolean enabledForParam;
+    private boolean enabledForLocalVariable;
 
     protected CEVariableCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);
         enabledForField = true;
         enabledForParam = true;
         enabledForLocalVariable = true;
-
     }
 
     @Override
-    public boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+    public final boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
         if (psiElement instanceof PsiJavaFile) {
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override

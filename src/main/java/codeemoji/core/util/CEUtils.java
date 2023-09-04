@@ -117,13 +117,15 @@ public final class CEUtils {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean isGenericType(@NotNull PsiElement element, PsiTypeElement typeElement) {
+    public static boolean isGenericType(@NotNull PsiElement element, @Nullable PsiTypeElement typeElement) {
         var tpl = searchGenericTypesList(element);
         if (tpl != null) {
             var tps = tpl.getTypeParameters();
             for (var tp : tps) {
-                if (typeElement.getText().equalsIgnoreCase(tp.getText())) {
-                    return true;
+                if (typeElement != null) {
+                    if (typeElement.getText().equalsIgnoreCase(tp.getText())) {
+                        return true;
+                    }
                 }
             }
         }
