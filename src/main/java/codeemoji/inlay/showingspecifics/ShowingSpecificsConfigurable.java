@@ -30,7 +30,8 @@ import static java.awt.GridBagConstraints.HORIZONTAL;
 import static java.awt.GridBagConstraints.WEST;
 
 @SuppressWarnings("UnstableApiUsage")
-public record ShowingSpecificsConfigurable(ShowingSpecificsSettings settings) implements ImmediateConfigurable, CEIProjectConfig {
+public record ShowingSpecificsConfigurable(
+        ShowingSpecificsSettings settings) implements ImmediateConfigurable, CEIProjectConfig {
 
     private static @NotNull JPanel createBasicInnerBagPanel(@NotNull String title, boolean withBorder) {
         var result = new JPanel(new GridBagLayout());

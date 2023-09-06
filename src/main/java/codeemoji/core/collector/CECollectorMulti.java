@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-public record CEMultiCollector(List<InlayHintsCollector> collectors) implements InlayHintsCollector {
+public record CECollectorMulti(List<InlayHintsCollector> collectors) implements InlayHintsCollector {
 
     @Override
     public boolean collect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {

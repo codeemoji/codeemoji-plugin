@@ -48,5 +48,7 @@
                                    implementationClass="codeemoji.inlay.showingmodifiers.ShowingModifiers"/>
         <codeInsight.inlayProvider language="JAVA"
                                    implementationClass="codeemoji.inlay.showingspecifics.ShowingSpecifics"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.implicit.ImplicitAnnotations"/>
     </extensions>
 </idea-plugin>

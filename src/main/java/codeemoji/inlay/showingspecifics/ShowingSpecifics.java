@@ -3,7 +3,7 @@ package codeemoji.inlay.showingspecifics;
 import codeemoji.core.collector.project.CEProjectClassCollector;
 import codeemoji.core.collector.project.CEProjectMethodCollector;
 import codeemoji.core.collector.project.CEProjectVariableCollector;
-import codeemoji.core.provider.CEMultiProvider;
+import codeemoji.core.provider.CEProviderMulti;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
@@ -16,7 +16,7 @@ import java.util.List;
 import static codeemoji.core.collector.project.config.CERuleElement.*;
 
 @SuppressWarnings("UnstableApiUsage")
-public class ShowingSpecifics extends CEMultiProvider<ShowingSpecificsSettings> {
+public class ShowingSpecifics extends CEProviderMulti<ShowingSpecificsSettings> {
 
     @Nullable
     @Override

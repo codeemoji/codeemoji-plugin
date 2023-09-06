@@ -1,6 +1,6 @@
 package codeemoji.inlay.showingmodifiers;
 
-import codeemoji.core.provider.CEMultiProvider;
+import codeemoji.core.provider.CEProviderMulti;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
@@ -16,7 +16,7 @@ import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.*;
 import static com.intellij.psi.PsiModifier.*;
 
 @SuppressWarnings("UnstableApiUsage")
-public class ShowingModifiers extends CEMultiProvider<ShowingModifiersSettings> {
+public class ShowingModifiers extends CEProviderMulti<ShowingModifiersSettings> {
 
     @Override
     public String getPreviewText() {

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-public abstract non-sealed class CEClassCollector extends CESimpleCollector<PsiClass, PsiIdentifier> {
+public abstract non-sealed class CEClassCollector extends CECollectorSimple<PsiClass, PsiIdentifier> {
 
     @SuppressWarnings("unused")
     protected CEClassCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {

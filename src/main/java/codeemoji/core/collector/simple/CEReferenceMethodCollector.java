@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-public abstract non-sealed class CEReferenceMethodCollector extends CESimpleCollector<PsiMethod, PsiMethodCallExpression> {
+public abstract non-sealed class CEReferenceMethodCollector extends CECollectorSimple<PsiMethod, PsiMethodCallExpression> {
 
     protected CEReferenceMethodCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);

@@ -1,6 +1,6 @@
 package codeemoji.core.collector.project;
 
-import codeemoji.core.collector.CECollector;
+import codeemoji.core.collector.CECollectorInline;
 import codeemoji.core.collector.project.config.CEConfigFile;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
@@ -17,7 +17,7 @@ import static codeemoji.core.collector.project.config.CERuleFeature.ANNOTATIONS;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public abstract sealed class CEProjectCollector<H extends PsiModifierListOwner, A extends PsiElement> extends CECollector<A>
+public abstract sealed class CEProjectCollector<H extends PsiModifierListOwner, A extends PsiElement> extends CECollectorInline<A>
         implements CEIProject<H, A> permits CEProjectClassCollector, CEProjectMethodCollector, CEProjectVariableCollector {
 
     protected final CEConfigFile configFile;

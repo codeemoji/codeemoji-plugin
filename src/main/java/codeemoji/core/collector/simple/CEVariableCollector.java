@@ -17,7 +17,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @SuppressWarnings("UnstableApiUsage")
-public abstract non-sealed class CEVariableCollector extends CESimpleCollector<PsiVariable, PsiElement> {
+public abstract non-sealed class CEVariableCollector extends CECollectorSimple<PsiVariable, PsiElement> {
 
     private boolean enabledForField;
     private boolean enabledForParam;

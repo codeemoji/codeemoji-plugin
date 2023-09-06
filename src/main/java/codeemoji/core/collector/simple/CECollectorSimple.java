@@ -1,6 +1,6 @@
 package codeemoji.core.collector.simple;
 
-import codeemoji.core.collector.CECollector;
+import codeemoji.core.collector.CECollectorInline;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
@@ -16,13 +16,13 @@ import org.jetbrains.annotations.Nullable;
 @Setter
 @ToString
 @SuppressWarnings("UnstableApiUsage")
-public abstract sealed class CESimpleCollector<H extends PsiElement, A extends PsiElement> extends CECollector<A>
+public abstract sealed class CECollectorSimple<H extends PsiElement, A extends PsiElement> extends CECollectorInline<A>
         permits CEClassCollector, CEMethodCollector, CEVariableCollector,
         CEReferenceClassCollector, CEReferenceFieldCollector, CEReferenceMethodCollector {
 
     private final InlayPresentation inlay;
 
-    protected CESimpleCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    protected CECollectorSimple(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor);
         this.inlay = buildInlay(symbol, "inlay." + keyId + ".tooltip", null);
     }
