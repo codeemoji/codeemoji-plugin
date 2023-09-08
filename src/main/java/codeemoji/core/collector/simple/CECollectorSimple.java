@@ -1,6 +1,6 @@
 package codeemoji.core.collector.simple;
 
-import codeemoji.core.collector.CECollectorInline;
+import codeemoji.core.collector.CECollector;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 @Setter
 @ToString
 @SuppressWarnings("UnstableApiUsage")
-public abstract sealed class CECollectorSimple<H extends PsiElement, A extends PsiElement> extends CECollectorInline<A>
+public abstract sealed class CECollectorSimple<H extends PsiElement, A extends PsiElement> extends CECollector<A>
         permits CEClassCollector, CEMethodCollector, CEVariableCollector,
         CEReferenceClassCollector, CEReferenceFieldCollector, CEReferenceMethodCollector {
 
@@ -28,7 +28,7 @@ public abstract sealed class CECollectorSimple<H extends PsiElement, A extends P
     }
 
     protected final void addInlay(@Nullable A element, InlayHintsSink sink) {
-        addInlay(element, sink, getInlay());
+        addInlayInline(element, sink, getInlay());
     }
 
     public abstract boolean needsHint(@NotNull H element);

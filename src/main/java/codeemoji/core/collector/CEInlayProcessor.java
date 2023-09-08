@@ -13,7 +13,7 @@ import java.awt.*;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public abstract sealed class CEInlayProcessor permits CECollectorInline, CECollectorBlock {
+public abstract sealed class CEInlayProcessor permits CECollector {
 
     private final Editor editor;
     private final PresentationFactory factory;

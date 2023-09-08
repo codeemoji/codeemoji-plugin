@@ -9,11 +9,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-public sealed interface CEICollector<A extends PsiElement> extends InlayHintsCollector permits CECollectorInline, CECollectorBlock {
+public sealed interface CEICollector<A extends PsiElement> extends InlayHintsCollector permits CECollector {
 
     Editor getEditor();
 
-    void addInlay(@Nullable A element, InlayHintsSink sink, InlayPresentation inlay);
+    void addInlayInline(@Nullable A element, InlayHintsSink sink, InlayPresentation inlay);
+
+    void addInlayBlock(@Nullable A element, @NotNull InlayHintsSink sink, InlayPresentation inlay);
 
     boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink);
 

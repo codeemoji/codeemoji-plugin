@@ -11,14 +11,21 @@ import org.jetbrains.annotations.Nullable;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public abstract non-sealed class CECollectorBlock<A extends PsiElement> extends CEInlayProcessor implements CEICollector<A> {
+public abstract non-sealed class CECollector<A extends PsiElement> extends CEInlayProcessor implements CEICollector<A> {
 
-    protected CECollectorBlock(@NotNull Editor editor) {
+    protected CECollector(Editor editor) {
         super(editor);
     }
 
     @Override
-    public void addInlay(@Nullable A element, @NotNull InlayHintsSink sink, InlayPresentation inlay) {
+    public void addInlayInline(@Nullable A element, InlayHintsSink sink, InlayPresentation inlay) {
+        if (element != null) {
+            sink.addInlineElement(calcOffset(element), false, inlay, false);
+        }
+    }
+
+    @Override
+    public void addInlayBlock(@Nullable A element, @NotNull InlayHintsSink sink, InlayPresentation inlay) {
         if (element != null) {
             var indentFactor = EditorUtil.getPlainSpaceWidth(getEditor());
             var indent = EditorUtil.getTabSize(getEditor()) * indentFactor;
@@ -26,4 +33,5 @@ public abstract non-sealed class CECollectorBlock<A extends PsiElement> extends 
             sink.addBlockElement(element.getTextOffset(), true, true, 0, inlay);
         }
     }
+
 }

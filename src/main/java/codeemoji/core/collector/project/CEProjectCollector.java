@@ -1,6 +1,6 @@
 package codeemoji.core.collector.project;
 
-import codeemoji.core.collector.CECollectorInline;
+import codeemoji.core.collector.CECollector;
 import codeemoji.core.collector.project.config.CEConfigFile;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
@@ -17,7 +17,7 @@ import static codeemoji.core.collector.project.config.CERuleFeature.ANNOTATIONS;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public abstract sealed class CEProjectCollector<H extends PsiModifierListOwner, A extends PsiElement> extends CECollectorInline<A>
+public abstract sealed class CEProjectCollector<H extends PsiModifierListOwner, A extends PsiElement> extends CECollector<A>
         implements CEIProject<H, A> permits CEProjectClassCollector, CEProjectMethodCollector, CEProjectVariableCollector {
 
     protected final CEConfigFile configFile;
@@ -46,7 +46,7 @@ public abstract sealed class CEProjectCollector<H extends PsiModifierListOwner, 
     public void addInlayAnnotationsFR(@NotNull A addHintElement, @NotNull List<String> hintValues, @NotNull InlayHintsSink sink) {
         if (!hintValues.isEmpty()) {
             var inlay = buildInlay(getAnnotationsSymbol(), getAnnotationsKey(), String.valueOf(hintValues));
-            addInlay(addHintElement, sink, inlay);
+            addInlayInline(addHintElement, sink, inlay);
         }
     }
 }

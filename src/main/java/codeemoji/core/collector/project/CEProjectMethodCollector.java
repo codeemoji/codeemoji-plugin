@@ -66,7 +66,7 @@ public non-sealed class CEProjectMethodCollector extends CEProjectCollector<PsiM
                                 @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
             var inlay = buildInlay(symbol, keyTooltip, String.valueOf(hintValues));
-            addInlay(addHintElement, sink, inlay);
+            addInlayInline(addHintElement, sink, inlay);
         }
     }
 

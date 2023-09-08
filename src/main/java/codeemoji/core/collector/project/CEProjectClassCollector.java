@@ -102,7 +102,7 @@ public non-sealed class CEProjectClassCollector extends CEProjectCollector<PsiCl
                                         @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
             var inlay = buildInlay(symbol, keyTooltip, String.valueOf(hintValues));
-            addInlay(addHintElement, sink, inlay);
+            addInlayInline(addHintElement, sink, inlay);
         }
     }
 

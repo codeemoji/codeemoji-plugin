@@ -1,9 +1,7 @@
 package codeemoji.inlay.implicit;
 
-import codeemoji.core.collector.implicit.CEImplicit;
-import codeemoji.core.collector.implicit.CEImplicitCollector;
+import codeemoji.core.collector.implicit.CEJPAEntityCollector;
 import codeemoji.core.provider.CEProvider;
-import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
@@ -22,8 +20,6 @@ public class ImplicitAnnotations extends CEProvider<NoSettings> {
 
     @Override
     public InlayHintsCollector buildCollector(Editor editor) {
-        var jpaEntityImplicit = new CEImplicit("javax.persistence.Entity");
-        jpaEntityImplicit.addAnnotationForField("javax.persistence.Column", new CESymbol(0x1F9D0, "@Column"), "name");
-        return new CEImplicitCollector(editor, jpaEntityImplicit);
+        return new CEJPAEntityCollector(editor, getKeyId(), 0x1F9D0);
     }
 }
