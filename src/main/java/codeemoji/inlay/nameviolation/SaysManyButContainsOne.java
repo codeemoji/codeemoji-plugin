@@ -6,6 +6,7 @@ import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiEllipsisType;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +43,8 @@ public class SaysManyButContainsOne extends CEProvider<NoSettings> {
                 var typeElement = element.getTypeElement();
                 return typeElement != null &&
                         CEUtils.isPluralForm(element.getName()) &&
-                        !typeElement.isInferredType() && //TODO: detect inferred type name
+                        !(typeElement.getType() instanceof PsiEllipsisType) &&
+                        !typeElement.isInferredType() &&
                         !CEUtils.isGenericType(element, typeElement) &&
                         !CEUtils.isConstantName(element) &&
                         !CEUtils.isNumericType(typeElement) &&

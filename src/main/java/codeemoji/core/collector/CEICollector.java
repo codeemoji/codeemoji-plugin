@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("UnstableApiUsage")
+@SuppressWarnings({"UnstableApiUsage"})
 public sealed interface CEICollector<A extends PsiElement> extends InlayHintsCollector permits CECollector {
 
     Editor getEditor();
@@ -17,6 +17,7 @@ public sealed interface CEICollector<A extends PsiElement> extends InlayHintsCol
 
     void addInlayBlock(@Nullable A element, @NotNull InlayHintsSink sink, InlayPresentation inlay);
 
+    @SuppressWarnings("SameReturnValue")
     boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink);
 
     default boolean collect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {

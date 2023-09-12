@@ -24,7 +24,7 @@ public abstract sealed class CECollectorSimple<H extends PsiElement, A extends P
 
     protected CECollectorSimple(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor);
-        this.inlay = buildInlay(symbol, "inlay." + keyId + ".tooltip", null);
+        this.inlay = buildInlayWithEmoji(symbol, "inlay." + keyId + ".tooltip", null);
     }
 
     protected final void addInlay(@Nullable A element, InlayHintsSink sink) {

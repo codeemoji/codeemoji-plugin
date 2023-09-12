@@ -101,7 +101,7 @@ public non-sealed class CEProjectClassCollector extends CEProjectCollector<PsiCl
     public void addInlayReferenceListFR(@NotNull PsiElement addHintElement, @NotNull List<String> hintValues,
                                         @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
-            var inlay = buildInlay(symbol, keyTooltip, String.valueOf(hintValues));
+            var inlay = buildInlayWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
             addInlayInline(addHintElement, sink, inlay);
         }
     }

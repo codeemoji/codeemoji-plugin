@@ -20,6 +20,6 @@ public class ImplicitAnnotations extends CEProvider<NoSettings> {
 
     @Override
     public InlayHintsCollector buildCollector(Editor editor) {
-        return new CEJPAEntityCollector(editor, getKeyId(), 0x1F9D0);
+        return new CEJPAEntityCollector(editor, getKeyId(), 0x1F4AD);
     }
 }

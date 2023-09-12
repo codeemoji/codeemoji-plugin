@@ -13,7 +13,7 @@ public class CESymbol {
     private int codePoint = 0x26AA; //white circle
     private int qualifier = 0;
     private boolean background = true;
-    private String emoji = buildFullEmoji(codePoint, qualifier, background, null);
+    private String emoji = buildFullEmoji(codePoint, qualifier, true, null);
     private Icon icon = null;
 
     public CESymbol() {

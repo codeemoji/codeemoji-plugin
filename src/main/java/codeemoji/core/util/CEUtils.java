@@ -225,13 +225,14 @@ public final class CEUtils {
     }
 
     public static boolean isConstantName(@NotNull PsiVariable element) {
-        var psiModifierList = element.getModifierList();
-        if (psiModifierList != null) {
-            return psiModifierList.hasModifierProperty(STATIC) &&
-                    psiModifierList.hasModifierProperty(FINAL) &&
-                    Objects.equals(element.getType().getPresentableText(), "String");
-        }
-        return false;
+        return isConstant(element) && Objects.equals(element.getType().getPresentableText(), "String");
+    }
+
+    public static boolean isConstant(@NotNull PsiVariable element) {
+        var modifierList = element.getModifierList();
+        return modifierList != null &&
+                modifierList.hasExplicitModifier(STATIC) &&
+                modifierList.hasExplicitModifier(FINAL);
     }
 
     public static boolean isIterableType(PsiTypeElement typeElement) {
@@ -272,6 +273,103 @@ public final class CEUtils {
                     return true;
                 }
             }
+        }
+        return false;
+    }
+
+    public static boolean isDateDBType(@NotNull PsiType psiType) {
+        if (psiType instanceof PsiClassType) {
+            var psiClass = ((PsiClassType) psiType).resolve();
+            if (psiClass != null) {
+                var className = psiClass.getQualifiedName();
+                return isKnownDateDBType(className);
+            }
+        }
+        return false;
+    }
+
+    private static boolean isKnownDateDBType(String className) {
+        var dateTypes = new String[]{
+                "java.util.Date",
+                "java.util.Calendar",
+                "java.sql.Date",
+                "java.sql.Time",
+                "java.sql.Timestamp"
+        };
+        for (var dateType : dateTypes) {
+            if (dateType.equals(className)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isPrimitiveOrWrapperType(@NotNull PsiType psiType) {
+        if (psiType instanceof PsiPrimitiveType ||
+                psiType.equalsToText("byte[]") || psiType.getCanonicalText(false).equalsIgnoreCase("java.lang.Byte[]") ||
+                psiType.equalsToText("char[]") || psiType.getCanonicalText(false).equalsIgnoreCase("java.lang.Char[]")) {
+            return true;
+        } else if (psiType instanceof PsiClassType classType) {
+            var psiClass = classType.resolve();
+            if (psiClass != null) {
+                var className = psiClass.getQualifiedName();
+                return isKnownPrimitiveOrWrapperType(className);
+            }
+        }
+        return false;
+    }
+
+    private static boolean isKnownPrimitiveOrWrapperType(String className) {
+        var primitiveAndWrapperTypes = new String[]{
+                "int", "java.lang.Integer",
+                "boolean", "java.lang.Boolean",
+                "char", "java.lang.Character",
+                "byte", "java.lang.Byte",
+                "short", "java.lang.Short",
+                "long", "java.lang.Long",
+                "float", "java.lang.Float",
+                "double", "java.lang.Double"
+        };
+        for (var indice = 0; indice < primitiveAndWrapperTypes.length; indice += 2) {
+            var primitiveType = primitiveAndWrapperTypes[indice];
+            var wrapperType = primitiveAndWrapperTypes[indice + 1];
+            if (primitiveType.equals(className) || wrapperType.equals(className)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isEnumType(PsiType type) {
+        if (type instanceof PsiClassType classType) {
+            var psiClass = classType.resolve();
+            if (psiClass != null) {
+                return psiClass.isEnum();
+            }
+        }
+        return false;
+    }
+
+    public static boolean isSerializableType(PsiType type) {
+        if (type instanceof PsiClassType classType) {
+            var psiClass = classType.resolve();
+            if (psiClass != null) {
+                return hasSerializableInterface(psiClass);
+            }
+        }
+        return false;
+    }
+
+    private static boolean hasSerializableInterface(@NotNull PsiClass psiClass) {
+        var interfaces = psiClass.getInterfaces();
+        for (var anInterface : interfaces) {
+            if ("java.io.Serializable".equals(anInterface.getQualifiedName())) {
+                return true;
+            }
+        }
+        var superClass = psiClass.getSuperClass();
+        if (superClass != null) {
+            return hasSerializableInterface(superClass);
         }
         return false;
     }

@@ -14,7 +14,7 @@ import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.*;
 import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.*;
 import static com.intellij.psi.PsiModifier.*;
 
-@SuppressWarnings("UnstableApiUsage")
+@SuppressWarnings({"UnstableApiUsage", "DuplicatedCode"})
 public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) implements ImmediateConfigurable {
 
     private static @NotNull JPanel createBasicInnerPanel(@NotNull String typeTitle) {

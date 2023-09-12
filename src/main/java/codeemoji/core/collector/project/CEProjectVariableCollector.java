@@ -85,7 +85,7 @@ public non-sealed class CEProjectVariableCollector extends CEProjectCollector<Ps
     public void addInlayTypesFR(@NotNull PsiReferenceExpression addHintElement, @NotNull List<String> hintValues,
                                 @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
-            var inlay = buildInlay(symbol, keyTooltip, String.valueOf(hintValues));
+            var inlay = buildInlayWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
             addInlayInline(addHintElement, sink, inlay);
         }
     }

@@ -31,20 +31,20 @@ public abstract sealed class CEInlayProcessor permits CECollector {
         }
     }
 
-    protected final InlayPresentation buildInlay(@Nullable CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+    protected final InlayPresentation buildInlayWithEmoji(@Nullable CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         if (symbol == null) {
             symbol = new CESymbol();
         } else if (symbol.getIcon() != null) {
             return buildInlayWithIcon(symbol.getIcon(), keyTooltip, suffixTooltip);
         }
-        return buildInlayWithSymbol(symbol.getEmoji(), keyTooltip, suffixTooltip);
+        return buildInlayWithText(symbol.getEmoji(), keyTooltip, suffixTooltip);
     }
 
-    private InlayPresentation buildInlayWithIcon(@NotNull Icon icon, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+    protected InlayPresentation buildInlayWithIcon(@NotNull Icon icon, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         return formatInlay(getFactory().smallScaledIcon(icon), keyTooltip, suffixTooltip);
     }
 
-    private InlayPresentation buildInlayWithSymbol(@NotNull String fullText, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+    protected InlayPresentation buildInlayWithText(@NotNull String fullText, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         return formatInlay(getFactory().smallText(fullText), keyTooltip, suffixTooltip);
     }
 
