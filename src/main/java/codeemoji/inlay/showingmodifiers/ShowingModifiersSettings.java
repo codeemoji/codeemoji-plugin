@@ -13,7 +13,10 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier;
-import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.*;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.NATIVE_METHOD;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.SYNCHRONIZED_METHOD;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.TRANSIENT_FIELD;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.VOLATILE_FIELD;
 
 @ToString
 @EqualsAndHashCode
@@ -40,12 +43,12 @@ public class ShowingModifiersSettings implements PersistentStateComponent<Showin
         XmlSerializerUtil.copyBean(state, this);
     }
 
-    public synchronized boolean query(@NotNull ScopeModifier scopeModifier) {
+    synchronized boolean query(@NotNull ScopeModifier scopeModifier) {
         basicModifiersMap.putIfAbsent(scopeModifier, false);
         return basicModifiersMap.get(scopeModifier);
     }
 
-    public synchronized void update(@NotNull ScopeModifier scopeModifier, boolean value) {
+    synchronized void update(@NotNull ScopeModifier scopeModifier, boolean value) {
         basicModifiersMap.put(scopeModifier, value);
     }
 

@@ -2,7 +2,11 @@ package codeemoji.core.collector;
 
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
-import com.intellij.codeInsight.hints.presentation.*;
+import com.intellij.codeInsight.hints.presentation.DynamicInsetPresentation;
+import com.intellij.codeInsight.hints.presentation.InlayPresentation;
+import com.intellij.codeInsight.hints.presentation.InlayTextMetricsStorage;
+import com.intellij.codeInsight.hints.presentation.InsetValueProvider;
+import com.intellij.codeInsight.hints.presentation.PresentationFactory;
 import com.intellij.openapi.editor.Editor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -66,7 +70,7 @@ public abstract sealed class CEInlayProcessor permits CECollector {
         final var inset = new InsetValueProvider() {
             @Override
             public int getTop() {
-                return (new InlayTextMetricsStorage(CEInlayProcessor.this.getEditor())).getFontMetrics(true).offsetFromTop();
+                return (new InlayTextMetricsStorage(getEditor())).getFontMetrics(true).offsetFromTop();
             }
         };
         return new DynamicInsetPresentation(inlay, inset);

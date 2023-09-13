@@ -4,7 +4,12 @@ import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiCallExpression;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiMethodCallExpression;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,8 +29,8 @@ public abstract non-sealed class CEReferenceMethodCollector extends CECollectorS
                     if (CEUtils.isNotPreviewEditor(editor) &&
                             (callExpression instanceof final PsiMethodCallExpression mexp)) {
                         final var method = mexp.resolveMethod();
-                        if (null != method && (CEReferenceMethodCollector.this.needsHint(method))) {
-                            CEReferenceMethodCollector.this.addInlay(mexp, inlayHintsSink);
+                        if (null != method && (needsHint(method))) {
+                            addInlay(mexp, inlayHintsSink);
 
                         }
 

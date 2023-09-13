@@ -2,7 +2,11 @@ package codeemoji.core.collector.implicit.jpa;
 
 import codeemoji.core.collector.implicit.CEImplicitAttribute;
 import codeemoji.core.collector.implicit.CEImplicitInterface;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiAnnotation;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiMember;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

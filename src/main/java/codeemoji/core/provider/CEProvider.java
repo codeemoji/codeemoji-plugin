@@ -1,7 +1,12 @@
 package codeemoji.core.provider;
 
 import codeemoji.core.util.CEBundle;
-import com.intellij.codeInsight.hints.*;
+import com.intellij.codeInsight.hints.ChangeListener;
+import com.intellij.codeInsight.hints.ImmediateConfigurable;
+import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.NoSettings;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.lang.Language;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;

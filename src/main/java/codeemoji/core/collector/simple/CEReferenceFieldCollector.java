@@ -4,7 +4,11 @@ import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiReferenceExpression;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,8 +29,8 @@ public abstract non-sealed class CEReferenceFieldCollector extends CECollectorSi
                         final var reference = expression.getReference();
                         if (null != reference) {
                             final var resolveElement = reference.resolve();
-                            if (resolveElement instanceof final PsiField field && CEReferenceFieldCollector.this.needsHint(field)) {
-                                CEReferenceFieldCollector.this.addInlay(expression, inlayHintsSink);
+                            if (resolveElement instanceof final PsiField field && needsHint(field)) {
+                                addInlay(expression, inlayHintsSink);
                             }
                         }
                     }

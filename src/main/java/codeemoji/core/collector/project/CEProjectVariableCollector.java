@@ -5,9 +5,15 @@ import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiLocalVariable;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiReferenceExpression;
+import com.intellij.psi.PsiVariable;
 import lombok.Getter;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,39 +50,38 @@ public non-sealed class CEProjectVariableCollector extends CEProjectCollector<Ps
                         final var reference = expression.getReference();
                         if (null != reference) {
                             final var resolveElement = reference.resolve();
-                            final var elementRuleType = CEProjectVariableCollector.this.getClassByElementRule();
+                            final var elementRuleType = getClassByElementRule();
                             if (null != elementRuleType && (elementRuleType.isInstance(resolveElement))) {
-                                CEProjectVariableCollector.this.processHint(expression, (PsiVariable) resolveElement, inlayHintsSink);
+                                processHint(expression, (PsiVariable) resolveElement, inlayHintsSink);
                             }
                         }
                     }
                     super.visitReferenceExpression(expression);
+                }
+
+                private @Nullable Class<? extends PsiVariable> getClassByElementRule() {
+                    switch (elementRule) {
+                        case FIELD -> {
+                            return PsiField.class;
+                        }
+                        case LOCALVARIABLE -> {
+                            return PsiLocalVariable.class;
+                        }
+                        case PARAMETER -> {
+                            return PsiParameter.class;
+                        }
+                        default -> {
+                            return null;
+                        }
+                    }
                 }
             });
         }
         return false;
     }
 
-    @Contract(pure = true)
-    private @Nullable Class<? extends PsiVariable> getClassByElementRule() {
-        switch (this.elementRule) {
-            case FIELD -> {
-                return PsiField.class;
-            }
-            case LOCALVARIABLE -> {
-                return PsiLocalVariable.class;
-            }
-            case PARAMETER -> {
-                return PsiParameter.class;
-            }
-            default -> {
-                return null;
-            }
-        }
-    }
-
     @Override
-    public void processHint(@NotNull final PsiReferenceExpression addHintElement, @NotNull final PsiVariable evaluationElement, @NotNull final InlayHintsSink sink) {
+    protected void processHint(@NotNull final PsiReferenceExpression addHintElement, @NotNull final PsiVariable evaluationElement, @NotNull final InlayHintsSink sink) {
         this.processAnnotationsFR(elementRule, evaluationElement, addHintElement, sink);
         this.processTypesFR(elementRule, TYPES, evaluationElement.getType(), addHintElement, sink, this.getTypesSymbol(), typesKey);
     }
@@ -101,7 +106,8 @@ public non-sealed class CEProjectVariableCollector extends CEProjectCollector<Ps
     }
 
     @Override
-    public @NotNull CESymbol getAnnotationsSymbol() {
+    @NotNull
+    public CESymbol getAnnotationsSymbol() {
         return this.readRuleEmoji(elementRule, ANNOTATIONS, ANNOTATIONS_SYMBOL);
     }
 

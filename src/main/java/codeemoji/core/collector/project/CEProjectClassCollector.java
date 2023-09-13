@@ -4,7 +4,14 @@ import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiClassType;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiReferenceExpression;
+import com.intellij.psi.PsiReferenceList;
+import com.intellij.psi.PsiVariable;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,8 +19,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 import static codeemoji.core.collector.config.CERuleElement.CLASS;
-import static codeemoji.core.collector.config.CERuleFeature.*;
-import static codeemoji.core.collector.project.ProjectRuleSymbol.*;
+import static codeemoji.core.collector.config.CERuleFeature.ANNOTATIONS;
+import static codeemoji.core.collector.config.CERuleFeature.EXTENDS;
+import static codeemoji.core.collector.config.CERuleFeature.IMPLEMENTS;
+import static codeemoji.core.collector.project.ProjectRuleSymbol.ANNOTATIONS_SYMBOL;
+import static codeemoji.core.collector.project.ProjectRuleSymbol.EXTENDS_SYMBOL;
+import static codeemoji.core.collector.project.ProjectRuleSymbol.IMPLEMENTS_SYMBOL;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
@@ -44,7 +55,7 @@ public non-sealed class CEProjectClassCollector extends CEProjectCollector<PsiCl
                         if (null != reference) {
                             final var resolveElement = reference.resolve();
                             if (resolveElement instanceof final PsiClass clazz) {
-                                CEProjectClassCollector.this.processHint(expression, clazz, inlayHintsSink);
+                                processHint(expression, clazz, inlayHintsSink);
                             }
                         }
                     }
@@ -59,7 +70,7 @@ public non-sealed class CEProjectClassCollector extends CEProjectCollector<PsiCl
                             typeElement.getType() instanceof final PsiClassType classType) {
                         final var clazz = classType.resolve();
                         if (null != clazz) {
-                            CEProjectClassCollector.this.processHint(variable, clazz, inlayHintsSink);
+                            processHint(variable, clazz, inlayHintsSink);
                         }
 
                     }
@@ -80,7 +91,7 @@ public non-sealed class CEProjectClassCollector extends CEProjectCollector<PsiCl
                         for (final var ref : list.getReferenceElements()) {
                             final var resolveElement = ref.resolve();
                             if (resolveElement instanceof final PsiClass clazz) {
-                                CEProjectClassCollector.this.processHint(ref, clazz, inlayHintsSink);
+                                processHint(ref, clazz, inlayHintsSink);
                             }
                         }
                     }
@@ -91,7 +102,7 @@ public non-sealed class CEProjectClassCollector extends CEProjectCollector<PsiCl
     }
 
     @Override
-    public void processHint(@NotNull final PsiElement addHintElement, @NotNull final PsiClass evaluationElement, @NotNull final InlayHintsSink sink) {
+    protected void processHint(@NotNull final PsiElement addHintElement, @NotNull final PsiClass evaluationElement, @NotNull final InlayHintsSink sink) {
         this.processAnnotationsFR(CLASS, evaluationElement, addHintElement, sink);
         this.processReferenceListFR(EXTENDS, evaluationElement.getExtendsList(), addHintElement, sink, this.getExtendsSymbol(), extendsKey);
         this.processReferenceListFR(IMPLEMENTS, evaluationElement.getImplementsList(), addHintElement, sink, this.getImplementsSymbol(), implementsKey);
@@ -118,7 +129,8 @@ public non-sealed class CEProjectClassCollector extends CEProjectCollector<PsiCl
     }
 
     @Override
-    public @NotNull CESymbol getAnnotationsSymbol() {
+    @NotNull
+    public CESymbol getAnnotationsSymbol() {
         return this.readRuleEmoji(CLASS, ANNOTATIONS, ANNOTATIONS_SYMBOL);
     }
 

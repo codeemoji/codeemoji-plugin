@@ -40,7 +40,7 @@ public abstract sealed class CEProjectCollector<H extends PsiModifierListOwner, 
     }
 
     @SuppressWarnings("unused")
-    public abstract void processHint(@NotNull A addHintElement, @NotNull H evaluationElement, @NotNull InlayHintsSink sink);
+    protected abstract void processHint(@NotNull A addHintElement, @NotNull H evaluationElement, @NotNull InlayHintsSink sink);
 
     @Override
     public void addInlayAnnotationsFR(@NotNull A addHintElement, @NotNull List<String> hintValues, @NotNull InlayHintsSink sink) {

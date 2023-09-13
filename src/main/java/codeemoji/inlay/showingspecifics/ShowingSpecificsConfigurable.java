@@ -10,6 +10,7 @@ import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.ide.BrowserUtil;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.util.ui.FormBuilder;
@@ -25,7 +26,11 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
-import static codeemoji.core.collector.config.CERuleElement.*;
+import static codeemoji.core.collector.config.CERuleElement.CLASS;
+import static codeemoji.core.collector.config.CERuleElement.FIELD;
+import static codeemoji.core.collector.config.CERuleElement.LOCALVARIABLE;
+import static codeemoji.core.collector.config.CERuleElement.METHOD;
+import static codeemoji.core.collector.config.CERuleElement.PARAMETER;
 import static java.awt.GridBagConstraints.HORIZONTAL;
 import static java.awt.GridBagConstraints.WEST;
 
@@ -90,7 +95,8 @@ public record ShowingSpecificsConfigurable(
             try {
                 BrowserUtil.browse(new URI(this.settings().getHowToConfigureURL()));
             } catch (final URISyntaxException ex) {
-                CEProjectConfigInterface.LOG.info(ex);
+                Logger LOG = Logger.getInstance(ShowingSpecificsConfigurable.class);
+                LOG.info(ex);
             }
         });
         panel.add(button);

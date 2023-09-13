@@ -4,7 +4,12 @@ import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiCallExpression;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiMethodCallExpression;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +46,7 @@ public non-sealed class CEProjectMethodCollector extends CEProjectCollector<PsiM
                             (callExpression instanceof final PsiMethodCallExpression mexp)) {
                         final var method = mexp.resolveMethod();
                         if (null != method) {
-                            CEProjectMethodCollector.this.processHint(mexp, method, inlayHintsSink);
+                            processHint(mexp, method, inlayHintsSink);
                         }
                     }
                     super.visitCallExpression(callExpression);
@@ -53,7 +58,7 @@ public non-sealed class CEProjectMethodCollector extends CEProjectCollector<PsiM
     }
 
     @Override
-    public void processHint(@NotNull final PsiMethodCallExpression addHintElement, @NotNull final PsiMethod evaluationElement, @NotNull final InlayHintsSink sink) {
+    protected void processHint(@NotNull final PsiMethodCallExpression addHintElement, @NotNull final PsiMethod evaluationElement, @NotNull final InlayHintsSink sink) {
         this.processAnnotationsFR(METHOD, evaluationElement, addHintElement, sink);
         final var type = evaluationElement.getReturnType();
         if (!evaluationElement.isConstructor() && null != type) {
@@ -79,7 +84,8 @@ public non-sealed class CEProjectMethodCollector extends CEProjectCollector<PsiM
     }
 
     @Override
-    public @NotNull CESymbol getAnnotationsSymbol() {
+    @NotNull
+    public CESymbol getAnnotationsSymbol() {
         return this.readRuleEmoji(METHOD, ANNOTATIONS, ANNOTATIONS_SYMBOL);
     }
 

@@ -38,7 +38,7 @@ public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSetting
             @Override
             public boolean needsHint(@NotNull final PsiVariable element) {
                 if (null != element.getNameIdentifier()) {
-                    return ShortDescriptiveName.this.getSettings().getNumberOfLetters() >= element.getNameIdentifier().getTextLength();
+                    return getSettings().getNumberOfLetters() >= element.getNameIdentifier().getTextLength();
                 }
                 return false;
             }

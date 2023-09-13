@@ -24,7 +24,7 @@ public class CEJPAEntityCollector extends CEJPACollector {
     }
 
     @Override
-    public void processImplicitsFor(@NotNull PsiMember member, @NotNull InlayHintsSink sink) {
+    protected void processImplicitsFor(@NotNull PsiMember member, @NotNull InlayHintsSink sink) {
         if (member instanceof PsiClass clazz) {
             var implicits = new ArrayList<CEImplicitInterface>();
             implicits.add(new CEJPAImplicitEntity());

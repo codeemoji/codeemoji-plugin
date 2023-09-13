@@ -5,7 +5,22 @@ import com.google.gson.JsonObject;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiClassType;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifierList;
+import com.intellij.psi.PsiModifierListOwner;
+import com.intellij.psi.PsiParameterList;
+import com.intellij.psi.PsiPrimitiveType;
+import com.intellij.psi.PsiReferenceExpression;
+import com.intellij.psi.PsiReferenceParameterList;
+import com.intellij.psi.PsiType;
+import com.intellij.psi.PsiTypeElement;
+import com.intellij.psi.PsiTypeParameterList;
+import com.intellij.psi.PsiTypes;
+import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +32,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import static com.intellij.psi.PsiModifier.*;
+import static com.intellij.psi.PsiModifier.FINAL;
+import static com.intellij.psi.PsiModifier.PRIVATE;
+import static com.intellij.psi.PsiModifier.PROTECTED;
+import static com.intellij.psi.PsiModifier.PUBLIC;
+import static com.intellij.psi.PsiModifier.STATIC;
 
 public enum CEUtils {
     ;
@@ -226,7 +245,7 @@ public enum CEUtils {
         return CEUtils.isConstant(element) && Objects.equals(element.getType().getPresentableText(), "String");
     }
 
-    public static boolean isConstant(@NotNull final PsiVariable element) {
+    public static boolean isConstant(@NotNull final PsiModifierListOwner element) {
         final var modifierList = element.getModifierList();
         return null != modifierList &&
                 modifierList.hasExplicitModifier(STATIC) &&
@@ -276,8 +295,8 @@ public enum CEUtils {
     }
 
     public static boolean isDateDBType(@NotNull final PsiType psiType) {
-        if (psiType instanceof PsiClassType) {
-            final var psiClass = ((PsiClassType) psiType).resolve();
+        if (psiType instanceof PsiClassType classType) {
+            final var psiClass = classType.resolve();
             if (null != psiClass) {
                 final var className = psiClass.getQualifiedName();
                 return CEUtils.isKnownDateDBType(className);

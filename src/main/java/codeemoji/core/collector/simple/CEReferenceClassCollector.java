@@ -4,7 +4,14 @@ import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiClassType;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiReferenceExpression;
+import com.intellij.psi.PsiReferenceList;
+import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,8 +32,8 @@ public abstract non-sealed class CEReferenceClassCollector extends CECollectorSi
                         final var reference = expression.getReference();
                         if (null != reference) {
                             final var resolveElement = reference.resolve();
-                            if (resolveElement instanceof final PsiClass clazz && CEReferenceClassCollector.this.needsHint(clazz)) {
-                                CEReferenceClassCollector.this.addInlay(expression, inlayHintsSink);
+                            if (resolveElement instanceof final PsiClass clazz && needsHint(clazz)) {
+                                addInlay(expression, inlayHintsSink);
                             }
                         }
                     }
@@ -40,8 +47,8 @@ public abstract non-sealed class CEReferenceClassCollector extends CECollectorSi
                         if (null != typeElement && !typeElement.isInferredType()
                                 && typeElement.getType() instanceof final PsiClassType classType) {
                             final var clazz = classType.resolve();
-                            if (null != clazz && (CEReferenceClassCollector.this.needsHint(clazz))) {
-                                CEReferenceClassCollector.this.addInlay(variable, inlayHintsSink);
+                            if (null != clazz && (needsHint(clazz))) {
+                                addInlay(variable, inlayHintsSink);
 
                             }
 
@@ -63,8 +70,8 @@ public abstract non-sealed class CEReferenceClassCollector extends CECollectorSi
                     if (null != list) {
                         for (final var ref : list.getReferenceElements()) {
                             final var resolveElement = ref.resolve();
-                            if (resolveElement instanceof final PsiClass clazz && (CEReferenceClassCollector.this.needsHint(clazz))) {
-                                CEReferenceClassCollector.this.addInlay(ref, inlayHintsSink);
+                            if (resolveElement instanceof final PsiClass clazz && (needsHint(clazz))) {
+                                addInlay(ref, inlayHintsSink);
 
                             }
                         }

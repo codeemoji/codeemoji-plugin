@@ -14,8 +14,6 @@ import java.util.Map;
 
 public interface CEProjectConfigInterface {
 
-    Logger LOG = Logger.getInstance(CEProjectConfigInterface.class);
-
     default @NotNull Map<CERuleFeature, List<String>> readRuleFeatures(@NotNull final CERuleElement elementRule) {
         final Map<CERuleFeature, List<String>> result = new EnumMap<>(CERuleFeature.class);
         for (final var rule : this.getConfigFile().getRules()) {
@@ -40,7 +38,8 @@ public interface CEProjectConfigInterface {
                         final var codePoint = Integer.parseInt(emoji, 16);
                         return new CESymbol(codePoint);
                     } catch (final NumberFormatException ex) {
-                        CEProjectConfigInterface.LOG.info(ex);
+                        Logger LOG = Logger.getInstance(CEProjectConfigInterface.class);
+                        LOG.info(ex);
                     }
                 }
             }

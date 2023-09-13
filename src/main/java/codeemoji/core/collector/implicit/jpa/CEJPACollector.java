@@ -12,8 +12,6 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 @Getter
 @SuppressWarnings("UnstableApiUsage")
 public abstract class CEJPACollector extends CEImplicitCollector {
@@ -27,7 +25,7 @@ public abstract class CEJPACollector extends CEImplicitCollector {
         this.codePoint = codePoint;
     }
 
-    void processImplicits(@NotNull final PsiMember member, @NotNull final List<? extends CEImplicitInterface> implicits, @NotNull final InlayHintsSink sink) {
+    void processImplicits(@NotNull final PsiMember member, @NotNull final Iterable<? extends CEImplicitInterface> implicits, @NotNull final InlayHintsSink sink) {
         for (final var implicit : implicits) {
             var hasImplicitAnnotation = false;
             for (final var name : implicit.getBaseNames()) {
@@ -67,7 +65,6 @@ public abstract class CEJPACollector extends CEImplicitCollector {
         }
     }
 
-
     private void addImplicitInlay(final PsiElement element, @Nullable final String fullText, @NotNull final InlayHintsSink sink) {
         if (null != fullText) {
             final var symbol = new CESymbol(codePoint, fullText);
@@ -75,6 +72,5 @@ public abstract class CEJPACollector extends CEImplicitCollector {
             this.addInlayBlock(element, sink, inlay);
         }
     }
-
 
 }

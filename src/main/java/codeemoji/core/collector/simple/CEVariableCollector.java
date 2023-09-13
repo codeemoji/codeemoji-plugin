@@ -4,7 +4,15 @@ import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiLocalVariable;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.PsiReferenceExpression;
+import com.intellij.psi.PsiVariable;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import lombok.Getter;
@@ -36,58 +44,58 @@ public abstract non-sealed class CEVariableCollector extends CECollectorSimple<P
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
                 public void visitField(@NotNull final PsiField field) {
-                    if (CEVariableCollector.this.isEnabledForField()) {
-                        CEVariableCollector.this.process(field, editor, inlayHintsSink);
+                    if (isEnabledForField()) {
+                        process(field, editor, inlayHintsSink);
                     }
                     super.visitField(field);
                 }
 
                 @Override
                 public void visitParameter(@NotNull final PsiParameter parameter) {
-                    if (CEVariableCollector.this.isEnabledForParam()) {
-                        CEVariableCollector.this.process(parameter, editor, inlayHintsSink);
+                    if (isEnabledForParam()) {
+                        process(parameter, editor, inlayHintsSink);
                     }
                     super.visitParameter(parameter);
                 }
 
                 @Override
                 public void visitLocalVariable(@NotNull final PsiLocalVariable localVariable) {
-                    if (CEVariableCollector.this.isEnabledForLocalVariable()) {
-                        CEVariableCollector.this.process(localVariable, editor, inlayHintsSink);
+                    if (isEnabledForLocalVariable()) {
+                        process(localVariable, editor, inlayHintsSink);
                     }
                     super.visitLocalVariable(localVariable);
+                }
+
+                private void process(@NotNull final PsiVariable variable, @NotNull final Editor editor, @NotNull final InlayHintsSink sink) {
+                    if (needsHint(variable)) {
+                        addInlay(variable.getNameIdentifier(), sink);
+                        if (CEUtils.isNotPreviewEditor(editor)) {
+                            final var scope = GlobalSearchScope.fileScope(variable.getContainingFile());
+                            final var refs = ReferencesSearch.search(variable, scope, false).toArray(PsiReference.EMPTY_ARRAY);
+                            for (final var ref : refs) {
+                                addInlay(ref.getElement(), sink);
+                            }
+                        } else {
+                            processReferencesInPreviewEditor(variable, sink);
+                        }
+                    }
+                }
+
+                private void processReferencesInPreviewEditor(@NotNull final PsiVariable variable, @NotNull final InlayHintsSink inlayHintsSink) {
+                    variable.getContainingFile().accept(new JavaRecursiveElementVisitor() {
+                        @Override
+                        public void visitReferenceExpression(@NotNull final PsiReferenceExpression expression) {
+                            if (CEUtils.hasAUniqueQualifier(expression)
+                                    && Objects.equals(expression.getText(), variable.getName())) {
+                                addInlay(expression, inlayHintsSink);
+                            }
+                            super.visitReferenceExpression(expression);
+                        }
+                    });
                 }
             });
         }
         return false;
-    }
-
-    private void process(@NotNull final PsiVariable variable, @NotNull final Editor editor, @NotNull final InlayHintsSink sink) {
-        if (this.needsHint(variable)) {
-            this.addInlay(variable.getNameIdentifier(), sink);
-            if (CEUtils.isNotPreviewEditor(editor)) {
-                final var scope = GlobalSearchScope.fileScope(variable.getContainingFile());
-                final var refs = ReferencesSearch.search(variable, scope, false).toArray(PsiReference.EMPTY_ARRAY);
-                for (final var ref : refs) {
-                    this.addInlay(ref.getElement(), sink);
-                }
-            } else {
-                this.processReferencesInPreviewEditor(variable, sink);
-            }
-        }
-    }
-
-    private void processReferencesInPreviewEditor(@NotNull final PsiVariable variable, @NotNull final InlayHintsSink inlayHintsSink) {
-        variable.getContainingFile().accept(new JavaRecursiveElementVisitor() {
-            @Override
-            public void visitReferenceExpression(@NotNull final PsiReferenceExpression expression) {
-                if (CEUtils.hasAUniqueQualifier(expression)
-                        && Objects.equals(expression.getText(), variable.getName())) {
-                    CEVariableCollector.this.addInlay(expression, inlayHintsSink);
-                }
-                super.visitReferenceExpression(expression);
-            }
-        });
     }
 
     @Override

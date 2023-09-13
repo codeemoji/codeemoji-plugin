@@ -23,7 +23,7 @@ public class CEJPAEmbeddableCollector extends CEJPACollector {
     }
 
     @Override
-    public void processImplicitsFor(@NotNull PsiMember member, @NotNull InlayHintsSink sink) {
+    protected void processImplicitsFor(@NotNull PsiMember member, @NotNull InlayHintsSink sink) {
         if (member instanceof PsiField field) {
             var implicits = new ArrayList<CEImplicitInterface>();
             implicits.add(new CEJPAImplicitColumn());
