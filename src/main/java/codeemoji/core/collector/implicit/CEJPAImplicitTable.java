@@ -1,7 +1,6 @@
 package codeemoji.core.collector.implicit;
 
-import com.intellij.psi.PsiAnnotation;
-import com.intellij.psi.PsiMember;
+import com.intellij.psi.*;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -9,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 @Getter
+@SuppressWarnings("UnstableApiUsage")
 public class CEJPAImplicitTable implements CEIJPAImplicit {
 
     private final List<String> baseNames;
@@ -18,7 +18,7 @@ public class CEJPAImplicitTable implements CEIJPAImplicit {
     }
 
     @Override
-    public @Nullable String processAttributes(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
+    public @Nullable String createAttributes(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
         var attributeNameValue = member.getName();
         if (attributeNameValue != null) {
             attributeNameValue = attributeNameValue.toLowerCase();
@@ -31,7 +31,54 @@ public class CEJPAImplicitTable implements CEIJPAImplicit {
             }
         }
         var nameAttr = new CEJPAAttribute("name", attributeNameValue, true);
-        return buildAttributes(annotation, nameAttr);
+        if (annotation.findAttribute("uniqueConstraints") == null) {
+            var processUq = processUniqueConstraints(member, annotation);
+            var uqValue = processUq != null ? "{" + processUq + "}" : null;
+            var uniqueConstraintsAttr = new CEJPAAttribute("uniqueConstraints", uqValue, false);
+            return formatAttributes(annotation, nameAttr, uniqueConstraintsAttr);
+        } else {
+            return formatAttributes(annotation, nameAttr);
+        }
+    }
+
+    @Override
+    public @Nullable String updateAttributes(@NotNull PsiMember member, @NotNull PsiAnnotation annotation, @NotNull String attributeName) {
+        final String UNIQUE_CONSTRAINTS_NAME = "uniqueConstraints";
+        if (attributeName.equalsIgnoreCase(UNIQUE_CONSTRAINTS_NAME) && annotation.findAttribute(UNIQUE_CONSTRAINTS_NAME) != null) {
+            return processUniqueConstraints(member, annotation);
+        }
+        return null;
+    }
+
+    private @Nullable String processUniqueConstraints(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
+        StringBuilder result = new StringBuilder();
+        var ucValue = annotation.findAttributeValue("uniqueConstraints");
+        var ucValueCompare = ucValue != null ? ucValue.getText().replaceAll(" ", "") : "{}";
+        if (member instanceof PsiClass clazz) {
+            clazz.accept(new JavaRecursiveElementVisitor() {
+                @Override
+                public void visitField(@NotNull PsiField field) {
+                    var columnAnnotation = CEJPAPersistenceUtils.searchAnnotation(field, "Column");
+                    if (columnAnnotation != null) {
+                        var uniqueValue = columnAnnotation.findAttributeValue("unique");
+                        if (uniqueValue != null && uniqueValue.getText().equalsIgnoreCase("true")) {
+                            var addValue = "@UniqueConstraint(columnNames = {\"" + field.getName() + "\"})";
+                            if (!ucValueCompare.contains(addValue.replace(" ", ""))) {
+                                if (!result.isEmpty()) {
+                                    result.append(", ");
+                                }
+                                result.append(addValue);
+                            }
+                        }
+                    }
+                    super.visitField(field);
+                }
+            });
+            if (!result.isEmpty() && !ucValueCompare.equalsIgnoreCase("{}")) {
+                result.insert(0, ", ");
+            }
+        }
+        return !result.isEmpty() ? result.toString() : null;
     }
 
     @Override

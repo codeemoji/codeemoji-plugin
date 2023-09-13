@@ -25,10 +25,10 @@ public class CEJPAImplicitBasic implements CEIJPAImplicit {
     }
 
     @Override
-    public @Nullable String processAttributes(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
+    public @Nullable String createAttributes(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
         if (CEJPAPersistenceUtils.searchAnnotation(member, "Id") != null) {
             var optionalAttr = new CEJPAAttribute("optional", "false", false);
-            return buildAttributes(annotation, optionalAttr);
+            return formatAttributes(annotation, optionalAttr);
         }
         return null;
     }

@@ -14,7 +14,12 @@ public interface CEIJPAImplicit {
 
     List<String> getBaseNames();
 
-    @Nullable String processAttributes(@NotNull PsiMember member, @NotNull PsiAnnotation annotation);
+    @Nullable String createAttributes(@NotNull PsiMember member, @NotNull PsiAnnotation annotation);
+
+    @Nullable
+    default String updateAttributes(@NotNull PsiMember member, @NotNull PsiAnnotation annotation, @NotNull String attributeName) {
+        return null;
+    }
 
     @Nullable String buildAnnotationFor(@NotNull PsiMember member);
 
@@ -29,8 +34,8 @@ public interface CEIJPAImplicit {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    default boolean isDeactivatedFor(@NotNull PsiField field) {
-        for (var annotation : field.getAnnotations()) {
+    default boolean isDeactivatedFor(@NotNull PsiMember member) {
+        for (var annotation : member.getAnnotations()) {
             var annotationName = annotation.getQualifiedName();
             if (annotationName != null) {
                 for (var caseDeactivated : getDeactivatedCases()) {
@@ -84,17 +89,19 @@ public interface CEIJPAImplicit {
         return false;
     }
 
-    default String buildAttributes(@NotNull PsiAnnotation annotation, CEJPAAttribute @NotNull ... attributes) {
+    default String formatAttributes(@NotNull PsiAnnotation annotation, CEJPAAttribute @NotNull ... attributes) {
         StringBuilder finalResult = null;
         List<String> resultAttributes = new ArrayList<>();
         for (var attributeForCheck : attributes) {
-            var hasAttribute = annotation.findAttribute(attributeForCheck.name()) != null;
-            if (!hasAttribute) {
-                var prefix = "";
-                if (attributeForCheck.textual()) {
-                    prefix = "\"";
+            if (attributeForCheck.value() != null) {
+                var hasAttribute = annotation.findAttribute(attributeForCheck.name()) != null;
+                if (!hasAttribute) {
+                    var prefix = "";
+                    if (attributeForCheck.textual()) {
+                        prefix = "\"";
+                    }
+                    resultAttributes.add(attributeForCheck.name() + " = " + prefix + attributeForCheck.value() + prefix);
                 }
-                resultAttributes.add(attributeForCheck.name() + " = " + prefix + attributeForCheck.value() + prefix);
             }
         }
         if (!resultAttributes.isEmpty()) {

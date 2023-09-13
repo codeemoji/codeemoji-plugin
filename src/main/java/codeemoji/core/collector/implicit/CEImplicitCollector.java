@@ -23,7 +23,6 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
     public boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
         if (psiElement instanceof PsiJavaFile) {
             psiElement.accept(new JavaRecursiveElementVisitor() {
-
                 @Override
                 public void visitClass(@NotNull PsiClass clazz) {
                     if (hasImplicitBase(clazz)) {
@@ -58,7 +57,13 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
         }
     }
 
-    int calcOffsetForAnnotation(@NotNull PsiAnnotation annotation) {
+    public void addInlayInAttribute(@Nullable PsiAnnotation annotation, @Nullable String attributeName, InlayHintsSink sink, InlayPresentation inlay) {
+        if (annotation != null && attributeName != null) {
+            sink.addInlineElement(calcOffsetForAttribute(annotation, attributeName), false, inlay, false);
+        }
+    }
+
+    private int calcOffsetForAnnotation(@NotNull PsiAnnotation annotation) {
         var result = annotation.getTextOffset();
         var attributes = annotation.getAttributes();
         if (attributes.isEmpty() && !annotation.getText().contains("(") && !annotation.getText().contains(")")) {
@@ -69,10 +74,19 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
         return result;
     }
 
-    public boolean hasImplicitBase(@Nullable PsiClass containingClass) {
-        if (containingClass != null) {
+    private int calcOffsetForAttribute(@NotNull PsiAnnotation annotation, @NotNull String attributeName) {
+        var attributeValue = annotation.findAttributeValue(attributeName);
+        var result = 0;
+        if (attributeValue != null) {
+            result = attributeValue.getTextOffset() + attributeValue.getTextLength() - 1;
+        }
+        return result;
+    }
+
+    public boolean hasImplicitBase(@Nullable PsiClass clazz) {
+        if (clazz != null) {
             for (var bName : getBaseNames()) {
-                if (containingClass.getAnnotation(bName) != null) {
+                if (clazz.getAnnotation(bName) != null) {
                     return true;
                 }
 

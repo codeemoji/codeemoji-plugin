@@ -18,9 +18,9 @@ public class CEJPAImplicitEntity implements CEIJPAImplicit {
     }
 
     @Override
-    public @Nullable String processAttributes(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
+    public @Nullable String createAttributes(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
         var nameAttr = new CEJPAAttribute("name", member.getName(), true);
-        return buildAttributes(annotation, nameAttr);
+        return formatAttributes(annotation, nameAttr);
     }
 
     @Override

@@ -27,9 +27,14 @@ public class CEJPAImplicitColumn implements CEIJPAImplicit {
     }
 
     @Override
-    public @Nullable String processAttributes(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
+    public @Nullable String createAttributes(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
         var nameAttr = new CEJPAAttribute("name", member.getName(), true);
-        return buildAttributes(annotation, nameAttr);
+        var ucValue = annotation.findAttributeValue("unique");
+        if (ucValue != null && ucValue.getText().equalsIgnoreCase("true")) {
+            var nullableAttr = new CEJPAAttribute("nullable", "false", false);
+            return formatAttributes(annotation, nameAttr, nullableAttr);
+        }
+        return formatAttributes(annotation, nameAttr);
     }
 
     @Override
