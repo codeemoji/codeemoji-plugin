@@ -205,11 +205,23 @@ public enum CEUtils {
         if (formattedName.isEmpty()) {
             return false;
         }
-        final var whiteListWords = new String[]{"class", "list", "is"};
-        for (final var word : whiteListWords) {
-            if (formattedName.endsWith(word)) {
-                return true;
+        final var classLoader = CEUtils.class.getClassLoader();
+        try (final var is = classLoader.getResourceAsStream("suffix_whitelist_plural.json")) {
+            if (null != is) {
+                final Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8);
+                final var je = new Gson().fromJson(reader, JsonObject.class);
+                if (null != je) {
+                    var suffixes = je.getAsJsonArray("suffixes");
+                    for (final var suffix : suffixes.asList()) {
+                        if (formattedName.endsWith(suffix.getAsString())) {
+                            return true;
+                        }
+                    }
+
+                }
             }
+        } catch (final RuntimeException | IOException ex) {
+            CEUtils.LOG.info(ex);
         }
         return false;
     }

@@ -36,10 +36,12 @@ public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
                         && CEUtils.isPluralForm(element.getName())) {
                     var typeElement = element.getReturnTypeElement();
                     return !CEUtils.isGenericType(element, typeElement) &&
-                            (Objects.equals(element.getReturnType(), PsiTypes.voidType()) ||
-                                    (!CEUtils.isArrayType(typeElement) &&
-                                            !CEUtils.isIterableType(typeElement) &&
-                                            !CEUtils.isMappableType(typeElement)));
+                            (
+                                    Objects.equals(element.getReturnType(), PsiTypes.voidType()) ||
+                                            (!CEUtils.isArrayType(typeElement) &&
+                                                    !CEUtils.isIterableType(typeElement) &&
+                                                    !CEUtils.isMappableType(typeElement))
+                            );
                 }
                 return false;
             }

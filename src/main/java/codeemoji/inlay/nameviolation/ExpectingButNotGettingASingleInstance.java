@@ -32,9 +32,14 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings
         return new CEMethodCollector(editor, getKeyId(), MANY) {
             @Override
             public boolean needsHint(@NotNull PsiMethod element) {
-                if ((element.getName().startsWith("get") || element.getName().startsWith("return")) && !Objects.equals(element.getReturnType(), PsiTypes.voidType()) && !CEUtils.isPluralForm(element.getName())) {
+                if ((element.getName().startsWith("get") || element.getName().startsWith("return")) &&
+                        !Objects.equals(element.getReturnType(), PsiTypes.voidType()) &&
+                        !CEUtils.isPluralForm(element.getName())) {
                     var typeElement = element.getReturnTypeElement();
-                    return CEUtils.isArrayType(typeElement) || CEUtils.isIterableType(typeElement);
+                    return !CEUtils.sameNameAsType(typeElement, element.getName()) &&
+                            (CEUtils.isArrayType(typeElement) ||
+                                    CEUtils.isIterableType(typeElement) ||
+                                    CEUtils.isMappableType(typeElement));
                 }
                 return false;
             }
