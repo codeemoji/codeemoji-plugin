@@ -51,13 +51,13 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
         return false;
     }
 
-    public void addInlayInAnnotation(@Nullable PsiAnnotation annotation, InlayHintsSink sink, InlayPresentation inlay) {
+    public void addInlayInAnnotation(@Nullable PsiAnnotation annotation, @NotNull InlayHintsSink sink, @NotNull InlayPresentation inlay) {
         if (annotation != null) {
             sink.addInlineElement(calcOffsetForAnnotation(annotation), false, inlay, false);
         }
     }
 
-    public void addInlayInAttribute(@Nullable PsiAnnotation annotation, @Nullable String attributeName, InlayHintsSink sink, InlayPresentation inlay) {
+    public void addInlayInAttribute(@Nullable PsiAnnotation annotation, @Nullable String attributeName, @NotNull InlayHintsSink sink, @NotNull InlayPresentation inlay) {
         if (annotation != null && attributeName != null) {
             sink.addInlineElement(calcOffsetForAttribute(annotation, attributeName), false, inlay, false);
         }

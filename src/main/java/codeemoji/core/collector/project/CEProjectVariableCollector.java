@@ -23,9 +23,9 @@ import static codeemoji.core.collector.project.ProjectRuleSymbol.TYPES_SYMBOL;
 public non-sealed class CEProjectVariableCollector extends CEProjectCollector<PsiVariable, PsiReferenceExpression>
         implements CEProjectTypesInterface<PsiReferenceExpression> {
 
-    private final CERuleElement elementRule;
-    private final String typesKey;
-    private final CESymbol typesSymbol;
+    private final @NotNull CERuleElement elementRule;
+    private final @NotNull String typesKey;
+    private final @NotNull CESymbol typesSymbol;
 
     public CEProjectVariableCollector(@NotNull Editor editor, @NotNull CERuleElement elementRule, @NotNull String mainKeyId) {
         super(editor, mainKeyId + "." + elementRule.getValue());

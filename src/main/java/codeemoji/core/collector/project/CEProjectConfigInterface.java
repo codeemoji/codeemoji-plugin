@@ -16,7 +16,7 @@ public interface CEProjectConfigInterface {
 
     Logger LOG = Logger.getInstance(CEProjectConfigInterface.class);
 
-    default Map<CERuleFeature, List<String>> readRuleFeatures(@NotNull CERuleElement elementRule) {
+    default @NotNull Map<CERuleFeature, List<String>> readRuleFeatures(@NotNull CERuleElement elementRule) {
         Map<CERuleFeature, List<String>> result = new EnumMap<>(CERuleFeature.class);
         for (var rule : getConfigFile().getRules()) {
             var element = rule.element();

@@ -7,6 +7,7 @@ import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +24,7 @@ public class ImplicitAnnotations extends CEProviderMulti<NoSettings> {
     }
 
     @Override
-    public List<InlayHintsCollector> buildCollectors(Editor editor) {
+    public @NotNull List<InlayHintsCollector> buildCollectors(@NotNull Editor editor) {
         return new ArrayList<>(
                 Arrays.asList(
                         new CEJPAEntityCollector(editor, getKeyId(), 0x1F4AD),

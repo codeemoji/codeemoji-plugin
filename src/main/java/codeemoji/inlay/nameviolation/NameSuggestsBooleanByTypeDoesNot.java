@@ -34,7 +34,7 @@ public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NoSettings> {
     }
 
     @Override
-    public InlayHintsCollector buildCollector(Editor editor) {
+    public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
         return new CEVariableCollector(editor, getKeyId(), CONFUSED) {
             @Override
             public boolean needsHint(@NotNull PsiVariable element) {

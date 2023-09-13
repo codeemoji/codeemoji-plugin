@@ -16,7 +16,7 @@ import java.util.List;
 @SuppressWarnings("UnstableApiUsage")
 public class CEJPAEmbeddableCollector extends CEJPACollector {
 
-    public final List<String> baseNames;
+    public final @NotNull List<String> baseNames;
 
     public CEJPAEmbeddableCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable Integer codePoint) {
         super(editor, keyId, codePoint);

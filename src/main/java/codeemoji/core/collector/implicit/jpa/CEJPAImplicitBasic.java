@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 public class CEJPAImplicitBasic implements CEImplicitInterface {
 
-    private final List<String> baseNames;
+    private final @NotNull List<String> baseNames;
     private final List<String> deactivatedCases = new ArrayList<>();
     private final List<String> deactivatedInTypeCases = new ArrayList<>();
 

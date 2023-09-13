@@ -27,7 +27,7 @@ public class GetMethodDoesNotReturn extends CEProvider<NoSettings> {
     }
 
     @Override
-    public InlayHintsCollector buildCollector(Editor editor) {
+    public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
         return new CEMethodCollector(editor, getKeyId(), CONFUSED) {
             @Override
             public boolean needsHint(@NotNull PsiMethod element) {

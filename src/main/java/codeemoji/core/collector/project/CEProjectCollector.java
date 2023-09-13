@@ -20,10 +20,10 @@ import static codeemoji.core.collector.project.ProjectRuleSymbol.ANNOTATIONS_SYM
 public abstract sealed class CEProjectCollector<H extends PsiModifierListOwner, A extends PsiElement> extends CECollector<A>
         implements CEProjectInterface<H, A> permits CEProjectClassCollector, CEProjectMethodCollector, CEProjectVariableCollector {
 
-    protected final CEConfigFile configFile;
-    protected final String mainKeyId;
-    private final String annotationsKey;
-    private final CESymbol annotationsSymbol;
+    protected final @NotNull CEConfigFile configFile;
+    protected final @NotNull String mainKeyId;
+    private final @NotNull String annotationsKey;
+    private final @NotNull CESymbol annotationsSymbol;
 
     protected CEProjectCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
         super(editor);

@@ -13,7 +13,7 @@ import java.util.List;
 @SuppressWarnings("UnstableApiUsage")
 public class CEJPAImplicitTable implements CEImplicitInterface {
 
-    private final List<String> baseNames;
+    private final @NotNull List<String> baseNames;
 
     public CEJPAImplicitTable() {
         this.baseNames = CEJPAUtils.buildBaseNames("Table");

@@ -15,7 +15,7 @@ public final class ProjectRuleSymbol {
     private ProjectRuleSymbol() {
     }
 
-    public static CESymbol detectDefaultSymbol(@NotNull CERuleFeature feature) {
+    public static @NotNull CESymbol detectDefaultSymbol(@NotNull CERuleFeature feature) {
         switch (feature) {
             case ANNOTATIONS -> {
                 return ANNOTATIONS_SYMBOL;

@@ -18,7 +18,7 @@ public abstract non-sealed class CECollector<A extends PsiElement> extends CEInl
     }
 
     @Override
-    public void addInlayInline(@Nullable A element, InlayHintsSink sink, InlayPresentation inlay) {
+    public void addInlayInline(@Nullable A element, @NotNull InlayHintsSink sink, @NotNull InlayPresentation inlay) {
         if (element != null) {
             sink.addInlineElement(calcOffset(element), false, inlay, false);
         }

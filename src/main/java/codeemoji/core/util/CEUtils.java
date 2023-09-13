@@ -40,7 +40,7 @@ public final class CEUtils {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean sameNameAsType(PsiTypeElement typeElement, String fieldName) {
+    public static boolean sameNameAsType(PsiTypeElement typeElement, @Nullable String fieldName) {
         if (fieldName != null) {
             try {
                 var typeName = Objects.requireNonNull(typeElement).getType().getPresentableText();
@@ -63,7 +63,7 @@ public final class CEUtils {
         return words[words.length - 1];
     }
 
-    public static boolean isPluralForm(String name) {
+    public static boolean isPluralForm(@Nullable String name) {
         if (name != null && name.trim().length() > 1) {
             var word = identifyLastWordWithUpperCase(name);
             if (isSuffixWhiteList(name)) {
@@ -76,7 +76,7 @@ public final class CEUtils {
         return false;
     }
 
-    private static String identifyLastWordWithUpperCase(String name) {
+    private static @NotNull String identifyLastWordWithUpperCase(@NotNull String name) {
         String result = null;
         var pattern = Pattern.compile("\\b[A-Z][a-zA-Z]*\\b");
         var matcher = pattern.matcher(name);
@@ -86,7 +86,7 @@ public final class CEUtils {
         return (result != null) ? result : name;
     }
 
-    private static boolean isIrregularPluralForm(String word) {
+    private static boolean isIrregularPluralForm(@NotNull String word) {
         var classLoader = CEUtils.class.getClassLoader();
         try (var is = classLoader.getResourceAsStream("irregular_plural.json")) {
             if (is != null) {
@@ -102,14 +102,14 @@ public final class CEUtils {
         return false;
     }
 
-    private static boolean isCommonPluralForm(String word) {
+    private static boolean isCommonPluralForm(@NotNull String word) {
         var pattern = ".*s$";
         var pat = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
         var mat = pat.matcher(word);
         return mat.matches();
     }
 
-    public static boolean containsOnlySpecialCharacters(String name) {
+    public static boolean containsOnlySpecialCharacters(@NotNull String name) {
         var regex = "^[^a-zA-Z0-9]+$";
         var pattern = Pattern.compile(regex);
         var matcher = pattern.matcher(name);

@@ -25,7 +25,7 @@ public class ShowingSpecifics extends CEProviderMulti<ShowingSpecificsSettings> 
     }
 
     @Override
-    public List<InlayHintsCollector> buildCollectors(Editor editor) {
+    public @NotNull List<InlayHintsCollector> buildCollectors(@NotNull Editor editor) {
         List<InlayHintsCollector> list = new ArrayList<>();
 
         list.add(new CEProjectClassCollector(editor, getKeyId()));

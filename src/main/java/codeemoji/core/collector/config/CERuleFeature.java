@@ -20,11 +20,11 @@ public enum CERuleFeature {
     RETURNS("returns"),
     UNKNOWN("unknown");
 
-    private final String value;
+    private final @NotNull String value;
 
     protected static class EnumDeserializer implements JsonDeserializer<CERuleFeature> {
         @Override
-        public CERuleFeature deserialize(@NotNull JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public @NotNull CERuleFeature deserialize(@NotNull JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             try {
                 return CERuleFeature.valueOf(json.getAsString().toUpperCase());
             } catch (RuntimeException ex) {

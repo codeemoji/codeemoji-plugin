@@ -17,7 +17,7 @@ import java.util.List;
 public sealed interface CEProjectTypesInterface<A extends PsiElement> extends CEProjectConfigInterface
         permits CEProjectMethodCollector, CEProjectVariableCollector {
 
-    default void processTypesFR(@NotNull CERuleElement elementRule, @NotNull CERuleFeature featureRule, PsiType type,
+    default void processTypesFR(@NotNull CERuleElement elementRule, @NotNull CERuleFeature featureRule, @NotNull PsiType type,
                                 @NotNull A addHintElement, @NotNull InlayHintsSink sink,
                                 @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         addInlayTypesFR(addHintElement, needsHintTypesFR(elementRule, featureRule, type), sink,

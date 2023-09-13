@@ -24,7 +24,7 @@ public class ShowingModifiers extends CEProviderMulti<ShowingModifiersSettings> 
     }
 
     @Override
-    public List<InlayHintsCollector> buildCollectors(Editor editor) {
+    public @NotNull List<InlayHintsCollector> buildCollectors(@NotNull Editor editor) {
         List<InlayHintsCollector> list = new ArrayList<>();
         //class
         list.addAll(

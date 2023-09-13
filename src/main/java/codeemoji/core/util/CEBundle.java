@@ -15,11 +15,11 @@ public final class CEBundle {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static CEBundle getInstance() {
+    private static @NotNull CEBundle getInstance() {
         return CEBundleHolder.INSTANCE;
     }
 
-    public static @NotNull String getString(String key) {
+    public static @NotNull String getString(@NotNull String key) {
         return getInstance().getBundle().getString(key);
     }
 

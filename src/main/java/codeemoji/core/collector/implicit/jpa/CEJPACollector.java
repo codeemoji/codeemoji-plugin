@@ -18,8 +18,8 @@ import java.util.List;
 @SuppressWarnings("UnstableApiUsage")
 public abstract class CEJPACollector extends CEImplicitCollector {
 
-    public final String keyId;
-    public final Integer codePoint;
+    public final @NotNull String keyId;
+    public final @Nullable Integer codePoint;
 
     public CEJPACollector(@NotNull Editor editor, @NotNull String keyId, @Nullable Integer codePoint) {
         super(editor);

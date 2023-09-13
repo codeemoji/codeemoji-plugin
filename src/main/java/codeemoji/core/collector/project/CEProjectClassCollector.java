@@ -20,10 +20,10 @@ import static codeemoji.core.collector.project.ProjectRuleSymbol.*;
 public non-sealed class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiElement>
         implements CEProjectReferenceListInterface<PsiReferenceList, PsiElement> {
 
-    private final String extendsKey;
-    private final String implementsKey;
-    private final CESymbol extendsSymbol;
-    private final CESymbol implementsSymbol;
+    private final @NotNull String extendsKey;
+    private final @NotNull String implementsKey;
+    private final @NotNull CESymbol extendsSymbol;
+    private final @NotNull CESymbol implementsSymbol;
 
     public CEProjectClassCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
         super(editor, mainKeyId + ".class");

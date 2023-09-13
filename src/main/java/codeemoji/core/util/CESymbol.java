@@ -13,8 +13,8 @@ public class CESymbol {
     private int codePoint = 0x26AA; //white circle
     private int qualifier = 0;
     private boolean background = true;
-    private String emoji = buildFullEmoji(codePoint, qualifier, true, null);
-    private Icon icon = null;
+    private @NotNull String emoji = buildFullEmoji(codePoint, qualifier, true, null);
+    private @Nullable Icon icon = null;
 
     public CESymbol() {
     }
@@ -42,7 +42,7 @@ public class CESymbol {
         this.emoji = buildFullEmoji(getCodePoint(), getQualifier(), isBackground(), null);
     }
 
-    private static @NotNull String buildFullEmoji(int codePoint, int qualifier, boolean addColor, String suffixText) {
+    private static @NotNull String buildFullEmoji(int codePoint, int qualifier, boolean addColor, @Nullable String suffixText) {
         var codePointChars = Character.toChars(codePoint);
         var withoutColorChars = codePointChars;
         var result = new String(withoutColorChars);

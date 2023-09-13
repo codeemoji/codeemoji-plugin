@@ -16,7 +16,7 @@ import java.awt.*;
 public abstract sealed class CEInlayProcessor permits CECollector {
 
     private final Editor editor;
-    private final PresentationFactory factory;
+    private final @NotNull PresentationFactory factory;
 
     public CEInlayProcessor(Editor editor) {
         this.editor = editor;
@@ -48,7 +48,7 @@ public abstract sealed class CEInlayProcessor permits CECollector {
         return formatInlay(getFactory().smallText(fullText), keyTooltip, suffixTooltip);
     }
 
-    private InlayPresentation formatInlay(@NotNull InlayPresentation inlay, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+    private @NotNull InlayPresentation formatInlay(@NotNull InlayPresentation inlay, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         inlay = buildInsetValuesForInlay(inlay);
         inlay = getFactory().withCursorOnHover(inlay, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         var tooltip = getTooltip(keyTooltip);
@@ -62,7 +62,7 @@ public abstract sealed class CEInlayProcessor permits CECollector {
     }
 
     //TODO: refactor internal api usage
-    private @NotNull InlayPresentation buildInsetValuesForInlay(InlayPresentation inlay) {
+    private @NotNull InlayPresentation buildInsetValuesForInlay(@NotNull InlayPresentation inlay) {
         var inset = new InsetValueProvider() {
             @Override
             public int getTop() {

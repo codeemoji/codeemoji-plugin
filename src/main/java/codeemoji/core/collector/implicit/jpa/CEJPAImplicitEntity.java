@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 public class CEJPAImplicitEntity implements CEImplicitInterface {
 
-    private final List<String> baseNames;
+    private final @NotNull List<String> baseNames;
 
     public CEJPAImplicitEntity() {
         this.baseNames = CEJPAUtils.buildBaseNames("Entity");

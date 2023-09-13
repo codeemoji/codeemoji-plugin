@@ -22,8 +22,8 @@ import static codeemoji.core.collector.project.ProjectRuleSymbol.RETURNS_SYMBOL;
 public non-sealed class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiMethodCallExpression>
         implements CEProjectTypesInterface<PsiMethodCallExpression> {
 
-    private final String returnsKey;
-    private final CESymbol returnsSymbol;
+    private final @NotNull String returnsKey;
+    private final @NotNull CESymbol returnsSymbol;
 
     public CEProjectMethodCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
         super(editor, mainKeyId + ".method");

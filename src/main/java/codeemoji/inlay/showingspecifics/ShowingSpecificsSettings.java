@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 @State(name = "ShowingSpecificsSettings", storages = @Storage("codeemoji-showing-specifics-settings.xml"))
 public class ShowingSpecificsSettings implements PersistentStateComponent<ShowingSpecificsSettings> {
 
-    private final String howToConfigureURL;
+    private final @NotNull String howToConfigureURL;
 
     public ShowingSpecificsSettings() {
         this.howToConfigureURL = "https://github.com/codeemoji/codeemoji-plugin/tree/develop#cases-of-showing-specifics-of-projects";

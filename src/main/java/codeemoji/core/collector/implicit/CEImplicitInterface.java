@@ -89,7 +89,7 @@ public interface CEImplicitInterface {
         return false;
     }
 
-    default String formatAttributes(@NotNull PsiAnnotation annotation, CEImplicitAttribute @NotNull ... attributes) {
+    default @Nullable String formatAttributes(@NotNull PsiAnnotation annotation, CEImplicitAttribute @NotNull ... attributes) {
         StringBuilder finalResult = null;
         List<String> resultAttributes = new ArrayList<>();
         for (var attributeForCheck : attributes) {
