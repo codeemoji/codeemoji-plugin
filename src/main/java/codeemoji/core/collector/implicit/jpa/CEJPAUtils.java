@@ -31,7 +31,7 @@ public final class CEJPAUtils {
     }
 
     public static @Nullable PsiAnnotation searchAnnotation(@NotNull PsiMember member, String searched) {
-        PsiAnnotation ann = member.getAnnotation(NS1 + searched);
+        var ann = member.getAnnotation(NS1 + searched);
         return (ann == null) ? member.getAnnotation(NS2 + searched) : ann;
     }
 }

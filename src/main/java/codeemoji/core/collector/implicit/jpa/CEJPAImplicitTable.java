@@ -45,7 +45,7 @@ public class CEJPAImplicitTable implements CEImplicitInterface {
 
     @Override
     public @Nullable String updateAttributes(@NotNull PsiMember member, @NotNull PsiAnnotation annotation, @NotNull String attributeName) {
-        final String UNIQUE_CONSTRAINTS_NAME = "uniqueConstraints";
+        final var UNIQUE_CONSTRAINTS_NAME = "uniqueConstraints";
         if (attributeName.equalsIgnoreCase(UNIQUE_CONSTRAINTS_NAME) && annotation.findAttribute(UNIQUE_CONSTRAINTS_NAME) != null) {
             return processUniqueConstraints(member, annotation);
         }
@@ -53,7 +53,7 @@ public class CEJPAImplicitTable implements CEImplicitInterface {
     }
 
     private @Nullable String processUniqueConstraints(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
-        StringBuilder result = new StringBuilder();
+        var result = new StringBuilder();
         var ucValue = annotation.findAttributeValue("uniqueConstraints");
         var ucValueCompare = ucValue != null ? ucValue.getText().replaceAll(" ", "") : "{}";
         if (member instanceof PsiClass clazz) {
