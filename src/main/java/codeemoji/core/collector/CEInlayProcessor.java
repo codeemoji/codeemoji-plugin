@@ -18,7 +18,7 @@ public abstract sealed class CEInlayProcessor permits CECollector {
     private final Editor editor;
     private final @NotNull PresentationFactory factory;
 
-    protected CEInlayProcessor(final Editor editor) {
+    CEInlayProcessor(final Editor editor) {
         this.editor = editor;
         factory = new PresentationFactory(this.editor);
     }
@@ -40,7 +40,7 @@ public abstract sealed class CEInlayProcessor permits CECollector {
         return this.buildInlayWithText(symbol.getEmoji(), keyTooltip, suffixTooltip);
     }
 
-    protected InlayPresentation buildInlayWithIcon(@NotNull final Icon icon, @NotNull final String keyTooltip, @Nullable final String suffixTooltip) {
+    private InlayPresentation buildInlayWithIcon(@NotNull final Icon icon, @NotNull final String keyTooltip, @Nullable final String suffixTooltip) {
         return this.formatInlay(factory.smallScaledIcon(icon), keyTooltip, suffixTooltip);
     }
 

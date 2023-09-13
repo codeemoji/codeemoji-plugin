@@ -25,7 +25,7 @@ public abstract sealed class CEProjectCollector<H extends PsiModifierListOwner, 
     private final @NotNull String annotationsKey;
     private final @NotNull CESymbol annotationsSymbol;
 
-    protected CEProjectCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
+    CEProjectCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
         super(editor);
         this.configFile = new CEConfigFile(editor.getProject());
         this.mainKeyId = "inlay." + mainKeyId;

@@ -12,8 +12,8 @@ import static com.intellij.psi.PsiModifier.DEFAULT;
 
 public class ModifierClassCollector extends CEReferenceClassCollector {
 
-    final boolean activated;
-    final String modifier;
+    private final boolean activated;
+    private final String modifier;
 
     public ModifierClassCollector(@NotNull final Editor editor, @NotNull final String mainKeyId, @Nullable final CESymbol symbol,
                                   final String modifier, final boolean activated) {

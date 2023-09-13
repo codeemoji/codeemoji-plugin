@@ -15,7 +15,7 @@ import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.*;
 import static com.intellij.psi.PsiModifier.*;
 
 @SuppressWarnings({"UnstableApiUsage", "DuplicatedCode"})
-public record ShowingModifiersConfigurable(ShowingModifiersSettings settings) implements ImmediateConfigurable {
+record ShowingModifiersConfigurable(ShowingModifiersSettings settings) implements ImmediateConfigurable {
 
     private static @NotNull JPanel createBasicInnerPanel(@NotNull String typeTitle) {
         var result = new JPanel(new GridLayout(10, 1));

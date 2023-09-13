@@ -83,7 +83,8 @@ public non-sealed class CEProjectMethodCollector extends CEProjectCollector<PsiM
         return this.readRuleEmoji(METHOD, ANNOTATIONS, ANNOTATIONS_SYMBOL);
     }
 
-    public @NotNull CESymbol getReturnsSymbol() {
+    @NotNull
+    private CESymbol getReturnsSymbol() {
         return this.readRuleEmoji(METHOD, RETURNS, RETURNS_SYMBOL);
     }
 

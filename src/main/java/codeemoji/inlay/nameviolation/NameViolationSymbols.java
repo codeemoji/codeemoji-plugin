@@ -2,7 +2,7 @@ package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.util.CESymbol;
 
-public final class NameViolationSymbols {
+final class NameViolationSymbols {
 
     public static final CESymbol SMALL_NAME = new CESymbol(0x1F90F);
     public static final CESymbol CONFUSED = new CESymbol(0x1F937);

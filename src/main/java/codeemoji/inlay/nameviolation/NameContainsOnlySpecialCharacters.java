@@ -9,6 +9,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -37,7 +39,7 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NoSettings> {
         return new CEVariableCollector(editor, getKeyId(), CONFUSED) {
             @Override
             public boolean needsHint(@NotNull PsiVariable element) {
-                return CEUtils.containsOnlySpecialCharacters(element.getName());
+                return CEUtils.containsOnlySpecialCharacters(Objects.requireNonNull(element.getName()));
             }
         };
     }

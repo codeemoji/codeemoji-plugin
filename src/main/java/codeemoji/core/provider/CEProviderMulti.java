@@ -19,5 +19,5 @@ public abstract class CEProviderMulti<S> extends CEProvider<S> {
         return new CECollectorMulti(buildCollectors(editor));
     }
 
-    public abstract List<InlayHintsCollector> buildCollectors(Editor editor);
+    protected abstract List<InlayHintsCollector> buildCollectors(Editor editor);
 }

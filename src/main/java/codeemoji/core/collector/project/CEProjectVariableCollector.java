@@ -105,7 +105,8 @@ public non-sealed class CEProjectVariableCollector extends CEProjectCollector<Ps
         return this.readRuleEmoji(elementRule, ANNOTATIONS, ANNOTATIONS_SYMBOL);
     }
 
-    public @NotNull CESymbol getTypesSymbol() {
+    @NotNull
+    private CESymbol getTypesSymbol() {
         return this.readRuleEmoji(elementRule, TYPES, TYPES_SYMBOL);
     }
 }

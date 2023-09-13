@@ -7,7 +7,6 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMember;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,7 @@ public class CEJPAEmbeddableCollector extends CEJPACollector {
 
     public final @NotNull List<String> baseNames;
 
-    public CEJPAEmbeddableCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable Integer codePoint) {
+    public CEJPAEmbeddableCollector(@NotNull Editor editor, @NotNull String keyId, int codePoint) {
         super(editor, keyId, codePoint);
         this.baseNames = CEJPAUtils.buildBaseNames("Embeddable");
     }

@@ -2,7 +2,7 @@ package codeemoji.inlay.showingmodifiers;
 
 import codeemoji.core.util.CESymbol;
 
-public final class ShowingModifiersSymbols {
+final class ShowingModifiersSymbols {
 
     public static final CESymbol PUBLIC_SYMBOL = new CESymbol(0x1F30E); //globe
     public static final CESymbol DEFAULT_SYMBOL = new CESymbol(0x1F310); //globe with meridians

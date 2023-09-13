@@ -83,7 +83,7 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
         return result;
     }
 
-    public boolean hasImplicitBase(@Nullable final PsiClass clazz) {
+    private boolean hasImplicitBase(@Nullable final PsiClass clazz) {
         if (null != clazz) {
             for (final var bName : this.getBaseNames()) {
                 if (null != clazz.getAnnotation(bName)) {
@@ -97,5 +97,5 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
 
     public abstract List<String> getBaseNames();
 
-    public abstract void processImplicitsFor(@NotNull PsiMember member, @NotNull InlayHintsSink sink);
+    protected abstract void processImplicitsFor(@NotNull PsiMember member, @NotNull InlayHintsSink sink);
 }

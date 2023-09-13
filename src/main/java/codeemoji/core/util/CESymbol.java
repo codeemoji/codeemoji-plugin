@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.util.Arrays;
 
+@SuppressWarnings("ConstantValue")
 @Data
 public class CESymbol {
 

@@ -122,8 +122,8 @@ public record ShowingSpecificsConfigurable(
         return result;
     }
 
-    public void buildInnerElementPanel(@NotNull final JPanel result, @NotNull final GridBagConstraints gbc,
-                                       @NotNull final CERuleElement elementRule, @NotNull final String panelTitle) {
+    private void buildInnerElementPanel(@NotNull final JPanel result, @NotNull final GridBagConstraints gbc,
+                                        @NotNull final CERuleElement elementRule, @NotNull final String panelTitle) {
         final var panel = ShowingSpecificsConfigurable.createBasicInnerBagPanel(panelTitle, true);
         final var features = this.readRuleFeatures(elementRule);
         if (!features.isEmpty()) {

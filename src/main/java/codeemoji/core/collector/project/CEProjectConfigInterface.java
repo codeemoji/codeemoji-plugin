@@ -21,7 +21,7 @@ public interface CEProjectConfigInterface {
         for (final var rule : this.getConfigFile().getRules()) {
             final var element = rule.element();
             final var feature = rule.feature();
-            if (null != element && null != feature && (element == elementRule)) {
+            if (null != feature && (element == elementRule)) {
                 result.put(feature, rule.values());
             }
         }
@@ -33,8 +33,7 @@ public interface CEProjectConfigInterface {
         for (final var rule : this.getConfigFile().getRules()) {
             final var element = rule.element();
             final var feature = rule.feature();
-            if (null != element && null != feature &&
-                    element == elementRule && feature == featureRule) {
+            if (element == elementRule && feature == featureRule) {
                 final var emoji = rule.emoji();
                 if (null != emoji) {
                     try {

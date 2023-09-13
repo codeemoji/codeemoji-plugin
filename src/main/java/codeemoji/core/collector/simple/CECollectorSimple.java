@@ -22,14 +22,14 @@ public abstract sealed class CECollectorSimple<H extends PsiElement, A extends P
 
     private final InlayPresentation inlay;
 
-    protected CECollectorSimple(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    CECollectorSimple(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor);
         this.inlay = buildInlayWithEmoji(symbol, "inlay." + keyId + ".tooltip", null);
     }
 
-    protected final void addInlay(@Nullable A element, InlayHintsSink sink) {
+    final void addInlay(@Nullable A element, InlayHintsSink sink) {
         addInlayInline(element, sink, getInlay());
     }
 
-    public abstract boolean needsHint(@NotNull H element);
+    protected abstract boolean needsHint(@NotNull H element);
 }

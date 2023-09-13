@@ -19,15 +19,15 @@ import java.util.List;
 public abstract class CEJPACollector extends CEImplicitCollector {
 
     public final @NotNull String keyId;
-    public final @Nullable Integer codePoint;
+    public final int codePoint;
 
-    protected CEJPACollector(@NotNull final Editor editor, @NotNull final String keyId, @Nullable final Integer codePoint) {
+    CEJPACollector(@NotNull final Editor editor, @NotNull final String keyId, final int codePoint) {
         super(editor);
         this.keyId = keyId;
         this.codePoint = codePoint;
     }
 
-    protected void processImplicits(@NotNull final PsiMember member, @NotNull final List<? extends CEImplicitInterface> implicits, @NotNull final InlayHintsSink sink) {
+    void processImplicits(@NotNull final PsiMember member, @NotNull final List<? extends CEImplicitInterface> implicits, @NotNull final InlayHintsSink sink) {
         for (final var implicit : implicits) {
             var hasImplicitAnnotation = false;
             for (final var name : implicit.getBaseNames()) {

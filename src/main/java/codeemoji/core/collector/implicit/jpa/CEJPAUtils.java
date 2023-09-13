@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public enum CEJPAUtils {
+enum CEJPAUtils {
     ;
 
     private static final String NS1 = "javax.persistence.";

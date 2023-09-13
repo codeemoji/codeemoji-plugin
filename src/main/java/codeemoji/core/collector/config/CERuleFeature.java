@@ -22,7 +22,7 @@ public enum CERuleFeature {
 
     private final @NotNull String value;
 
-    protected static class EnumDeserializer implements JsonDeserializer<CERuleFeature> {
+    static class EnumDeserializer implements JsonDeserializer<CERuleFeature> {
         @Override
         public @NotNull CERuleFeature deserialize(@NotNull final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
             try {

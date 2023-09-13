@@ -122,11 +122,13 @@ public non-sealed class CEProjectClassCollector extends CEProjectCollector<PsiCl
         return this.readRuleEmoji(CLASS, ANNOTATIONS, ANNOTATIONS_SYMBOL);
     }
 
-    public @NotNull CESymbol getExtendsSymbol() {
+    @NotNull
+    private CESymbol getExtendsSymbol() {
         return this.readRuleEmoji(CLASS, EXTENDS, EXTENDS_SYMBOL);
     }
 
-    public @NotNull CESymbol getImplementsSymbol() {
+    @NotNull
+    private CESymbol getImplementsSymbol() {
         return this.readRuleEmoji(CLASS, IMPLEMENTS, IMPLEMENTS_SYMBOL);
     }
 

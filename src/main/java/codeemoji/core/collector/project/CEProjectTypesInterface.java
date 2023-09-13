@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-public sealed interface CEProjectTypesInterface<A extends PsiElement> extends CEProjectConfigInterface
+sealed interface CEProjectTypesInterface<A extends PsiElement> extends CEProjectConfigInterface
         permits CEProjectMethodCollector, CEProjectVariableCollector {
 
     default void processTypesFR(@NotNull final CERuleElement elementRule, @NotNull final CERuleFeature featureRule, @NotNull final PsiType type,
