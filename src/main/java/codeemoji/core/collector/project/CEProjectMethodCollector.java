@@ -11,16 +11,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static codeemoji.core.collector.config.CERuleElement.METHOD;
+import static codeemoji.core.collector.config.CERuleFeature.ANNOTATIONS;
+import static codeemoji.core.collector.config.CERuleFeature.RETURNS;
 import static codeemoji.core.collector.project.ProjectRuleSymbol.ANNOTATIONS_SYMBOL;
 import static codeemoji.core.collector.project.ProjectRuleSymbol.RETURNS_SYMBOL;
-import static codeemoji.core.collector.project.config.CERuleElement.METHOD;
-import static codeemoji.core.collector.project.config.CERuleFeature.ANNOTATIONS;
-import static codeemoji.core.collector.project.config.CERuleFeature.RETURNS;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
 public non-sealed class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiMethodCallExpression>
-        implements CEIProjectTypes<PsiMethodCallExpression> {
+        implements CEProjectTypesInterface<PsiMethodCallExpression> {
 
     private final String returnsKey;
     private final CESymbol returnsSymbol;

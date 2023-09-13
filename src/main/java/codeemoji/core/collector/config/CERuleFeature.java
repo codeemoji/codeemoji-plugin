@@ -1,4 +1,4 @@
-package codeemoji.core.collector.project.config;
+package codeemoji.core.collector.config;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

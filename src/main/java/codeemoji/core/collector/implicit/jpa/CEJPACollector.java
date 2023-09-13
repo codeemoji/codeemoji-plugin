@@ -1,5 +1,7 @@
-package codeemoji.core.collector.implicit;
+package codeemoji.core.collector.implicit.jpa;
 
+import codeemoji.core.collector.implicit.CEImplicitCollector;
+import codeemoji.core.collector.implicit.CEImplicitInterface;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
@@ -14,8 +16,7 @@ import java.util.List;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public abstract sealed class CEJPACollector extends CEImplicitCollector
-        permits CEJPAEmbeddableCollector, CEJPAEntityCollector {
+public abstract class CEJPACollector extends CEImplicitCollector {
 
     public final String keyId;
     public final Integer codePoint;
@@ -26,7 +27,7 @@ public abstract sealed class CEJPACollector extends CEImplicitCollector
         this.codePoint = codePoint;
     }
 
-    protected void processImplicits(@NotNull PsiMember member, @NotNull List<CEIJPAImplicit> implicits, @NotNull InlayHintsSink sink) {
+    protected void processImplicits(@NotNull PsiMember member, @NotNull List<CEImplicitInterface> implicits, @NotNull InlayHintsSink sink) {
         for (var implicit : implicits) {
             var hasImplicitAnnotation = false;
             for (var name : implicit.getBaseNames()) {

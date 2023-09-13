@@ -20,7 +20,7 @@ import java.util.Objects;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public abstract non-sealed class CEProvider<S> implements CEIProvider<S> {
+public abstract non-sealed class CEProvider<S> implements CEProviderInterface<S> {
 
     private static final Logger LOG = Logger.getInstance(CEProvider.class);
 

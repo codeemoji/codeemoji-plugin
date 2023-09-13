@@ -1,5 +1,7 @@
-package codeemoji.core.collector.implicit;
+package codeemoji.core.collector.implicit.jpa;
 
+import codeemoji.core.collector.implicit.CEImplicitAttribute;
+import codeemoji.core.collector.implicit.CEImplicitInterface;
 import codeemoji.core.util.CEUtils;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiField;
@@ -12,22 +14,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class CEJPAImplicitBasic implements CEIJPAImplicit {
+public class CEJPAImplicitBasic implements CEImplicitInterface {
 
     private final List<String> baseNames;
     private final List<String> deactivatedCases = new ArrayList<>();
     private final List<String> deactivatedInTypeCases = new ArrayList<>();
 
     public CEJPAImplicitBasic() {
-        this.baseNames = CEJPAPersistenceUtils.buildBaseNames("Basic");
-        deactivatedCases.addAll(CEJPAPersistenceUtils.buildBaseListFor("Transient"));
-        deactivatedInTypeCases.addAll(CEJPAPersistenceUtils.buildBaseListFor("Embeddable"));
+        this.baseNames = CEJPAUtils.buildBaseNames("Basic");
+        deactivatedCases.addAll(CEJPAUtils.buildBaseListFor("Transient"));
+        deactivatedInTypeCases.addAll(CEJPAUtils.buildBaseListFor("Embeddable"));
     }
 
     @Override
     public @Nullable String createAttributes(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
-        if (CEJPAPersistenceUtils.searchAnnotation(member, "Id") != null) {
-            var optionalAttr = new CEJPAAttribute("optional", "false", false);
+        if (CEJPAUtils.searchAnnotation(member, "Id") != null) {
+            var optionalAttr = new CEImplicitAttribute("optional", "false", false);
             return formatAttributes(annotation, optionalAttr);
         }
         return null;

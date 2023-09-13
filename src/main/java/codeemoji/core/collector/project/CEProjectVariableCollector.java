@@ -1,6 +1,6 @@
 package codeemoji.core.collector.project;
 
-import codeemoji.core.collector.project.config.CERuleElement;
+import codeemoji.core.collector.config.CERuleElement;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
@@ -13,15 +13,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static codeemoji.core.collector.config.CERuleFeature.ANNOTATIONS;
+import static codeemoji.core.collector.config.CERuleFeature.TYPES;
 import static codeemoji.core.collector.project.ProjectRuleSymbol.ANNOTATIONS_SYMBOL;
 import static codeemoji.core.collector.project.ProjectRuleSymbol.TYPES_SYMBOL;
-import static codeemoji.core.collector.project.config.CERuleFeature.ANNOTATIONS;
-import static codeemoji.core.collector.project.config.CERuleFeature.TYPES;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
 public non-sealed class CEProjectVariableCollector extends CEProjectCollector<PsiVariable, PsiReferenceExpression>
-        implements CEIProjectTypes<PsiReferenceExpression> {
+        implements CEProjectTypesInterface<PsiReferenceExpression> {
 
     private final CERuleElement elementRule;
     private final String typesKey;

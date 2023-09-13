@@ -11,14 +11,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static codeemoji.core.collector.config.CERuleElement.CLASS;
+import static codeemoji.core.collector.config.CERuleFeature.*;
 import static codeemoji.core.collector.project.ProjectRuleSymbol.*;
-import static codeemoji.core.collector.project.config.CERuleElement.CLASS;
-import static codeemoji.core.collector.project.config.CERuleFeature.*;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
 public non-sealed class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiElement>
-        implements CEIProjectReferenceList<PsiReferenceList, PsiElement> {
+        implements CEProjectReferenceListInterface<PsiReferenceList, PsiElement> {
 
     private final String extendsKey;
     private final String implementsKey;

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public abstract non-sealed class CECollector<A extends PsiElement> extends CEInlayProcessor implements CEICollector<A> {
+public abstract non-sealed class CECollector<A extends PsiElement> extends CEInlayProcessor implements CECollectorInterface<A> {
 
     protected CECollector(Editor editor) {
         super(editor);

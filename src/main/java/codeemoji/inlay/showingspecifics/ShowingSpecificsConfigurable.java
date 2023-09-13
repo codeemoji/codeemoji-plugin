@@ -1,10 +1,10 @@
 package codeemoji.inlay.showingspecifics;
 
-import codeemoji.core.collector.project.CEIProjectConfig;
+import codeemoji.core.collector.config.CEConfigFile;
+import codeemoji.core.collector.config.CERuleElement;
+import codeemoji.core.collector.config.CERuleFeature;
+import codeemoji.core.collector.project.CEProjectConfigInterface;
 import codeemoji.core.collector.project.ProjectRuleSymbol;
-import codeemoji.core.collector.project.config.CEConfigFile;
-import codeemoji.core.collector.project.config.CERuleElement;
-import codeemoji.core.collector.project.config.CERuleFeature;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.ChangeListener;
@@ -25,13 +25,13 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
-import static codeemoji.core.collector.project.config.CERuleElement.*;
+import static codeemoji.core.collector.config.CERuleElement.*;
 import static java.awt.GridBagConstraints.HORIZONTAL;
 import static java.awt.GridBagConstraints.WEST;
 
 @SuppressWarnings("UnstableApiUsage")
 public record ShowingSpecificsConfigurable(
-        ShowingSpecificsSettings settings) implements ImmediateConfigurable, CEIProjectConfig {
+        ShowingSpecificsSettings settings) implements ImmediateConfigurable, CEProjectConfigInterface {
 
     private static @NotNull JPanel createBasicInnerBagPanel(@NotNull String title, boolean withBorder) {
         var result = new JPanel(new GridBagLayout());

@@ -1,5 +1,7 @@
-package codeemoji.core.collector.implicit;
+package codeemoji.core.collector.implicit.jpa;
 
+import codeemoji.core.collector.implicit.CEImplicitAttribute;
+import codeemoji.core.collector.implicit.CEImplicitInterface;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMember;
@@ -14,24 +16,24 @@ import static com.intellij.psi.PsiModifier.FINAL;
 import static com.intellij.psi.PsiModifier.STATIC;
 
 @Getter
-public class CEJPAImplicitColumn implements CEIJPAImplicit {
+public class CEJPAImplicitColumn implements CEImplicitInterface {
 
     private final List<String> baseNames;
     private final List<String> deactivatedCases = new ArrayList<>();
     private final List<String> deactivatedInTypeCases = new ArrayList<>();
 
     public CEJPAImplicitColumn() {
-        this.baseNames = CEJPAPersistenceUtils.buildBaseNames("Column");
-        deactivatedCases.addAll(CEJPAPersistenceUtils.buildBaseListFor("Transient", "JoinColumn", "OneToMany", "AttributeOverride"));
-        deactivatedInTypeCases.addAll(CEJPAPersistenceUtils.buildBaseListFor("Embeddable"));
+        this.baseNames = CEJPAUtils.buildBaseNames("Column");
+        deactivatedCases.addAll(CEJPAUtils.buildBaseListFor("Transient", "JoinColumn", "OneToMany", "AttributeOverride"));
+        deactivatedInTypeCases.addAll(CEJPAUtils.buildBaseListFor("Embeddable"));
     }
 
     @Override
     public @Nullable String createAttributes(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
-        var nameAttr = new CEJPAAttribute("name", member.getName(), true);
+        var nameAttr = new CEImplicitAttribute("name", member.getName(), true);
         var ucValue = annotation.findAttributeValue("unique");
         if (ucValue != null && ucValue.getText().equalsIgnoreCase("true")) {
-            var nullableAttr = new CEJPAAttribute("nullable", "false", false);
+            var nullableAttr = new CEImplicitAttribute("nullable", "false", false);
             return formatAttributes(annotation, nameAttr, nullableAttr);
         }
         return formatAttributes(annotation, nameAttr);

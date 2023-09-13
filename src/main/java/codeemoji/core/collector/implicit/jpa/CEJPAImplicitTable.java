@@ -1,5 +1,7 @@
-package codeemoji.core.collector.implicit;
+package codeemoji.core.collector.implicit.jpa;
 
+import codeemoji.core.collector.implicit.CEImplicitAttribute;
+import codeemoji.core.collector.implicit.CEImplicitInterface;
 import com.intellij.psi.*;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -9,12 +11,12 @@ import java.util.List;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public class CEJPAImplicitTable implements CEIJPAImplicit {
+public class CEJPAImplicitTable implements CEImplicitInterface {
 
     private final List<String> baseNames;
 
     public CEJPAImplicitTable() {
-        this.baseNames = CEJPAPersistenceUtils.buildBaseNames("Table");
+        this.baseNames = CEJPAUtils.buildBaseNames("Table");
     }
 
     @Override
@@ -23,18 +25,18 @@ public class CEJPAImplicitTable implements CEIJPAImplicit {
         if (attributeNameValue != null) {
             attributeNameValue = attributeNameValue.toLowerCase();
         }
-        var ann = CEJPAPersistenceUtils.searchAnnotation(member, "Entity");
+        var ann = CEJPAUtils.searchAnnotation(member, "Entity");
         if (ann != null) {
             var valueAttribute = ann.findAttributeValue("name");
             if (valueAttribute != null && !valueAttribute.getText().equalsIgnoreCase("\"\"")) {
                 attributeNameValue = valueAttribute.getText().toLowerCase().replace("\"", "");
             }
         }
-        var nameAttr = new CEJPAAttribute("name", attributeNameValue, true);
+        var nameAttr = new CEImplicitAttribute("name", attributeNameValue, true);
         if (annotation.findAttribute("uniqueConstraints") == null) {
             var processUq = processUniqueConstraints(member, annotation);
             var uqValue = processUq != null ? "{" + processUq + "}" : null;
-            var uniqueConstraintsAttr = new CEJPAAttribute("uniqueConstraints", uqValue, false);
+            var uniqueConstraintsAttr = new CEImplicitAttribute("uniqueConstraints", uqValue, false);
             return formatAttributes(annotation, nameAttr, uniqueConstraintsAttr);
         } else {
             return formatAttributes(annotation, nameAttr);
@@ -58,7 +60,7 @@ public class CEJPAImplicitTable implements CEIJPAImplicit {
             clazz.accept(new JavaRecursiveElementVisitor() {
                 @Override
                 public void visitField(@NotNull PsiField field) {
-                    var columnAnnotation = CEJPAPersistenceUtils.searchAnnotation(field, "Column");
+                    var columnAnnotation = CEJPAUtils.searchAnnotation(field, "Column");
                     if (columnAnnotation != null) {
                         var uniqueValue = columnAnnotation.findAttributeValue("unique");
                         if (uniqueValue != null && uniqueValue.getText().equalsIgnoreCase("true")) {

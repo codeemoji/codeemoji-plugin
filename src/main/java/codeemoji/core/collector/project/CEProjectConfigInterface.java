@@ -1,8 +1,8 @@
 package codeemoji.core.collector.project;
 
-import codeemoji.core.collector.project.config.CEConfigFile;
-import codeemoji.core.collector.project.config.CERuleElement;
-import codeemoji.core.collector.project.config.CERuleFeature;
+import codeemoji.core.collector.config.CEConfigFile;
+import codeemoji.core.collector.config.CERuleElement;
+import codeemoji.core.collector.config.CERuleFeature;
 import codeemoji.core.util.CESymbol;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -12,9 +12,9 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-public interface CEIProjectConfig {
+public interface CEProjectConfigInterface {
 
-    Logger LOG = Logger.getInstance(CEIProjectConfig.class);
+    Logger LOG = Logger.getInstance(CEProjectConfigInterface.class);
 
     default Map<CERuleFeature, List<String>> readRuleFeatures(@NotNull CERuleElement elementRule) {
         Map<CERuleFeature, List<String>> result = new EnumMap<>(CERuleFeature.class);

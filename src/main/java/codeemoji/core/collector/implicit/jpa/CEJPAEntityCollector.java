@@ -1,5 +1,6 @@
-package codeemoji.core.collector.implicit;
+package codeemoji.core.collector.implicit.jpa;
 
+import codeemoji.core.collector.implicit.CEImplicitInterface;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
@@ -14,25 +15,25 @@ import java.util.List;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public non-sealed class CEJPAEntityCollector extends CEJPACollector {
+public class CEJPAEntityCollector extends CEJPACollector {
 
     public final List<String> baseNames;
 
     public CEJPAEntityCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable Integer codePoint) {
         super(editor, keyId, codePoint);
-        this.baseNames = CEJPAPersistenceUtils.buildBaseNames("Entity");
+        this.baseNames = CEJPAUtils.buildBaseNames("Entity");
     }
 
     @Override
     public void processImplicitsFor(@NotNull PsiMember member, @NotNull InlayHintsSink sink) {
         if (member instanceof PsiClass clazz) {
-            var implicits = new ArrayList<CEIJPAImplicit>();
+            var implicits = new ArrayList<CEImplicitInterface>();
             implicits.add(new CEJPAImplicitEntity());
             implicits.add(new CEJPAImplicitTable());
             processImplicits(clazz, implicits, sink);
         }
         if (member instanceof PsiField field) {
-            var implicits = new ArrayList<CEIJPAImplicit>();
+            var implicits = new ArrayList<CEImplicitInterface>();
             implicits.add(new CEJPAImplicitColumn());
             implicits.add(new CEJPAImplicitBasic());
             processImplicits(field, implicits, sink);

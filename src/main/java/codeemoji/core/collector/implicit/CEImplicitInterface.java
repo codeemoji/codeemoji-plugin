@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("UnstableApiUsage")
-public interface CEIJPAImplicit {
+public interface CEImplicitInterface {
 
     List<String> getBaseNames();
 
@@ -89,7 +89,7 @@ public interface CEIJPAImplicit {
         return false;
     }
 
-    default String formatAttributes(@NotNull PsiAnnotation annotation, CEJPAAttribute @NotNull ... attributes) {
+    default String formatAttributes(@NotNull PsiAnnotation annotation, CEImplicitAttribute @NotNull ... attributes) {
         StringBuilder finalResult = null;
         List<String> resultAttributes = new ArrayList<>();
         for (var attributeForCheck : attributes) {

@@ -1,6 +1,6 @@
 package codeemoji.core.collector.project;
 
-import codeemoji.core.collector.project.config.CERuleFeature;
+import codeemoji.core.collector.config.CERuleFeature;
 import codeemoji.core.util.CESymbol;
 import org.jetbrains.annotations.NotNull;
 

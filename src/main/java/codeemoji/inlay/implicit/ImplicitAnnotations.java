@@ -1,7 +1,7 @@
 package codeemoji.inlay.implicit;
 
-import codeemoji.core.collector.implicit.CEJPAEmbeddableCollector;
-import codeemoji.core.collector.implicit.CEJPAEntityCollector;
+import codeemoji.core.collector.implicit.jpa.CEJPAEmbeddableCollector;
+import codeemoji.core.collector.implicit.jpa.CEJPAEntityCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;

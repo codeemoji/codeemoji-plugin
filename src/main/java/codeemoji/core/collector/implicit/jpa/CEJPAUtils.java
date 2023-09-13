@@ -1,4 +1,4 @@
-package codeemoji.core.collector.implicit;
+package codeemoji.core.collector.implicit.jpa;
 
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiMember;
@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public final class CEJPAPersistenceUtils {
+public final class CEJPAUtils {
 
     private static final String NS1 = "javax.persistence.";
     private static final String NS2 = "jakarta.persistence.";
 
-    private CEJPAPersistenceUtils() {
+    private CEJPAUtils() {
     }
 
     public static @NotNull List<String> buildBaseNames(@NotNull String name) {

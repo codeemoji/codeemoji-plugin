@@ -6,7 +6,7 @@ import com.intellij.openapi.editor.Editor;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("UnstableApiUsage")
-public sealed interface CEIProvider<S> extends InlayHintsProvider<S> permits CEProvider {
+public sealed interface CEProviderInterface<S> extends InlayHintsProvider<S> permits CEProvider {
 
     @NotNull String getKeyId();
 

@@ -1,7 +1,7 @@
 package codeemoji.core.collector.project;
 
 import codeemoji.core.collector.CECollector;
-import codeemoji.core.collector.project.config.CEConfigFile;
+import codeemoji.core.collector.config.CEConfigFile;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
@@ -12,13 +12,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static codeemoji.core.collector.config.CERuleFeature.ANNOTATIONS;
 import static codeemoji.core.collector.project.ProjectRuleSymbol.ANNOTATIONS_SYMBOL;
-import static codeemoji.core.collector.project.config.CERuleFeature.ANNOTATIONS;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
 public abstract sealed class CEProjectCollector<H extends PsiModifierListOwner, A extends PsiElement> extends CECollector<A>
-        implements CEIProject<H, A> permits CEProjectClassCollector, CEProjectMethodCollector, CEProjectVariableCollector {
+        implements CEProjectInterface<H, A> permits CEProjectClassCollector, CEProjectMethodCollector, CEProjectVariableCollector {
 
     protected final CEConfigFile configFile;
     protected final String mainKeyId;
