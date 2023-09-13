@@ -27,7 +27,7 @@ public class CEJPAImplicitBasic implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable String createAttributes(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotation) {
+    public @Nullable String createAttributesFor(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotation) {
         if (null != CEJPAUtils.searchAnnotation(member, "Id")) {
             final var optionalAttr = new CEImplicitAttribute("optional", "false", false);
             return this.formatAttributes(annotation, optionalAttr);
@@ -36,7 +36,7 @@ public class CEJPAImplicitBasic implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable String buildAnnotationFor(@NotNull final PsiMember member) {
+    public @Nullable String createAnnotationFor(@NotNull final PsiMember member) {
         if (member instanceof final PsiField field) {
             final var type = field.getType();
             if ((

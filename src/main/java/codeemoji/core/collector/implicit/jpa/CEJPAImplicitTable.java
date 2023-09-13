@@ -24,7 +24,7 @@ public class CEJPAImplicitTable implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable String createAttributes(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotation) {
+    public @Nullable String createAttributesFor(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotation) {
         var attributeNameValue = member.getName();
         if (null != attributeNameValue) {
             attributeNameValue = attributeNameValue.toLowerCase();
@@ -48,7 +48,7 @@ public class CEJPAImplicitTable implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable String updateAttributes(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotation, @NotNull final String attributeName) {
+    public @Nullable String updateAttributesFor(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotation, @NotNull final String attributeName) {
         final var UNIQUE_CONSTRAINTS_NAME = "uniqueConstraints";
         if (attributeName.equalsIgnoreCase(UNIQUE_CONSTRAINTS_NAME) && null != annotation.findAttribute(UNIQUE_CONSTRAINTS_NAME)) {
             return this.processUniqueConstraints(member, annotation);
@@ -88,7 +88,7 @@ public class CEJPAImplicitTable implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable String buildAnnotationFor(@NotNull final PsiMember member) {
+    public @Nullable String createAnnotationFor(@NotNull final PsiMember member) {
         return null;
     }
 }

@@ -33,17 +33,17 @@ public abstract class CEJPACollector extends CEImplicitCollector {
                 if (null != annotation) {
                     for (final var attribute : annotation.getAttributes()) {
                         final var attributeName = attribute.getAttributeName();
-                        final var valueComplement = implicit.updateAttributes(member, annotation, attributeName);
+                        final var valueComplement = implicit.updateAttributesFor(member, annotation, attributeName);
                         this.addImplicitInlayForAttributeValue(annotation, attributeName, valueComplement, sink);
                     }
-                    final var newAttributesList = implicit.createAttributes(member, annotation);
+                    final var newAttributesList = implicit.createAttributesFor(member, annotation);
                     this.addImplicitInlayForAnnotation(annotation, newAttributesList, sink);
                     hasImplicitAnnotation = true;
                     break;
                 }
             }
             if (!hasImplicitAnnotation) {
-                final var complement = implicit.buildAnnotationFor(member);
+                final var complement = implicit.createAnnotationFor(member);
                 if (null != complement) {
                     this.addImplicitInlay(member, complement, sink);
                 }

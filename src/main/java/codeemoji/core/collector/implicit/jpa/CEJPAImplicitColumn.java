@@ -29,7 +29,7 @@ public class CEJPAImplicitColumn implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable String createAttributes(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotation) {
+    public @Nullable String createAttributesFor(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotation) {
         final var nameAttr = new CEImplicitAttribute("name", member.getName(), true);
         final var ucValue = annotation.findAttributeValue("unique");
         if (null != ucValue && "true".equalsIgnoreCase(ucValue.getText())) {
@@ -40,7 +40,7 @@ public class CEJPAImplicitColumn implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable String buildAnnotationFor(@NotNull final PsiMember member) {
+    public @Nullable String createAnnotationFor(@NotNull final PsiMember member) {
         if (member instanceof final PsiField field) {
             final var modifierList = field.getModifierList();
             if (null != modifierList &&

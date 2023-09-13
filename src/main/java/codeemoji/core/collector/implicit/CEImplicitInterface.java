@@ -19,14 +19,14 @@ public interface CEImplicitInterface {
 
     List<String> getBaseNames();
 
-    @Nullable String createAttributes(@NotNull PsiMember member, @NotNull PsiAnnotation annotation);
+    @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotation);
 
     @Nullable
-    default String updateAttributes(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotation, @NotNull final String attributeName) {
+    default String updateAttributesFor(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotation, @NotNull final String attributeName) {
         return null;
     }
 
-    @Nullable String buildAnnotationFor(@NotNull PsiMember member);
+    @Nullable String createAnnotationFor(@NotNull PsiMember member);
 
     @NotNull
     default List<String> getDeactivatedCases() {
