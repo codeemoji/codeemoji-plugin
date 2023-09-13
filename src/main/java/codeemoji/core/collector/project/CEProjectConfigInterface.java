@@ -16,37 +16,37 @@ public interface CEProjectConfigInterface {
 
     Logger LOG = Logger.getInstance(CEProjectConfigInterface.class);
 
-    default @NotNull Map<CERuleFeature, List<String>> readRuleFeatures(@NotNull CERuleElement elementRule) {
-        Map<CERuleFeature, List<String>> result = new EnumMap<>(CERuleFeature.class);
-        for (var rule : getConfigFile().getRules()) {
-            var element = rule.element();
-            var feature = rule.feature();
-            if (element != null && feature != null && (element.equals(elementRule))) {
+    default @NotNull Map<CERuleFeature, List<String>> readRuleFeatures(@NotNull final CERuleElement elementRule) {
+        final Map<CERuleFeature, List<String>> result = new EnumMap<>(CERuleFeature.class);
+        for (final var rule : this.getConfigFile().getRules()) {
+            final var element = rule.element();
+            final var feature = rule.feature();
+            if (null != element && null != feature && (element == elementRule)) {
                 result.put(feature, rule.values());
             }
         }
         return result;
     }
 
-    default @NotNull CESymbol readRuleEmoji(@NotNull CERuleElement elementRule, @NotNull CERuleFeature featureRule,
-                                            @Nullable CESymbol defaultSymbol) {
-        for (var rule : getConfigFile().getRules()) {
-            var element = rule.element();
-            var feature = rule.feature();
-            if (element != null && feature != null &&
-                    element.equals(elementRule) && feature.equals(featureRule)) {
-                var emoji = rule.emoji();
-                if (emoji != null) {
+    default @NotNull CESymbol readRuleEmoji(@NotNull final CERuleElement elementRule, @NotNull final CERuleFeature featureRule,
+                                            @Nullable final CESymbol defaultSymbol) {
+        for (final var rule : this.getConfigFile().getRules()) {
+            final var element = rule.element();
+            final var feature = rule.feature();
+            if (null != element && null != feature &&
+                    element == elementRule && feature == featureRule) {
+                final var emoji = rule.emoji();
+                if (null != emoji) {
                     try {
-                        var codePoint = Integer.parseInt(emoji, 16);
+                        final var codePoint = Integer.parseInt(emoji, 16);
                         return new CESymbol(codePoint);
-                    } catch (NumberFormatException ex) {
-                        LOG.info(ex);
+                    } catch (final NumberFormatException ex) {
+                        CEProjectConfigInterface.LOG.info(ex);
                     }
                 }
             }
         }
-        if (defaultSymbol == null) {
+        if (null == defaultSymbol) {
             return new CESymbol();
         }
         return defaultSymbol;

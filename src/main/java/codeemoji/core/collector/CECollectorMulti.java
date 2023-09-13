@@ -12,9 +12,9 @@ import java.util.List;
 public record CECollectorMulti(List<InlayHintsCollector> collectors) implements InlayHintsCollector {
 
     @Override
-    public boolean collect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
-        if (collectors() != null) {
-            for (var collector : collectors()) {
+    public boolean collect(@NotNull final PsiElement psiElement, @NotNull final Editor editor, @NotNull final InlayHintsSink inlayHintsSink) {
+        if (null != this.collectors()) {
+            for (final var collector : this.collectors()) {
                 collector.collect(psiElement, editor, inlayHintsSink);
             }
         }

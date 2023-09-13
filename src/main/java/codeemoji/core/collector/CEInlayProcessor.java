@@ -18,55 +18,55 @@ public abstract sealed class CEInlayProcessor permits CECollector {
     private final Editor editor;
     private final @NotNull PresentationFactory factory;
 
-    public CEInlayProcessor(Editor editor) {
+    protected CEInlayProcessor(final Editor editor) {
         this.editor = editor;
-        this.factory = new PresentationFactory(getEditor());
+        factory = new PresentationFactory(this.editor);
     }
 
-    private static @Nullable String getTooltip(@NotNull String key) {
+    private static @Nullable String getTooltip(@NotNull final String key) {
         try {
             return CEBundle.getString(key);
-        } catch (RuntimeException ex) {
+        } catch (final RuntimeException ex) {
             return null;
         }
     }
 
-    protected final InlayPresentation buildInlayWithEmoji(@Nullable CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
-        if (symbol == null) {
+    protected final InlayPresentation buildInlayWithEmoji(@Nullable CESymbol symbol, @NotNull final String keyTooltip, @Nullable final String suffixTooltip) {
+        if (null == symbol) {
             symbol = new CESymbol();
-        } else if (symbol.getIcon() != null) {
-            return buildInlayWithIcon(symbol.getIcon(), keyTooltip, suffixTooltip);
+        } else if (null != symbol.getIcon()) {
+            return this.buildInlayWithIcon(symbol.getIcon(), keyTooltip, suffixTooltip);
         }
-        return buildInlayWithText(symbol.getEmoji(), keyTooltip, suffixTooltip);
+        return this.buildInlayWithText(symbol.getEmoji(), keyTooltip, suffixTooltip);
     }
 
-    protected InlayPresentation buildInlayWithIcon(@NotNull Icon icon, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
-        return formatInlay(getFactory().smallScaledIcon(icon), keyTooltip, suffixTooltip);
+    protected InlayPresentation buildInlayWithIcon(@NotNull final Icon icon, @NotNull final String keyTooltip, @Nullable final String suffixTooltip) {
+        return this.formatInlay(factory.smallScaledIcon(icon), keyTooltip, suffixTooltip);
     }
 
-    protected InlayPresentation buildInlayWithText(@NotNull String fullText, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
-        return formatInlay(getFactory().smallText(fullText), keyTooltip, suffixTooltip);
+    protected InlayPresentation buildInlayWithText(@NotNull final String fullText, @NotNull final String keyTooltip, @Nullable final String suffixTooltip) {
+        return this.formatInlay(factory.smallText(fullText), keyTooltip, suffixTooltip);
     }
 
-    private @NotNull InlayPresentation formatInlay(@NotNull InlayPresentation inlay, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
-        inlay = buildInsetValuesForInlay(inlay);
-        inlay = getFactory().withCursorOnHover(inlay, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        var tooltip = getTooltip(keyTooltip);
-        if (tooltip != null) {
-            if (suffixTooltip != null) {
+    private @NotNull InlayPresentation formatInlay(@NotNull InlayPresentation inlay, @NotNull final String keyTooltip, @Nullable final String suffixTooltip) {
+        inlay = this.buildInsetValuesForInlay(inlay);
+        inlay = factory.withCursorOnHover(inlay, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        var tooltip = CEInlayProcessor.getTooltip(keyTooltip);
+        if (null != tooltip) {
+            if (null != suffixTooltip) {
                 tooltip += " " + suffixTooltip;
             }
-            inlay = getFactory().withTooltip(tooltip, inlay);
+            inlay = factory.withTooltip(tooltip, inlay);
         }
         return inlay;
     }
 
     //TODO: refactor internal api usage
-    private @NotNull InlayPresentation buildInsetValuesForInlay(@NotNull InlayPresentation inlay) {
-        var inset = new InsetValueProvider() {
+    private @NotNull InlayPresentation buildInsetValuesForInlay(@NotNull final InlayPresentation inlay) {
+        final var inset = new InsetValueProvider() {
             @Override
             public int getTop() {
-                return (new InlayTextMetricsStorage(getEditor())).getFontMetrics(true).offsetFromTop();
+                return (new InlayTextMetricsStorage(CEInlayProcessor.this.getEditor())).getFontMetrics(true).offsetFromTop();
             }
         };
         return new DynamicInsetPresentation(inlay, inset);

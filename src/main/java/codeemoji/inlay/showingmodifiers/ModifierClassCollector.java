@@ -15,8 +15,8 @@ public class ModifierClassCollector extends CEReferenceClassCollector {
     final boolean activated;
     final String modifier;
 
-    public ModifierClassCollector(@NotNull Editor editor, @NotNull String mainKeyId, @Nullable CESymbol symbol,
-                                  String modifier, boolean activated) {
+    public ModifierClassCollector(@NotNull final Editor editor, @NotNull final String mainKeyId, @Nullable final CESymbol symbol,
+                                  final String modifier, final boolean activated) {
         super(editor, mainKeyId + ".class." + modifier, symbol);
         this.activated = activated;
         this.modifier = modifier;
@@ -24,17 +24,17 @@ public class ModifierClassCollector extends CEReferenceClassCollector {
 
     @Override
     public boolean isEnabled() {
-        return activated;
+        return this.activated;
     }
 
     @Override
-    public boolean needsHint(@NotNull PsiClass element) {
-        var psiModifierList = element.getModifierList();
-        if (psiModifierList != null) {
-            if (modifier.equalsIgnoreCase(DEFAULT)) {
+    public boolean needsHint(@NotNull final PsiClass element) {
+        final var psiModifierList = element.getModifierList();
+        if (null != psiModifierList) {
+            if (this.modifier.equalsIgnoreCase(DEFAULT)) {
                 return CEUtils.checkDefaultModifier(psiModifierList);
             } else {
-                return psiModifierList.hasModifierProperty(modifier);
+                return psiModifierList.hasModifierProperty(this.modifier);
             }
         }
         return false;

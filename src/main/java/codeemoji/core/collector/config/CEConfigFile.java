@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Getter
@@ -21,27 +22,27 @@ public class CEConfigFile {
     private final Map<String, Object> configs = new HashMap<>();
     private final List<CERule> rules = new ArrayList<>();
 
-    public CEConfigFile(@Nullable Project project) {
+    public CEConfigFile(@Nullable final Project project) {
         try {
-            var contentRoots = ProjectRootManager.getInstance(Objects.requireNonNull(project)).getContentRoots();
-            for (var baseDir : contentRoots) {
-                var file = baseDir.findFileByRelativePath(FILE);
-                if (file != null) {
-                    try (var is = file.getInputStream()) {
-                        try (Reader inputStreamReader = new InputStreamReader(is)) {
+            final var contentRoots = ProjectRootManager.getInstance(Objects.requireNonNull(project)).getContentRoots();
+            for (final var baseDir : contentRoots) {
+                final var file = baseDir.findFileByRelativePath(CEConfigFile.FILE);
+                if (null != file) {
+                    try (final var is = file.getInputStream()) {
+                        try (final Reader inputStreamReader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
 
-                            var gson = new GsonBuilder()
+                            final var gson = new GsonBuilder()
                                     .registerTypeAdapter(CERuleElement.class, new CERuleElement.EnumDeserializer())
                                     .registerTypeAdapter(CERuleFeature.class, new CERuleFeature.EnumDeserializer())
                                     .create();
 
-                            @SuppressWarnings("unchecked") Map<String, Object> map = gson.fromJson(inputStreamReader, Map.class);
-                            for (var entry : map.entrySet()) {
-                                if (Objects.equals(entry.getKey(), JSON_HEADER)) {
-                                    var readRules = gson.fromJson(String.valueOf(entry.getValue()), CERule[].class);
-                                    Collections.addAll(this.rules, readRules);
+                            @SuppressWarnings("unchecked") final Map<String, Object> map = gson.fromJson(inputStreamReader, Map.class);
+                            for (final var entry : map.entrySet()) {
+                                if (Objects.equals(entry.getKey(), CEConfigFile.JSON_HEADER)) {
+                                    final var readRules = gson.fromJson(String.valueOf(entry.getValue()), CERule[].class);
+                                    Collections.addAll(rules, readRules);
                                 } else {
-                                    configs.put(entry.getKey(), entry.getValue());
+                                    this.configs.put(entry.getKey(), entry.getValue());
                                 }
                             }
                         }
@@ -49,8 +50,8 @@ public class CEConfigFile {
                     break;
                 }
             }
-        } catch (RuntimeException | IOException ex) {
-            LOG.info(ex);
+        } catch (final RuntimeException | IOException ex) {
+            CEConfigFile.LOG.info(ex);
         }
     }
 

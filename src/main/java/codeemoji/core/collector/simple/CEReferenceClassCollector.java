@@ -11,22 +11,22 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("UnstableApiUsage")
 public abstract non-sealed class CEReferenceClassCollector extends CECollectorSimple<PsiClass, PsiElement> {
 
-    protected CEReferenceClassCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    protected CEReferenceClassCollector(@NotNull final Editor editor, @NotNull final String keyId, @Nullable final CESymbol symbol) {
         super(editor, keyId, symbol);
     }
 
     @Override
-    public final boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+    public final boolean processCollect(@NotNull final PsiElement psiElement, @NotNull final Editor editor, @NotNull final InlayHintsSink inlayHintsSink) {
         if (psiElement instanceof PsiJavaFile) {
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
-                public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
+                public void visitReferenceExpression(@NotNull final PsiReferenceExpression expression) {
                     if (CEUtils.isNotPreviewEditor(editor)) {
-                        var reference = expression.getReference();
-                        if (reference != null) {
-                            var resolveElement = reference.resolve();
-                            if (resolveElement instanceof PsiClass clazz && needsHint(clazz)) {
-                                addInlay(expression, inlayHintsSink);
+                        final var reference = expression.getReference();
+                        if (null != reference) {
+                            final var resolveElement = reference.resolve();
+                            if (resolveElement instanceof final PsiClass clazz && CEReferenceClassCollector.this.needsHint(clazz)) {
+                                CEReferenceClassCollector.this.addInlay(expression, inlayHintsSink);
                             }
                         }
                     }
@@ -34,14 +34,14 @@ public abstract non-sealed class CEReferenceClassCollector extends CECollectorSi
                 }
 
                 @Override
-                public void visitVariable(@NotNull PsiVariable variable) {
+                public void visitVariable(@NotNull final PsiVariable variable) {
                     if (CEUtils.isNotPreviewEditor(editor)) {
-                        var typeElement = variable.getTypeElement();
-                        if (typeElement != null && !typeElement.isInferredType()
-                                && typeElement.getType() instanceof PsiClassType classType) {
-                            var clazz = classType.resolve();
-                            if (clazz != null && (needsHint(clazz))) {
-                                addInlay(variable, inlayHintsSink);
+                        final var typeElement = variable.getTypeElement();
+                        if (null != typeElement && !typeElement.isInferredType()
+                                && typeElement.getType() instanceof final PsiClassType classType) {
+                            final var clazz = classType.resolve();
+                            if (null != clazz && (CEReferenceClassCollector.this.needsHint(clazz))) {
+                                CEReferenceClassCollector.this.addInlay(variable, inlayHintsSink);
 
                             }
 
@@ -51,20 +51,20 @@ public abstract non-sealed class CEReferenceClassCollector extends CECollectorSi
                 }
 
                 @Override
-                public void visitClass(@NotNull PsiClass psiClass) {
+                public void visitClass(@NotNull final PsiClass psiClass) {
                     if (CEUtils.isNotPreviewEditor(editor)) {
-                        visitClassForRefs(psiClass.getExtendsList());
-                        visitClassForRefs(psiClass.getImplementsList());
+                        this.visitClassForRefs(psiClass.getExtendsList());
+                        this.visitClassForRefs(psiClass.getImplementsList());
                     }
                     super.visitClass(psiClass);
                 }
 
-                private void visitClassForRefs(@Nullable PsiReferenceList list) {
-                    if (list != null) {
-                        for (var ref : list.getReferenceElements()) {
-                            var resolveElement = ref.resolve();
-                            if (resolveElement instanceof PsiClass clazz && (needsHint(clazz))) {
-                                addInlay(ref, inlayHintsSink);
+                private void visitClassForRefs(@Nullable final PsiReferenceList list) {
+                    if (null != list) {
+                        for (final var ref : list.getReferenceElements()) {
+                            final var resolveElement = ref.resolve();
+                            if (resolveElement instanceof final PsiClass clazz && (CEReferenceClassCollector.this.needsHint(clazz))) {
+                                CEReferenceClassCollector.this.addInlay(ref, inlayHintsSink);
 
                             }
                         }
@@ -76,10 +76,10 @@ public abstract non-sealed class CEReferenceClassCollector extends CECollectorSi
     }
 
     @Override
-    public int calcOffset(@Nullable PsiElement element) {
-        if (element instanceof PsiVariable variable) {
-            var varName = variable.getNameIdentifier();
-            if (varName != null) {
+    public int calcOffset(@Nullable final PsiElement element) {
+        if (element instanceof final PsiVariable variable) {
+            final var varName = variable.getNameIdentifier();
+            if (null != varName) {
                 return varName.getTextOffset() - 1;
             }
         }

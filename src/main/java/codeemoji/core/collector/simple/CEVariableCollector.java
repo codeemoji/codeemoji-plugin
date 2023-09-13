@@ -23,37 +23,37 @@ public abstract non-sealed class CEVariableCollector extends CECollectorSimple<P
     private boolean enabledForParam;
     private boolean enabledForLocalVariable;
 
-    protected CEVariableCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    protected CEVariableCollector(@NotNull final Editor editor, @NotNull final String keyId, @Nullable final CESymbol symbol) {
         super(editor, keyId, symbol);
-        enabledForField = true;
-        enabledForParam = true;
-        enabledForLocalVariable = true;
+        this.enabledForField = true;
+        this.enabledForParam = true;
+        this.enabledForLocalVariable = true;
     }
 
     @Override
-    public final boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+    public final boolean processCollect(@NotNull final PsiElement psiElement, @NotNull final Editor editor, @NotNull final InlayHintsSink inlayHintsSink) {
         if (psiElement instanceof PsiJavaFile) {
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
-                public void visitField(@NotNull PsiField field) {
-                    if (isEnabledForField()) {
-                        process(field, editor, inlayHintsSink);
+                public void visitField(@NotNull final PsiField field) {
+                    if (CEVariableCollector.this.isEnabledForField()) {
+                        CEVariableCollector.this.process(field, editor, inlayHintsSink);
                     }
                     super.visitField(field);
                 }
 
                 @Override
-                public void visitParameter(@NotNull PsiParameter parameter) {
-                    if (isEnabledForParam()) {
-                        process(parameter, editor, inlayHintsSink);
+                public void visitParameter(@NotNull final PsiParameter parameter) {
+                    if (CEVariableCollector.this.isEnabledForParam()) {
+                        CEVariableCollector.this.process(parameter, editor, inlayHintsSink);
                     }
                     super.visitParameter(parameter);
                 }
 
                 @Override
-                public void visitLocalVariable(@NotNull PsiLocalVariable localVariable) {
-                    if (isEnabledForLocalVariable()) {
-                        process(localVariable, editor, inlayHintsSink);
+                public void visitLocalVariable(@NotNull final PsiLocalVariable localVariable) {
+                    if (CEVariableCollector.this.isEnabledForLocalVariable()) {
+                        CEVariableCollector.this.process(localVariable, editor, inlayHintsSink);
                     }
                     super.visitLocalVariable(localVariable);
                 }
@@ -62,28 +62,28 @@ public abstract non-sealed class CEVariableCollector extends CECollectorSimple<P
         return false;
     }
 
-    private void process(@NotNull PsiVariable variable, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
-        if (needsHint(variable)) {
-            addInlay(variable.getNameIdentifier(), sink);
+    private void process(@NotNull final PsiVariable variable, @NotNull final Editor editor, @NotNull final InlayHintsSink sink) {
+        if (this.needsHint(variable)) {
+            this.addInlay(variable.getNameIdentifier(), sink);
             if (CEUtils.isNotPreviewEditor(editor)) {
-                var scope = GlobalSearchScope.fileScope(variable.getContainingFile());
-                var refs = ReferencesSearch.search(variable, scope, false).toArray(PsiReference.EMPTY_ARRAY);
-                for (var ref : refs) {
-                    addInlay(ref.getElement(), sink);
+                final var scope = GlobalSearchScope.fileScope(variable.getContainingFile());
+                final var refs = ReferencesSearch.search(variable, scope, false).toArray(PsiReference.EMPTY_ARRAY);
+                for (final var ref : refs) {
+                    this.addInlay(ref.getElement(), sink);
                 }
             } else {
-                processReferencesInPreviewEditor(variable, sink);
+                this.processReferencesInPreviewEditor(variable, sink);
             }
         }
     }
 
-    private void processReferencesInPreviewEditor(@NotNull PsiVariable variable, @NotNull InlayHintsSink inlayHintsSink) {
+    private void processReferencesInPreviewEditor(@NotNull final PsiVariable variable, @NotNull final InlayHintsSink inlayHintsSink) {
         variable.getContainingFile().accept(new JavaRecursiveElementVisitor() {
             @Override
-            public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
+            public void visitReferenceExpression(@NotNull final PsiReferenceExpression expression) {
                 if (CEUtils.hasAUniqueQualifier(expression)
                         && Objects.equals(expression.getText(), variable.getName())) {
-                    addInlay(expression, inlayHintsSink);
+                    CEVariableCollector.this.addInlay(expression, inlayHintsSink);
                 }
                 super.visitReferenceExpression(expression);
             }
@@ -91,10 +91,10 @@ public abstract non-sealed class CEVariableCollector extends CECollectorSimple<P
     }
 
     @Override
-    public int calcOffset(@Nullable PsiElement element) {
-        if (element != null) {
+    public int calcOffset(@Nullable final PsiElement element) {
+        if (null != element) {
             var length = element.getTextLength();
-            var attr = "this.";
+            final var attr = "this.";
             if (element.getText().contains(attr)) {
                 length -= attr.length();
             }

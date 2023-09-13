@@ -23,33 +23,33 @@ public class CEJPAImplicitColumn implements CEImplicitInterface {
     private final List<String> deactivatedInTypeCases = new ArrayList<>();
 
     public CEJPAImplicitColumn() {
-        this.baseNames = CEJPAUtils.buildBaseNames("Column");
-        deactivatedCases.addAll(CEJPAUtils.buildBaseListFor("Transient", "JoinColumn", "OneToMany", "AttributeOverride"));
-        deactivatedInTypeCases.addAll(CEJPAUtils.buildBaseListFor("Embeddable"));
+        baseNames = CEJPAUtils.buildBaseNames("Column");
+        this.deactivatedCases.addAll(CEJPAUtils.buildBaseListFor("Transient", "JoinColumn", "OneToMany", "AttributeOverride"));
+        this.deactivatedInTypeCases.addAll(CEJPAUtils.buildBaseListFor("Embeddable"));
     }
 
     @Override
-    public @Nullable String createAttributes(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
-        var nameAttr = new CEImplicitAttribute("name", member.getName(), true);
-        var ucValue = annotation.findAttributeValue("unique");
-        if (ucValue != null && ucValue.getText().equalsIgnoreCase("true")) {
-            var nullableAttr = new CEImplicitAttribute("nullable", "false", false);
-            return formatAttributes(annotation, nameAttr, nullableAttr);
+    public @Nullable String createAttributes(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotation) {
+        final var nameAttr = new CEImplicitAttribute("name", member.getName(), true);
+        final var ucValue = annotation.findAttributeValue("unique");
+        if (null != ucValue && "true".equalsIgnoreCase(ucValue.getText())) {
+            final var nullableAttr = new CEImplicitAttribute("nullable", "false", false);
+            return this.formatAttributes(annotation, nameAttr, nullableAttr);
         }
-        return formatAttributes(annotation, nameAttr);
+        return this.formatAttributes(annotation, nameAttr);
     }
 
     @Override
-    public @Nullable String buildAnnotationFor(@NotNull PsiMember member) {
-        if (member instanceof PsiField field) {
-            var modifierList = field.getModifierList();
-            if (modifierList != null &&
+    public @Nullable String buildAnnotationFor(@NotNull final PsiMember member) {
+        if (member instanceof final PsiField field) {
+            final var modifierList = field.getModifierList();
+            if (null != modifierList &&
                     !modifierList.hasExplicitModifier(STATIC) &&
                     !modifierList.hasExplicitModifier(FINAL) &&
-                    !isDeactivatedFor(field) &&
-                    !isDeactivatedInType(field.getType())
+                    !this.isDeactivatedFor(field) &&
+                    !this.isDeactivatedInType(field.getType())
             ) {
-                var name = field.getName();
+                final var name = field.getName();
                 return "@Column(name = \"" + name + "\")";
             }
         }

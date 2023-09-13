@@ -11,22 +11,22 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("UnstableApiUsage")
 public abstract non-sealed class CEReferenceFieldCollector extends CECollectorSimple<PsiField, PsiReferenceExpression> {
 
-    protected CEReferenceFieldCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    protected CEReferenceFieldCollector(@NotNull final Editor editor, @NotNull final String keyId, @Nullable final CESymbol symbol) {
         super(editor, keyId, symbol);
     }
 
     @Override
-    public final boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+    public final boolean processCollect(@NotNull final PsiElement psiElement, @NotNull final Editor editor, @NotNull final InlayHintsSink inlayHintsSink) {
         if (psiElement instanceof PsiJavaFile) {
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
-                public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
+                public void visitReferenceExpression(@NotNull final PsiReferenceExpression expression) {
                     if (CEUtils.isNotPreviewEditor(editor)) {
-                        var reference = expression.getReference();
-                        if (reference != null) {
-                            var resolveElement = reference.resolve();
-                            if (resolveElement instanceof PsiField field && needsHint(field)) {
-                                addInlay(expression, inlayHintsSink);
+                        final var reference = expression.getReference();
+                        if (null != reference) {
+                            final var resolveElement = reference.resolve();
+                            if (resolveElement instanceof final PsiField field && CEReferenceFieldCollector.this.needsHint(field)) {
+                                CEReferenceFieldCollector.this.addInlay(expression, inlayHintsSink);
                             }
                         }
                     }
@@ -38,10 +38,10 @@ public abstract non-sealed class CEReferenceFieldCollector extends CECollectorSi
     }
 
     @Override
-    public int calcOffset(@Nullable PsiReferenceExpression reference) {
-        if (reference != null) {
-            var lastChild = reference.getLastChild();
-            var length = lastChild.getTextLength();
+    public int calcOffset(@Nullable final PsiReferenceExpression reference) {
+        if (null != reference) {
+            final var lastChild = reference.getLastChild();
+            final var length = lastChild.getTextLength();
             return lastChild.getTextOffset() + length;
         }
         return 0;

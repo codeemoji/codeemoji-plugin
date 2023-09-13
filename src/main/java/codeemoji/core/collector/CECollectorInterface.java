@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings({"UnstableApiUsage"})
+@SuppressWarnings("UnstableApiUsage")
 public sealed interface CECollectorInterface<A extends PsiElement> extends InlayHintsCollector permits CECollector {
 
     Editor getEditor();
@@ -20,15 +20,15 @@ public sealed interface CECollectorInterface<A extends PsiElement> extends Inlay
     @SuppressWarnings("SameReturnValue")
     boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink);
 
-    default boolean collect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
-        if (isEnabled()) {
-            return processCollect(psiElement, editor, inlayHintsSink);
+    default boolean collect(@NotNull final PsiElement psiElement, @NotNull final Editor editor, @NotNull final InlayHintsSink inlayHintsSink) {
+        if (this.isEnabled()) {
+            return this.processCollect(psiElement, editor, inlayHintsSink);
         }
         return false;
     }
 
-    default int calcOffset(@Nullable A element) {
-        if (element != null) {
+    default int calcOffset(@Nullable final A element) {
+        if (null != element) {
             return element.getTextOffset() + element.getTextLength();
         }
         return 0;

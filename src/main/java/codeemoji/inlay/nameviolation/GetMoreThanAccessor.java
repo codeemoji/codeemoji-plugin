@@ -37,12 +37,12 @@ public class GetMoreThanAccessor extends CEProvider<NoSettings> {
     }
 
     @Override
-    public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
-        return new CEMethodCollector(editor, getKeyId(), CONFUSED) {
+    public @NotNull InlayHintsCollector buildCollector(@NotNull final Editor editor) {
+        return new CEMethodCollector(editor, this.getKeyId(), CONFUSED) {
             @Override
-            public boolean needsHint(@NotNull PsiMethod element) {
-                if (element.getName().startsWith("get") && !Objects.equals(element.getReturnType(), PsiTypes.voidType()) && element.getBody() != null) {
-                    return element.getBody().getStatements().length > 1 && !element.getName().equalsIgnoreCase("getInstance");
+            public boolean needsHint(@NotNull final PsiMethod element) {
+                if (element.getName().startsWith("get") && !Objects.equals(element.getReturnType(), PsiTypes.voidType()) && null != element.getBody()) {
+                    return 1 < element.getBody().getStatements().length && !"getInstance".equalsIgnoreCase(element.getName());
                 }
                 return false;
             }

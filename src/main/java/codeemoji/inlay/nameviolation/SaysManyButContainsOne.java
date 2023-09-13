@@ -36,12 +36,12 @@ public class SaysManyButContainsOne extends CEProvider<NoSettings> {
     }
 
     @Override
-    public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
-        return new CEVariableCollector(editor, getKeyId(), ONE) {
+    public @NotNull InlayHintsCollector buildCollector(@NotNull final Editor editor) {
+        return new CEVariableCollector(editor, this.getKeyId(), ONE) {
             @Override
-            public boolean needsHint(@NotNull PsiVariable element) {
-                var typeElement = element.getTypeElement();
-                return typeElement != null &&
+            public boolean needsHint(@NotNull final PsiVariable element) {
+                final var typeElement = element.getTypeElement();
+                return null != typeElement &&
                         CEUtils.isPluralForm(element.getName()) &&
                         !(typeElement.getType() instanceof PsiEllipsisType) &&
                         !typeElement.isInferredType() &&

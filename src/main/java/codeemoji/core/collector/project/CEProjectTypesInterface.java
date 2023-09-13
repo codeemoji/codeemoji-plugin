@@ -17,26 +17,26 @@ import java.util.List;
 public sealed interface CEProjectTypesInterface<A extends PsiElement> extends CEProjectConfigInterface
         permits CEProjectMethodCollector, CEProjectVariableCollector {
 
-    default void processTypesFR(@NotNull CERuleElement elementRule, @NotNull CERuleFeature featureRule, @NotNull PsiType type,
-                                @NotNull A addHintElement, @NotNull InlayHintsSink sink,
-                                @NotNull CESymbol symbol, @NotNull String keyTooltip) {
-        addInlayTypesFR(addHintElement, needsHintTypesFR(elementRule, featureRule, type), sink,
+    default void processTypesFR(@NotNull final CERuleElement elementRule, @NotNull final CERuleFeature featureRule, @NotNull final PsiType type,
+                                @NotNull final A addHintElement, @NotNull final InlayHintsSink sink,
+                                @NotNull final CESymbol symbol, @NotNull final String keyTooltip) {
+        this.addInlayTypesFR(addHintElement, this.needsHintTypesFR(elementRule, featureRule, type), sink,
                 symbol, keyTooltip);
     }
 
-    default @NotNull List<String> needsHintTypesFR(@NotNull CERuleElement elementRule, @NotNull CERuleFeature featureRule, @NotNull PsiType type) {
-        var rules = readRuleFeatures(elementRule);
-        var featureValues = rules.get(featureRule);
-        List<String> results = new ArrayList<>();
-        if (featureValues != null) {
-            for (var value : featureValues) {
-                String qualifiedName;
-                if (type instanceof PsiClassType classType) {
+    default @NotNull List<String> needsHintTypesFR(@NotNull final CERuleElement elementRule, @NotNull final CERuleFeature featureRule, @NotNull final PsiType type) {
+        final var rules = this.readRuleFeatures(elementRule);
+        final var featureValues = rules.get(featureRule);
+        final List<String> results = new ArrayList<>();
+        if (null != featureValues) {
+            for (final var value : featureValues) {
+                final String qualifiedName;
+                if (type instanceof final PsiClassType classType) {
                     qualifiedName = CEUtils.resolveQualifiedName(classType);
                 } else {
                     qualifiedName = type.getPresentableText();
                 }
-                if (qualifiedName != null && qualifiedName.equalsIgnoreCase(value)) {
+                if (null != qualifiedName && qualifiedName.equalsIgnoreCase(value)) {
                     results.add(value);
                 }
             }

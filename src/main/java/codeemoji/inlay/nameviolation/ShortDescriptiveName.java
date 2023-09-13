@@ -33,12 +33,12 @@ public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSetting
     }
 
     @Override
-    public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
-        return new CEVariableCollector(editor, getKeyId(), SMALL_NAME) {
+    public @NotNull InlayHintsCollector buildCollector(@NotNull final Editor editor) {
+        return new CEVariableCollector(editor, this.getKeyId(), SMALL_NAME) {
             @Override
-            public boolean needsHint(@NotNull PsiVariable element) {
-                if (element.getNameIdentifier() != null) {
-                    return getSettings().getNumberOfLetters() >= element.getNameIdentifier().getTextLength();
+            public boolean needsHint(@NotNull final PsiVariable element) {
+                if (null != element.getNameIdentifier()) {
+                    return ShortDescriptiveName.this.getSettings().getNumberOfLetters() >= element.getNameIdentifier().getTextLength();
                 }
                 return false;
             }
@@ -46,7 +46,7 @@ public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSetting
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull ShortDescriptiveNameSettings settings) {
+    public @NotNull ImmediateConfigurable createConfigurable(@NotNull final ShortDescriptiveNameSettings settings) {
         return new ShortDescriptiveNameConfigurable(settings);
     }
 }

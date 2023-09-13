@@ -21,58 +21,58 @@ public abstract class CEJPACollector extends CEImplicitCollector {
     public final @NotNull String keyId;
     public final @Nullable Integer codePoint;
 
-    public CEJPACollector(@NotNull Editor editor, @NotNull String keyId, @Nullable Integer codePoint) {
+    protected CEJPACollector(@NotNull final Editor editor, @NotNull final String keyId, @Nullable final Integer codePoint) {
         super(editor);
         this.keyId = keyId;
         this.codePoint = codePoint;
     }
 
-    protected void processImplicits(@NotNull PsiMember member, @NotNull List<CEImplicitInterface> implicits, @NotNull InlayHintsSink sink) {
-        for (var implicit : implicits) {
+    protected void processImplicits(@NotNull final PsiMember member, @NotNull final List<? extends CEImplicitInterface> implicits, @NotNull final InlayHintsSink sink) {
+        for (final var implicit : implicits) {
             var hasImplicitAnnotation = false;
-            for (var name : implicit.getBaseNames()) {
-                var annotation = member.getAnnotation(name);
-                if (annotation != null) {
-                    for (var attribute : annotation.getAttributes()) {
-                        var attributeName = attribute.getAttributeName();
-                        var valueComplement = implicit.updateAttributes(member, annotation, attributeName);
-                        addImplicitInlayForAttributeValue(annotation, attributeName, valueComplement, sink);
+            for (final var name : implicit.getBaseNames()) {
+                final var annotation = member.getAnnotation(name);
+                if (null != annotation) {
+                    for (final var attribute : annotation.getAttributes()) {
+                        final var attributeName = attribute.getAttributeName();
+                        final var valueComplement = implicit.updateAttributes(member, annotation, attributeName);
+                        this.addImplicitInlayForAttributeValue(annotation, attributeName, valueComplement, sink);
                     }
-                    var newAttributesList = implicit.createAttributes(member, annotation);
-                    addImplicitInlayForAnnotation(annotation, newAttributesList, sink);
+                    final var newAttributesList = implicit.createAttributes(member, annotation);
+                    this.addImplicitInlayForAnnotation(annotation, newAttributesList, sink);
                     hasImplicitAnnotation = true;
                     break;
                 }
             }
             if (!hasImplicitAnnotation) {
-                var complement = implicit.buildAnnotationFor(member);
-                if (complement != null) {
-                    addImplicitInlay(member, complement, sink);
+                final var complement = implicit.buildAnnotationFor(member);
+                if (null != complement) {
+                    this.addImplicitInlay(member, complement, sink);
                 }
             }
         }
     }
 
-    private void addImplicitInlayForAttributeValue(PsiAnnotation annotation, @Nullable String attributeName, @Nullable String attributeValue, InlayHintsSink sink) {
-        if (attributeValue != null) {
-            var inlay = buildInlayWithText(attributeValue, "inlay." + getKeyId() + ".attributes.tooltip", null);
-            addInlayInAttribute(annotation, attributeName, sink, inlay);
+    private void addImplicitInlayForAttributeValue(final PsiAnnotation annotation, @Nullable final String attributeName, @Nullable final String attributeValue, final InlayHintsSink sink) {
+        if (null != attributeValue) {
+            final var inlay = this.buildInlayWithText(attributeValue, "inlay." + keyId + ".attributes.tooltip", null);
+            this.addInlayInAttribute(annotation, attributeName, sink, inlay);
         }
     }
 
-    private void addImplicitInlayForAnnotation(PsiAnnotation annotation, @Nullable String newAttributesList, @NotNull InlayHintsSink sink) {
-        if (newAttributesList != null) {
-            var inlay = buildInlayWithText(newAttributesList, "inlay." + getKeyId() + ".attributes.tooltip", null);
-            addInlayInAnnotation(annotation, sink, inlay);
+    private void addImplicitInlayForAnnotation(final PsiAnnotation annotation, @Nullable final String newAttributesList, @NotNull final InlayHintsSink sink) {
+        if (null != newAttributesList) {
+            final var inlay = this.buildInlayWithText(newAttributesList, "inlay." + keyId + ".attributes.tooltip", null);
+            this.addInlayInAnnotation(annotation, sink, inlay);
         }
     }
 
 
-    private void addImplicitInlay(PsiElement element, @Nullable String fullText, @NotNull InlayHintsSink sink) {
-        if (fullText != null) {
-            var symbol = new CESymbol(getCodePoint(), fullText);
-            var inlay = buildInlayWithEmoji(symbol, "inlay." + getKeyId() + ".annotations.tooltip", null);
-            addInlayBlock(element, sink, inlay);
+    private void addImplicitInlay(final PsiElement element, @Nullable final String fullText, @NotNull final InlayHintsSink sink) {
+        if (null != fullText) {
+            final var symbol = new CESymbol(codePoint, fullText);
+            final var inlay = this.buildInlayWithEmoji(symbol, "inlay." + keyId + ".annotations.tooltip", null);
+            this.addInlayBlock(element, sink, inlay);
         }
     }
 

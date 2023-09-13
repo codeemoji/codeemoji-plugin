@@ -15,34 +15,34 @@ import java.util.List;
 @SuppressWarnings("UnstableApiUsage")
 public abstract class CEImplicitCollector extends CECollector<PsiElement> {
 
-    public CEImplicitCollector(@NotNull Editor editor) {
+    protected CEImplicitCollector(@NotNull final Editor editor) {
         super(editor);
     }
 
     @Override
-    public boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+    public boolean processCollect(@NotNull final PsiElement psiElement, @NotNull final Editor editor, @NotNull final InlayHintsSink inlayHintsSink) {
         if (psiElement instanceof PsiJavaFile) {
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
-                public void visitClass(@NotNull PsiClass clazz) {
-                    if (hasImplicitBase(clazz)) {
-                        processImplicitsFor(clazz, inlayHintsSink);
+                public void visitClass(@NotNull final PsiClass clazz) {
+                    if (CEImplicitCollector.this.hasImplicitBase(clazz)) {
+                        CEImplicitCollector.this.processImplicitsFor(clazz, inlayHintsSink);
                     }
                     super.visitClass(clazz);
                 }
 
                 @Override
-                public void visitField(@NotNull PsiField field) {
-                    if (hasImplicitBase(field.getContainingClass())) {
-                        processImplicitsFor(field, inlayHintsSink);
+                public void visitField(@NotNull final PsiField field) {
+                    if (CEImplicitCollector.this.hasImplicitBase(field.getContainingClass())) {
+                        CEImplicitCollector.this.processImplicitsFor(field, inlayHintsSink);
                     }
                     super.visitField(field);
                 }
 
                 @Override
-                public void visitMethod(@NotNull PsiMethod method) {
-                    if (hasImplicitBase(method.getContainingClass())) {
-                        processImplicitsFor(method, inlayHintsSink);
+                public void visitMethod(@NotNull final PsiMethod method) {
+                    if (CEImplicitCollector.this.hasImplicitBase(method.getContainingClass())) {
+                        CEImplicitCollector.this.processImplicitsFor(method, inlayHintsSink);
                     }
                     super.visitMethod(method);
                 }
@@ -51,21 +51,21 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
         return false;
     }
 
-    public void addInlayInAnnotation(@Nullable PsiAnnotation annotation, @NotNull InlayHintsSink sink, @NotNull InlayPresentation inlay) {
-        if (annotation != null) {
-            sink.addInlineElement(calcOffsetForAnnotation(annotation), false, inlay, false);
+    public void addInlayInAnnotation(@Nullable final PsiAnnotation annotation, @NotNull final InlayHintsSink sink, @NotNull final InlayPresentation inlay) {
+        if (null != annotation) {
+            sink.addInlineElement(this.calcOffsetForAnnotation(annotation), false, inlay, false);
         }
     }
 
-    public void addInlayInAttribute(@Nullable PsiAnnotation annotation, @Nullable String attributeName, @NotNull InlayHintsSink sink, @NotNull InlayPresentation inlay) {
-        if (annotation != null && attributeName != null) {
-            sink.addInlineElement(calcOffsetForAttribute(annotation, attributeName), false, inlay, false);
+    public void addInlayInAttribute(@Nullable final PsiAnnotation annotation, @Nullable final String attributeName, @NotNull final InlayHintsSink sink, @NotNull final InlayPresentation inlay) {
+        if (null != annotation && null != attributeName) {
+            sink.addInlineElement(this.calcOffsetForAttribute(annotation, attributeName), false, inlay, false);
         }
     }
 
-    private int calcOffsetForAnnotation(@NotNull PsiAnnotation annotation) {
+    private int calcOffsetForAnnotation(@NotNull final PsiAnnotation annotation) {
         var result = annotation.getTextOffset();
-        var attributes = annotation.getAttributes();
+        final var attributes = annotation.getAttributes();
         if (attributes.isEmpty() && !annotation.getText().contains("(") && !annotation.getText().contains(")")) {
             result += annotation.getTextLength();
         } else {
@@ -74,19 +74,19 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
         return result;
     }
 
-    private int calcOffsetForAttribute(@NotNull PsiAnnotation annotation, @NotNull String attributeName) {
-        var attributeValue = annotation.findAttributeValue(attributeName);
+    private int calcOffsetForAttribute(@NotNull final PsiAnnotation annotation, @NotNull final String attributeName) {
+        final var attributeValue = annotation.findAttributeValue(attributeName);
         var result = 0;
-        if (attributeValue != null) {
+        if (null != attributeValue) {
             result = attributeValue.getTextOffset() + attributeValue.getTextLength() - 1;
         }
         return result;
     }
 
-    public boolean hasImplicitBase(@Nullable PsiClass clazz) {
-        if (clazz != null) {
-            for (var bName : getBaseNames()) {
-                if (clazz.getAnnotation(bName) != null) {
+    public boolean hasImplicitBase(@Nullable final PsiClass clazz) {
+        if (null != clazz) {
+            for (final var bName : this.getBaseNames()) {
+                if (null != clazz.getAnnotation(bName)) {
                     return true;
                 }
 

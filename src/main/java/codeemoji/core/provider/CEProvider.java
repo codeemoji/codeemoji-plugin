@@ -27,75 +27,76 @@ public abstract non-sealed class CEProvider<S> implements CEProviderInterface<S>
     private S settings;
 
     protected CEProvider() {
-        this.settings = createSettings();
+        settings = this.createSettings();
     }
 
     @Override
     public @NotNull SettingsKey<S> getKey() {
-        return new SettingsKey<>(getClass().getSimpleName().toLowerCase());
+        return new SettingsKey<>(this.getClass().getSimpleName().toLowerCase());
     }
 
     @Nls(capitalization = Nls.Capitalization.Sentence)
     @Override
     public @NotNull String getName() {
         try {
-            return Objects.requireNonNull(getProperty("inlay." + getKeyId() + ".name"));
-        } catch (RuntimeException ex) {
+            return Objects.requireNonNull(this.getProperty("inlay." + this.getKeyId() + ".name"));
+        } catch (final RuntimeException ex) {
             return "<NAME_NOT_DEFINED>";
         }
     }
 
     @Nls
     @Override
-    public String getProperty(@NotNull String key) {
+    public String getProperty(@NotNull final String key) {
         return CEBundle.getString(key);
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull S settings) {
-        return new ImmediateConfigurable() {
-            @Override
-            public @NotNull JComponent createComponent(@NotNull ChangeListener changeListener) {
-                return FormBuilder.createFormBuilder().getPanel();
-            }
-        };
+    public @NotNull ImmediateConfigurable createConfigurable(@NotNull final S settings) {
+        return new MyImmediateConfigurable();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public final @NotNull S createSettings() {
-        if (settings == null) {
+        if (null == settings) {
             try {
-                var type = (Class<S>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-                var genericType = type.getDeclaredConstructor().newInstance();
+                final var type = (Class<S>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+                final var genericType = type.getDeclaredConstructor().newInstance();
                 if (genericType instanceof NoSettings) {
-                    this.settings = (S) new NoSettings();
-                } else if (genericType instanceof PersistentStateComponent<?> typeT) {
-                    this.settings = (S) ApplicationManager.getApplication().getService(typeT.getClass());
+                    settings = (S) new NoSettings();
+                } else if (genericType instanceof final PersistentStateComponent<?> typeT) {
+                    settings = (S) ApplicationManager.getApplication().getService(typeT.getClass());
                 } else {
                     throw new CEProviderException("Settings must be 'NoSettings' or 'PersistentStateComponent' type.");
                 }
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                     NoSuchMethodException ex) {
-                LOG.error(ex);
+            } catch (final InstantiationException | IllegalAccessException | InvocationTargetException |
+                           NoSuchMethodException ex) {
+                CEProvider.LOG.error(ex);
             }
         }
-        return settings;
+        return this.settings;
     }
 
     @Override
     public final @NotNull String getKeyId() {
-        return getKey().getId();
+        return this.getKey().getId();
     }
 
     @Override
-    public final InlayHintsCollector getCollectorFor(@NotNull PsiFile psiFile, @NotNull Editor editor, @NotNull S settings, @NotNull InlayHintsSink inlayHintsSink) {
-        return buildCollector(editor);
+    public final InlayHintsCollector getCollectorFor(@NotNull final PsiFile psiFile, @NotNull final Editor editor, @NotNull final S settings, @NotNull final InlayHintsSink inlayHintsSink) {
+        return this.buildCollector(editor);
     }
 
     @Override
-    public final boolean isLanguageSupported(@NotNull Language language) {
+    public final boolean isLanguageSupported(@NotNull final Language language) {
         return "JAVA".equals(language.getID());
     }
 
+    private static class MyImmediateConfigurable implements ImmediateConfigurable {
+        @Override
+        public @NotNull JComponent createComponent(@NotNull final ChangeListener changeListener) {
+            return FormBuilder.createFormBuilder().getPanel();
+        }
+    }
 }

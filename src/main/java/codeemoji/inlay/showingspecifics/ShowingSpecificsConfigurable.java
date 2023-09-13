@@ -33,12 +33,12 @@ import static java.awt.GridBagConstraints.WEST;
 public record ShowingSpecificsConfigurable(
         ShowingSpecificsSettings settings) implements ImmediateConfigurable, CEProjectConfigInterface {
 
-    private static @NotNull JPanel createBasicInnerBagPanel(@NotNull String title, boolean withBorder) {
-        var result = new JPanel(new GridBagLayout());
+    private static @NotNull JPanel createBasicInnerBagPanel(@NotNull final String title, final boolean withBorder) {
+        final var result = new JPanel(new GridBagLayout());
         if (withBorder) {
             result.setBorder(BorderFactory.createTitledBorder(title));
         } else {
-            result.setBorder(BorderFactory.createTitledBorder(emptyBorder(), title));
+            result.setBorder(BorderFactory.createTitledBorder(ShowingSpecificsConfigurable.emptyBorder(), title));
         }
         return result;
     }
@@ -49,17 +49,17 @@ public record ShowingSpecificsConfigurable(
     }
 
     private static @Nullable Project getOpenProject() {
-        @NotNull Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-        if (openProjects.length > 0) {
+        @NotNull final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+        if (0 < openProjects.length) {
             return openProjects[0];
         }
         return null;
     }
 
     @Override
-    public @NotNull JComponent createComponent(@NotNull ChangeListener changeListener) {
-        var specificsPanel = new JPanel();
-        var detailProject = initOpenProjectsPanel();
+    public @NotNull JComponent createComponent(@NotNull final ChangeListener changeListener) {
+        final var specificsPanel = new JPanel();
+        final var detailProject = this.initOpenProjectsPanel();
         specificsPanel.add(detailProject);
         return FormBuilder.createFormBuilder()
                 .addComponent(specificsPanel)
@@ -67,87 +67,87 @@ public record ShowingSpecificsConfigurable(
     }
 
     private @NotNull JComponent initOpenProjectsPanel() {
-        var project = getOpenProject();
-        var file = new CEConfigFile(project);
+        final var project = ShowingSpecificsConfigurable.getOpenProject();
+        final var file = new CEConfigFile(project);
         if (file.getRules().isEmpty()) {
-            return howToConfigurePanel();
+            return this.howToConfigurePanel();
         }
-        if (project != null && !project.isDisposed()) {
-            return buildPanelsForOpenProject(project);
+        if (null != project && !project.isDisposed()) {
+            return this.buildPanelsForOpenProject(project);
         } else {
             return new JPanel();
         }
     }
 
     private @NotNull JComponent howToConfigurePanel() {
-        var panel = new JPanel();
-        var noRuleLoaded = CEBundle.getString("inlay.showingspecifics.options.title.noruleloaded");
-        var howToConfigure = CEBundle.getString("inlay.showingspecifics.options.title.noruleloaded.howtoconfigure");
+        final var panel = new JPanel();
+        final var noRuleLoaded = CEBundle.getString("inlay.showingspecifics.options.title.noruleloaded");
+        final var howToConfigure = CEBundle.getString("inlay.showingspecifics.options.title.noruleloaded.howtoconfigure");
         panel.add(new JLabel(noRuleLoaded + ":"));
-        var button = new JButton();
+        final var button = new JButton();
         button.setText(new CESymbol(0x1F575).getEmoji() + " " + howToConfigure);
         button.addActionListener(event -> {
             try {
-                BrowserUtil.browse(new URI(settings().getHowToConfigureURL()));
-            } catch (URISyntaxException ex) {
-                LOG.info(ex);
+                BrowserUtil.browse(new URI(this.settings().getHowToConfigureURL()));
+            } catch (final URISyntaxException ex) {
+                CEProjectConfigInterface.LOG.info(ex);
             }
         });
         panel.add(button);
         return panel;
     }
 
-    private @NotNull JPanel buildPanelsForOpenProject(@NotNull Project project) {
-        var gbc = new GridBagConstraints();
+    private @NotNull JPanel buildPanelsForOpenProject(@NotNull final Project project) {
+        final var gbc = new GridBagConstraints();
         gbc.fill = HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-        var projectStr = CEBundle.getString("inlay.showingspecifics.options.title.project");
-        var loadedRulesStr = CEBundle.getString("inlay.showingspecifics.options.title.loaded_rules");
-        var classTitle = CEBundle.getString("inlay.showingspecifics.options.title.classes");
-        var fieldTitle = CEBundle.getString("inlay.showingspecifics.options.title.fields");
-        var methodTitle = CEBundle.getString("inlay.showingspecifics.options.title.methods");
-        var parameterTitle = CEBundle.getString("inlay.showingspecifics.options.title.parameters");
-        var localVariableTitle = CEBundle.getString("inlay.showingspecifics.options.title.localvariables");
+        final var projectStr = CEBundle.getString("inlay.showingspecifics.options.title.project");
+        final var loadedRulesStr = CEBundle.getString("inlay.showingspecifics.options.title.loaded_rules");
+        final var classTitle = CEBundle.getString("inlay.showingspecifics.options.title.classes");
+        final var fieldTitle = CEBundle.getString("inlay.showingspecifics.options.title.fields");
+        final var methodTitle = CEBundle.getString("inlay.showingspecifics.options.title.methods");
+        final var parameterTitle = CEBundle.getString("inlay.showingspecifics.options.title.parameters");
+        final var localVariableTitle = CEBundle.getString("inlay.showingspecifics.options.title.localvariables");
 
-        var result = createBasicInnerBagPanel(loadedRulesStr + " - " + projectStr + ": " + project.getName(), false);
+        final var result = ShowingSpecificsConfigurable.createBasicInnerBagPanel(loadedRulesStr + " - " + projectStr + ": " + project.getName(), false);
 
-        buildInnerElementPanel(result, gbc, CLASS, classTitle);
-        buildInnerElementPanel(result, gbc, FIELD, fieldTitle);
-        buildInnerElementPanel(result, gbc, METHOD, methodTitle);
-        buildInnerElementPanel(result, gbc, PARAMETER, parameterTitle);
-        buildInnerElementPanel(result, gbc, LOCALVARIABLE, localVariableTitle);
+        this.buildInnerElementPanel(result, gbc, CLASS, classTitle);
+        this.buildInnerElementPanel(result, gbc, FIELD, fieldTitle);
+        this.buildInnerElementPanel(result, gbc, METHOD, methodTitle);
+        this.buildInnerElementPanel(result, gbc, PARAMETER, parameterTitle);
+        this.buildInnerElementPanel(result, gbc, LOCALVARIABLE, localVariableTitle);
 
         return result;
     }
 
-    public void buildInnerElementPanel(@NotNull JPanel result, @NotNull GridBagConstraints gbc,
-                                       @NotNull CERuleElement elementRule, @NotNull String panelTitle) {
-        var panel = createBasicInnerBagPanel(panelTitle, true);
-        var features = readRuleFeatures(elementRule);
+    public void buildInnerElementPanel(@NotNull final JPanel result, @NotNull final GridBagConstraints gbc,
+                                       @NotNull final CERuleElement elementRule, @NotNull final String panelTitle) {
+        final var panel = ShowingSpecificsConfigurable.createBasicInnerBagPanel(panelTitle, true);
+        final var features = this.readRuleFeatures(elementRule);
         if (!features.isEmpty()) {
-            buildInnerFeaturePanel(elementRule, features, panel);
+            this.buildInnerFeaturePanel(elementRule, features, panel);
             result.add(panel, gbc);
             gbc.gridy++;
         }
     }
 
-    private void buildInnerFeaturePanel(@NotNull CERuleElement elementRule,
-                                        @NotNull Map<CERuleFeature, List<String>> features,
-                                        @NotNull JPanel panel) {
-        var gbc = new GridBagConstraints();
+    private void buildInnerFeaturePanel(@NotNull final CERuleElement elementRule,
+                                        @NotNull final Map<CERuleFeature, List<String>> features,
+                                        @NotNull final JPanel panel) {
+        final var gbc = new GridBagConstraints();
         gbc.anchor = WEST;
         var gridX = 0;
         var gridY = 0;
-        for (var entry : features.entrySet()) {
-            var feature = entry.getKey();
-            var defaultSymbol = ProjectRuleSymbol.detectDefaultSymbol(feature);
-            var symbol = readRuleEmoji(elementRule, feature, defaultSymbol);
-            var key = new JLabel(symbol.getEmoji() + " " + feature.getValue() + ": ");
+        for (final var entry : features.entrySet()) {
+            final var feature = entry.getKey();
+            final var defaultSymbol = ProjectRuleSymbol.detectDefaultSymbol(feature);
+            final var symbol = this.readRuleEmoji(elementRule, feature, defaultSymbol);
+            final var key = new JLabel(symbol.getEmoji() + " " + feature.getValue() + ": ");
             var valuesStr = entry.getValue().toString();
             valuesStr = valuesStr.replace("[", "").replace("]", "");
-            var value = new JTextField(valuesStr);
+            final var value = new JTextField(valuesStr);
             value.setColumns(20);
             value.setEditable(false);
             gbc.gridx = gridX;
@@ -164,12 +164,12 @@ public record ShowingSpecificsConfigurable(
     @Contract(" -> new")
     @Override
     public @NotNull CEConfigFile getConfigFile() {
-        return new CEConfigFile(getOpenProject());
+        return new CEConfigFile(ShowingSpecificsConfigurable.getOpenProject());
     }
 
     @SuppressWarnings("unused")
     @Override
-    public Object readConfig(String key) {
-        return getConfigFile().getConfigs().get(key);
+    public Object readConfig(final String key) {
+        return this.getConfigFile().getConfigs().get(key);
     }
 }

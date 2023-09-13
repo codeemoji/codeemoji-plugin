@@ -24,11 +24,11 @@ public enum CERuleElement {
 
     protected static class EnumDeserializer implements JsonDeserializer<CERuleElement> {
         @Override
-        public @NotNull CERuleElement deserialize(@NotNull JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public @NotNull CERuleElement deserialize(@NotNull final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
             try {
                 return CERuleElement.valueOf(json.getAsString().toUpperCase());
-            } catch (RuntimeException ex) {
-                return UNKNOWN;
+            } catch (final RuntimeException ex) {
+                return CERuleElement.UNKNOWN;
             }
         }
     }
