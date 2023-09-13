@@ -62,7 +62,7 @@ public enum CEUtils {
         if (null != fieldName) {
             try {
                 var typeName = Objects.requireNonNull(typeElement).getType().getPresentableText();
-                final var index = typeName.indexOf('<');
+                final var index = typeName.indexOf("<");
                 if (0 < index) {
                     typeName = typeName.substring(0, index);
                 }
@@ -120,14 +120,14 @@ public enum CEUtils {
         return false;
     }
 
-    private static boolean isCommonPluralForm(@NotNull final String word) {
+    private static boolean isCommonPluralForm(@NotNull final CharSequence word) {
         final var pattern = ".*s$";
         final var pat = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
         final var mat = pat.matcher(word);
         return mat.matches();
     }
 
-    public static boolean containsOnlySpecialCharacters(@NotNull final String name) {
+    public static boolean containsOnlySpecialCharacters(@NotNull final CharSequence name) {
         final var regex = "^[^a-zA-Z0-9]+$";
         final var pattern = Pattern.compile(regex);
         final var matcher = pattern.matcher(name);

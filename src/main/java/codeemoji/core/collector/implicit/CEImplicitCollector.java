@@ -3,6 +3,7 @@ package codeemoji.core.collector.implicit;
 import codeemoji.core.collector.CECollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
+import com.intellij.lang.jvm.JvmAnnotatedElement;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiAnnotation;
@@ -54,7 +55,7 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
                     super.visitMethod(method);
                 }
 
-                private boolean hasImplicitBase(@Nullable final PsiClass clazz) {
+                private boolean hasImplicitBase(@Nullable final JvmAnnotatedElement clazz) {
                     if (null != clazz) {
                         for (final var bName : getBaseNames()) {
                             if (null != clazz.getAnnotation(bName)) {

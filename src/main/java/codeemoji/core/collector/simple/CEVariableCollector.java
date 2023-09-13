@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiLocalVariable;
+import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceExpression;
@@ -81,7 +82,7 @@ public abstract non-sealed class CEVariableCollector extends CECollectorSimple<P
                     }
                 }
 
-                private void processReferencesInPreviewEditor(@NotNull final PsiVariable variable, @NotNull final InlayHintsSink inlayHintsSink) {
+                private void processReferencesInPreviewEditor(@NotNull final PsiNamedElement variable, @NotNull final InlayHintsSink inlayHintsSink) {
                     variable.getContainingFile().accept(new JavaRecursiveElementVisitor() {
                         @Override
                         public void visitReferenceExpression(@NotNull final PsiReferenceExpression expression) {

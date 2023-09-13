@@ -1,7 +1,7 @@
 package codeemoji.core.collector.implicit.jpa;
 
 import com.intellij.psi.PsiAnnotation;
-import com.intellij.psi.PsiMember;
+import com.intellij.psi.PsiModifierListOwner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +28,7 @@ enum CEJPAUtils {
         return resultList;
     }
 
-    public static @Nullable PsiAnnotation searchAnnotation(@NotNull final PsiMember member, final String searched) {
+    public static @Nullable PsiAnnotation searchAnnotation(@NotNull final PsiModifierListOwner member, final String searched) {
         final var ann = member.getAnnotation(CEJPAUtils.NS1 + searched);
         return (null == ann) ? member.getAnnotation(CEJPAUtils.NS2 + searched) : ann;
     }
