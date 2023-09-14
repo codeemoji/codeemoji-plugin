@@ -38,8 +38,7 @@ public interface CEProjectConfigInterface {
                         final var codePoint = Integer.parseInt(emoji, 16);
                         return new CESymbol(codePoint);
                     } catch (final NumberFormatException ex) {
-                        Logger LOG = Logger.getInstance(CEProjectConfigInterface.class);
-                        LOG.info(ex);
+                        Logger.getInstance(CEProjectConfigInterface.class).info(ex);
                     }
                 }
             }
