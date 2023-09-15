@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.intellij.psi.PsiModifier.FINAL;
@@ -18,38 +19,43 @@ import static com.intellij.psi.PsiModifier.STATIC;
 @Getter
 public class CEJPAImplicitColumn implements CEImplicitInterface {
 
-    private final @NotNull List<String> baseNames;
+    private final @NotNull String baseName;
+    private final @NotNull String nameSpace;
     private final List<String> deactivatedCases = new ArrayList<>();
     private final List<String> deactivatedInTypeCases = new ArrayList<>();
 
-    public CEJPAImplicitColumn() {
-        baseNames = CEJPAUtils.buildBaseNames("Column");
-        this.deactivatedCases.addAll(CEJPAUtils.buildBaseListFor("Transient", "JoinColumn", "OneToMany", "AttributeOverride"));
-        this.deactivatedInTypeCases.addAll(CEJPAUtils.buildBaseListFor("Embeddable"));
+    public CEJPAImplicitColumn(@NotNull String nameSpace) {
+        this.nameSpace = nameSpace;
+        baseName = nameSpace + ".Column";
+        deactivatedCases.addAll(Arrays.asList(nameSpace + ".Transient",
+                nameSpace + ".JoinColumn",
+                nameSpace + ".OneToMany",
+                nameSpace + ".AttributeOverride"));
+        deactivatedInTypeCases.add(nameSpace + ".Embeddable");
     }
 
     @Override
-    public @Nullable String createAttributesFor(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotation) {
-        final var nameAttr = new CEImplicitAttribute("name", member.getName(), true);
-        final var ucValue = annotation.findAttributeValue("unique");
+    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
+        var nameAttr = new CEImplicitAttribute("name", member.getName(), true);
+        var ucValue = annotation.findAttributeValue("unique");
         if (null != ucValue && "true".equalsIgnoreCase(ucValue.getText())) {
-            final var nullableAttr = new CEImplicitAttribute("nullable", "false", false);
-            return this.formatAttributes(annotation, nameAttr, nullableAttr);
+            var nullableAttr = new CEImplicitAttribute("nullable", "false", false);
+            return formatAttributes(annotation, nameAttr, nullableAttr);
         }
-        return this.formatAttributes(annotation, nameAttr);
+        return formatAttributes(annotation, nameAttr);
     }
 
     @Override
-    public @Nullable String createAnnotationFor(@NotNull final PsiMember member) {
-        if (member instanceof final PsiField field) {
-            final var modifierList = field.getModifierList();
+    public @Nullable String createAnnotationFor(@NotNull PsiMember member) {
+        if (member instanceof PsiField field) {
+            var modifierList = field.getModifierList();
             if (null != modifierList &&
                     !modifierList.hasExplicitModifier(STATIC) &&
                     !modifierList.hasExplicitModifier(FINAL) &&
-                    !this.isDeactivatedFor(field) &&
-                    !this.isDeactivatedInType(field.getType())
+                    !isDeactivatedFor(field) &&
+                    !isDeactivatedInType(field.getType())
             ) {
-                final var name = field.getName();
+                var name = field.getName();
                 return "@Column(name = \"" + name + "\")";
             }
         }

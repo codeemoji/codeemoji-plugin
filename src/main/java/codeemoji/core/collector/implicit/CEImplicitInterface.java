@@ -17,89 +17,26 @@ import java.util.Objects;
 @SuppressWarnings("UnstableApiUsage")
 public interface CEImplicitInterface {
 
-    List<String> getBaseNames();
-
-    @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotation);
+    @NotNull
+    String getBaseName();
 
     @Nullable
-    default String updateAttributesFor(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotation, @NotNull final String attributeName) {
+    String createAnnotationFor(@NotNull PsiMember member);
+
+    @Nullable
+    String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotation);
+
+    @Nullable
+    default String updateAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotation, @NotNull String attributeName) {
         return null;
     }
 
-    @Nullable String createAnnotationFor(@NotNull PsiMember member);
-
-    @NotNull
-    default List<String> getDeactivatedCases() {
-        return new ArrayList<>();
-    }
-
-    @NotNull
-    default List<String> getDeactivatedInTypeCases() {
-        return new ArrayList<>();
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    default boolean isDeactivatedFor(@NotNull final PsiMember member) {
-        for (final var annotation : member.getAnnotations()) {
-            final var annotationName = annotation.getQualifiedName();
-            if (null != annotationName) {
-                for (final var caseDeactivated : this.getDeactivatedCases()) {
-                    if (annotationName.equalsIgnoreCase(caseDeactivated)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    default boolean isDeactivatedInType(final PsiType type) {
-        if (type instanceof final PsiClassType classType) {
-            try {
-                PsiClass result = null;
-                final var psiTypeClass = Objects.requireNonNull(classType.resolve());
-                final var qualifiedName = Objects.requireNonNull(psiTypeClass.getQualifiedName());
-                try {
-                    Class.forName(qualifiedName);
-                    result = psiTypeClass;
-                } catch (final ClassNotFoundException ignored) {
-                }
-                if (null == result) {
-                    final var openProjects = ProjectManager.getInstance().getOpenProjects();
-                    for (final var proj : openProjects) {
-                        final var scope = psiTypeClass.getResolveScope();
-                        final var aClass = JavaPsiFacade.getInstance(proj).findClass(qualifiedName, scope);
-                        if (null != aClass) {
-                            result = aClass;
-                            break;
-                        }
-                    }
-                }
-                if (null != result) {
-                    for (final var annotation : result.getAnnotations()) {
-                        final var annotationName = annotation.getQualifiedName();
-                        if (null != annotationName) {
-                            for (final var caseDeactivatedInType : this.getDeactivatedInTypeCases()) {
-                                if (annotationName.equalsIgnoreCase(caseDeactivatedInType)) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            } catch (final RuntimeException ignored) {
-            }
-        }
-        return false;
-    }
-
-    default @Nullable String formatAttributes(@NotNull final PsiAnnotation annotation, final CEImplicitAttribute @NotNull ... attributes) {
+    default @Nullable String formatAttributes(@NotNull PsiAnnotation annotation, CEImplicitAttribute @NotNull ... attributes) {
         StringBuilder finalResult = null;
-        final List<String> resultAttributes = new ArrayList<>();
-        for (final var attributeForCheck : attributes) {
+        List<String> resultAttributes = new ArrayList<>();
+        for (var attributeForCheck : attributes) {
             if (null != attributeForCheck.value()) {
-                final var hasAttribute = null != annotation.findAttribute(attributeForCheck.name());
+                var hasAttribute = null != annotation.findAttribute(attributeForCheck.name());
                 if (!hasAttribute) {
                     var prefix = "";
                     if (attributeForCheck.textual()) {
@@ -127,4 +64,71 @@ public interface CEImplicitInterface {
         }
         return null != finalResult ? finalResult.toString() : null;
     }
+
+    @NotNull
+    default List<String> getDeactivatedCases() {
+        return new ArrayList<>();
+    }
+
+    @NotNull
+    default List<String> getDeactivatedInTypeCases() {
+        return new ArrayList<>();
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    default boolean isDeactivatedFor(@NotNull PsiMember member) {
+        for (var annotation : member.getAnnotations()) {
+            var annotationName = annotation.getQualifiedName();
+            if (null != annotationName) {
+                for (var caseDeactivated : getDeactivatedCases()) {
+                    if (annotationName.equalsIgnoreCase(caseDeactivated)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    default boolean isDeactivatedInType(PsiType type) {
+        if (type instanceof PsiClassType classType) {
+            try {
+                PsiClass result = null;
+                var psiTypeClass = Objects.requireNonNull(classType.resolve());
+                var qualifiedName = Objects.requireNonNull(psiTypeClass.getQualifiedName());
+                try {
+                    Class.forName(qualifiedName);
+                    result = psiTypeClass;
+                } catch (ClassNotFoundException ignored) {
+                }
+                if (null == result) {
+                    var openProjects = ProjectManager.getInstance().getOpenProjects();
+                    for (var proj : openProjects) {
+                        var scope = psiTypeClass.getResolveScope();
+                        var aClass = JavaPsiFacade.getInstance(proj).findClass(qualifiedName, scope);
+                        if (null != aClass) {
+                            result = aClass;
+                            break;
+                        }
+                    }
+                }
+                if (null != result) {
+                    for (var annotation : result.getAnnotations()) {
+                        var annotationName = annotation.getQualifiedName();
+                        if (null != annotationName) {
+                            for (var caseDeactivatedInType : getDeactivatedInTypeCases()) {
+                                if (annotationName.equalsIgnoreCase(caseDeactivatedInType)) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (RuntimeException ignored) {
+            }
+        }
+        return false;
+    }
+
 }

@@ -13,23 +13,23 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("UnstableApiUsage")
 public abstract non-sealed class CECollector<A extends PsiElement> extends CEInlayProcessor implements CECollectorInterface<A> {
 
-    protected CECollector(final Editor editor) {
+    protected CECollector(Editor editor) {
         super(editor);
     }
 
     @Override
-    public final void addInlayInline(@Nullable final A element, @NotNull final InlayHintsSink sink, @NotNull final InlayPresentation inlay) {
+    public final void addInlayInline(@Nullable A element, @NotNull InlayHintsSink sink, @NotNull InlayPresentation inlay) {
         if (null != element) {
-            sink.addInlineElement(this.calcOffset(element), false, inlay, false);
+            sink.addInlineElement(calcOffset(element), false, inlay, false);
         }
     }
 
     @Override
-    public final void addInlayBlock(@Nullable final A element, @NotNull final InlayHintsSink sink, InlayPresentation inlay) {
+    public final void addInlayBlock(@Nullable A element, @NotNull InlayHintsSink sink, InlayPresentation inlay) {
         if (null != element) {
-            final var indentFactor = EditorUtil.getPlainSpaceWidth(this.getEditor());
-            final var indent = EditorUtil.getTabSize(this.getEditor()) * indentFactor;
-            inlay = this.getFactory().inset(inlay, indent, 0, 0, 0);
+            var indentFactor = EditorUtil.getPlainSpaceWidth(getEditor());
+            var indent = EditorUtil.getTabSize(getEditor()) * indentFactor;
+            inlay = getFactory().inset(inlay, indent, 0, 0, 0);
             sink.addBlockElement(element.getTextOffset(), true, true, 0, inlay);
         }
     }

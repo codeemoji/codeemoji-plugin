@@ -27,7 +27,7 @@ public abstract sealed class CEProjectCollector<H extends PsiModifierListOwner, 
 
     CEProjectCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
         super(editor);
-        this.configFile = new CEConfigFile(editor.getProject());
+        configFile = new CEConfigFile(editor.getProject());
         this.mainKeyId = "inlay." + mainKeyId;
         annotationsKey = getMainKeyId() + "." + ANNOTATIONS.getValue() + ".tooltip";
         annotationsSymbol = ANNOTATIONS_SYMBOL;

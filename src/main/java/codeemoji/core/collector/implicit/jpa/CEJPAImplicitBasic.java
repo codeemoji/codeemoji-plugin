@@ -16,29 +16,31 @@ import java.util.List;
 @Getter
 public class CEJPAImplicitBasic implements CEImplicitInterface {
 
-    private final @NotNull List<String> baseNames;
+    private final @NotNull String baseName;
+    private final @NotNull String nameSpace;
     private final List<String> deactivatedCases = new ArrayList<>();
     private final List<String> deactivatedInTypeCases = new ArrayList<>();
 
-    public CEJPAImplicitBasic() {
-        baseNames = CEJPAUtils.buildBaseNames("Basic");
-        this.deactivatedCases.addAll(CEJPAUtils.buildBaseListFor("Transient"));
-        this.deactivatedInTypeCases.addAll(CEJPAUtils.buildBaseListFor("Embeddable"));
+    public CEJPAImplicitBasic(@NotNull String nameSpace) {
+        this.nameSpace = nameSpace;
+        baseName = nameSpace + ".Basic";
+        deactivatedCases.add(nameSpace + ".Transient");
+        deactivatedInTypeCases.add(nameSpace + ".Embeddable");
     }
 
     @Override
-    public @Nullable String createAttributesFor(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotation) {
-        if (null != CEJPAUtils.searchAnnotation(member, "Id")) {
-            final var optionalAttr = new CEImplicitAttribute("optional", "false", false);
-            return this.formatAttributes(annotation, optionalAttr);
+    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
+        if (null != member.getAnnotation(nameSpace + ".Id")) {
+            var optionalAttr = new CEImplicitAttribute("optional", "false", false);
+            return formatAttributes(annotation, optionalAttr);
         }
         return null;
     }
 
     @Override
-    public @Nullable String createAnnotationFor(@NotNull final PsiMember member) {
-        if (member instanceof final PsiField field) {
-            final var type = field.getType();
+    public @Nullable String createAnnotationFor(@NotNull PsiMember member) {
+        if (member instanceof PsiField field) {
+            var type = field.getType();
             if ((
                     CEUtils.isPrimitiveOrWrapperType(type) ||
                             CEUtils.isDateDBType(type) ||
@@ -46,8 +48,8 @@ public class CEJPAImplicitBasic implements CEImplicitInterface {
                             CEUtils.isSerializableType(type)
             ) &&
                     !CEUtils.isConstant(field) &&
-                    !this.isDeactivatedFor(field) &&
-                    !this.isDeactivatedInType(field.getType())) {
+                    !isDeactivatedFor(field) &&
+                    !isDeactivatedInType(field.getType())) {
                 return "@Basic";
             }
         }

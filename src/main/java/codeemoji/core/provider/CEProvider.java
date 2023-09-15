@@ -32,32 +32,32 @@ public abstract non-sealed class CEProvider<S> implements CEProviderInterface<S>
     private S settings;
 
     protected CEProvider() {
-        settings = this.createSettings();
+        settings = createSettings();
     }
 
     @Override
     public @NotNull SettingsKey<S> getKey() {
-        return new SettingsKey<>(this.getClass().getSimpleName().toLowerCase());
+        return new SettingsKey<>(getClass().getSimpleName().toLowerCase());
     }
 
     @Nls(capitalization = Nls.Capitalization.Sentence)
     @Override
     public @NotNull String getName() {
         try {
-            return Objects.requireNonNull(this.getProperty("inlay." + this.getKeyId() + ".name"));
-        } catch (final RuntimeException ex) {
+            return Objects.requireNonNull(getProperty("inlay." + getKeyId() + ".name"));
+        } catch (RuntimeException ex) {
             return "<NAME_NOT_DEFINED>";
         }
     }
 
     @Nls
     @Override
-    public String getProperty(@NotNull final String key) {
+    public String getProperty(@NotNull String key) {
         return CEBundle.getString(key);
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull final S settings) {
+    public @NotNull ImmediateConfigurable createConfigurable(@NotNull S settings) {
         return new MyImmediateConfigurable();
     }
 
@@ -66,41 +66,41 @@ public abstract non-sealed class CEProvider<S> implements CEProviderInterface<S>
     public final @NotNull S createSettings() {
         if (null == settings) {
             try {
-                final var type = (Class<S>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-                final var genericType = type.getDeclaredConstructor().newInstance();
+                var type = (Class<S>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+                var genericType = type.getDeclaredConstructor().newInstance();
                 if (genericType instanceof NoSettings) {
                     settings = (S) new NoSettings();
-                } else if (genericType instanceof final PersistentStateComponent<?> typeT) {
+                } else if (genericType instanceof PersistentStateComponent<?> typeT) {
                     settings = (S) ApplicationManager.getApplication().getService(typeT.getClass());
                 } else {
                     throw new CEProviderException("Settings must be 'NoSettings' or 'PersistentStateComponent' type.");
                 }
-            } catch (final InstantiationException | IllegalAccessException | InvocationTargetException |
-                           NoSuchMethodException ex) {
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                     NoSuchMethodException ex) {
                 CEProvider.LOG.error(ex);
             }
         }
-        return this.settings;
+        return settings;
     }
 
     @Override
     public final @NotNull String getKeyId() {
-        return this.getKey().getId();
+        return getKey().getId();
     }
 
     @Override
-    public final InlayHintsCollector getCollectorFor(@NotNull final PsiFile psiFile, @NotNull final Editor editor, @NotNull final S settings, @NotNull final InlayHintsSink inlayHintsSink) {
-        return this.buildCollector(editor);
+    public final InlayHintsCollector getCollectorFor(@NotNull PsiFile psiFile, @NotNull Editor editor, @NotNull S settings, @NotNull InlayHintsSink inlayHintsSink) {
+        return buildCollector(editor);
     }
 
     @Override
-    public final boolean isLanguageSupported(@NotNull final Language language) {
+    public final boolean isLanguageSupported(@NotNull Language language) {
         return "JAVA".equals(language.getID());
     }
 
     private static class MyImmediateConfigurable implements ImmediateConfigurable {
         @Override
-        public @NotNull JComponent createComponent(@NotNull final ChangeListener changeListener) {
+        public @NotNull JComponent createComponent(@NotNull ChangeListener changeListener) {
             return FormBuilder.createFormBuilder().getPanel();
         }
     }

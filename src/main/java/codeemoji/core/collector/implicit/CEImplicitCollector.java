@@ -1,6 +1,7 @@
 package codeemoji.core.collector.implicit;
 
 import codeemoji.core.collector.CECollector;
+import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.lang.jvm.JvmAnnotatedElement;
@@ -17,22 +18,25 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 @Getter
 @SuppressWarnings("UnstableApiUsage")
 public abstract class CEImplicitCollector extends CECollector<PsiElement> {
 
-    protected CEImplicitCollector(@NotNull final Editor editor) {
+    public final @NotNull String keyId;
+    public final int codePoint;
+
+    protected CEImplicitCollector(@NotNull Editor editor, @NotNull String keyId, int codePoint) {
         super(editor);
+        this.keyId = keyId;
+        this.codePoint = codePoint;
     }
 
     @Override
-    public boolean processCollect(@NotNull final PsiElement psiElement, @NotNull final Editor editor, @NotNull final InlayHintsSink inlayHintsSink) {
+    public boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
         if (psiElement instanceof PsiJavaFile) {
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
-                public void visitClass(@NotNull final PsiClass clazz) {
+                public void visitClass(@NotNull PsiClass clazz) {
                     if (hasImplicitBase(clazz)) {
                         processImplicitsFor(clazz, inlayHintsSink);
                     }
@@ -40,7 +44,7 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
                 }
 
                 @Override
-                public void visitField(@NotNull final PsiField field) {
+                public void visitField(@NotNull PsiField field) {
                     if (hasImplicitBase(field.getContainingClass())) {
                         processImplicitsFor(field, inlayHintsSink);
                     }
@@ -48,21 +52,16 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
                 }
 
                 @Override
-                public void visitMethod(@NotNull final PsiMethod method) {
+                public void visitMethod(@NotNull PsiMethod method) {
                     if (hasImplicitBase(method.getContainingClass())) {
                         processImplicitsFor(method, inlayHintsSink);
                     }
                     super.visitMethod(method);
                 }
 
-                private boolean hasImplicitBase(@Nullable final JvmAnnotatedElement clazz) {
+                private boolean hasImplicitBase(@Nullable JvmAnnotatedElement clazz) {
                     if (null != clazz) {
-                        for (final var bName : getBaseNames()) {
-                            if (null != clazz.getAnnotation(bName)) {
-                                return true;
-                            }
-
-                        }
+                        return null != clazz.getAnnotation(getBaseName());
                     }
                     return false;
                 }
@@ -71,21 +70,21 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
         return false;
     }
 
-    protected void addInlayInAnnotation(@Nullable final PsiAnnotation annotation, @NotNull final InlayHintsSink sink, @NotNull final InlayPresentation inlay) {
+    protected void addInlayInAnnotation(@Nullable PsiAnnotation annotation, @NotNull InlayHintsSink sink, @NotNull InlayPresentation inlay) {
         if (null != annotation) {
-            sink.addInlineElement(this.calcOffsetForAnnotation(annotation), false, inlay, false);
+            sink.addInlineElement(calcOffsetForAnnotation(annotation), false, inlay, false);
         }
     }
 
-    protected void addInlayInAttribute(@Nullable final PsiAnnotation annotation, @Nullable final String attributeName, @NotNull final InlayHintsSink sink, @NotNull final InlayPresentation inlay) {
+    protected void addInlayInAttribute(@Nullable PsiAnnotation annotation, @Nullable String attributeName, @NotNull InlayHintsSink sink, @NotNull InlayPresentation inlay) {
         if (null != annotation && null != attributeName) {
-            sink.addInlineElement(this.calcOffsetForAttribute(annotation, attributeName), false, inlay, false);
+            sink.addInlineElement(calcOffsetForAttribute(annotation, attributeName), false, inlay, false);
         }
     }
 
-    private int calcOffsetForAnnotation(@NotNull final PsiAnnotation annotation) {
+    private int calcOffsetForAnnotation(@NotNull PsiAnnotation annotation) {
         var result = annotation.getTextOffset();
-        final var attributes = annotation.getAttributes();
+        var attributes = annotation.getAttributes();
         if (attributes.isEmpty() && !annotation.getText().contains("(") && !annotation.getText().contains(")")) {
             result += annotation.getTextLength();
         } else {
@@ -94,8 +93,8 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
         return result;
     }
 
-    private int calcOffsetForAttribute(@NotNull final PsiAnnotation annotation, @NotNull final String attributeName) {
-        final var attributeValue = annotation.findAttributeValue(attributeName);
+    private int calcOffsetForAttribute(@NotNull PsiAnnotation annotation, @NotNull String attributeName) {
+        var attributeValue = annotation.findAttributeValue(attributeName);
         var result = 0;
         if (null != attributeValue) {
             result = attributeValue.getTextOffset() + attributeValue.getTextLength() - 1;
@@ -103,7 +102,52 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
         return result;
     }
 
-    protected abstract List<String> getBaseNames();
+    protected void processImplicitsList(@NotNull PsiMember member, @NotNull Iterable<? extends CEImplicitInterface> implicits, @NotNull InlayHintsSink sink) {
+        for (var implicit : implicits) {
+            var hasImplicitAnnotation = false;
+            var annotation = member.getAnnotation(implicit.getBaseName());
+            if (null != annotation) {
+                for (var attribute : annotation.getAttributes()) {
+                    var attributeName = attribute.getAttributeName();
+                    var valueComplement = implicit.updateAttributesFor(member, annotation, attributeName);
+                    addImplicitInlayForAttributeValue(annotation, attributeName, valueComplement, sink);
+                }
+                var newAttributesList = implicit.createAttributesFor(member, annotation);
+                addImplicitInlayForAnnotation(annotation, newAttributesList, sink);
+                hasImplicitAnnotation = true;
+            }
+            if (!hasImplicitAnnotation) {
+                var complement = implicit.createAnnotationFor(member);
+                if (null != complement) {
+                    addImplicitInlay(member, complement, sink);
+                }
+            }
+        }
+    }
+
+    private void addImplicitInlayForAttributeValue(PsiAnnotation annotation, @Nullable String attributeName, @Nullable String attributeValue, InlayHintsSink sink) {
+        if (null != attributeValue) {
+            var inlay = buildInlayWithText(attributeValue, "inlay." + keyId + ".attributes.tooltip", null);
+            addInlayInAttribute(annotation, attributeName, sink, inlay);
+        }
+    }
+
+    private void addImplicitInlayForAnnotation(PsiAnnotation annotation, @Nullable String newAttributesList, @NotNull InlayHintsSink sink) {
+        if (null != newAttributesList) {
+            var inlay = buildInlayWithText(newAttributesList, "inlay." + keyId + ".attributes.tooltip", null);
+            addInlayInAnnotation(annotation, sink, inlay);
+        }
+    }
+
+    private void addImplicitInlay(PsiElement element, @Nullable String fullText, @NotNull InlayHintsSink sink) {
+        if (null != fullText) {
+            var symbol = new CESymbol(codePoint, fullText);
+            var inlay = buildInlayWithEmoji(symbol, "inlay." + keyId + ".annotations.tooltip", null);
+            addInlayBlock(element, sink, inlay);
+        }
+    }
+
+    protected abstract String getBaseName();
 
     protected abstract void processImplicitsFor(@NotNull PsiMember member, @NotNull InlayHintsSink sink);
 }

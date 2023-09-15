@@ -11,64 +11,64 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 @Getter
 @SuppressWarnings("UnstableApiUsage")
 public class CEJPAImplicitTable implements CEImplicitInterface {
 
-    private final @NotNull List<String> baseNames;
+    private final @NotNull String nameSpace;
+    private final @NotNull String baseName;
 
-    public CEJPAImplicitTable() {
-        baseNames = CEJPAUtils.buildBaseNames("Table");
+    public CEJPAImplicitTable(@NotNull String nameSpace) {
+        this.nameSpace = nameSpace;
+        baseName = nameSpace + ".Table";
     }
 
     @Override
-    public @Nullable String createAttributesFor(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotation) {
+    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
         var attributeNameValue = member.getName();
         if (null != attributeNameValue) {
             attributeNameValue = attributeNameValue.toLowerCase();
         }
-        final var ann = CEJPAUtils.searchAnnotation(member, "Entity");
+        var ann = member.getAnnotation(nameSpace + ".Entity");
         if (null != ann) {
-            final var valueAttribute = ann.findAttributeValue("name");
+            var valueAttribute = ann.findAttributeValue("name");
             if (null != valueAttribute && !"\"\"".equalsIgnoreCase(valueAttribute.getText())) {
                 attributeNameValue = valueAttribute.getText().toLowerCase().replace("\"", "");
             }
         }
-        final var nameAttr = new CEImplicitAttribute("name", attributeNameValue, true);
+        var nameAttr = new CEImplicitAttribute("name", attributeNameValue, true);
         if (null == annotation.findAttribute("uniqueConstraints")) {
-            final var processUq = this.processUniqueConstraints(member, annotation);
-            final var uqValue = null != processUq ? "{" + processUq + "}" : null;
-            final var uniqueConstraintsAttr = new CEImplicitAttribute("uniqueConstraints", uqValue, false);
-            return this.formatAttributes(annotation, nameAttr, uniqueConstraintsAttr);
+            var processUq = processUniqueConstraints(member, annotation);
+            var uqValue = null != processUq ? "{" + processUq + "}" : null;
+            var uniqueConstraintsAttr = new CEImplicitAttribute("uniqueConstraints", uqValue, false);
+            return formatAttributes(annotation, nameAttr, uniqueConstraintsAttr);
         } else {
-            return this.formatAttributes(annotation, nameAttr);
+            return formatAttributes(annotation, nameAttr);
         }
     }
 
     @Override
-    public @Nullable String updateAttributesFor(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotation, @NotNull final String attributeName) {
+    public @Nullable String updateAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotation, @NotNull String attributeName) {
         final var UNIQUE_CONSTRAINTS_NAME = "uniqueConstraints";
         if (attributeName.equalsIgnoreCase(UNIQUE_CONSTRAINTS_NAME) && null != annotation.findAttribute(UNIQUE_CONSTRAINTS_NAME)) {
-            return this.processUniqueConstraints(member, annotation);
+            return processUniqueConstraints(member, annotation);
         }
         return null;
     }
 
-    private @Nullable String processUniqueConstraints(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotation) {
-        final var result = new StringBuilder();
-        final var ucValue = annotation.findAttributeValue("uniqueConstraints");
-        final var ucValueCompare = null != ucValue ? ucValue.getText().replaceAll(" ", "") : "{}";
-        if (member instanceof final PsiClass clazz) {
+    private @Nullable String processUniqueConstraints(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
+        var result = new StringBuilder();
+        var ucValue = annotation.findAttributeValue("uniqueConstraints");
+        var ucValueCompare = null != ucValue ? ucValue.getText().replaceAll(" ", "") : "{}";
+        if (member instanceof PsiClass clazz) {
             clazz.accept(new JavaRecursiveElementVisitor() {
                 @Override
-                public void visitField(@NotNull final PsiField field) {
-                    final var columnAnnotation = CEJPAUtils.searchAnnotation(field, "Column");
+                public void visitField(@NotNull PsiField field) {
+                    var columnAnnotation = field.getAnnotation(nameSpace + ".Column");
                     if (null != columnAnnotation) {
-                        final var uniqueValue = columnAnnotation.findAttributeValue("unique");
+                        var uniqueValue = columnAnnotation.findAttributeValue("unique");
                         if (null != uniqueValue && "true".equalsIgnoreCase(uniqueValue.getText())) {
-                            final var addValue = "@UniqueConstraint(columnNames = {\"" + field.getName() + "\"})";
+                            var addValue = "@UniqueConstraint(columnNames = {\"" + field.getName() + "\"})";
                             if (!ucValueCompare.contains(addValue.replace(" ", ""))) {
                                 if (!result.isEmpty()) {
                                     result.append(", ");
@@ -88,7 +88,7 @@ public class CEJPAImplicitTable implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable String createAnnotationFor(@NotNull final PsiMember member) {
+    public @Nullable String createAnnotationFor(@NotNull PsiMember member) {
         return null;
     }
 }

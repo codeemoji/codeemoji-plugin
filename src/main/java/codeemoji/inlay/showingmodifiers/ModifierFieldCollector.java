@@ -15,8 +15,8 @@ public class ModifierFieldCollector extends CEReferenceFieldCollector {
     private final boolean activated;
     private final String modifier;
 
-    public ModifierFieldCollector(@NotNull final Editor editor, @NotNull final String mainKeyId, @Nullable final CESymbol symbol,
-                                  final String modifier, final boolean activated) {
+    public ModifierFieldCollector(@NotNull Editor editor, @NotNull String mainKeyId, @Nullable CESymbol symbol,
+                                  String modifier, boolean activated) {
         super(editor, mainKeyId + ".field." + modifier, symbol);
         this.activated = activated;
         this.modifier = modifier;
@@ -24,17 +24,17 @@ public class ModifierFieldCollector extends CEReferenceFieldCollector {
 
     @Override
     public boolean isEnabled() {
-        return this.activated;
+        return activated;
     }
 
     @Override
-    public boolean needsHint(@NotNull final PsiField element) {
-        final var psiModifierList = element.getModifierList();
+    public boolean needsHint(@NotNull PsiField element) {
+        var psiModifierList = element.getModifierList();
         if (null != psiModifierList) {
-            if (this.modifier.equalsIgnoreCase(DEFAULT)) {
+            if (modifier.equalsIgnoreCase(DEFAULT)) {
                 return CEUtils.checkDefaultModifier(psiModifierList);
             } else {
-                return psiModifierList.hasModifierProperty(this.modifier);
+                return psiModifierList.hasModifierProperty(modifier);
             }
         }
         return false;

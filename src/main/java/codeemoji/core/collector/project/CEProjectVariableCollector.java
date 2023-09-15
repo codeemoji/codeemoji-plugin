@@ -33,24 +33,24 @@ public non-sealed class CEProjectVariableCollector extends CEProjectCollector<Ps
     private final @NotNull String typesKey;
     private final @NotNull CESymbol typesSymbol;
 
-    public CEProjectVariableCollector(@NotNull final Editor editor, @NotNull final CERuleElement elementRule, @NotNull final String mainKeyId) {
+    public CEProjectVariableCollector(@NotNull Editor editor, @NotNull CERuleElement elementRule, @NotNull String mainKeyId) {
         super(editor, mainKeyId + "." + elementRule.getValue());
         this.elementRule = elementRule;
-        typesKey = this.getMainKeyId() + "." + TYPES.getValue() + ".tooltip";
+        typesKey = getMainKeyId() + "." + TYPES.getValue() + ".tooltip";
         typesSymbol = new CESymbol();
     }
 
     @Override
-    public boolean processCollect(@NotNull final PsiElement psiElement, @NotNull final Editor editor, @NotNull final InlayHintsSink inlayHintsSink) {
+    public boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
         if (psiElement instanceof PsiJavaFile) {
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
-                public void visitReferenceExpression(@NotNull final PsiReferenceExpression expression) {
+                public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
                     if (CEUtils.isNotPreviewEditor(editor)) {
-                        final var reference = expression.getReference();
+                        var reference = expression.getReference();
                         if (null != reference) {
-                            final var resolveElement = reference.resolve();
-                            final var elementRuleType = getClassByElementRule();
+                            var resolveElement = reference.resolve();
+                            var elementRuleType = getClassByElementRule();
                             if (null != elementRuleType && (elementRuleType.isInstance(resolveElement))) {
                                 processHint(expression, (PsiVariable) resolveElement, inlayHintsSink);
                             }
@@ -81,25 +81,25 @@ public non-sealed class CEProjectVariableCollector extends CEProjectCollector<Ps
     }
 
     @Override
-    protected void processHint(@NotNull final PsiReferenceExpression addHintElement, @NotNull final PsiVariable evaluationElement, @NotNull final InlayHintsSink sink) {
-        this.processAnnotationsFR(elementRule, evaluationElement, addHintElement, sink);
-        this.processTypesFR(elementRule, TYPES, evaluationElement.getType(), addHintElement, sink, this.getTypesSymbol(), typesKey);
+    protected void processHint(@NotNull PsiReferenceExpression addHintElement, @NotNull PsiVariable evaluationElement, @NotNull InlayHintsSink sink) {
+        processAnnotationsFR(elementRule, evaluationElement, addHintElement, sink);
+        processTypesFR(elementRule, TYPES, evaluationElement.getType(), addHintElement, sink, getTypesSymbol(), typesKey);
     }
 
     @Override
-    public void addInlayTypesFR(@NotNull final PsiReferenceExpression addHintElement, @NotNull final List<String> hintValues,
-                                @NotNull final InlayHintsSink sink, @NotNull final CESymbol symbol, @NotNull final String keyTooltip) {
+    public void addInlayTypesFR(@NotNull PsiReferenceExpression addHintElement, @NotNull List<String> hintValues,
+                                @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
-            final var inlay = this.buildInlayWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
-            this.addInlayInline(addHintElement, sink, inlay);
+            var inlay = buildInlayWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
+            addInlayInline(addHintElement, sink, inlay);
         }
     }
 
     @Override
-    public int calcOffset(@Nullable final PsiReferenceExpression reference) {
+    public int calcOffset(@Nullable PsiReferenceExpression reference) {
         if (null != reference) {
-            final var lastChild = reference.getLastChild();
-            final var length = lastChild.getTextLength();
+            var lastChild = reference.getLastChild();
+            var length = lastChild.getTextLength();
             return lastChild.getTextOffset() + length;
         }
         return 0;
@@ -108,11 +108,11 @@ public non-sealed class CEProjectVariableCollector extends CEProjectCollector<Ps
     @Override
     @NotNull
     public CESymbol getAnnotationsSymbol() {
-        return this.readRuleEmoji(elementRule, ANNOTATIONS, ANNOTATIONS_SYMBOL);
+        return readRuleEmoji(elementRule, ANNOTATIONS, ANNOTATIONS_SYMBOL);
     }
 
     @NotNull
     private CESymbol getTypesSymbol() {
-        return this.readRuleEmoji(elementRule, TYPES, TYPES_SYMBOL);
+        return readRuleEmoji(elementRule, TYPES, TYPES_SYMBOL);
     }
 }

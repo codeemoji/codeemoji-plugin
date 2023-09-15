@@ -30,21 +30,21 @@ public non-sealed class CEProjectMethodCollector extends CEProjectCollector<PsiM
     private final @NotNull String returnsKey;
     private final @NotNull CESymbol returnsSymbol;
 
-    public CEProjectMethodCollector(@NotNull final Editor editor, @NotNull final String mainKeyId) {
+    public CEProjectMethodCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
         super(editor, mainKeyId + ".method");
-        this.returnsKey = this.getMainKeyId() + "." + RETURNS.getValue() + ".tooltip";
-        this.returnsSymbol = new CESymbol();
+        returnsKey = getMainKeyId() + "." + RETURNS.getValue() + ".tooltip";
+        returnsSymbol = new CESymbol();
     }
 
     @Override
-    public boolean processCollect(@NotNull final PsiElement psiElement, @NotNull final Editor editor, @NotNull final InlayHintsSink inlayHintsSink) {
+    public boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
         if (psiElement instanceof PsiJavaFile) {
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
-                public void visitCallExpression(@NotNull final PsiCallExpression callExpression) {
+                public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
                     if (CEUtils.isNotPreviewEditor(editor) &&
-                            (callExpression instanceof final PsiMethodCallExpression mexp)) {
-                        final var method = mexp.resolveMethod();
+                            (callExpression instanceof PsiMethodCallExpression mexp)) {
+                        var method = mexp.resolveMethod();
                         if (null != method) {
                             processHint(mexp, method, inlayHintsSink);
                         }
@@ -58,25 +58,25 @@ public non-sealed class CEProjectMethodCollector extends CEProjectCollector<PsiM
     }
 
     @Override
-    protected void processHint(@NotNull final PsiMethodCallExpression addHintElement, @NotNull final PsiMethod evaluationElement, @NotNull final InlayHintsSink sink) {
-        this.processAnnotationsFR(METHOD, evaluationElement, addHintElement, sink);
-        final var type = evaluationElement.getReturnType();
+    protected void processHint(@NotNull PsiMethodCallExpression addHintElement, @NotNull PsiMethod evaluationElement, @NotNull InlayHintsSink sink) {
+        processAnnotationsFR(METHOD, evaluationElement, addHintElement, sink);
+        var type = evaluationElement.getReturnType();
         if (!evaluationElement.isConstructor() && null != type) {
-            this.processTypesFR(METHOD, RETURNS, type, addHintElement, sink, this.getReturnsSymbol(), returnsKey);
+            processTypesFR(METHOD, RETURNS, type, addHintElement, sink, getReturnsSymbol(), returnsKey);
         }
     }
 
     @Override
-    public void addInlayTypesFR(@NotNull final PsiMethodCallExpression addHintElement, @NotNull final List<String> hintValues,
-                                @NotNull final InlayHintsSink sink, @NotNull final CESymbol symbol, @NotNull final String keyTooltip) {
+    public void addInlayTypesFR(@NotNull PsiMethodCallExpression addHintElement, @NotNull List<String> hintValues,
+                                @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
-            final var inlay = this.buildInlayWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
-            this.addInlayInline(addHintElement, sink, inlay);
+            var inlay = buildInlayWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
+            addInlayInline(addHintElement, sink, inlay);
         }
     }
 
     @Override
-    public int calcOffset(@Nullable final PsiMethodCallExpression element) {
+    public int calcOffset(@Nullable PsiMethodCallExpression element) {
         if (null != element) {
             return element.getTextOffset() + element.getMethodExpression().getTextLength();
         }
@@ -86,12 +86,12 @@ public non-sealed class CEProjectMethodCollector extends CEProjectCollector<PsiM
     @Override
     @NotNull
     public CESymbol getAnnotationsSymbol() {
-        return this.readRuleEmoji(METHOD, ANNOTATIONS, ANNOTATIONS_SYMBOL);
+        return readRuleEmoji(METHOD, ANNOTATIONS, ANNOTATIONS_SYMBOL);
     }
 
     @NotNull
     private CESymbol getReturnsSymbol() {
-        return this.readRuleEmoji(METHOD, RETURNS, RETURNS_SYMBOL);
+        return readRuleEmoji(METHOD, RETURNS, RETURNS_SYMBOL);
     }
 
 }

@@ -22,38 +22,38 @@ public abstract sealed class CEInlayProcessor permits CECollector {
     private final Editor editor;
     private final @NotNull PresentationFactory factory;
 
-    CEInlayProcessor(final Editor editor) {
+    CEInlayProcessor(Editor editor) {
         this.editor = editor;
         factory = new PresentationFactory(this.editor);
     }
 
-    private static @Nullable String getTooltip(@NotNull final String key) {
+    private static @Nullable String getTooltip(@NotNull String key) {
         try {
             return CEBundle.getString(key);
-        } catch (final RuntimeException ex) {
+        } catch (RuntimeException ex) {
             return null;
         }
     }
 
-    protected final InlayPresentation buildInlayWithEmoji(@Nullable CESymbol symbol, @NotNull final String keyTooltip, @Nullable final String suffixTooltip) {
+    protected final InlayPresentation buildInlayWithEmoji(@Nullable CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         if (null == symbol) {
             symbol = new CESymbol();
         } else if (null != symbol.getIcon()) {
-            return this.buildInlayWithIcon(symbol.getIcon(), keyTooltip, suffixTooltip);
+            return buildInlayWithIcon(symbol.getIcon(), keyTooltip, suffixTooltip);
         }
-        return this.buildInlayWithText(symbol.getEmoji(), keyTooltip, suffixTooltip);
+        return buildInlayWithText(symbol.getEmoji(), keyTooltip, suffixTooltip);
     }
 
-    private InlayPresentation buildInlayWithIcon(@NotNull final Icon icon, @NotNull final String keyTooltip, @Nullable final String suffixTooltip) {
-        return this.formatInlay(factory.smallScaledIcon(icon), keyTooltip, suffixTooltip);
+    private InlayPresentation buildInlayWithIcon(@NotNull Icon icon, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+        return formatInlay(factory.smallScaledIcon(icon), keyTooltip, suffixTooltip);
     }
 
-    protected InlayPresentation buildInlayWithText(@NotNull final String fullText, @NotNull final String keyTooltip, @Nullable final String suffixTooltip) {
-        return this.formatInlay(factory.smallText(fullText), keyTooltip, suffixTooltip);
+    protected InlayPresentation buildInlayWithText(@NotNull String fullText, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+        return formatInlay(factory.smallText(fullText), keyTooltip, suffixTooltip);
     }
 
-    private @NotNull InlayPresentation formatInlay(@NotNull InlayPresentation inlay, @NotNull final String keyTooltip, @Nullable final String suffixTooltip) {
-        inlay = this.buildInsetValuesForInlay(inlay);
+    private @NotNull InlayPresentation formatInlay(@NotNull InlayPresentation inlay, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+        inlay = buildInsetValuesForInlay(inlay);
         inlay = factory.withCursorOnHover(inlay, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         var tooltip = CEInlayProcessor.getTooltip(keyTooltip);
         if (null != tooltip) {
@@ -66,8 +66,8 @@ public abstract sealed class CEInlayProcessor permits CECollector {
     }
 
     //TODO: refactor internal api usage
-    private @NotNull InlayPresentation buildInsetValuesForInlay(@NotNull final InlayPresentation inlay) {
-        final var inset = new InsetValueProvider() {
+    private @NotNull InlayPresentation buildInsetValuesForInlay(@NotNull InlayPresentation inlay) {
+        var inset = new InsetValueProvider() {
             @Override
             public int getTop() {
                 return (new InlayTextMetricsStorage(getEditor())).getFontMetrics(true).offsetFromTop();

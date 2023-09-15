@@ -1,4 +1,4 @@
-package codeemoji.core.collector.implicit.jpa;
+package codeemoji.core.collector.implicit.spring;
 
 import codeemoji.core.collector.implicit.CEImplicitAttribute;
 import codeemoji.core.collector.implicit.CEImplicitInterface;
@@ -9,14 +9,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
-public class CEJPAImplicitEntity implements CEImplicitInterface {
+public class CESpringImplicitBean implements CEImplicitInterface {
 
-    private final @NotNull String nameSpace;
     private final @NotNull String baseName;
 
-    public CEJPAImplicitEntity(@NotNull String nameSpace) {
-        this.nameSpace = nameSpace;
-        baseName = nameSpace + ".Entity";
+    public CESpringImplicitBean() {
+        baseName = "org.springframework.context.annotation.Bean";
     }
 
     @Override

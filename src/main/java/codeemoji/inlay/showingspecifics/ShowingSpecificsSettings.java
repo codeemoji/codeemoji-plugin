@@ -14,7 +14,7 @@ public class ShowingSpecificsSettings implements PersistentStateComponent<Showin
     private final @NotNull String howToConfigureURL;
 
     public ShowingSpecificsSettings() {
-        this.howToConfigureURL = "https://github.com/codeemoji/codeemoji-plugin/tree/develop#cases-of-showing-specifics-of-projects";
+        howToConfigureURL = "https://github.com/codeemoji/codeemoji-plugin/tree/develop#cases-of-showing-specifics-of-projects";
     }
 
     @Override

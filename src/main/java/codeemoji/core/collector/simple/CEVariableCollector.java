@@ -32,19 +32,19 @@ public abstract non-sealed class CEVariableCollector extends CECollectorSimple<P
     private boolean enabledForParam;
     private boolean enabledForLocalVariable;
 
-    protected CEVariableCollector(@NotNull final Editor editor, @NotNull final String keyId, @Nullable final CESymbol symbol) {
+    protected CEVariableCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);
-        this.enabledForField = true;
-        this.enabledForParam = true;
-        this.enabledForLocalVariable = true;
+        enabledForField = true;
+        enabledForParam = true;
+        enabledForLocalVariable = true;
     }
 
     @Override
-    public final boolean processCollect(@NotNull final PsiElement psiElement, @NotNull final Editor editor, @NotNull final InlayHintsSink inlayHintsSink) {
+    public final boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
         if (psiElement instanceof PsiJavaFile) {
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
-                public void visitField(@NotNull final PsiField field) {
+                public void visitField(@NotNull PsiField field) {
                     if (isEnabledForField()) {
                         process(field, editor, inlayHintsSink);
                     }
@@ -52,7 +52,7 @@ public abstract non-sealed class CEVariableCollector extends CECollectorSimple<P
                 }
 
                 @Override
-                public void visitParameter(@NotNull final PsiParameter parameter) {
+                public void visitParameter(@NotNull PsiParameter parameter) {
                     if (isEnabledForParam()) {
                         process(parameter, editor, inlayHintsSink);
                     }
@@ -60,20 +60,20 @@ public abstract non-sealed class CEVariableCollector extends CECollectorSimple<P
                 }
 
                 @Override
-                public void visitLocalVariable(@NotNull final PsiLocalVariable localVariable) {
+                public void visitLocalVariable(@NotNull PsiLocalVariable localVariable) {
                     if (isEnabledForLocalVariable()) {
                         process(localVariable, editor, inlayHintsSink);
                     }
                     super.visitLocalVariable(localVariable);
                 }
 
-                private void process(@NotNull final PsiVariable variable, @NotNull final Editor editor, @NotNull final InlayHintsSink sink) {
+                private void process(@NotNull PsiVariable variable, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
                     if (needsHint(variable)) {
                         addInlay(variable.getNameIdentifier(), sink);
                         if (CEUtils.isNotPreviewEditor(editor)) {
-                            final var scope = GlobalSearchScope.fileScope(variable.getContainingFile());
-                            final var refs = ReferencesSearch.search(variable, scope, false).toArray(PsiReference.EMPTY_ARRAY);
-                            for (final var ref : refs) {
+                            var scope = GlobalSearchScope.fileScope(variable.getContainingFile());
+                            var refs = ReferencesSearch.search(variable, scope, false).toArray(PsiReference.EMPTY_ARRAY);
+                            for (var ref : refs) {
                                 addInlay(ref.getElement(), sink);
                             }
                         } else {
@@ -82,10 +82,10 @@ public abstract non-sealed class CEVariableCollector extends CECollectorSimple<P
                     }
                 }
 
-                private void processReferencesInPreviewEditor(@NotNull final PsiNamedElement variable, @NotNull final InlayHintsSink inlayHintsSink) {
+                private void processReferencesInPreviewEditor(@NotNull PsiNamedElement variable, @NotNull InlayHintsSink inlayHintsSink) {
                     variable.getContainingFile().accept(new JavaRecursiveElementVisitor() {
                         @Override
-                        public void visitReferenceExpression(@NotNull final PsiReferenceExpression expression) {
+                        public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
                             if (CEUtils.hasAUniqueQualifier(expression)
                                     && Objects.equals(expression.getText(), variable.getName())) {
                                 addInlay(expression, inlayHintsSink);
@@ -100,7 +100,7 @@ public abstract non-sealed class CEVariableCollector extends CECollectorSimple<P
     }
 
     @Override
-    public int calcOffset(@Nullable final PsiElement element) {
+    public int calcOffset(@Nullable PsiElement element) {
         if (null != element) {
             var length = element.getTextLength();
             final var attr = "this.";

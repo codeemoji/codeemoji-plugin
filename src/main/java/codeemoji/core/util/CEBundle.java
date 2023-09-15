@@ -11,7 +11,7 @@ public final class CEBundle {
     final ResourceBundle bundle;
 
     private CEBundle() {
-        this.bundle = ResourceBundle.getBundle("CEBundle");
+        bundle = ResourceBundle.getBundle("CEBundle");
     }
 
     @SuppressWarnings("SameReturnValue")

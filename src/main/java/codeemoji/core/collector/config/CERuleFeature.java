@@ -24,10 +24,10 @@ public enum CERuleFeature {
 
     static class EnumDeserializer implements JsonDeserializer<CERuleFeature> {
         @Override
-        public @NotNull CERuleFeature deserialize(@NotNull final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
+        public @NotNull CERuleFeature deserialize(@NotNull JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             try {
                 return CERuleFeature.valueOf(json.getAsString().toUpperCase());
-            } catch (final RuntimeException ex) {
+            } catch (RuntimeException ex) {
                 return CERuleFeature.UNKNOWN;
             }
         }

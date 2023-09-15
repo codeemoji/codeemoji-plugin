@@ -15,20 +15,20 @@ import static codeemoji.core.collector.config.CERuleFeature.ANNOTATIONS;
 sealed interface CEProjectInterface<H extends PsiModifierListOwner, A extends PsiElement>
         extends CEProjectConfigInterface permits CEProjectCollector {
 
-    default void processAnnotationsFR(@NotNull final CERuleElement elementRule, @NotNull final H evaluationElement,
-                                      @NotNull final A hintElement, @NotNull final InlayHintsSink sink) {
-        this.addInlayAnnotationsFR(hintElement, this.needsHintAnnotationsFR(elementRule, evaluationElement), sink);
+    default void processAnnotationsFR(@NotNull CERuleElement elementRule, @NotNull H evaluationElement,
+                                      @NotNull A hintElement, @NotNull InlayHintsSink sink) {
+        addInlayAnnotationsFR(hintElement, needsHintAnnotationsFR(elementRule, evaluationElement), sink);
     }
 
-    default @NotNull List<String> needsHintAnnotationsFR(@NotNull final CERuleElement elementRule, @NotNull final H evaluationElement) {
-        final var rules = this.readRuleFeatures(elementRule);
-        final var featureValues = rules.get(ANNOTATIONS);
-        final List<String> hintValues = new ArrayList<>();
+    default @NotNull List<String> needsHintAnnotationsFR(@NotNull CERuleElement elementRule, @NotNull H evaluationElement) {
+        var rules = readRuleFeatures(elementRule);
+        var featureValues = rules.get(ANNOTATIONS);
+        List<String> hintValues = new ArrayList<>();
         if (null != featureValues) {
-            final var annotations = evaluationElement.getAnnotations();
-            for (final var type : annotations) {
-                for (final var value : featureValues) {
-                    final var qualifiedName = type.getQualifiedName();
+            var annotations = evaluationElement.getAnnotations();
+            for (var type : annotations) {
+                for (var value : featureValues) {
+                    var qualifiedName = type.getQualifiedName();
                     if (null != qualifiedName && qualifiedName.equalsIgnoreCase(value)) {
                         hintValues.add(value);
                     }
