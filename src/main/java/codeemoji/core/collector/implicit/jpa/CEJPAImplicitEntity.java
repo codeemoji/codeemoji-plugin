@@ -20,9 +20,9 @@ public class CEJPAImplicitEntity implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
+    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName) {
         var nameAttr = new CEImplicitAttribute("name", member.getName(), true);
-        return formatAttributes(annotation, nameAttr);
+        return formatAttributes(annotationFromBaseName, nameAttr);
     }
 
     @Override

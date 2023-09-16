@@ -24,10 +24,10 @@ public interface CEImplicitInterface {
     String createAnnotationFor(@NotNull PsiMember member);
 
     @Nullable
-    String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotation);
+    String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName);
 
     @Nullable
-    default String updateAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotation, @NotNull String attributeName) {
+    default CEImplicitAttributeInsetValue updateAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName, @NotNull String attributeName) {
         return null;
     }
 

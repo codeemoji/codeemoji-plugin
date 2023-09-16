@@ -14,24 +14,24 @@ import java.util.ArrayList;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public class CESpringConfigurationCollector extends CEImplicitCollector {
+public class CESpringControllerCollector extends CEImplicitCollector {
 
     public final @NotNull String baseName;
 
-    public CESpringConfigurationCollector(@NotNull Editor editor, @NotNull String keyId, int codePoint) {
+    public CESpringControllerCollector(@NotNull Editor editor, @NotNull String keyId, int codePoint) {
         super(editor, keyId, codePoint);
-        baseName = "org.springframework.context.annotation.Configuration";
+        baseName = "org.springframework.stereotype.Controller";
     }
 
     @Override
     protected void processImplicitsFor(@NotNull PsiMember member, @NotNull InlayHintsSink sink) {
         if (member instanceof PsiClass clazz) {
             var implicits = new ArrayList<CEImplicitInterface>();
-            implicits.add(new CESpringImplicitConfiguration());
+            implicits.add(new CESpringImplicitRequestMapping());
             processImplicitsList(clazz, implicits, sink);
         } else if (member instanceof PsiMethod method) {
             var implicits = new ArrayList<CEImplicitInterface>();
-            implicits.add(new CESpringImplicitBean());
+            implicits.add(new CESpringImplicitRequestMapping());
             processImplicitsList(method, implicits, sink);
         }
     }

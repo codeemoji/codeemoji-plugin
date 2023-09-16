@@ -1,6 +1,7 @@
 package codeemoji.core.collector.implicit.jpa;
 
 import codeemoji.core.collector.implicit.CEImplicitAttribute;
+import codeemoji.core.collector.implicit.CEImplicitAttributeInsetValue;
 import codeemoji.core.collector.implicit.CEImplicitInterface;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiAnnotation;
@@ -24,7 +25,7 @@ public class CEJPAImplicitTable implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
+    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName) {
         var attributeNameValue = member.getName();
         if (null != attributeNameValue) {
             attributeNameValue = attributeNameValue.toLowerCase();
@@ -37,28 +38,27 @@ public class CEJPAImplicitTable implements CEImplicitInterface {
             }
         }
         var nameAttr = new CEImplicitAttribute("name", attributeNameValue, true);
-        if (null == annotation.findAttribute("uniqueConstraints")) {
-            var processUq = processUniqueConstraints(member, annotation);
+        if (null == annotationFromBaseName.findAttribute("uniqueConstraints")) {
+            var processUq = processUniqueConstraintsAttribute(member, annotationFromBaseName);
             var uqValue = null != processUq ? "{" + processUq + "}" : null;
             var uniqueConstraintsAttr = new CEImplicitAttribute("uniqueConstraints", uqValue, false);
-            return formatAttributes(annotation, nameAttr, uniqueConstraintsAttr);
+            return formatAttributes(annotationFromBaseName, nameAttr, uniqueConstraintsAttr);
         } else {
-            return formatAttributes(annotation, nameAttr);
+            return formatAttributes(annotationFromBaseName, nameAttr);
         }
     }
 
     @Override
-    public @Nullable String updateAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotation, @NotNull String attributeName) {
-        final var UNIQUE_CONSTRAINTS_NAME = "uniqueConstraints";
-        if (attributeName.equalsIgnoreCase(UNIQUE_CONSTRAINTS_NAME) && null != annotation.findAttribute(UNIQUE_CONSTRAINTS_NAME)) {
-            return processUniqueConstraints(member, annotation);
+    public @Nullable CEImplicitAttributeInsetValue updateAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName, @NotNull String attributeName) {
+        if (attributeName.equalsIgnoreCase("uniqueConstraints") && null != annotationFromBaseName.findDeclaredAttributeValue(attributeName)) {
+            return new CEImplicitAttributeInsetValue(processUniqueConstraintsAttribute(member, annotationFromBaseName));
         }
         return null;
     }
 
-    private @Nullable String processUniqueConstraints(@NotNull PsiMember member, @NotNull PsiAnnotation annotation) {
+    private @Nullable String processUniqueConstraintsAttribute(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName) {
         var result = new StringBuilder();
-        var ucValue = annotation.findAttributeValue("uniqueConstraints");
+        var ucValue = annotationFromBaseName.findAttributeValue("uniqueConstraints");
         var ucValueCompare = null != ucValue ? ucValue.getText().replaceAll(" ", "") : "{}";
         if (member instanceof PsiClass clazz) {
             clazz.accept(new JavaRecursiveElementVisitor() {

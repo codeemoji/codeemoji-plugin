@@ -2,6 +2,7 @@ package codeemoji.core.collector.implicit.spring;
 
 import codeemoji.core.collector.implicit.CEImplicitAttribute;
 import codeemoji.core.collector.implicit.CEImplicitInterface;
+import codeemoji.core.util.CEUtils;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiMember;
 import lombok.Getter;
@@ -9,17 +10,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
-public class CESpringImplicitBean implements CEImplicitInterface {
+public class CESpringImplicitConfiguration implements CEImplicitInterface {
 
     private final @NotNull String baseName;
 
-    public CESpringImplicitBean() {
-        baseName = "org.springframework.context.annotation.Bean";
+    public CESpringImplicitConfiguration() {
+        baseName = "org.springframework.context.annotation.Configuration";
     }
 
     @Override
     public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName) {
-        var nameAttr = new CEImplicitAttribute("name", member.getName(), true);
+        var value = CEUtils.uncapitalizeAsProperty(member.getName());
+        var nameAttr = new CEImplicitAttribute("value", value, true);
         return formatAttributes(annotationFromBaseName, nameAttr);
     }
 

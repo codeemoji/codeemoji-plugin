@@ -76,9 +76,10 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
         }
     }
 
-    protected void addInlayInAttribute(@Nullable PsiAnnotation annotation, @Nullable String attributeName, @NotNull InlayHintsSink sink, @NotNull InlayPresentation inlay) {
+    protected void addInlayInAttribute(@Nullable PsiAnnotation annotation, @Nullable String attributeName,
+                                       @NotNull InlayHintsSink sink, @NotNull InlayPresentation inlay, int shiftOffset) {
         if (null != annotation && null != attributeName) {
-            sink.addInlineElement(calcOffsetForAttribute(annotation, attributeName), false, inlay, false);
+            sink.addInlineElement(calcOffsetForAttribute(annotation, attributeName, shiftOffset), false, inlay, false);
         }
     }
 
@@ -93,11 +94,11 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
         return result;
     }
 
-    private int calcOffsetForAttribute(@NotNull PsiAnnotation annotation, @NotNull String attributeName) {
+    private int calcOffsetForAttribute(@NotNull PsiAnnotation annotation, @NotNull String attributeName, int shiftOffset) {
         var attributeValue = annotation.findAttributeValue(attributeName);
         var result = 0;
         if (null != attributeValue) {
-            result = attributeValue.getTextOffset() + attributeValue.getTextLength() - 1;
+            result = attributeValue.getTextOffset() + attributeValue.getTextLength() - shiftOffset;
         }
         return result;
     }
@@ -109,8 +110,8 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
             if (null != annotation) {
                 for (var attribute : annotation.getAttributes()) {
                     var attributeName = attribute.getAttributeName();
-                    var valueComplement = implicit.updateAttributesFor(member, annotation, attributeName);
-                    addImplicitInlayForAttributeValue(annotation, attributeName, valueComplement, sink);
+                    var attributeInset = implicit.updateAttributesFor(member, annotation, attributeName);
+                    addImplicitInlayForAttributeValue(annotation, attributeName, attributeInset, sink);
                 }
                 var newAttributesList = implicit.createAttributesFor(member, annotation);
                 addImplicitInlayForAnnotation(annotation, newAttributesList, sink);
@@ -125,10 +126,10 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
         }
     }
 
-    private void addImplicitInlayForAttributeValue(PsiAnnotation annotation, @Nullable String attributeName, @Nullable String attributeValue, InlayHintsSink sink) {
-        if (null != attributeValue) {
-            var inlay = buildInlayWithText(attributeValue, "inlay." + keyId + ".attributes.tooltip", null);
-            addInlayInAttribute(annotation, attributeName, sink, inlay);
+    private void addImplicitInlayForAttributeValue(PsiAnnotation annotation, @Nullable String attributeName, @Nullable CEImplicitAttributeInsetValue attributeValueInset, InlayHintsSink sink) {
+        if (null != attributeValueInset && null != attributeValueInset.getValue()) {
+            var inlay = buildInlayWithText(attributeValueInset.getValue().toString(), "inlay." + keyId + ".attributes.tooltip", null);
+            addInlayInAttribute(annotation, attributeName, sink, inlay, attributeValueInset.getShiftOffset());
         }
     }
 

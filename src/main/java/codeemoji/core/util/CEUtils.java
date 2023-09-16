@@ -402,4 +402,36 @@ public enum CEUtils {
         }
         return false;
     }
+
+    public static String uncapitalizeAsProperty(String str) {
+        if (notHasLength(str) || (str.length() > 1 && Character.isUpperCase(str.charAt(0)) &&
+                Character.isUpperCase(str.charAt(1)))) {
+            return str;
+        }
+        return changeFirstCharacterCase(str, false);
+    }
+
+    public static boolean notHasLength(@Nullable String str) {
+        return (str == null || str.isEmpty());
+    }
+
+    private static String changeFirstCharacterCase(String str, boolean capitalize) {
+        if (notHasLength(str)) {
+            return str;
+        }
+        char baseChar = str.charAt(0);
+        char updatedChar;
+        if (capitalize) {
+            updatedChar = Character.toUpperCase(baseChar);
+        } else {
+            updatedChar = Character.toLowerCase(baseChar);
+        }
+        if (baseChar == updatedChar) {
+            return str;
+        }
+        char[] chars = str.toCharArray();
+        chars[0] = updatedChar;
+        return new String(chars);
+    }
+
 }
