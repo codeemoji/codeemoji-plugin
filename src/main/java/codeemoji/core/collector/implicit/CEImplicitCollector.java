@@ -5,6 +5,7 @@ import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.lang.jvm.JvmAnnotatedElement;
+import com.intellij.lang.jvm.JvmAnnotation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiAnnotation;
@@ -17,6 +18,11 @@ import com.intellij.psi.PsiMethod;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
@@ -61,7 +67,7 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
 
                 private boolean hasImplicitBase(@Nullable JvmAnnotatedElement clazz) {
                     if (null != clazz) {
-                        return null != clazz.getAnnotation(getBaseName());
+                        return null != clazz.getAnnotation(getBaseName()) && !isDeactivatedFor(clazz);
                     }
                     return false;
                 }
@@ -147,6 +153,19 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
             var inlay = buildInlayWithEmoji(symbol, "inlay." + keyId + ".annotations.tooltip", null);
             addInlayBlock(element, sink, inlay);
         }
+    }
+
+    @NotNull
+    protected List<String> getDeactivatedCases() {
+        return new ArrayList<>();
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    private boolean isDeactivatedFor(@NotNull JvmAnnotatedElement element) {
+        return Arrays.stream(element.getAnnotations())
+                .map(JvmAnnotation::getQualifiedName)
+                .filter(Objects::nonNull)
+                .anyMatch(annotationName -> getDeactivatedCases().stream().anyMatch(annotationName::equalsIgnoreCase));
     }
 
     protected abstract String getBaseName();

@@ -1,5 +1,7 @@
 package codeemoji.core.collector.implicit;
 
+import com.intellij.lang.jvm.JvmAnnotatedElement;
+import com.intellij.lang.jvm.JvmAnnotation;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
@@ -11,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -76,18 +79,11 @@ public interface CEImplicitInterface {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    default boolean isDeactivatedFor(@NotNull PsiMember member) {
-        for (var annotation : member.getAnnotations()) {
-            var annotationName = annotation.getQualifiedName();
-            if (null != annotationName) {
-                for (var caseDeactivated : getDeactivatedCases()) {
-                    if (annotationName.equalsIgnoreCase(caseDeactivated)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+    default boolean isDeactivatedFor(@NotNull JvmAnnotatedElement element) {
+        return Arrays.stream(element.getAnnotations())
+                .map(JvmAnnotation::getQualifiedName)
+                .filter(Objects::nonNull)
+                .anyMatch(annotationName -> getDeactivatedCases().stream().anyMatch(annotationName::equalsIgnoreCase));
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

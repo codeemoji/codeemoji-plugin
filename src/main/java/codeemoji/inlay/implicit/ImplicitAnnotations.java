@@ -4,6 +4,7 @@ import codeemoji.core.collector.implicit.jpa.CEJPAEmbeddableCollector;
 import codeemoji.core.collector.implicit.jpa.CEJPAEntityCollector;
 import codeemoji.core.collector.implicit.spring.CESpringConfigurationCollector;
 import codeemoji.core.collector.implicit.spring.CESpringControllerCollector;
+import codeemoji.core.collector.implicit.spring.CESpringRestControllerCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
@@ -33,7 +34,8 @@ public class ImplicitAnnotations extends CEProviderMulti<NoSettings> {
                         new CEJPAEmbeddableCollector(editor, getKeyId(), 0x1F4AD, "javax.persistence"),
                         new CEJPAEmbeddableCollector(editor, getKeyId(), 0x1F4AD, "jakarta.persistence"),
                         new CESpringConfigurationCollector(editor, getKeyId(), 0x1F4AD),
-                        new CESpringControllerCollector(editor, getKeyId(), 0x1F4AD)
+                        new CESpringControllerCollector(editor, getKeyId(), 0x1F4AD),
+                        new CESpringRestControllerCollector(editor, getKeyId(), 0x1F4AD)
                 ));
     }
 }

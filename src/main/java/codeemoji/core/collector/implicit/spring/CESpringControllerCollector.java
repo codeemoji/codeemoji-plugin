@@ -8,15 +8,17 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMember;
 import com.intellij.psi.PsiMethod;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 @Getter
+@Setter
 @SuppressWarnings("UnstableApiUsage")
 public class CESpringControllerCollector extends CEImplicitCollector {
 
-    public final @NotNull String baseName;
+    public @NotNull String baseName;
 
     public CESpringControllerCollector(@NotNull Editor editor, @NotNull String keyId, int codePoint) {
         super(editor, keyId, codePoint);
