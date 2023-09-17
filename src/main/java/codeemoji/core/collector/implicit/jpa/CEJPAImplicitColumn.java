@@ -35,14 +35,14 @@ public class CEJPAImplicitColumn implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName) {
+    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation memberAnnotation) {
         var nameAttr = new CEImplicitAttribute("name", member.getName(), true);
-        var ucValue = annotationFromBaseName.findAttributeValue("unique");
+        var ucValue = memberAnnotation.findAttributeValue("unique");
         if (null != ucValue && "true".equalsIgnoreCase(ucValue.getText())) {
             var nullableAttr = new CEImplicitAttribute("nullable", "false", false);
-            return formatAttributes(annotationFromBaseName, nameAttr, nullableAttr);
+            return formatAttributes(memberAnnotation, nameAttr, nullableAttr);
         }
-        return formatAttributes(annotationFromBaseName, nameAttr);
+        return formatAttributes(memberAnnotation, nameAttr);
     }
 
     @Override

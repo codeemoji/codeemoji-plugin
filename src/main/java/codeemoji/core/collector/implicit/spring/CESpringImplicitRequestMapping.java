@@ -3,7 +3,6 @@ package codeemoji.core.collector.implicit.spring;
 import codeemoji.core.collector.implicit.CEImplicitAttribute;
 import codeemoji.core.collector.implicit.CEImplicitAttributeInsetValue;
 import codeemoji.core.collector.implicit.CEImplicitInterface;
-import codeemoji.core.util.CEUtils;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationMemberValue;
 import com.intellij.psi.PsiMember;
@@ -29,9 +28,25 @@ public class CESpringImplicitRequestMapping implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName) {
+    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation memberAnnotation) {
+        List<CEImplicitAttribute> attrList = new ArrayList<>();
+        attrList.add(processNameAttribute(member));
+        if (null == memberAnnotation.findAttribute("method")) {
+            prepareAttribute(member, memberAnnotation, "method", attrList);
+        }
+        if (null == memberAnnotation.findAttribute("params")) {
+            prepareAttribute(member, memberAnnotation, "params", attrList);
+        }
+        if (null == memberAnnotation.findAttribute("headers")) {
+            prepareAttribute(member, memberAnnotation, "headers", attrList);
+        }
+        return formatAttributes(memberAnnotation, attrList.toArray(new CEImplicitAttribute[0]));
+    }
+
+    @NotNull
+    private CEImplicitAttribute processNameAttribute(@NotNull PsiMember member) {
         var clazz = member.getContainingClass();
-        Object nameValue = CEUtils.uncapitalizeAsProperty(member.getName());
+        Object nameValue = member.getName();
         if (clazz != null) {
             var classAnnotation = clazz.getAnnotation(baseName);
             if (classAnnotation != null) {
@@ -44,20 +59,7 @@ public class CESpringImplicitRequestMapping implements CEImplicitInterface {
                 }
             }
         }
-        var nameAttr = new CEImplicitAttribute("name", nameValue, true);
-
-        List<CEImplicitAttribute> attrList = new ArrayList<>();
-        attrList.add(nameAttr);
-        if (null == annotationFromBaseName.findAttribute("method")) {
-            prepareAttribute(member, annotationFromBaseName, "method", attrList);
-        }
-        if (null == annotationFromBaseName.findAttribute("params")) {
-            prepareAttribute(member, annotationFromBaseName, "params", attrList);
-        }
-        if (null == annotationFromBaseName.findAttribute("headers")) {
-            prepareAttribute(member, annotationFromBaseName, "headers", attrList);
-        }
-        return formatAttributes(annotationFromBaseName, attrList.toArray(new CEImplicitAttribute[0]));
+        return new CEImplicitAttribute("name", nameValue, true);
     }
 
     private void prepareAttribute(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName,
@@ -125,10 +127,10 @@ public class CESpringImplicitRequestMapping implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable CEImplicitAttributeInsetValue updateAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName, @NotNull String attributeName) {
+    public @Nullable CEImplicitAttributeInsetValue updateAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation memberAnnotation, @NotNull String attributeName) {
         if (member instanceof PsiMethod method) {
-            var attrValue = annotationFromBaseName.findDeclaredAttributeValue(attributeName);
-            var attrValueUpdated = processAttribute(method, annotationFromBaseName, attributeName);
+            var attrValue = memberAnnotation.findDeclaredAttributeValue(attributeName);
+            var attrValueUpdated = processAttribute(method, memberAnnotation, attributeName);
             if (null != attrValue && null != attrValueUpdated) {
                 var shiftOffset = 1;
                 if (!attrValue.getText().contains("{") || (attrValue.getText().contains("{") && !attrValue.getText().contains("}"))) {

@@ -19,10 +19,10 @@ public class CESpringImplicitConfiguration implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName) {
+    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation memberAnnotation) {
         var value = CEUtils.uncapitalizeAsProperty(member.getName());
         var nameAttr = new CEImplicitAttribute("value", value, true);
-        return formatAttributes(annotationFromBaseName, nameAttr);
+        return formatAttributes(memberAnnotation, nameAttr);
     }
 
     @Override

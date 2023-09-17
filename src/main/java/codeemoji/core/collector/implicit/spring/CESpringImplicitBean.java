@@ -19,7 +19,7 @@ public class CESpringImplicitBean implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName) {
+    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation memberAnnotation) {
         var clazz = member.getContainingClass();
         Object attributeName = null;
         if (clazz != null) {
@@ -36,7 +36,7 @@ public class CESpringImplicitBean implements CEImplicitInterface {
             }
         }
         var nameAttr = new CEImplicitAttribute("name", attributeName, true);
-        return formatAttributes(annotationFromBaseName, nameAttr);
+        return formatAttributes(memberAnnotation, nameAttr);
     }
 
     @Override

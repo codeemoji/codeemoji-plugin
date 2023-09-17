@@ -25,7 +25,7 @@ public class CEJPAImplicitTable implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName) {
+    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation memberAnnotation) {
         var attributeNameValue = member.getName();
         if (null != attributeNameValue) {
             attributeNameValue = attributeNameValue.toLowerCase();
@@ -38,20 +38,20 @@ public class CEJPAImplicitTable implements CEImplicitInterface {
             }
         }
         var nameAttr = new CEImplicitAttribute("name", attributeNameValue, true);
-        if (null == annotationFromBaseName.findAttribute("uniqueConstraints")) {
-            var processUq = processUniqueConstraintsAttribute(member, annotationFromBaseName);
+        if (null == memberAnnotation.findAttribute("uniqueConstraints")) {
+            var processUq = processUniqueConstraintsAttribute(member, memberAnnotation);
             var uqValue = null != processUq ? "{" + processUq + "}" : null;
             var uniqueConstraintsAttr = new CEImplicitAttribute("uniqueConstraints", uqValue, false);
-            return formatAttributes(annotationFromBaseName, nameAttr, uniqueConstraintsAttr);
+            return formatAttributes(memberAnnotation, nameAttr, uniqueConstraintsAttr);
         } else {
-            return formatAttributes(annotationFromBaseName, nameAttr);
+            return formatAttributes(memberAnnotation, nameAttr);
         }
     }
 
     @Override
-    public @Nullable CEImplicitAttributeInsetValue updateAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName, @NotNull String attributeName) {
-        if (attributeName.equalsIgnoreCase("uniqueConstraints") && null != annotationFromBaseName.findDeclaredAttributeValue(attributeName)) {
-            return new CEImplicitAttributeInsetValue(processUniqueConstraintsAttribute(member, annotationFromBaseName));
+    public @Nullable CEImplicitAttributeInsetValue updateAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation memberAnnotation, @NotNull String attributeName) {
+        if (attributeName.equalsIgnoreCase("uniqueConstraints") && null != memberAnnotation.findDeclaredAttributeValue(attributeName)) {
+            return new CEImplicitAttributeInsetValue(processUniqueConstraintsAttribute(member, memberAnnotation));
         }
         return null;
     }

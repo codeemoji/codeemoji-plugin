@@ -29,10 +29,10 @@ public class CEJPAImplicitBasic implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName) {
+    public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation memberAnnotation) {
         if (null != member.getAnnotation(nameSpace + ".Id")) {
             var optionalAttr = new CEImplicitAttribute("optional", "false", false);
-            return formatAttributes(annotationFromBaseName, optionalAttr);
+            return formatAttributes(memberAnnotation, optionalAttr);
         }
         return null;
     }
