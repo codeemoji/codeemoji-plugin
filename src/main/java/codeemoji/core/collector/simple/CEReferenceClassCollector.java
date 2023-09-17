@@ -58,12 +58,12 @@ public abstract non-sealed class CEReferenceClassCollector extends CECollectorSi
                 }
 
                 @Override
-                public void visitClass(@NotNull PsiClass psiClass) {
+                public void visitClass(@NotNull PsiClass aClass) {
                     if (CEUtils.isNotPreviewEditor(editor)) {
-                        visitClassForRefs(psiClass.getExtendsList());
-                        visitClassForRefs(psiClass.getImplementsList());
+                        visitClassForRefs(aClass.getExtendsList());
+                        visitClassForRefs(aClass.getImplementsList());
                     }
-                    super.visitClass(psiClass);
+                    super.visitClass(aClass);
                 }
 
                 private void visitClassForRefs(@Nullable PsiReferenceList list) {

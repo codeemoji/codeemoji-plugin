@@ -2,7 +2,7 @@ package codeemoji.core.provider;
 
 class CEProviderException extends RuntimeException {
 
-    public CEProviderException(String detailMessage) {
-        super(detailMessage);
+    CEProviderException() {
+        super("Settings must be 'NoSettings' or 'PersistentStateComponent' type.");
     }
 }

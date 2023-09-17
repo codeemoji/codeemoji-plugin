@@ -43,7 +43,7 @@ public record ShowingSpecificsConfigurable(
         if (withBorder) {
             result.setBorder(BorderFactory.createTitledBorder(title));
         } else {
-            result.setBorder(BorderFactory.createTitledBorder(ShowingSpecificsConfigurable.emptyBorder(), title));
+            result.setBorder(BorderFactory.createTitledBorder(emptyBorder(), title));
         }
         return result;
     }
@@ -72,7 +72,7 @@ public record ShowingSpecificsConfigurable(
     }
 
     private @NotNull JComponent initOpenProjectsPanel() {
-        var project = ShowingSpecificsConfigurable.getOpenProject();
+        var project = getOpenProject();
         var file = new CEConfigFile(project);
         if (file.getRules().isEmpty()) {
             return howToConfigurePanel();
@@ -117,7 +117,7 @@ public record ShowingSpecificsConfigurable(
         var parameterTitle = CEBundle.getString("inlay.showingspecifics.options.title.parameters");
         var localVariableTitle = CEBundle.getString("inlay.showingspecifics.options.title.localvariables");
 
-        var result = ShowingSpecificsConfigurable.createBasicInnerBagPanel(loadedRulesStr + " - " + projectStr + ": " + project.getName(), false);
+        var result = createBasicInnerBagPanel(loadedRulesStr + " - " + projectStr + ": " + project.getName(), false);
 
         buildInnerElementPanel(result, gbc, CLASS, classTitle);
         buildInnerElementPanel(result, gbc, FIELD, fieldTitle);
@@ -130,7 +130,7 @@ public record ShowingSpecificsConfigurable(
 
     private void buildInnerElementPanel(@NotNull JPanel result, @NotNull GridBagConstraints gbc,
                                         @NotNull CERuleElement elementRule, @NotNull String panelTitle) {
-        var panel = ShowingSpecificsConfigurable.createBasicInnerBagPanel(panelTitle, true);
+        var panel = createBasicInnerBagPanel(panelTitle, true);
         var features = readRuleFeatures(elementRule);
         if (!features.isEmpty()) {
             buildInnerFeaturePanel(elementRule, features, panel);
@@ -170,7 +170,7 @@ public record ShowingSpecificsConfigurable(
     @Contract(" -> new")
     @Override
     public @NotNull CEConfigFile getConfigFile() {
-        return new CEConfigFile(ShowingSpecificsConfigurable.getOpenProject());
+        return new CEConfigFile(getOpenProject());
     }
 
     @SuppressWarnings("unused")

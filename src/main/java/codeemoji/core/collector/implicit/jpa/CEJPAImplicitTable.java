@@ -50,7 +50,7 @@ public class CEJPAImplicitTable implements CEImplicitInterface {
 
     @Override
     public @Nullable CEImplicitAttributeInsetValue updateAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation memberAnnotation, @NotNull String attributeName) {
-        if (attributeName.equalsIgnoreCase("uniqueConstraints") && null != memberAnnotation.findDeclaredAttributeValue(attributeName)) {
+        if ("uniqueConstraints".equalsIgnoreCase(attributeName) && null != memberAnnotation.findDeclaredAttributeValue(attributeName)) {
             return new CEImplicitAttributeInsetValue(processUniqueConstraintsAttribute(member, memberAnnotation));
         }
         return null;

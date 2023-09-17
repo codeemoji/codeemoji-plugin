@@ -26,9 +26,9 @@ public enum CERuleElement {
         @Override
         public @NotNull CERuleElement deserialize(@NotNull JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             try {
-                return CERuleElement.valueOf(json.getAsString().toUpperCase());
+                return valueOf(json.getAsString().toUpperCase());
             } catch (RuntimeException ex) {
-                return CERuleElement.UNKNOWN;
+                return UNKNOWN;
             }
         }
     }

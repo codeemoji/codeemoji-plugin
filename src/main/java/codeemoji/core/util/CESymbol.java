@@ -14,7 +14,7 @@ public class CESymbol {
     private int codePoint = 0x26AA; //white circle
     private int qualifier;
     private boolean background = true;
-    private @NotNull String emoji = CESymbol.buildFullEmoji(codePoint, qualifier, true, null);
+    private @NotNull String emoji = buildFullEmoji(codePoint, qualifier, true, null);
     private @Nullable Icon icon;
 
     public CESymbol() {
@@ -27,12 +27,12 @@ public class CESymbol {
 
     public CESymbol(int codePoint) {
         this.codePoint = codePoint;
-        emoji = CESymbol.buildFullEmoji(this.codePoint, qualifier, background, null);
+        emoji = buildFullEmoji(this.codePoint, qualifier, background, null);
     }
 
     public CESymbol(int codePoint, String suffixText) {
         this.codePoint = codePoint;
-        emoji = CESymbol.buildFullEmoji(this.codePoint, qualifier, background, suffixText);
+        emoji = buildFullEmoji(this.codePoint, qualifier, background, suffixText);
     }
 
     @SuppressWarnings("unused")
@@ -40,7 +40,7 @@ public class CESymbol {
         this.codePoint = codePoint;
         this.qualifier = qualifier;
         this.background = background;
-        emoji = CESymbol.buildFullEmoji(this.codePoint, this.qualifier, this.background, null);
+        emoji = buildFullEmoji(this.codePoint, this.qualifier, this.background, null);
     }
 
     private static @NotNull String buildFullEmoji(int codePoint, int qualifier, boolean addColor, @Nullable String suffixText) {

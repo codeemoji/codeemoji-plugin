@@ -8,7 +8,9 @@ import com.intellij.codeInsight.hints.presentation.InlayTextMetricsStorage;
 import com.intellij.codeInsight.hints.presentation.InsetValueProvider;
 import com.intellij.codeInsight.hints.presentation.PresentationFactory;
 import com.intellij.openapi.editor.Editor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,6 +18,8 @@ import javax.swing.*;
 import java.awt.*;
 
 @Getter
+@ToString
+@EqualsAndHashCode
 @SuppressWarnings("UnstableApiUsage")
 public abstract sealed class CEInlayProcessor permits CECollector {
 
@@ -48,14 +52,14 @@ public abstract sealed class CEInlayProcessor permits CECollector {
         return formatInlay(factory.smallScaledIcon(icon), keyTooltip, suffixTooltip);
     }
 
-    protected InlayPresentation buildInlayWithText(@NotNull String fullText, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+    protected final InlayPresentation buildInlayWithText(@NotNull String fullText, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         return formatInlay(factory.smallText(fullText), keyTooltip, suffixTooltip);
     }
 
     private @NotNull InlayPresentation formatInlay(@NotNull InlayPresentation inlay, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         inlay = buildInsetValuesForInlay(inlay);
         inlay = factory.withCursorOnHover(inlay, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        var tooltip = CEInlayProcessor.getTooltip(keyTooltip);
+        var tooltip = getTooltip(keyTooltip);
         if (null != tooltip) {
             if (null != suffixTooltip) {
                 tooltip += " " + suffixTooltip;

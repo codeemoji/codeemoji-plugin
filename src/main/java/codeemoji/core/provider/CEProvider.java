@@ -73,11 +73,11 @@ public abstract non-sealed class CEProvider<S> implements CEProviderInterface<S>
                 } else if (genericType instanceof PersistentStateComponent<?> typeT) {
                     settings = (S) ApplicationManager.getApplication().getService(typeT.getClass());
                 } else {
-                    throw new CEProviderException("Settings must be 'NoSettings' or 'PersistentStateComponent' type.");
+                    throw new CEProviderException();
                 }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                      NoSuchMethodException ex) {
-                CEProvider.LOG.error(ex);
+                LOG.error(ex);
             }
         }
         return settings;

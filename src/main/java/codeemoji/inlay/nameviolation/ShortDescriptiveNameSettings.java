@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 @State(name = "ShortDescriptiveNameSettings", storages = @Storage("codeemoji-short-descriptive-name-settings.xml"))
 public class ShortDescriptiveNameSettings implements PersistentStateComponent<ShortDescriptiveNameSettings> {
 
-    private @NotNull Integer numberOfLetters = 1;
+    private int numberOfLetters = 1;
 
     @Override
     public ShortDescriptiveNameSettings getState() {

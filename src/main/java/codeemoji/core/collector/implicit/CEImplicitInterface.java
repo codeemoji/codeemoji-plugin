@@ -51,11 +51,13 @@ public interface CEImplicitInterface {
         }
         if (!resultAttributes.isEmpty()) {
             finalResult = new StringBuilder();
-            for (var ind = 0; ind < resultAttributes.size(); ind++) {
+            var ind = 0;
+            while (ind < resultAttributes.size()) {
                 finalResult.append(resultAttributes.get(ind));
                 if (ind + 1 < resultAttributes.size()) {
                     finalResult.append(", ");
                 }
+                ind++;
             }
             if (annotation.getAttributes().isEmpty()) {
                 if (!annotation.getText().contains("(") && !annotation.getText().contains(")")) {

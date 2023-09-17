@@ -24,11 +24,11 @@ public abstract non-sealed class CEClassCollector extends CECollectorSimple<PsiC
         if (psiElement instanceof PsiJavaFile) {
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
-                public void visitClass(@NotNull PsiClass clazz) {
-                    if (needsHint(clazz)) {
-                        addInlay(clazz.getNameIdentifier(), inlayHintsSink);
+                public void visitClass(@NotNull PsiClass aClass) {
+                    if (needsHint(aClass)) {
+                        addInlay(aClass.getNameIdentifier(), inlayHintsSink);
                     }
-                    super.visitClass(clazz);
+                    super.visitClass(aClass);
                 }
             });
         }

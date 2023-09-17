@@ -31,7 +31,7 @@ public class CEConfigFile {
         try {
             var contentRoots = ProjectRootManager.getInstance(Objects.requireNonNull(project)).getContentRoots();
             for (var baseDir : contentRoots) {
-                var file = baseDir.findFileByRelativePath(CEConfigFile.FILE);
+                var file = baseDir.findFileByRelativePath(FILE);
                 if (null != file) {
                     try (var is = file.getInputStream()) {
                         try (Reader inputStreamReader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
@@ -43,7 +43,7 @@ public class CEConfigFile {
 
                             @SuppressWarnings("unchecked") Map<String, Object> map = gson.fromJson(inputStreamReader, Map.class);
                             for (var entry : map.entrySet()) {
-                                if (Objects.equals(entry.getKey(), CEConfigFile.JSON_HEADER)) {
+                                if (Objects.equals(entry.getKey(), JSON_HEADER)) {
                                     var readRules = gson.fromJson(String.valueOf(entry.getValue()), CERule[].class);
                                     Collections.addAll(rules, readRules);
                                 } else {
@@ -56,7 +56,7 @@ public class CEConfigFile {
                 }
             }
         } catch (RuntimeException | IOException ex) {
-            CEConfigFile.LOG.info(ex);
+            LOG.info(ex);
         }
     }
 

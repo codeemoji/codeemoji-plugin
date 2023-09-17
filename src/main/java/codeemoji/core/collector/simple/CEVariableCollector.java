@@ -60,11 +60,11 @@ public abstract non-sealed class CEVariableCollector extends CECollectorSimple<P
                 }
 
                 @Override
-                public void visitLocalVariable(@NotNull PsiLocalVariable localVariable) {
+                public void visitLocalVariable(@NotNull PsiLocalVariable variable) {
                     if (isEnabledForLocalVariable()) {
-                        process(localVariable, editor, inlayHintsSink);
+                        process(variable, editor, inlayHintsSink);
                     }
-                    super.visitLocalVariable(localVariable);
+                    super.visitLocalVariable(variable);
                 }
 
                 private void process(@NotNull PsiVariable variable, @NotNull Editor editor, @NotNull InlayHintsSink sink) {

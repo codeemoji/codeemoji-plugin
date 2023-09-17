@@ -26,9 +26,9 @@ public enum CERuleFeature {
         @Override
         public @NotNull CERuleFeature deserialize(@NotNull JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             try {
-                return CERuleFeature.valueOf(json.getAsString().toUpperCase());
+                return valueOf(json.getAsString().toUpperCase());
             } catch (RuntimeException ex) {
-                return CERuleFeature.UNKNOWN;
+                return UNKNOWN;
             }
         }
     }

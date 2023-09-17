@@ -27,15 +27,17 @@ public class ImplicitAnnotations extends CEProviderMulti<NoSettings> {
 
     @Override
     public @NotNull List<InlayHintsCollector> buildCollectors(@NotNull Editor editor) {
+        final int codePoint = 0x1F4AD;
+        String keyId = getKeyId();
         return new ArrayList<>(
                 Arrays.asList(
-                        new CEJPAEntityCollector(editor, getKeyId(), 0x1F4AD, "javax.persistence"),
-                        new CEJPAEntityCollector(editor, getKeyId(), 0x1F4AD, "jakarta.persistence"),
-                        new CEJPAEmbeddableCollector(editor, getKeyId(), 0x1F4AD, "javax.persistence"),
-                        new CEJPAEmbeddableCollector(editor, getKeyId(), 0x1F4AD, "jakarta.persistence"),
-                        new CESpringConfigurationCollector(editor, getKeyId(), 0x1F4AD),
-                        new CESpringControllerCollector(editor, getKeyId(), 0x1F4AD),
-                        new CESpringRestControllerCollector(editor, getKeyId(), 0x1F4AD)
+                        new CEJPAEntityCollector(editor, keyId, codePoint, "javax.persistence"),
+                        new CEJPAEntityCollector(editor, keyId, codePoint, "jakarta.persistence"),
+                        new CEJPAEmbeddableCollector(editor, keyId, codePoint, "javax.persistence"),
+                        new CEJPAEmbeddableCollector(editor, keyId, codePoint, "jakarta.persistence"),
+                        new CESpringConfigurationCollector(editor, keyId, codePoint),
+                        new CESpringControllerCollector(editor, keyId, codePoint),
+                        new CESpringRestControllerCollector(editor, keyId, codePoint)
                 ));
     }
 }

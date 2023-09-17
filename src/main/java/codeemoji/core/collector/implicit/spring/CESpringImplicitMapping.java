@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -22,33 +23,33 @@ import java.util.List;
 public abstract class CESpringImplicitMapping implements CEImplicitInterface {
 
     @Override
-    public final @Nullable String createAttributesFor(@NotNull final PsiMember member, @NotNull final PsiAnnotation memberAnnotation) {
-        final List<CEImplicitAttribute> attrList = new ArrayList<>(this.createChildrenAttributesFor(member, memberAnnotation));
-        attrList.add(this.processNameAttribute(member));
+    public final @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation memberAnnotation) {
+        List<CEImplicitAttribute> attrList = new ArrayList<>(createChildrenAttributesFor(member, memberAnnotation));
+        attrList.add(processNameAttribute(member));
         if (null == memberAnnotation.findAttribute("params")) {
-            this.prepareAttribute(member, memberAnnotation, "params", attrList);
+            prepareAttribute(member, memberAnnotation, "params", attrList);
         }
         if (null == memberAnnotation.findAttribute("headers")) {
-            this.prepareAttribute(member, memberAnnotation, "headers", attrList);
+            prepareAttribute(member, memberAnnotation, "headers", attrList);
         }
-        return this.formatAttributes(memberAnnotation, attrList.toArray(new CEImplicitAttribute[0]));
+        return formatAttributes(memberAnnotation, attrList.toArray(new CEImplicitAttribute[0]));
     }
 
-    public @NotNull List<CEImplicitAttribute> createChildrenAttributesFor(@NotNull final PsiMember member,
-                                                                          @NotNull final PsiAnnotation memberAnnotation) {
+    public @NotNull List<CEImplicitAttribute> createChildrenAttributesFor(@NotNull PsiMember member,
+                                                                          @NotNull PsiAnnotation memberAnnotation) {
         return new ArrayList<>();
     }
 
     @NotNull
-    public CEImplicitAttribute processNameAttribute(@NotNull final PsiMember member) {
-        final var clazz = member.getContainingClass();
+    public CEImplicitAttribute processNameAttribute(@NotNull PsiMember member) {
+        var clazz = member.getContainingClass();
         Object nameValue = member.getName();
         if (null != clazz) {
-            final var classAnnotation = clazz.getAnnotation("org.springframework.web.bind.annotation.RequestMapping");
+            var classAnnotation = clazz.getAnnotation("org.springframework.web.bind.annotation.RequestMapping");
             if (null != classAnnotation) {
-                final var nameClassAttr = classAnnotation.findDeclaredAttributeValue("name");
+                var nameClassAttr = classAnnotation.findDeclaredAttributeValue("name");
                 if (null != nameClassAttr) {
-                    final var nameClassAttrText = nameClassAttr.getText().replaceAll("\"", "").trim();
+                    var nameClassAttrText = nameClassAttr.getText().replaceAll("\"", "").trim();
                     if (!nameClassAttrText.isEmpty()) {
                         nameValue = nameClassAttrText + "#" + member.getName();
                     }
@@ -58,25 +59,25 @@ public abstract class CESpringImplicitMapping implements CEImplicitInterface {
         return new CEImplicitAttribute("name", nameValue, true);
     }
 
-    public void prepareAttribute(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotationFromBaseName,
-                                 @NotNull final String attributeName, @NotNull final List<CEImplicitAttribute> attrList) {
-        final var processAttribute = this.processAttribute(member, annotationFromBaseName, attributeName);
-        final var attribute = new CEImplicitAttribute(attributeName, processAttribute, false);
+    public void prepareAttribute(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName,
+                                 @NotNull String attributeName, @NotNull Collection<? super CEImplicitAttribute> attrList) {
+        var processAttribute = processAttribute(member, annotationFromBaseName, attributeName);
+        var attribute = new CEImplicitAttribute(attributeName, processAttribute, false);
         attrList.add(attribute);
     }
 
-    private @Nullable String processAttribute(@NotNull final PsiMember member, @NotNull final PsiAnnotation annotationFromBaseName,
-                                              @NotNull final String attributeName) {
+    private @Nullable String processAttribute(@NotNull PsiMember member, @NotNull PsiAnnotation annotationFromBaseName,
+                                              @NotNull String attributeName) {
         String result = null;
-        final var memberAttrValue = annotationFromBaseName.findDeclaredAttributeValue(attributeName);
-        if (member instanceof final PsiMethod method) {
-            final var clazz = method.getContainingClass();
+        var memberAttrValue = annotationFromBaseName.findDeclaredAttributeValue(attributeName);
+        if (member instanceof PsiMethod method) {
+            var clazz = method.getContainingClass();
             if (null != clazz) {
-                final var classAnnotation = clazz.getAnnotation("org.springframework.web.bind.annotation.RequestMapping");
+                var classAnnotation = clazz.getAnnotation("org.springframework.web.bind.annotation.RequestMapping");
                 if (null != classAnnotation) {
-                    final var classAttrValue = classAnnotation.findDeclaredAttributeValue(attributeName);
+                    var classAttrValue = classAnnotation.findDeclaredAttributeValue(attributeName);
                     if (null != classAttrValue) {
-                        result = this.joinAttributeListValue(classAttrValue, memberAttrValue);
+                        result = joinAttributeListValue(classAttrValue, memberAttrValue);
                     }
                 }
             }
@@ -84,24 +85,24 @@ public abstract class CESpringImplicitMapping implements CEImplicitInterface {
         return result;
     }
 
-    private @Nullable String joinAttributeListValue(@NotNull final PsiAnnotationMemberValue classAttrValue,
-                                                    @Nullable final PsiAnnotationMemberValue memberAttrValue) {
-        final var textClass = classAttrValue.getText();
-        final var textMember = null != memberAttrValue ? memberAttrValue.getText() : "";
-        final var textClassCompare = textClass.replaceAll("\\{", "").replaceAll("\\}", "").replaceAll(" ", "");
-        final var textMemberCompare = textMember.replaceAll("\\{", "").replaceAll("\\}", "").replaceAll(" ", "");
-        final var classMethods = textClassCompare.split(",");
-        final var memberMethods = textMemberCompare.split(",");
-        final var classSet = new HashSet<>(Arrays.asList(classMethods));
-        final var memberSet = new HashSet<>(Arrays.asList(memberMethods));
-        final var mixedSet = new HashSet<>();
+    private @Nullable String joinAttributeListValue(@NotNull PsiAnnotationMemberValue classAttrValue,
+                                                    @Nullable PsiAnnotationMemberValue memberAttrValue) {
+        var textClass = classAttrValue.getText();
+        var textMember = null != memberAttrValue ? memberAttrValue.getText() : "";
+        var textClassCompare = textClass.replaceAll("\\{", "").replaceAll("\\}", "").replaceAll(" ", "");
+        var textMemberCompare = textMember.replaceAll("\\{", "").replaceAll("\\}", "").replaceAll(" ", "");
+        var classMethods = textClassCompare.split(",");
+        var memberMethods = textMemberCompare.split(",");
+        var classSet = new HashSet<>(Arrays.asList(classMethods));
+        var memberSet = new HashSet<>(Arrays.asList(memberMethods));
+        var mixedSet = new HashSet<>();
         mixedSet.addAll(classSet);
         mixedSet.addAll(memberSet);
         mixedSet.removeAll(memberSet);
-        final var setList = new ArrayList<>(mixedSet);
+        var setList = new ArrayList<>(mixedSet);
         Collections.reverse(setList);
-        final var mixedArray = setList.toArray();
-        final var mixedArrayValue = Arrays.toString(mixedArray).replaceAll("\\[", "").replaceAll("]", "");
+        var mixedArray = setList.toArray();
+        var mixedArrayValue = Arrays.toString(mixedArray).replaceAll("\\[", "").replaceAll("]", "");
         if (textMemberCompare.isEmpty()) {
             if ("{}".equals(textClass)) {
                 return null;
@@ -118,15 +119,15 @@ public abstract class CESpringImplicitMapping implements CEImplicitInterface {
     }
 
     @Override
-    public @Nullable String createAnnotationFor(@NotNull final PsiMember member) {
+    public @Nullable String createAnnotationFor(@NotNull PsiMember member) {
         return null;
     }
 
     @Override
-    public @Nullable CEImplicitAttributeInsetValue updateAttributesFor(@NotNull final PsiMember member, @NotNull final PsiAnnotation memberAnnotation, @NotNull final String attributeName) {
-        if (member instanceof final PsiMethod method) {
-            final var attrValue = memberAnnotation.findDeclaredAttributeValue(attributeName);
-            var attrValueUpdated = this.processAttribute(method, memberAnnotation, attributeName);
+    public @Nullable CEImplicitAttributeInsetValue updateAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation memberAnnotation, @NotNull String attributeName) {
+        if (member instanceof PsiMethod method) {
+            var attrValue = memberAnnotation.findDeclaredAttributeValue(attributeName);
+            var attrValueUpdated = processAttribute(method, memberAnnotation, attributeName);
             if (null != attrValue && null != attrValueUpdated) {
                 var shiftOffset = 1;
                 if (!attrValue.getText().contains("{") || (attrValue.getText().contains("{") && !attrValue.getText().contains("}"))) {

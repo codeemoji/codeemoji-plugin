@@ -38,15 +38,15 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
     }
 
     @Override
-    public boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+    public final boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
         if (psiElement instanceof PsiJavaFile) {
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
-                public void visitClass(@NotNull PsiClass clazz) {
-                    if (hasImplicitBase(clazz)) {
-                        processImplicitsFor(clazz, inlayHintsSink);
+                public void visitClass(@NotNull PsiClass aClass) {
+                    if (hasImplicitBase(aClass)) {
+                        processImplicitsFor(aClass, inlayHintsSink);
                     }
-                    super.visitClass(clazz);
+                    super.visitClass(aClass);
                 }
 
                 @Override
@@ -76,14 +76,14 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
         return false;
     }
 
-    protected void addInlayInAnnotation(@Nullable PsiAnnotation annotation, @NotNull InlayHintsSink sink, @NotNull InlayPresentation inlay) {
+    protected final void addInlayInAnnotation(@Nullable PsiAnnotation annotation, @NotNull InlayHintsSink sink, @NotNull InlayPresentation inlay) {
         if (null != annotation) {
             sink.addInlineElement(calcOffsetForAnnotation(annotation), false, inlay, false);
         }
     }
 
-    protected void addInlayInAttribute(@Nullable PsiAnnotation annotation, @Nullable String attributeName,
-                                       @NotNull InlayHintsSink sink, @NotNull InlayPresentation inlay, int shiftOffset) {
+    protected final void addInlayInAttribute(@Nullable PsiAnnotation annotation, @Nullable String attributeName,
+                                             @NotNull InlayHintsSink sink, @NotNull InlayPresentation inlay, int shiftOffset) {
         if (null != annotation && null != attributeName) {
             sink.addInlineElement(calcOffsetForAttribute(annotation, attributeName, shiftOffset), false, inlay, false);
         }
@@ -109,7 +109,7 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
         return result;
     }
 
-    protected void processImplicitsList(@NotNull PsiMember member, @NotNull Iterable<? extends CEImplicitInterface> implicits, @NotNull InlayHintsSink sink) {
+    protected final void processImplicitsList(@NotNull PsiMember member, @NotNull Iterable<? extends CEImplicitInterface> implicits, @NotNull InlayHintsSink sink) {
         for (var implicit : implicits) {
             var hasImplicitAnnotation = false;
             var annotation = member.getAnnotation(implicit.getBaseName());
