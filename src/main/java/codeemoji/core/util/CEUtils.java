@@ -415,7 +415,7 @@ public enum CEUtils {
         return (str == null || str.isEmpty());
     }
 
-    private static String changeFirstCharacterCase(String str, boolean capitalize) {
+    private static String changeFirstCharacterCase(String str, @SuppressWarnings("SameParameterValue") boolean capitalize) {
         if (notHasLength(str)) {
             return str;
         }

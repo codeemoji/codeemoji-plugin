@@ -126,7 +126,8 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
         }
     }
 
-    private void addImplicitInlayForAttributeValue(PsiAnnotation annotation, @Nullable String attributeName, @Nullable CEImplicitAttributeInsetValue attributeValueInset, InlayHintsSink sink) {
+    private void addImplicitInlayForAttributeValue(PsiAnnotation annotation, @Nullable String attributeName,
+                                                   @Nullable CEImplicitAttributeInsetValue attributeValueInset, InlayHintsSink sink) {
         if (null != attributeValueInset && null != attributeValueInset.getValue()) {
             var inlay = buildInlayWithText(attributeValueInset.getValue().toString(), "inlay." + keyId + ".attributes.tooltip", null);
             addInlayInAttribute(annotation, attributeName, sink, inlay, attributeValueInset.getShiftOffset());
