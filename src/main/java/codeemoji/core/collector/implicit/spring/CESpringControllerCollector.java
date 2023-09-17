@@ -32,6 +32,11 @@ public class CESpringControllerCollector extends CEImplicitCollector {
         } else if (member instanceof PsiMethod method) {
             var implicits = new ArrayList<CEImplicitInterface>();
             implicits.add(new CESpringImplicitRequestMapping());
+            implicits.add(new CESpringImplicitGetMapping());
+            implicits.add(new CESpringImplicitPostMapping());
+            implicits.add(new CESpringImplicitPutMapping());
+            implicits.add(new CESpringImplicitPatchMapping());
+            implicits.add(new CESpringImplicitDeleteMapping());
             processImplicitsList(method, implicits, sink);
         }
     }
