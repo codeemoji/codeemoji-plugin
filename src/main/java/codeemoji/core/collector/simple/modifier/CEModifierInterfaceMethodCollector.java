@@ -1,6 +1,6 @@
-package codeemoji.core.collector.simple.reference.modifier;
+package codeemoji.core.collector.simple.modifier;
 
-import codeemoji.core.collector.simple.reference.CEReferenceMethodCollector;
+import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.util.CESymbol;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
@@ -8,7 +8,7 @@ import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CEModifierInterfaceMethodCollector extends CEReferenceMethodCollector {
+public final class CEModifierInterfaceMethodCollector extends CEReferenceMethodCollector {
 
     private final boolean activated;
     private final String modifier;

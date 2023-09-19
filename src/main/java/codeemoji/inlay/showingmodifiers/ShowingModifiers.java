@@ -1,9 +1,9 @@
 package codeemoji.inlay.showingmodifiers;
 
-import codeemoji.core.collector.simple.reference.modifier.CEModifierClassCollector;
-import codeemoji.core.collector.simple.reference.modifier.CEModifierFieldCollector;
-import codeemoji.core.collector.simple.reference.modifier.CEModifierInterfaceMethodCollector;
-import codeemoji.core.collector.simple.reference.modifier.CEModifierMethodCollector;
+import codeemoji.core.collector.simple.modifier.CEModifierClassCollector;
+import codeemoji.core.collector.simple.modifier.CEModifierFieldCollector;
+import codeemoji.core.collector.simple.modifier.CEModifierInterfaceMethodCollector;
+import codeemoji.core.collector.simple.modifier.CEModifierMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;

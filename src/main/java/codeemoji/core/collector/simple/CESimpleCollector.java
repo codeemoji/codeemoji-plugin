@@ -16,7 +16,9 @@ import org.jetbrains.annotations.Nullable;
 @Setter
 @ToString
 @SuppressWarnings("UnstableApiUsage")
-public abstract class CESimpleCollector<H extends PsiElement, A extends PsiElement> extends CECollector<A> {
+public sealed abstract class CESimpleCollector<H extends PsiElement, A extends PsiElement> extends CECollector<A>
+        permits CEClassCollector, CEMethodCollector, CEVariableCollector,
+        CEReferenceClassCollector, CEReferenceFieldCollector, CEReferenceMethodCollector {
 
     private final InlayPresentation inlay;
 
