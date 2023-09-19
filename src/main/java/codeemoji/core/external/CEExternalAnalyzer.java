@@ -1,6 +1,6 @@
 package codeemoji.core.external;
 
-import codeemoji.inlay.scm.MyExternalService;
+import codeemoji.inlay.external.MyExternalService;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import lombok.Getter;

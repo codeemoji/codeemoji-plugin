@@ -1,4 +1,4 @@
-package codeemoji.inlay.scm;
+package codeemoji.inlay.external;
 
 import codeemoji.core.external.CEExternalService;
 import com.intellij.openapi.components.Service;
@@ -19,15 +19,18 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
     Map<VirtualFile, Object> persistentValues = new HashMap<>();
 
     public void init(@NotNull Project project) {
-        persistentValues.put(project.getWorkspaceFile(), "MyExternalService");
+        // Persists preprocessing values
+        persistentValues.put(project.getWorkspaceFile(), null);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void buildInfo(@NotNull Map infoResult, @Nullable PsiElement element) {
         try {
             if (element != null) {
+                // Retrieves preprocessed values
                 var value = getPersistentValue(element.getProject().getWorkspaceFile());
-                //infoResult.put(...
+                // Put informations about element
+                infoResult.put("externalParam", null);
             }
         } catch (RuntimeException ignored) {
         }
