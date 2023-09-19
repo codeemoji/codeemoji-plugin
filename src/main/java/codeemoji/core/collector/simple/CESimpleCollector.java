@@ -16,18 +16,16 @@ import org.jetbrains.annotations.Nullable;
 @Setter
 @ToString
 @SuppressWarnings("UnstableApiUsage")
-public abstract sealed class CECollectorSimple<H extends PsiElement, A extends PsiElement> extends CECollector<A>
-        permits CEClassCollector, CEMethodCollector, CEVariableCollector,
-        CEReferenceClassCollector, CEReferenceFieldCollector, CEReferenceMethodCollector {
+public abstract class CESimpleCollector<H extends PsiElement, A extends PsiElement> extends CECollector<A> {
 
     private final InlayPresentation inlay;
 
-    CECollectorSimple(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    protected CESimpleCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor);
         inlay = buildInlayWithEmoji(symbol, "inlay." + keyId + ".tooltip", null);
     }
 
-    final void addInlay(@Nullable A element, InlayHintsSink sink) {
+    protected final void addInlay(@Nullable A element, InlayHintsSink sink) {
         addInlayInline(element, sink, getInlay());
     }
 

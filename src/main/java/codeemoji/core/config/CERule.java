@@ -1,4 +1,4 @@
-package codeemoji.core.collector.config;
+package codeemoji.core.config;
 
 import java.util.List;
 

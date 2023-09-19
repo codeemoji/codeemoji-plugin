@@ -21,12 +21,12 @@ import java.awt.*;
 @ToString
 @EqualsAndHashCode
 @SuppressWarnings("UnstableApiUsage")
-public abstract sealed class CEInlayProcessor permits CECollector {
+public abstract sealed class CEInlayBuilder permits CECollector {
 
     private final Editor editor;
     private final @NotNull PresentationFactory factory;
 
-    CEInlayProcessor(Editor editor) {
+    CEInlayBuilder(Editor editor) {
         this.editor = editor;
         factory = new PresentationFactory(this.editor);
     }
@@ -48,11 +48,11 @@ public abstract sealed class CEInlayProcessor permits CECollector {
         return buildInlayWithText(symbol.getEmoji(), keyTooltip, suffixTooltip);
     }
 
-    private InlayPresentation buildInlayWithIcon(@NotNull Icon icon, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+    private @NotNull InlayPresentation buildInlayWithIcon(@NotNull Icon icon, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         return formatInlay(factory.smallScaledIcon(icon), keyTooltip, suffixTooltip);
     }
 
-    protected final InlayPresentation buildInlayWithText(@NotNull String fullText, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+    protected final @NotNull InlayPresentation buildInlayWithText(@NotNull String fullText, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         return formatInlay(factory.smallText(fullText), keyTooltip, suffixTooltip);
     }
 

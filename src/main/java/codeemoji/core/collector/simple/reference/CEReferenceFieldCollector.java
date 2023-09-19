@@ -1,5 +1,6 @@
-package codeemoji.core.collector.simple;
+package codeemoji.core.collector.simple.reference;
 
+import codeemoji.core.collector.simple.CESimpleCollector;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-public abstract non-sealed class CEReferenceFieldCollector extends CECollectorSimple<PsiField, PsiReferenceExpression> {
+public abstract class CEReferenceFieldCollector extends CESimpleCollector<PsiField, PsiReferenceExpression> {
 
     protected CEReferenceFieldCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor, keyId, symbol);

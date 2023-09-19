@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("UnstableApiUsage")
-public interface CEImplicitInterface {
+public interface CEImplicit {
 
     @NotNull
     String getBaseName();

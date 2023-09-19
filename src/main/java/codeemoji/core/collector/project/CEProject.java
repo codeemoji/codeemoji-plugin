@@ -1,6 +1,6 @@
 package codeemoji.core.collector.project;
 
-import codeemoji.core.collector.config.CERuleElement;
+import codeemoji.core.config.CERuleElement;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiModifierListOwner;
@@ -9,11 +9,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static codeemoji.core.collector.config.CERuleFeature.ANNOTATIONS;
+import static codeemoji.core.config.CERuleFeature.ANNOTATIONS;
 
 @SuppressWarnings("UnstableApiUsage")
-sealed interface CEProjectInterface<H extends PsiModifierListOwner, A extends PsiElement>
-        extends CEProjectConfigInterface permits CEProjectCollector {
+interface CEProject<H extends PsiModifierListOwner, A extends PsiElement> extends CEProjectConfig {
 
     default void processAnnotationsFR(@NotNull CERuleElement elementRule, @NotNull H evaluationElement,
                                       @NotNull A hintElement, @NotNull InlayHintsSink sink) {

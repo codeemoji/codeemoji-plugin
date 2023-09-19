@@ -18,18 +18,18 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import static codeemoji.core.collector.config.CERuleElement.CLASS;
-import static codeemoji.core.collector.config.CERuleFeature.ANNOTATIONS;
-import static codeemoji.core.collector.config.CERuleFeature.EXTENDS;
-import static codeemoji.core.collector.config.CERuleFeature.IMPLEMENTS;
 import static codeemoji.core.collector.project.ProjectRuleSymbol.ANNOTATIONS_SYMBOL;
 import static codeemoji.core.collector.project.ProjectRuleSymbol.EXTENDS_SYMBOL;
 import static codeemoji.core.collector.project.ProjectRuleSymbol.IMPLEMENTS_SYMBOL;
+import static codeemoji.core.config.CERuleElement.CLASS;
+import static codeemoji.core.config.CERuleFeature.ANNOTATIONS;
+import static codeemoji.core.config.CERuleFeature.EXTENDS;
+import static codeemoji.core.config.CERuleFeature.IMPLEMENTS;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public non-sealed class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiElement>
-        implements CEProjectReferenceListInterface<PsiReferenceList, PsiElement> {
+public final class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiElement>
+        implements CEProjectReferenceList<PsiReferenceList, PsiElement> {
 
     private final @NotNull String extendsKey;
     private final @NotNull String implementsKey;

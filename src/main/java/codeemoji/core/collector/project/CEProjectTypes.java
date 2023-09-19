@@ -1,7 +1,7 @@
 package codeemoji.core.collector.project;
 
-import codeemoji.core.collector.config.CERuleElement;
-import codeemoji.core.collector.config.CERuleFeature;
+import codeemoji.core.config.CERuleElement;
+import codeemoji.core.config.CERuleFeature;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-sealed interface CEProjectTypesInterface<A extends PsiElement> extends CEProjectConfigInterface
+sealed interface CEProjectTypes<A extends PsiElement> extends CEProjectConfig
         permits CEProjectMethodCollector, CEProjectVariableCollector {
 
     default void processTypesFR(@NotNull CERuleElement elementRule, @NotNull CERuleFeature featureRule, @NotNull PsiType type,

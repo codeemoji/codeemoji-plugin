@@ -2,7 +2,7 @@ package codeemoji.core.collector.implicit.spring;
 
 import codeemoji.core.collector.implicit.CEImplicitAttribute;
 import codeemoji.core.collector.implicit.CEImplicitAttributeInsetValue;
-import codeemoji.core.collector.implicit.CEImplicitInterface;
+import codeemoji.core.collector.implicit.CEImplicit;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationMemberValue;
 import com.intellij.psi.PsiMember;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public abstract class CESpringImplicitMapping implements CEImplicitInterface {
+public abstract class CESpringImplicitMapping implements CEImplicit {
 
     @Override
     public final @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation memberAnnotation) {

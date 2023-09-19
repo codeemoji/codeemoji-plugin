@@ -4,6 +4,7 @@ import codeemoji.core.util.CEBundle;
 import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.InlayHintsProvider;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.codeInsight.hints.SettingsKey;
@@ -25,7 +26,7 @@ import java.util.Objects;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public abstract non-sealed class CEProvider<S> implements CEProviderInterface<S> {
+public abstract class CEProvider<S> implements InlayHintsProvider<S> {
 
     private static final Logger LOG = Logger.getInstance(CEProvider.class);
 
@@ -83,10 +84,11 @@ public abstract non-sealed class CEProvider<S> implements CEProviderInterface<S>
         return settings;
     }
 
-    @Override
     public final @NotNull String getKeyId() {
         return getKey().getId();
     }
+
+    protected abstract InlayHintsCollector buildCollector(Editor editor);
 
     @Override
     public final InlayHintsCollector getCollectorFor(@NotNull PsiFile psiFile, @NotNull Editor editor, @NotNull S settings, @NotNull InlayHintsSink inlayHintsSink) {

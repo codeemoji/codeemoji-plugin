@@ -109,7 +109,7 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement> {
         return result;
     }
 
-    protected final void processImplicitsList(@NotNull PsiMember member, @NotNull Iterable<? extends CEImplicitInterface> implicits, @NotNull InlayHintsSink sink) {
+    protected final void processImplicitsList(@NotNull PsiMember member, @NotNull Iterable<? extends CEImplicit> implicits, @NotNull InlayHintsSink sink) {
         for (var implicit : implicits) {
             var hasImplicitAnnotation = false;
             var annotation = member.getAnnotation(implicit.getBaseName());

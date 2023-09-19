@@ -1,6 +1,6 @@
-package codeemoji.inlay.showingmodifiers;
+package codeemoji.core.collector.simple.reference.modifier;
 
-import codeemoji.core.collector.simple.CEReferenceMethodCollector;
+import codeemoji.core.collector.simple.reference.CEReferenceMethodCollector;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.openapi.editor.Editor;
@@ -10,13 +10,13 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.intellij.psi.PsiModifier.DEFAULT;
 
-public class ModifierMethodCollector extends CEReferenceMethodCollector {
+public class CEModifierMethodCollector extends CEReferenceMethodCollector {
 
     private final boolean activated;
     private final String modifier;
 
-    public ModifierMethodCollector(@NotNull Editor editor, @NotNull String mainKeyId, @Nullable CESymbol symbol,
-                                   String modifier, boolean activated) {
+    public CEModifierMethodCollector(@NotNull Editor editor, @NotNull String mainKeyId, @Nullable CESymbol symbol,
+                                     String modifier, boolean activated) {
         super(editor, mainKeyId + ".method." + modifier, symbol);
         this.activated = activated;
         this.modifier = modifier;

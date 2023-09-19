@@ -1,7 +1,7 @@
 package codeemoji.core.collector.implicit.jpa;
 
 import codeemoji.core.collector.implicit.CEImplicitAttribute;
-import codeemoji.core.collector.implicit.CEImplicitInterface;
+import codeemoji.core.collector.implicit.CEImplicit;
 import codeemoji.core.util.CEUtils;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiField;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class CEJPAImplicitBasic implements CEImplicitInterface {
+public class CEJPAImplicitBasic implements CEImplicit {
 
     private final @NotNull String baseName;
     private final @NotNull String nameSpace;

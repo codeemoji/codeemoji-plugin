@@ -1,7 +1,7 @@
 package codeemoji.core.collector.implicit.jpa;
 
+import codeemoji.core.collector.implicit.CEImplicit;
 import codeemoji.core.collector.implicit.CEImplicitCollector;
-import codeemoji.core.collector.implicit.CEImplicitInterface;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiField;
@@ -27,7 +27,7 @@ public class CEJPAEmbeddableCollector extends CEImplicitCollector {
     @Override
     protected void processImplicitsFor(@NotNull PsiMember member, @NotNull InlayHintsSink sink) {
         if (member instanceof PsiField field) {
-            var implicits = new ArrayList<CEImplicitInterface>();
+            var implicits = new ArrayList<CEImplicit>();
             implicits.add(new CEJPAImplicitColumn(nameSpace));
             implicits.add(new CEJPAImplicitBasic(nameSpace));
             processImplicitsList(field, implicits, sink);

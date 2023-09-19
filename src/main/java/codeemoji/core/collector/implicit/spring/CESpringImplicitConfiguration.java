@@ -1,7 +1,7 @@
 package codeemoji.core.collector.implicit.spring;
 
 import codeemoji.core.collector.implicit.CEImplicitAttribute;
-import codeemoji.core.collector.implicit.CEImplicitInterface;
+import codeemoji.core.collector.implicit.CEImplicit;
 import codeemoji.core.util.CEUtils;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiMember;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
-public class CESpringImplicitConfiguration implements CEImplicitInterface {
+public class CESpringImplicitConfiguration implements CEImplicit {
 
     private final @NotNull String baseName;
 

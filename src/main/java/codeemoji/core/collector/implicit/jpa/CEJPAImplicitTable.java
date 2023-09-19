@@ -2,7 +2,7 @@ package codeemoji.core.collector.implicit.jpa;
 
 import codeemoji.core.collector.implicit.CEImplicitAttribute;
 import codeemoji.core.collector.implicit.CEImplicitAttributeInsetValue;
-import codeemoji.core.collector.implicit.CEImplicitInterface;
+import codeemoji.core.collector.implicit.CEImplicit;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public class CEJPAImplicitTable implements CEImplicitInterface {
+public class CEJPAImplicitTable implements CEImplicit {
 
     private final @NotNull String nameSpace;
     private final @NotNull String baseName;

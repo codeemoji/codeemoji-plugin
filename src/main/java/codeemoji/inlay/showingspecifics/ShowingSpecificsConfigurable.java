@@ -1,10 +1,10 @@
 package codeemoji.inlay.showingspecifics;
 
-import codeemoji.core.collector.config.CEConfigFile;
-import codeemoji.core.collector.config.CERuleElement;
-import codeemoji.core.collector.config.CERuleFeature;
-import codeemoji.core.collector.project.CEProjectConfigInterface;
+import codeemoji.core.collector.project.CEProjectConfig;
 import codeemoji.core.collector.project.ProjectRuleSymbol;
+import codeemoji.core.config.CEConfigFile;
+import codeemoji.core.config.CERuleElement;
+import codeemoji.core.config.CERuleFeature;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.ChangeListener;
@@ -26,17 +26,17 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
-import static codeemoji.core.collector.config.CERuleElement.CLASS;
-import static codeemoji.core.collector.config.CERuleElement.FIELD;
-import static codeemoji.core.collector.config.CERuleElement.LOCALVARIABLE;
-import static codeemoji.core.collector.config.CERuleElement.METHOD;
-import static codeemoji.core.collector.config.CERuleElement.PARAMETER;
+import static codeemoji.core.config.CERuleElement.CLASS;
+import static codeemoji.core.config.CERuleElement.FIELD;
+import static codeemoji.core.config.CERuleElement.LOCALVARIABLE;
+import static codeemoji.core.config.CERuleElement.METHOD;
+import static codeemoji.core.config.CERuleElement.PARAMETER;
 import static java.awt.GridBagConstraints.HORIZONTAL;
 import static java.awt.GridBagConstraints.WEST;
 
 @SuppressWarnings("UnstableApiUsage")
 public record ShowingSpecificsConfigurable(
-        ShowingSpecificsSettings settings) implements ImmediateConfigurable, CEProjectConfigInterface {
+        ShowingSpecificsSettings settings) implements ImmediateConfigurable, CEProjectConfig {
 
     private static @NotNull JPanel createBasicInnerBagPanel(@NotNull String title, boolean withBorder) {
         var result = new JPanel(new GridBagLayout());

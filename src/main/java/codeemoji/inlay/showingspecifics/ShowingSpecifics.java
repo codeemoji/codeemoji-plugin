@@ -13,7 +13,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static codeemoji.core.collector.config.CERuleElement.*;
+import static codeemoji.core.config.CERuleElement.FIELD;
+import static codeemoji.core.config.CERuleElement.LOCALVARIABLE;
+import static codeemoji.core.config.CERuleElement.PARAMETER;
 
 @SuppressWarnings("UnstableApiUsage")
 public class ShowingSpecifics extends CEProviderMulti<ShowingSpecificsSettings> {

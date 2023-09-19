@@ -1,6 +1,6 @@
 package codeemoji.core.collector.project;
 
-import codeemoji.core.collector.config.CERuleFeature;
+import codeemoji.core.config.CERuleFeature;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
@@ -12,11 +12,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static codeemoji.core.collector.config.CERuleElement.CLASS;
+import static codeemoji.core.config.CERuleElement.CLASS;
 
 @SuppressWarnings("UnstableApiUsage")
-sealed interface CEProjectReferenceListInterface<H extends PsiReferenceList, A extends PsiElement>
-        extends CEProjectConfigInterface permits CEProjectClassCollector {
+sealed interface CEProjectReferenceList<H extends PsiReferenceList, A extends PsiElement>
+        extends CEProjectConfig permits CEProjectClassCollector {
 
     default void processReferenceListFR(@NotNull CERuleFeature featureRule, @Nullable H evaluationElement,
                                         @NotNull A hintElement, @NotNull InlayHintsSink sink,

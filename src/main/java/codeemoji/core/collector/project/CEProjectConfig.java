@@ -1,8 +1,8 @@
 package codeemoji.core.collector.project;
 
-import codeemoji.core.collector.config.CEConfigFile;
-import codeemoji.core.collector.config.CERuleElement;
-import codeemoji.core.collector.config.CERuleFeature;
+import codeemoji.core.config.CEConfigFile;
+import codeemoji.core.config.CERuleElement;
+import codeemoji.core.config.CERuleFeature;
 import codeemoji.core.util.CESymbol;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +12,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-public interface CEProjectConfigInterface {
+public interface CEProjectConfig {
 
     default @NotNull Map<CERuleFeature, List<String>> readRuleFeatures(@NotNull CERuleElement elementRule) {
         Map<CERuleFeature, List<String>> result = new EnumMap<>(CERuleFeature.class);
@@ -38,7 +38,7 @@ public interface CEProjectConfigInterface {
                         var codePoint = Integer.parseInt(emoji, 16);
                         return new CESymbol(codePoint);
                     } catch (NumberFormatException ex) {
-                        Logger.getInstance(CEProjectConfigInterface.class).info(ex);
+                        Logger.getInstance(CEProjectConfig.class).info(ex);
                     }
                 }
             }

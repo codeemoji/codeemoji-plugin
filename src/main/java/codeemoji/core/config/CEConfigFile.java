@@ -1,4 +1,4 @@
-package codeemoji.core.collector.config;
+package codeemoji.core.config;
 
 import com.google.gson.GsonBuilder;
 import com.intellij.openapi.diagnostic.Logger;

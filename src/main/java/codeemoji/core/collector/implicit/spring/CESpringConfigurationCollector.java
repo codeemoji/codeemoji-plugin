@@ -1,7 +1,7 @@
 package codeemoji.core.collector.implicit.spring;
 
+import codeemoji.core.collector.implicit.CEImplicit;
 import codeemoji.core.collector.implicit.CEImplicitCollector;
-import codeemoji.core.collector.implicit.CEImplicitInterface;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
@@ -26,11 +26,11 @@ public class CESpringConfigurationCollector extends CEImplicitCollector {
     @Override
     protected void processImplicitsFor(@NotNull PsiMember member, @NotNull InlayHintsSink sink) {
         if (member instanceof PsiClass clazz) {
-            var implicits = new ArrayList<CEImplicitInterface>();
+            var implicits = new ArrayList<CEImplicit>();
             implicits.add(new CESpringImplicitConfiguration());
             processImplicitsList(clazz, implicits, sink);
         } else if (member instanceof PsiMethod method) {
-            var implicits = new ArrayList<CEImplicitInterface>();
+            var implicits = new ArrayList<CEImplicit>();
             implicits.add(new CESpringImplicitBean());
             processImplicitsList(method, implicits, sink);
         }
