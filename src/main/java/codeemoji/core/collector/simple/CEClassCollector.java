@@ -25,7 +25,7 @@ public abstract non-sealed class CEClassCollector extends CESimpleCollector<PsiC
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
                 public void visitClass(@NotNull PsiClass aClass) {
-                    if (needsHint(aClass)) {
+                    if (needsHint(aClass, processExternalInfo(aClass))) {
                         addInlay(aClass.getNameIdentifier(), inlayHintsSink);
                     }
                     super.visitClass(aClass);
@@ -34,4 +34,5 @@ public abstract non-sealed class CEClassCollector extends CESimpleCollector<PsiC
         }
         return false;
     }
+
 }

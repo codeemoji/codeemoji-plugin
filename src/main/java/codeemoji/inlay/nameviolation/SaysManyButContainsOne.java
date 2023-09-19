@@ -10,6 +10,8 @@ import com.intellij.psi.PsiEllipsisType;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
+
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.ONE;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -39,7 +41,7 @@ public class SaysManyButContainsOne extends CEProvider<NoSettings> {
     public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
         return new CEVariableCollector(editor, getKeyId(), ONE) {
             @Override
-            public boolean needsHint(@NotNull PsiVariable element) {
+            public boolean needsHint(@NotNull PsiVariable element, @NotNull Map<?, ?> externalInfo) {
                 var typeElement = element.getTypeElement();
                 return null != typeElement &&
                         CEUtils.isPluralForm(element.getName()) &&

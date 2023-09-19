@@ -8,6 +8,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
+
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.SMALL_NAME;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -36,7 +38,7 @@ public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSetting
     public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
         return new CEVariableCollector(editor, getKeyId(), SMALL_NAME) {
             @Override
-            public boolean needsHint(@NotNull PsiVariable element) {
+            public boolean needsHint(@NotNull PsiVariable element, @NotNull Map<?, ?> externalInfo) {
                 if (null != element.getNameIdentifier()) {
                     return getSettings().getNumberOfLetters() >= element.getNameIdentifier().getTextLength();
                 }

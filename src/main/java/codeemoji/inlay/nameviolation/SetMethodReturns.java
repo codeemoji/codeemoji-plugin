@@ -9,6 +9,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiTypes;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Objects;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
@@ -31,7 +32,7 @@ public class SetMethodReturns extends CEProvider<NoSettings> {
     public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
         return new CEMethodCollector(editor, getKeyId(), CONFUSED) {
             @Override
-            public boolean needsHint(@NotNull PsiMethod element) {
+            public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                 return element.getName().startsWith("set") && !Objects.equals(element.getReturnType(), PsiTypes.voidType());
             }
         };

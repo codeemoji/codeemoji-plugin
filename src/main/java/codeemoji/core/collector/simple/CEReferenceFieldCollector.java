@@ -29,7 +29,7 @@ public abstract non-sealed class CEReferenceFieldCollector extends CESimpleColle
                         var reference = expression.getReference();
                         if (null != reference) {
                             var resolveElement = reference.resolve();
-                            if (resolveElement instanceof PsiField field && needsHint(field)) {
+                            if (resolveElement instanceof PsiField field && needsHint(field, processExternalInfo(field))) {
                                 addInlay(expression, inlayHintsSink);
                             }
                         }

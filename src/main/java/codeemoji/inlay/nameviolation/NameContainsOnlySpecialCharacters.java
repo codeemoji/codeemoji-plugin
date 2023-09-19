@@ -9,6 +9,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Objects;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
@@ -38,7 +39,7 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NoSettings> {
     public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
         return new CEVariableCollector(editor, getKeyId(), CONFUSED) {
             @Override
-            public boolean needsHint(@NotNull PsiVariable element) {
+            public boolean needsHint(@NotNull PsiVariable element, @NotNull Map<?, ?> externalInfo) {
                 return CEUtils.containsOnlySpecialCharacters(Objects.requireNonNull(element.getName()));
             }
         };

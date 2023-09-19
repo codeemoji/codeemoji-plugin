@@ -68,7 +68,7 @@ public abstract non-sealed class CEVariableCollector extends CESimpleCollector<P
                 }
 
                 private void process(@NotNull PsiVariable variable, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
-                    if (needsHint(variable)) {
+                    if (needsHint(variable, processExternalInfo(variable))) {
                         addInlay(variable.getNameIdentifier(), sink);
                         if (CEUtils.isNotPreviewEditor(editor)) {
                             var scope = GlobalSearchScope.fileScope(variable.getContainingFile());

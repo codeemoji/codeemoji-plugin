@@ -8,6 +8,8 @@ import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
 import static com.intellij.psi.PsiModifier.DEFAULT;
 
 public final class CEModifierMethodCollector extends CEReferenceMethodCollector {
@@ -28,7 +30,7 @@ public final class CEModifierMethodCollector extends CEReferenceMethodCollector 
     }
 
     @Override
-    public boolean needsHint(@NotNull PsiMethod element) {
+    public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
         var psiModifierList = element.getModifierList();
         if (modifier.equalsIgnoreCase(DEFAULT)) {
             return CEUtils.checkDefaultModifier(psiModifierList);

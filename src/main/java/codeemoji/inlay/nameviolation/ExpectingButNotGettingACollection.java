@@ -10,6 +10,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiTypes;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Objects;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.ONE;
@@ -31,7 +32,7 @@ public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
     public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
         return new CEMethodCollector(editor, getKeyId(), ONE) {
             @Override
-            public boolean needsHint(@NotNull PsiMethod element) {
+            public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                 if ((element.getName().startsWith("get") || element.getName().startsWith("return"))
                         && CEUtils.isPluralForm(element.getName())) {
                     var typeElement = element.getReturnTypeElement();

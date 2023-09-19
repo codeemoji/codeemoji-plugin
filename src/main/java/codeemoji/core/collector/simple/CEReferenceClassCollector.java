@@ -32,7 +32,7 @@ public abstract non-sealed class CEReferenceClassCollector extends CESimpleColle
                         var reference = expression.getReference();
                         if (null != reference) {
                             var resolveElement = reference.resolve();
-                            if (resolveElement instanceof PsiClass clazz && needsHint(clazz)) {
+                            if (resolveElement instanceof PsiClass clazz && needsHint(clazz, processExternalInfo(clazz))) {
                                 addInlay(expression, inlayHintsSink);
                             }
                         }
@@ -47,9 +47,8 @@ public abstract non-sealed class CEReferenceClassCollector extends CESimpleColle
                         if (null != typeElement && !typeElement.isInferredType()
                                 && typeElement.getType() instanceof PsiClassType classType) {
                             var clazz = classType.resolve();
-                            if (null != clazz && (needsHint(clazz))) {
+                            if (null != clazz && (needsHint(clazz, processExternalInfo(clazz)))) {
                                 addInlay(variable, inlayHintsSink);
-
                             }
 
                         }
@@ -70,7 +69,7 @@ public abstract non-sealed class CEReferenceClassCollector extends CESimpleColle
                     if (null != list) {
                         for (var ref : list.getReferenceElements()) {
                             var resolveElement = ref.resolve();
-                            if (resolveElement instanceof PsiClass clazz && (needsHint(clazz))) {
+                            if (resolveElement instanceof PsiClass clazz && (needsHint(clazz, processExternalInfo(clazz)))) {
                                 addInlay(ref, inlayHintsSink);
 
                             }

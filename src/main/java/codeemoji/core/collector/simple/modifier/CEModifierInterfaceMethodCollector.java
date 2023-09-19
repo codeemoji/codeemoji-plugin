@@ -8,6 +8,8 @@ import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
 public final class CEModifierInterfaceMethodCollector extends CEReferenceMethodCollector {
 
     private final boolean activated;
@@ -26,7 +28,7 @@ public final class CEModifierInterfaceMethodCollector extends CEReferenceMethodC
     }
 
     @Override
-    public boolean needsHint(@NotNull PsiMethod element) {
+    public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
         var parent = element.getParent();
         if (parent instanceof PsiClass clazz && (clazz.isInterface())) {
             var psiModifierList = element.getModifierList();

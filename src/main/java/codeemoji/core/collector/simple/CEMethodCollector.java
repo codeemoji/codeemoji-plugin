@@ -24,7 +24,7 @@ public abstract non-sealed class CEMethodCollector extends CESimpleCollector<Psi
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
                 public void visitMethod(@NotNull PsiMethod method) {
-                    if (needsHint(method)) {
+                    if (needsHint(method, processExternalInfo(method))) {
                         addInlay(method.getNameIdentifier(), inlayHintsSink);
                     }
                     super.visitMethod(method);

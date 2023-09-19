@@ -1,6 +1,7 @@
 package codeemoji.core.collector.simple;
 
 import codeemoji.core.collector.CECollector;
+import codeemoji.core.external.CEExternalAnalyzer;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
@@ -11,6 +12,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -31,5 +35,13 @@ public sealed abstract class CESimpleCollector<H extends PsiElement, A extends P
         addInlayInline(element, sink, getInlay());
     }
 
-    protected abstract boolean needsHint(@NotNull H element);
+    protected @NotNull Map<?, ?> processExternalInfo(@Nullable H element) {
+        Map<?, ?> result = new HashMap<>();
+        if (element != null) {
+            CEExternalAnalyzer.getInstance(element.getProject()).buildExternalInfo(result, element);
+        }
+        return result;
+    }
+
+    protected abstract boolean needsHint(@NotNull H element, @NotNull Map<?, ?> externalInfo);
 }

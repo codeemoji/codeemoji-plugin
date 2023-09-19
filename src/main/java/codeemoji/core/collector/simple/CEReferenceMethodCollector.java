@@ -29,7 +29,7 @@ public abstract non-sealed class CEReferenceMethodCollector extends CESimpleColl
                     if (CEUtils.isNotPreviewEditor(editor) &&
                             (callExpression instanceof PsiMethodCallExpression mexp)) {
                         var method = mexp.resolveMethod();
-                        if (null != method && (needsHint(method))) {
+                        if (null != method && (needsHint(method, processExternalInfo(method)))) {
                             addInlay(mexp, inlayHintsSink);
 
                         }

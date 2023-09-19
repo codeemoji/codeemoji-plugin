@@ -9,6 +9,8 @@ import com.intellij.psi.PsiTypes;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
+
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -37,7 +39,7 @@ public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NoSettings> {
     public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
         return new CEVariableCollector(editor, getKeyId(), CONFUSED) {
             @Override
-            public boolean needsHint(@NotNull PsiVariable element) {
+            public boolean needsHint(@NotNull PsiVariable element, @NotNull Map<?, ?> externalInfo) {
                 if (null != element.getName()) {
                     return 2 < element.getName().length() &&
                             element.getName().startsWith("is") && !element.getType().equals(PsiTypes.booleanType());
