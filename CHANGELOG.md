@@ -1,14 +1,17 @@
 # codEEmoji Plugin Changelog
 
-## 3.0.0-SNAPSHOT (September __th, 2023)
+## 3.0.0 (September 20th, 2023)
 
 ### Added
 
--
+- Cases of implicit annotations
+- API for external services
 
 ### Improvements
 
--
+- Framework refactorings and improvements
+- General performance improvements
+- Fix bugs
 
 ## 2.0.2  (August 28th, 2023)
 

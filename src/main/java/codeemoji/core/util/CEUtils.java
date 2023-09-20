@@ -85,7 +85,7 @@ public enum CEUtils {
 
     public static boolean isPluralForm(@Nullable String name) {
         if (null != name && 1 < name.trim().length()) {
-            var word = identifyLastWordWithUpperCase(name);
+            var word = calcLastWordCapitalized(name);
             if (isSuffixWhiteList(name)) {
                 return false;
             }
@@ -94,16 +94,6 @@ public enum CEUtils {
             } else return isCommonPluralForm(word);
         }
         return false;
-    }
-
-    private static @NotNull String identifyLastWordWithUpperCase(@NotNull String name) {
-        String result = null;
-        var pattern = Pattern.compile("\\b[A-Z][a-zA-Z]*\\b");
-        var matcher = pattern.matcher(name);
-        while (matcher.find()) {
-            result = matcher.group();
-        }
-        return (null != result) ? result : name;
     }
 
     private static boolean isIrregularPluralForm(@NotNull String word) {
