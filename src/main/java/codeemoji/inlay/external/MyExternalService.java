@@ -39,8 +39,5 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
             }
         } catch (RuntimeException ignored) {
         }
-        System.out.println("fui chamado no projeto "
-                + element.getProject().getName() + " para o elemento " + element.getText()
-                + " na classe " + element.getContainingFile().getName());
     }
 }
