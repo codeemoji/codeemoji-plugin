@@ -12,9 +12,9 @@ public final class CEExternalAnalyzerStartup implements ProjectActivity {
     @Nullable
     @Override
     public Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
-        var externalServices = CEExternalAnalyzer.getInstance(project).getExternalServices();
+        var externalServices = CEExternalAnalyzer.getInstance().retrieveExternalServices(project);
         for (CEExternalService<?, ?> externalService : externalServices) {
-            externalService.init(project);
+            externalService.initFor(project);
         }
         return null;
     }

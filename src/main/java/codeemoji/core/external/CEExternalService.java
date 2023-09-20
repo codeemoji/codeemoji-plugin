@@ -9,9 +9,11 @@ import java.util.Map;
 
 public interface CEExternalService<K, V> {
 
-    void init(@NotNull Project project);
+    void initFor(@NotNull Project project);
 
-    void buildInfo(@NotNull Map<?, ?> infoResult, @Nullable PsiElement element);
+    void stopFor(@NotNull Project project);
+
+    void buildInfoFor(@NotNull Map<?, ?> infoResult, @Nullable PsiElement element);
 
     default V getPersistentValue(@Nullable K projectKey) {
         try {

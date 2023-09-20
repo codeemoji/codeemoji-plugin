@@ -1,32 +1,43 @@
 package codeemoji.inlay.showingmodifiers;
 
 import codeemoji.core.util.CEBundle;
+import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 
 import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.*;
-import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.*;
-import static com.intellij.psi.PsiModifier.*;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.ABSTRACT_SYMBOL;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.DEFAULT_INTERFACE_SYMBOL;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.DEFAULT_SYMBOL;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.FINAL_SYMBOL;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.FINAL_VAR_SYMBOL;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.NATIVE_SYMBOL;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.PRIVATE_SYMBOL;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.PROTECTED_SYMBOL;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.PUBLIC_SYMBOL;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.STATIC_SYMBOL;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.SYNCHRONIZED_SYMBOL;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.TRANSIENT_SYMBOL;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.VOLATILE_SYMBOL;
+import static com.intellij.psi.PsiModifier.ABSTRACT;
+import static com.intellij.psi.PsiModifier.DEFAULT;
+import static com.intellij.psi.PsiModifier.FINAL;
+import static com.intellij.psi.PsiModifier.NATIVE;
+import static com.intellij.psi.PsiModifier.PRIVATE;
+import static com.intellij.psi.PsiModifier.PROTECTED;
+import static com.intellij.psi.PsiModifier.PUBLIC;
+import static com.intellij.psi.PsiModifier.STATIC;
+import static com.intellij.psi.PsiModifier.SYNCHRONIZED;
+import static com.intellij.psi.PsiModifier.TRANSIENT;
+import static com.intellij.psi.PsiModifier.VOLATILE;
 
 @SuppressWarnings({"UnstableApiUsage", "DuplicatedCode"})
 record ShowingModifiersConfigurable(ShowingModifiersSettings settings) implements ImmediateConfigurable {
-
-    private static @NotNull JPanel createBasicInnerPanel(@NotNull String typeTitle) {
-        var result = new JPanel(new GridLayout(10, 1));
-        var title = CEBundle.getString("inlay.showingmodifiers.options.title." + typeTitle);
-        result.setBorder(BorderFactory.createTitledBorder(emptyBorder(), title));
-        return result;
-    }
-
-    private static @NotNull Border emptyBorder() {
-        return BorderFactory.createEmptyBorder(1, 3, 1, 3);
-    }
 
     @Override
     public @NotNull JComponent createComponent(@NotNull ChangeListener changeListener) {
@@ -36,7 +47,8 @@ record ShowingModifiersConfigurable(ShowingModifiersSettings settings) implement
         var fieldPanel = prepareFieldPanel(changeListener);
         var methodPanel = prepareMethodPanel(changeListener);
 
-        modifiersPanel.setBorder(BorderFactory.createTitledBorder(CEBundle.getString("inlay.showingmodifiers.options.title.modifiers")));
+        var title = CEBundle.getString("inlay.showingmodifiers.options.title.modifiers");
+        modifiersPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(7, 0, 7, 0), title));
 
         modifiersPanel.add(classPanel);
         modifiersPanel.add(fieldPanel);
@@ -48,7 +60,7 @@ record ShowingModifiersConfigurable(ShowingModifiersSettings settings) implement
     }
 
     private @NotNull JPanel prepareClassPanel(@NotNull ChangeListener changeListener) {
-        var result = createBasicInnerPanel("classes");
+        var result = CEUtils.createBasicInnerPanel("inlay.showingmodifiers.options.title.classes", 10, 1);
 
         var publicClass = new JCheckBox(PUBLIC_SYMBOL.getEmoji() + PUBLIC, settings().query(PUBLIC_CLASS));
         var defaultClass = new JCheckBox(DEFAULT_SYMBOL.getEmoji() + DEFAULT, settings().query(DEFAULT_CLASS));
@@ -69,7 +81,7 @@ record ShowingModifiersConfigurable(ShowingModifiersSettings settings) implement
     }
 
     private @NotNull JPanel prepareFieldPanel(@NotNull ChangeListener changeListener) {
-        var result = createBasicInnerPanel("fields");
+        var result = CEUtils.createBasicInnerPanel("inlay.showingmodifiers.options.title.fields", 10, 1);
 
         var publicField = new JCheckBox(PUBLIC_SYMBOL.getEmoji() + PUBLIC, settings().query(PUBLIC_FIELD));
         var defaultField = new JCheckBox(DEFAULT_SYMBOL.getEmoji() + DEFAULT, settings().query(DEFAULT_FIELD));
@@ -102,7 +114,7 @@ record ShowingModifiersConfigurable(ShowingModifiersSettings settings) implement
     }
 
     private @NotNull JPanel prepareMethodPanel(@NotNull ChangeListener changeListener) {
-        var result = createBasicInnerPanel("methods");
+        var result = CEUtils.createBasicInnerPanel("inlay.showingmodifiers.options.title.methods", 10, 1);
 
         var publicMethod = new JCheckBox(PUBLIC_SYMBOL.getEmoji() + PUBLIC, settings().query(PUBLIC_METHOD));
         var defaultMethod = new JCheckBox(DEFAULT_SYMBOL.getEmoji() + DEFAULT, settings().query(DEFAULT_METHOD));

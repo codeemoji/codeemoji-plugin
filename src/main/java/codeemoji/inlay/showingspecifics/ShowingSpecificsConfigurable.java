@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -38,19 +37,10 @@ import static java.awt.GridBagConstraints.WEST;
 public record ShowingSpecificsConfigurable(
         ShowingSpecificsSettings settings) implements ImmediateConfigurable, CEProjectConfig {
 
-    private static @NotNull JPanel createBasicInnerBagPanel(@NotNull String title, boolean withBorder) {
+    private static @NotNull JPanel createBasicInnerBagPanel(@NotNull String title) {
         var result = new JPanel(new GridBagLayout());
-        if (withBorder) {
-            result.setBorder(BorderFactory.createTitledBorder(title));
-        } else {
-            result.setBorder(BorderFactory.createTitledBorder(emptyBorder(), title));
-        }
+        result.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(7, 0, 7, 0), title));
         return result;
-    }
-
-    @Contract(value = " -> new", pure = true)
-    private static @NotNull Border emptyBorder() {
-        return BorderFactory.createEmptyBorder(1, 3, 1, 3);
     }
 
     private static @Nullable Project getOpenProject() {
@@ -117,7 +107,7 @@ public record ShowingSpecificsConfigurable(
         var parameterTitle = CEBundle.getString("inlay.showingspecifics.options.title.parameters");
         var localVariableTitle = CEBundle.getString("inlay.showingspecifics.options.title.localvariables");
 
-        var result = createBasicInnerBagPanel(loadedRulesStr + " - " + projectStr + ": " + project.getName(), false);
+        var result = createBasicInnerBagPanel(loadedRulesStr + " (" + projectStr + ": " + project.getName() + ")");
 
         buildInnerElementPanel(result, gbc, CLASS, classTitle);
         buildInnerElementPanel(result, gbc, FIELD, fieldTitle);
@@ -130,7 +120,7 @@ public record ShowingSpecificsConfigurable(
 
     private void buildInnerElementPanel(@NotNull JPanel result, @NotNull GridBagConstraints gbc,
                                         @NotNull CERuleElement elementRule, @NotNull String panelTitle) {
-        var panel = createBasicInnerBagPanel(panelTitle, true);
+        var panel = createBasicInnerBagPanel(panelTitle);
         var features = readRuleFeatures(elementRule);
         if (!features.isEmpty()) {
             buildInnerFeaturePanel(elementRule, features, panel);

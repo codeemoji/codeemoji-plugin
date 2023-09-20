@@ -6,8 +6,8 @@ import codeemoji.core.collector.implicit.spring.CESpringConfigurationCollector;
 import codeemoji.core.collector.implicit.spring.CESpringControllerCollector;
 import codeemoji.core.collector.implicit.spring.CESpringRestControllerCollector;
 import codeemoji.core.provider.CEProviderMulti;
+import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
-import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public class ImplicitAnnotations extends CEProviderMulti<NoSettings> {
+public class ImplicitAnnotations extends CEProviderMulti<ImplicitAnnotationsSettings> {
 
     @Override
     public String getPreviewText() {
@@ -39,5 +39,10 @@ public class ImplicitAnnotations extends CEProviderMulti<NoSettings> {
                         new CESpringControllerCollector(editor, keyId, codePoint),
                         new CESpringRestControllerCollector(editor, keyId, codePoint)
                 ));
+    }
+
+    @Override
+    public @NotNull ImmediateConfigurable createConfigurable(@NotNull ImplicitAnnotationsSettings settings) {
+        return new ImplicitAnnotationsConfigurable(settings);
     }
 }

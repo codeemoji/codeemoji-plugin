@@ -38,7 +38,7 @@ public sealed abstract class CESimpleCollector<H extends PsiElement, A extends P
     protected @NotNull Map<?, ?> processExternalInfo(@Nullable H element) {
         Map<?, ?> result = new HashMap<>();
         if (element != null) {
-            CEExternalAnalyzer.getInstance(element.getProject()).buildExternalInfo(result, element);
+            CEExternalAnalyzer.getInstance().buildExternalInfo(result, element);
         }
         return result;
     }

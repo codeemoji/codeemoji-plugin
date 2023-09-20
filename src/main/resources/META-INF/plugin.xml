@@ -13,10 +13,16 @@
     <depends>com.intellij.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+
+        <!--suppress PluginXmlCapitalization -->
+        <applicationConfigurable groupId="other" displayName="codEEmoji Settings"
+                                 instance="codeemoji.core.config.CEGlobalConfigurable"/>
         <postStartupActivity implementation="codeemoji.core.external.CEExternalAnalyzerStartup"/>
         <applicationService serviceImplementation="codeemoji.inlay.nameviolation.ShortDescriptiveNameSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.showingmodifiers.ShowingModifiersSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.showingspecifics.ShowingSpecificsSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.implicit.ImplicitAnnotationsSettings"/>
+        <applicationService serviceImplementation="codeemoji.core.config.CEGlobalSettings"/>
         <codeInsight.inlayProvider language="JAVA"
                                    implementationClass="codeemoji.inlay.nameviolation.ShortDescriptiveName"/>
         <codeInsight.inlayProvider language="JAVA"

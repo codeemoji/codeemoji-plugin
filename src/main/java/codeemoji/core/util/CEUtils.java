@@ -24,6 +24,8 @@ import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -206,7 +208,7 @@ public enum CEUtils {
             return false;
         }
         var classLoader = CEUtils.class.getClassLoader();
-        try (var is = classLoader.getResourceAsStream("suffix_whitelist_plural.json")) {
+        try (var is = classLoader.getResourceAsStream("whitelist_plural.json")) {
             if (null != is) {
                 Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8);
                 var je = new Gson().fromJson(reader, JsonObject.class);
@@ -432,6 +434,21 @@ public enum CEUtils {
         char[] chars = str.toCharArray();
         chars[0] = updatedChar;
         return new String(chars);
+    }
+
+    public static @NotNull JPanel createBasicInnerPanel(@NotNull String titleKey, int rows, int cols) {
+        return createBasicInnerPanel(titleKey, rows, cols, 7, 0, 7, 0, 0, 0, null, null);
+    }
+
+    public static @NotNull JPanel createBasicInnerPanel(@NotNull String titleKey, int rows, int cols,
+                                                        int borderTop, int borderLeft, int borderBottom, int borderRight,
+                                                        int justification, int position, Font font, Color color) {
+        var result = new JPanel(new GridLayout(rows, cols));
+        var title = CEBundle.getString(titleKey);
+        result.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEmptyBorder(borderTop, borderLeft, borderBottom, borderRight),
+                title, justification, position, font, color));
+        return result;
     }
 
 }
