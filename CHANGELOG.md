@@ -1,6 +1,6 @@
 # codEEmoji Plugin Changelog
 
-## 3.0.0 (September 20th, 2023)
+## 3.0.0-beta (September 20th, 2023)
 
 ### Added
 
