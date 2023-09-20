@@ -9,19 +9,17 @@ import java.util.Map;
 
 public interface CEExternalService<K, V> {
 
-    void initFor(@NotNull Project project);
+    void preProcess(@NotNull Project project);
 
-    void stopFor(@NotNull Project project);
+    void buildInfo(@NotNull Map<?, ?> infoResult, @Nullable PsiElement element);
 
-    void buildInfoFor(@NotNull Map<?, ?> infoResult, @Nullable PsiElement element);
-
-    default V getPersistentValue(@Nullable K projectKey) {
+    default V retrieveData(@Nullable K projectKey) {
         try {
-            return getPersistentValues().get(projectKey);
+            return getPersistedData().get(projectKey);
         } catch (RuntimeException ignored) {
             return null;
         }
     }
 
-    Map<K, V> getPersistentValues();
+    Map<K, V> getPersistedData();
 }

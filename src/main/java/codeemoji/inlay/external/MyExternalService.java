@@ -16,24 +16,19 @@ import java.util.Map;
 @Getter
 public final class MyExternalService implements CEExternalService<VirtualFile, Object> {
 
-    Map<VirtualFile, Object> persistentValues = new HashMap<>();
+    Map<VirtualFile, Object> persistedData = new HashMap<>();
 
-    public void initFor(@NotNull Project project) {
+    public void preProcess(@NotNull Project project) {
         // Preprocess and persist information
-        persistentValues.put(project.getWorkspaceFile(), null);
-    }
-
-    @Override
-    public void stopFor(@NotNull Project project) {
-        // Stop processing
+        persistedData.put(project.getWorkspaceFile(), null);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public void buildInfoFor(@NotNull Map infoResult, @Nullable PsiElement element) {
+    public void buildInfo(@NotNull Map infoResult, @Nullable PsiElement element) {
         try {
             if (element != null) {
-                // Retrieves preprocessed values
-                var value = getPersistentValue(element.getProject().getWorkspaceFile());
+                // Retrieves preprocessed persistent values
+                var data = retrieveData(element.getProject().getWorkspaceFile());
                 // Put informations about element
                 infoResult.put("externalParam", null);
             }

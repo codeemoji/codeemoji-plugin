@@ -13,20 +13,11 @@ import java.util.Map;
 
 public final class CEExternalAnalyzer {
 
-    private static volatile CEExternalAnalyzer instance = null;
-
     private CEExternalAnalyzer() {
     }
 
     public static CEExternalAnalyzer getInstance() {
-        if (instance == null) {
-            synchronized (CEExternalAnalyzer.class) {
-                if (instance == null) {
-                    instance = new CEExternalAnalyzer();
-                }
-            }
-        }
-        return instance;
+        return CEExternalAnalyzerHolder.INSTANCE;
     }
 
     public @NotNull List<CEExternalService<?, ?>> retrieveExternalServices(@NotNull Project project) {
@@ -42,8 +33,12 @@ public final class CEExternalAnalyzer {
     public void buildExternalInfo(@NotNull Map<?, ?> result, @Nullable PsiElement element) {
         if (element != null) {
             for (CEExternalService<?, ?> service : retrieveExternalServices(element.getProject())) {
-                service.buildInfoFor(result, element);
+                service.buildInfo(result, element);
             }
         }
+    }
+
+    private static final class CEExternalAnalyzerHolder {
+        private static final CEExternalAnalyzer INSTANCE = new CEExternalAnalyzer();
     }
 }

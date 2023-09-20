@@ -26,9 +26,7 @@ public class CEGlobalConfigurable implements Configurable {
         var analysersPanel = CEUtils.createBasicInnerPanel("codeemoji.configurable.external.analysers.title", 1, 1);
         cbMyExternalService = new JCheckBox("MyExternalService");
         analysersPanel.add(cbMyExternalService);
-        var footerDesc = new JLabel(CEBundle.getString("codeemoji.configurable.external.analysers.footer.description"));
         innerPanel.add(analysersPanel);
-        innerPanel.add(footerDesc);
         globalPanel.add(innerPanel);
         return globalPanel;
     }
