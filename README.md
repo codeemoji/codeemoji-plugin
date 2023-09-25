@@ -351,6 +351,21 @@ that follow.
 
 ![Provider Class Diagram - Example](docs/screenshots/howtoextend01.png)
 
+As can be seen in the diagram above, a class of type _InlayHintProvider_ must implement a series of methods
+which will allow you to configure the inlay hint case in the IDE, allowing you to configure it in the appropriate menus
+for the given
+programming language. The most important point concerns the _getCollectorFor(PsiFile, Editor, S,
+InlayHintsSink)_. This method returns a class of type [
+_InlayHintsCollector_](https://github.com/JetBrains/intellij-community/blob/idea/232.9921.47/platform/lang-api/src/com/intellij/codeInsight/hints/InlayHintsCollector.kt).
+This class that is responsible for scanning
+the source code and execute the logic to identify the point where the addition of an inlay hint is necessary.
+
+Generally a class of type _InlayHintProvider_ is linked to a class of type _InlayHintCollector_. At this point, the
+class _CEProviderMulti_ differentiates itself. It extends the _CEProvider_ class and allows a list of
+coupled collectors.
+
+**codEEmoji** fornece uma rica API para implme
+
 # Acknowledgements
 
 This work was supported by the **Free University of Bozen-Bolzano - UNIBZ**.
