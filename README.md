@@ -338,8 +338,10 @@ of
 information directly into the editor and give developers additional code insight without disturbing the workflow. A
 well-known example is parameter hints that usually display the name of the function parameters as given in its
 declaration"_. Inlay hints can be of the type inline (inlays displayed in the code between code tokens) or block (inlays
-displayed above a code block) and must be implemented by a provider class that is registered in the plugin description
-file. All cases implemented in the **codEEmoji** plugin are Inlay hints that extend or implement the
+displayed above a code block) and must be implemented by a provider class that is registered in
+the [plugin configuration
+file](https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html). All cases implemented in the *
+*codEEmoji** plugin are Inlay hints that extend or implement the
 interface [
 _InlayHintsProvider_](https://github.com/JetBrains/intellij-community/blob/idea/232.9921.47/platform/lang-api/src/com/intellij/codeInsight/hints/InlayHintsProvider.kt).
 
