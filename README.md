@@ -364,7 +364,10 @@ Generally a class of type _InlayHintProvider_ is linked to a class of type _Inla
 class _CEProviderMulti_ differentiates itself. It extends the _CEProvider_ class and allows a list of
 coupled collectors.
 
-**codEEmoji** fornece uma rica API para implme
+**codEEmoji** provides a rich API for implementing classes of type _InlayHintsCollector_. The figure below displays the
+class diagram available for this purpose.
+
+![Collector Class Diagram - Example](docs/screenshots/howtoextend02.png)
 
 # Acknowledgements
 
