@@ -289,13 +289,13 @@ See the following figure.
 
 Here's an example of usage with _JPA_ from a code snipped:
 
-![Showing Implicit Annotations - Example](docs/screenshots/showingimplicitscode.png)
+![Showing Implicit Annotations - Example](docs/screenshots/showingimplicitsjpasample.png)
 
 Here's an examples of usage with _Spring_ from a code snipped:
 
-![Showing Implicit Annotations - Example](docs/screenshots/showingimplicitscodespring.png)
+![Showing Implicit Annotations - Example](docs/screenshots/showingimplicitsspringsample1.png)
 
-![Showing Implicit Annotations - Example](docs/screenshots/showingimplicitscodespring2.png)
+![Showing Implicit Annotations - Example](docs/screenshots/showingimplicitsspringsample2.png)
 
 # How to Extend
 
