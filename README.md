@@ -44,7 +44,7 @@ annotations for JakartaEE and Spring frameworks.
 * [Cases of Showing Modifiers](#cases-of-showing-modifiers)
 * [Cases of Showing Specifics of Projects](#cases-of-showing-specifics-of-projects)
 * [Cases of Showing Implicit Annotations](#cases-of-showing-implicit-annotations)
-* [External Service API](#external-service-api)
+* [External Services API](#external-services-api)
 * [How to Extend](#how-to-extend)
 * [Acknowledgements](#acknowledgements)
 * [References](#references)
@@ -340,10 +340,16 @@ well-known example is parameter hints that usually display the name of the funct
 declaration"_. Inlay hints can be of the type inline (inlays displayed in the code between code tokens) or block (inlays
 displayed above a code block) and must be implemented by a provider class that is registered in
 the [plugin configuration
-file](https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html). All cases implemented in the *
-*codEEmoji** plugin are Inlay hints that extend or implement the
+file](https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html). All cases implemented in the
+**codEEmoji** plugin are inlay hints that extend or implement the
 interface [
 _InlayHintsProvider_](https://github.com/JetBrains/intellij-community/blob/idea/232.9921.47/platform/lang-api/src/com/intellij/codeInsight/hints/InlayHintsProvider.kt).
+
+**codEEmoji** plugin disponibiliza duas classes abstratas (_CEProvider_ e _CEProviderMulti_) que implementam a interface
+_InlayHintsProvider_. Elas são pontos de partida para implementação de um caso para adição de inlay hint. Veja figura
+que segue.
+
+![Provider Class Diagram - Example](docs/screenshots/howtoextend01.png)
 
 # Acknowledgements
 
