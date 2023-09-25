@@ -322,8 +322,8 @@ configured using the plugin's global settings. See Figure below.
 license. It is fully developed based
 on [IntelliJ Platform Plugin SDK](https://plugins.jetbrains.com/docs/intellij/welcome.html). If you are not familiar
 with how to develop plugins for the _IntelliJ IDEA_ IDE,
-visit [https://plugins.jetbrains.com/docs/intellij/welcome.html](https://plugins.jetbrains.com/docs/intellij
-/welcome.html) to learn the basics. A suitable starting point for those with more experience is the part
+visit the [site](https://plugins.jetbrains.com/docs/intellij/welcome.html) to learn the basics. A suitable starting
+point for those with more experience is the part
 about [Inlay hints](https://plugins.jetbrains.com/docs/intellij/inlay-hints.html). It is important to mention that the
 _Inlay hints_ feature is a recent feature for _IDE IntelliJ IDEA_ and the **codEEmoji** plugin was developed using a
 large
