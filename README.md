@@ -345,9 +345,9 @@ file](https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html
 interface [
 _InlayHintsProvider_](https://github.com/JetBrains/intellij-community/blob/idea/232.9921.47/platform/lang-api/src/com/intellij/codeInsight/hints/InlayHintsProvider.kt).
 
-**codEEmoji** plugin disponibiliza duas classes abstratas (_CEProvider_ e _CEProviderMulti_) que implementam a interface
-_InlayHintsProvider_. Elas são pontos de partida para implementação de um caso para adição de inlay hint. Veja figura
-que segue.
+**codEEmoji** plugin provides two abstract classes (_CEProvider_ and _CEProviderMulti_) that implement the interface
+_InlayHintsProvider_. They are starting points for implementing a case for adding an inlay hint. See figure
+that follow.
 
 ![Provider Class Diagram - Example](docs/screenshots/howtoextend01.png)
 
