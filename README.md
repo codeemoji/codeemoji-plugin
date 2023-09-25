@@ -83,7 +83,7 @@ annotations for JakartaEE and Spring frameworks.
 
 ## How to Configure
 
-The plugin creates new Inlay Hints. All new inlay hints are enabled by default when installing the plugin. To disable
+The plugin creates new Inlay hints. All new inlay hints are enabled by default when installing the plugin. To disable
 inlay hints or configure
 options that are available for each one, go to "**_File>Settings>Editor>Inlay Hints_**". Click "**_Other>Java_**".
 
@@ -298,7 +298,7 @@ Here's an examples of usage with _Spring_ from a code snipped:
 
 ![Showing Implicit Annotations - Example](docs/screenshots/showingimplicitsspringsample2.png)
 
-# External Service API
+# External Services API
 
 The **codeEEmoji** plugin is prepared to work with information provided from external services. It provides extension
 points
@@ -317,6 +317,31 @@ configured using the plugin's global settings. See Figure below.
 ![External Services](docs/screenshots/externalservices.png)
 
 # How to Extend
+
+**codEEmoji** plugin is licensed under the [GPL v3.0](https://github.com/codeemoji/codeemoji-plugin/blob/main/LICENSE)
+license. It is fully developed based
+on [IntelliJ Platform Plugin SDK](https://plugins.jetbrains.com/docs/intellij/welcome.html). If you are not familiar
+with how to develop plugins for the _IntelliJ IDEA_ IDE,
+visit [https://plugins.jetbrains.com/docs/intellij/welcome.html](https://plugins.jetbrains.com/docs/intellij
+/welcome.html) to learn the basics. A suitable starting point for those with more experience is the part
+about [Inlay hints](https://plugins.jetbrains.com/docs/intellij/inlay-hints.html). It is important to mention that the
+_Inlay hints_ feature is a recent feature for _IDE IntelliJ IDEA_ and the **codEEmoji** plugin was developed using a
+large
+number of API's marked as _@Experimental_. This API's may change in the future and cause compatibility issues. However,
+in its current state, the plugin is fully compatible with versions 2023.1.x and 2023.2.x,
+using [JDK 17](https://github.com/adoptium/temurin17-binaries/releases/tag/jdk-17.0.8.1%2B1) or higher.
+
+As mentioned in the reference page for
+implementing [Inlay hints in the IDE](https://plugins.jetbrains.com/docs/intellij/inlay-hints.html), _"Inlay hints
+render small pieces
+of
+information directly into the editor and give developers additional code insight without disturbing the workflow. A
+well-known example is parameter hints that usually display the name of the function parameters as given in its
+declaration"_. Inlay hints can be of the type inline (inlays displayed in the code between code tokens) or block (inlays
+displayed above a code block) and must be implemented by a provider class that is registered in the plugin description
+file. All cases implemented in the **codEEmoji** plugin are Inlay hints that extend or implement the
+interface [
+_InlayHintsProvider_](https://github.com/JetBrains/intellij-community/blob/idea/232.9921.47/platform/lang-api/src/com/intellij/codeInsight/hints/InlayHintsProvider.kt).
 
 # Acknowledgements
 
