@@ -44,6 +44,7 @@ annotations for JakartaEE and Spring frameworks.
 * [Cases of Showing Modifiers](#cases-of-showing-modifiers)
 * [Cases of Showing Specifics of Projects](#cases-of-showing-specifics-of-projects)
 * [Cases of Showing Implicit Annotations](#cases-of-showing-implicit-annotations)
+* [External Service API](#external-service-api)
 * [How to Extend](#how-to-extend)
 * [Acknowledgements](#acknowledgements)
 * [References](#references)
@@ -297,9 +298,25 @@ Here's an examples of usage with _Spring_ from a code snipped:
 
 ![Showing Implicit Annotations - Example](docs/screenshots/showingimplicitsspringsample2.png)
 
-# How to Extend
+# External Service API
 
-Coming soon...
+The **codeEEmoji** plugin is prepared to work with information provided from external services. It provides extension
+points
+for creating background services that can obtain information about a source code element for which the insertion of an
+inlay hint is being evaluated.
+
+This API is experimental and the plugin currently does not contain any concrete services that use it. However, for
+future work it may be useful for cases of inlay hints that involve external services such as code versioners, quality
+analyzers, artificial intelligence tools for code prediction, among others.
+
+**codeEEmoji** is already prepared to enable or disable these services, as they can reduce the performance of the IDE,
+as
+they are transversal to the framework. Therefore, it is up to the user to use these services or not. Services can be
+configured using the plugin's global settings. See Figure below.
+
+![External Services](docs/screenshots/externalservices.png)
+
+# How to Extend
 
 # Acknowledgements
 
