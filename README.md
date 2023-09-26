@@ -410,6 +410,9 @@ referenced in the source code: _Reference Class_, _Reference Field_ and _Referen
 
 ![CESimpleCollector Class Diagram - Example](docs/screenshots/howtoextend04.png)
 
+For implementations of reference type elements, the plugin already provides abstract classes to work with
+references to modifiers in classes, methods, fields, and interface methods.
+
 ![CESimpleCollector Class Diagram - Example](docs/screenshots/howtoextend05.png)
 
 #### External Analyzers
