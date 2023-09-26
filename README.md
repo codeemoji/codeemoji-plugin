@@ -370,12 +370,12 @@ that follow.
 
 As can be seen in the diagram above, a class of type _InlayHintProvider_ must implement a series of methods
 which will allow you to configure the inlay hint case in the IDE, allowing you to configure it in the appropriate menus
-for the given
+for a
 programming language. The most important point concerns the _getCollectorFor(PsiFile, Editor, S,
-InlayHintsSink)_. This method returns a class of type [
+InlayHintsSink)_ method. This method returns a class of type [
 _InlayHintsCollector_](https://github.com/JetBrains/intellij-community/blob/idea/232.9921.47/platform/lang-api/src/com/intellij/codeInsight/hints/InlayHintsCollector.kt).
 This class that is responsible for scanning
-the source code and execute the logic to identify the point where the addition of an inlay hint is necessary.
+the source code elements and execute the logic to identify the point where the addition of an inlay hint is necessary.
 
 ## Collectors
 
