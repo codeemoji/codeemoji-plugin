@@ -46,6 +46,13 @@ annotations for JakartaEE and Spring frameworks.
 * [Cases of Showing Implicit Annotations](#cases-of-showing-implicit-annotations)
 * [External Services API](#external-services-api)
 * [How to Extend](#how-to-extend)
+    * [Providers](#providers)
+    * [Collectors](#collectors)
+        * [CESimpleCollector](#cesimplecollector)
+            * [External Analyzers](#external-analyzers)
+        * [CEProjectCollector](#ceprojectcollector)
+        * [CEImplictCollector](#ceimplictcollector)
+    * [Resources](#resources)
 * [Acknowledgements](#acknowledgements)
 * [References](#references)
 
@@ -374,9 +381,30 @@ class diagram available for this purpose.
 ![Collector Class Diagram - Example](docs/screenshots/howtoextend02.png)
 
 The _CECollector_ abstract class is the main class for implementing a collector. As can be seen in the
-diagram above, it has three main extensions: _CEImplicitCollector_, _CEProjectCollector_ and _CESimpleCollector_.
-The first two extensions are specific cases for working with implicit annotations and specifications of
-projects. The third is for general use. The following sections explore each case.
+diagram above, it has three main extensions: _CESimpleCollector_, _CEProjectCollector_ and _CEImplicitCollector_.
+The first is for general use. The other two extensions are specific cases for working with implicit annotations and
+specifications of
+projects. The following sections explore each case.
+
+### CESimpleCollector
+
+abc
+
+#### External Analyzers
+
+abc
+
+### CEProjectCollector
+
+abc
+
+### CEImplictCollector
+
+abc
+
+## Resources
+
+abc
 
 # Acknowledgements
 
