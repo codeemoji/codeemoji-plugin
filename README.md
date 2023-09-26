@@ -52,7 +52,7 @@ annotations for JakartaEE and Spring frameworks.
             * [External Analyzers](#external-analyzers)
         * [CEProjectCollector](#ceprojectcollector)
         * [CEImplictCollector](#ceimplictcollector)
-    * [Resources](#resources)
+    * [Internationalization](#internationalization)
 * [Acknowledgements](#acknowledgements)
 * [References](#references)
 
