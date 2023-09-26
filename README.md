@@ -386,8 +386,11 @@ allows you to implement this method using a list of collectors, useful for use w
 
 The _CECollector_ abstract class is the main class for implementing a collector. It extends the abstract class of
 service
-_CEInlayBuilder_ which contains all the methods for manipulating inlay hints. As can be seen in the
-diagram above, it has three main extensions: _CESimpleCollector_, _CEProjectCollector_ and _CEImplicitCollector_.
+_CEInlayBuilder_ which contains all the methods for manipulating inlay hints.
+
+![CECollector Class Diagram - Example](docs/screenshots/howtoextend03.png)
+
+The _CECollector_ has three main extensions: _CESimpleCollector_, _CEProjectCollector_ and _CEImplicitCollector_.
 The first is for general use. The other two extensions are specific cases for working with implicit annotations and
 specifications of
 projects. The following sections explore each case.

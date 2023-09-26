@@ -218,13 +218,13 @@ public enum CEUtils {
         return false;
     }
 
-    public static @Nullable String resolveQualifiedName(@NotNull PsiClassType psiType) {
+    public static @Nullable String resolveQualifiedName(@Nullable PsiClassType psiType) {
         try {
-            var psiTypeClass = Objects.requireNonNull(psiType.resolve());
+            var psiTypeClass = Objects.requireNonNull(psiType != null ? psiType.resolve() : null);
             var qualifiedName = Objects.requireNonNull(psiTypeClass.getQualifiedName());
             return resolveQualifiedName(qualifiedName, psiTypeClass);
         } catch (RuntimeException ignored) {
-            return psiType.getName();
+            return psiType != null ? psiType.getName() : null;
         }
     }
 
