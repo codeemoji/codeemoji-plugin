@@ -392,8 +392,7 @@ The _InlayHintsCollector_ framework interface can be implemented in the plugin b
 _CECollectorMulti_. The interface defines the _collect(PsiElement, Editor, InlayHintsSink)_ method. _CECollectorMulti_
 allows you to implement this method using a list of collectors, useful for use with _CEProviderMulti_.
 
-The _CECollector_ abstract class is the main class for implementing a collector. It extends the abstract class of
-service
+The _CECollector_ abstract class is the main class for implementing a collector. It extends the abstract class
 _CEInlayBuilder_ which contains all the methods for manipulating inlay hints. Child classes must implement
 _processCollect(PsiElement, Editor, InlayHintsSink)_.
 
