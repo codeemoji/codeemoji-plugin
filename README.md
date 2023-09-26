@@ -69,7 +69,7 @@ annotations for JakartaEE and Spring frameworks.
 
 ### Via marketplace
 
-[JetBrains Marketplace - codEEmoji](https://plugins.jetbrains.com/plugin/22416-cod-emoji)
+[JetBrains Marketplace - **codEEmoji**](https://plugins.jetbrains.com/plugin/22416-cod-emoji)
 
 ![How to Download](docs/screenshots/marketplace_install.png)
 
