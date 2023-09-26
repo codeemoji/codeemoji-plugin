@@ -345,6 +345,8 @@ file](https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html
 interface [
 _InlayHintsProvider_](https://github.com/JetBrains/intellij-community/blob/idea/232.9921.47/platform/lang-api/src/com/intellij/codeInsight/hints/InlayHintsProvider.kt).
 
+## Providers
+
 **codEEmoji** plugin provides two abstract classes (_CEProvider_ and _CEProviderMulti_) that implement the interface
 _InlayHintsProvider_. They are starting points for implementing a case for adding an inlay hint. See figure
 that follow.
@@ -360,6 +362,8 @@ _InlayHintsCollector_](https://github.com/JetBrains/intellij-community/blob/idea
 This class that is responsible for scanning
 the source code and execute the logic to identify the point where the addition of an inlay hint is necessary.
 
+## Collectors
+
 Generally a class of type _InlayHintProvider_ is linked to a class of type _InlayHintCollector_. At this point, the
 class _CEProviderMulti_ differentiates itself. It extends the _CEProvider_ class and allows a list of
 coupled collectors.
@@ -368,6 +372,11 @@ coupled collectors.
 class diagram available for this purpose.
 
 ![Collector Class Diagram - Example](docs/screenshots/howtoextend02.png)
+
+The _CECollector_ abstract class is the main class for implementing a collector. As can be seen in the
+diagram above, it has three main extensions: _CEImplicitCollector_, _CEProjectCollector_ and _CESimpleCollector_.
+The first two extensions are specific cases for working with implicit annotations and specifications of
+projects. The third is for general use. The following sections explore each case.
 
 # Acknowledgements
 
