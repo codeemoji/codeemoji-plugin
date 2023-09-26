@@ -325,20 +325,26 @@ configured using the plugin's global settings. See Figure below.
 
 # How to Extend
 
-**codEEmoji** plugin is licensed under the [GPL v3.0](https://github.com/codeemoji/codeemoji-plugin/blob/main/LICENSE)
-license. The source code is available on [GitHub](https://github.com/codeemoji/codeemoji-plugin/) and has two branches
-in the repository: _main_ for release and _develop_
-for current development. It is fully developed based
-on [IntelliJ Platform Plugin SDK](https://plugins.jetbrains.com/docs/intellij/welcome.html). If you are not familiar
-with how to develop plugins for the _IntelliJ IDEA_ IDE,
-visit the [site](https://plugins.jetbrains.com/docs/intellij/welcome.html) to learn the basics. A suitable starting
-point for those with more experience is the part
-about [Inlay hints](https://plugins.jetbrains.com/docs/intellij/inlay-hints.html). It is important to mention that the
-_Inlay hints_ feature is a recent feature for _IDE IntelliJ IDEA_ and the **codEEmoji** plugin was developed using a
-large
-number of API's marked as _@Experimental_. This API's may change in the future and cause compatibility issues. However,
-in its current state, the plugin is fully compatible with versions 2023.1.x and 2023.2.x,
-using [JDK 17](https://github.com/adoptium/temurin17-binaries/releases/tag/jdk-17.0.8.1%2B1) or higher.
+The **codEEmoji** plugin is under to the terms and conditions of
+the [GNU General Public License version 3.0](https://github.com/codeemoji/codeemoji-plugin/blob/main/LICENSE). The
+source code
+can be accessed on the [GitHub](https://github.com/codeemoji/codeemoji-plugin/) platform, whereby the repository
+contains two distinct branches: _"main"_ for official
+releases and _"develop"_ for ongoing development activities. The software is extensively developed using
+the [IntelliJ Platform Plugin SDK](https://plugins.jetbrains.com/docs/intellij/welcome.html). For individuals without
+familiarity with the process of developing plugins for the IntelliJ IDEA
+IDE, it is recommended to visit the [official websitesite](https://plugins.jetbrains.com/docs/intellij/welcome.html) in
+order to acquire a foundational understanding of the subject. An appropriate first reference for individuals with
+further expertise would be the section pertaining
+to [Inlay hints](https://plugins.jetbrains.com/docs/intellij/inlay-hints.html). It is noteworthy to acknowledge that the
+inclusion of the Inlay hints feature represents a recent addition to the
+IntelliJ IDEA IDE. Additionally, it is worth mentioning that the **codEEmoji** plugin was created utilizing numerous
+APIs
+that have been designated as _@Experimental_. The APIs have the potential to undergo modifications in the future, which
+could result in compatibility challenges. Nevertheless, the present condition of the plugin indicates that it is
+entirely compatible with versions 2023.1.x and 2023.2.x, provided
+that [JDK 17](https://github.com/adoptium/temurin17-binaries/releases/tag/jdk-17.0.8.1%2B1) or a higher version is
+utilized.
 
 As mentioned in the reference page for
 implementing [Inlay hints in the IDE](https://plugins.jetbrains.com/docs/intellij/inlay-hints.html), _"Inlay hints
