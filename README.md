@@ -362,7 +362,7 @@ _InlayHintsProvider_](https://github.com/JetBrains/intellij-community/blob/idea/
 
 ## Providers
 
-**codEEmoji** plugin provides two abstract classes (_CEProvider_ and _CEProviderMulti_) that implement the interface
+The **codEEmoji** plugin provides two abstract classes (_CEProvider_ and _CEProviderMulti_) that implement the interface
 _InlayHintsProvider_. They are starting points for implementing a case for adding an inlay hint. See figure
 that follow.
 
@@ -383,7 +383,8 @@ Generally a class of type _InlayHintProvider_ is linked to a class of type _Inla
 class _CEProviderMulti_ differentiates itself. It extends the _CEProvider_ class and allows a list of
 coupled collectors.
 
-**codEEmoji** provides a rich API for implementing classes of type _InlayHintsCollector_. The figure below displays the
+The **codEEmoji** provides a rich API for implementing classes of type _InlayHintsCollector_. The figure below displays
+the
 class diagram available for this purpose.
 
 ![Collector Class Diagram - Example](docs/screenshots/howtoextend02.png)
@@ -409,7 +410,7 @@ Child classes of _CESimpleCollector_ must implement the _needsHint(H, Map)_ meth
 type of element to be analyzed and answers whether it is necessary to add an inlay hint according to the logic of the
 concrete child class.
 
-**codEEmoji** provides six abstract classes that directly extend _CESimpleCollector_ that allow you to abstract the
+The **codEEmoji** provides six abstract classes that directly extend _CESimpleCollector_ that allow you to abstract the
 collect of
 elements of type _Class_, _Method_ and _Variable (Field, Parameter and Local Variable)_, in addition to elements that
 are
