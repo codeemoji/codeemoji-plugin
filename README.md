@@ -412,10 +412,70 @@ referenced in the source code: _Reference Class_, _Reference Field_ and _Referen
 
 ![CESimpleCollector Class Diagram - Example](docs/screenshots/howtoextend04.png)
 
+Example of use:
+
+````java
+public class GetMethodDoesNotReturn extends CEProvider<NoSettings> {
+
+    @Override
+    public String getPreviewText() {
+        return """
+                public class Customer {
+                    public void getName() {
+                        doSomething();
+                    }
+                }""";
+    }
+
+    @Override
+    public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
+        return new CEMethodCollector(editor, getKeyId(), CONFUSED) {
+            @Override
+            public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                return (element.getName().startsWith("get")
+                        || element.getName().startsWith("return"))
+                        && Objects.equals(element.getReturnType(), PsiTypes.voidType());
+            }
+        };
+    }
+}
+````
+
 For implementations of reference type elements, the plugin already provides abstract classes to work with
 references to modifiers in classes, methods, fields, and interface methods.
 
 ![CESimpleCollector Class Diagram - Example](docs/screenshots/howtoextend05.png)
+
+Example of use:
+
+````java
+public class ShowingModifiers extends CEProviderMulti<ShowingModifiersSettings> {
+
+    //source code omitted...
+
+    @Override
+    public @NotNull List<InlayHintsCollector> buildCollectors(@NotNull Editor editor) {
+        List<InlayHintsCollector> list = new ArrayList<>();
+        //fields
+        list.addAll(
+                Arrays.asList(
+                        new CEModifierFieldCollector(editor, getKeyId(), PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_FIELD)),
+                        new CEModifierFieldCollector(editor, getKeyId(), DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_FIELD)),
+                        new CEModifierFieldCollector(editor, getKeyId(), FINAL_VAR_SYMBOL, FINAL, getSettings().query(FINAL_FIELD)),
+                        new CEModifierFieldCollector(editor, getKeyId(), PROTECTED_SYMBOL, PROTECTED, getSettings().query(PROTECTED_FIELD)),
+                        new CEModifierFieldCollector(editor, getKeyId(), PRIVATE_SYMBOL, PRIVATE, getSettings().query(PRIVATE_FIELD)),
+                        new CEModifierFieldCollector(editor, getKeyId(), STATIC_SYMBOL, STATIC, getSettings().query(STATIC_FIELD)),
+                        new CEModifierFieldCollector(editor, getKeyId(), VOLATILE_SYMBOL, VOLATILE, getSettings().query(VOLATILE_FIELD)),
+                        new CEModifierFieldCollector(editor, getKeyId(), TRANSIENT_SYMBOL, TRANSIENT, getSettings().query(TRANSIENT_FIELD))
+                )
+        );
+
+        //source code omitted...
+
+        return list;
+    }
+}
+````
 
 #### External Analyzers
 
@@ -438,6 +498,34 @@ collectors and displays the available interfaces.
 
 ![CEExternalAnalyzer Class Diagram - Example](docs/screenshots/howtoextend07.png)
 
+Example of use:
+
+````java
+public class ShowingSpecifics extends CEProviderMulti<ShowingSpecificsSettings> {
+
+    //source code omitted...
+
+    @Override
+    public @NotNull List<InlayHintsCollector> buildCollectors(@NotNull Editor editor) {
+        List<InlayHintsCollector> list = new ArrayList<>();
+
+        list.add(new CEProjectClassCollector(editor, getKeyId()));
+        list.add(new CEProjectMethodCollector(editor, getKeyId()));
+        list.add(new CEProjectVariableCollector(editor, FIELD, getKeyId()));
+        list.add(new CEProjectVariableCollector(editor, PARAMETER, getKeyId()));
+        list.add(new CEProjectVariableCollector(editor, LOCALVARIABLE, getKeyId()));
+
+        return list;
+    }
+
+    @Override
+    public @NotNull ImmediateConfigurable createConfigurable(@NotNull ShowingSpecificsSettings settings) {
+        return new ShowingSpecificsConfigurable(settings);
+    }
+
+}
+````
+
 ### CEImplictCollector
 
 _CEImplicitCollector_ is also a specific type of collector in the plugin. It allows you to detect the need for implicit
@@ -451,6 +539,33 @@ collector has a list of classes that implement the _CEImplicit_ interface. This 
 invoked to investigate whether to process an inlay hint.
 
 ![CEExternalAnalyzer Class Diagram - Example](docs/screenshots/howtoextend08.png)
+
+Example of use:
+
+````java
+public class ImplicitAnnotations extends CEProviderMulti<ImplicitAnnotationsSettings> {
+
+    //source code omitted...
+
+    @Override
+    public @NotNull List<InlayHintsCollector> buildCollectors(@NotNull Editor editor) {
+        final int codePoint = 0x1F4AD;
+        String keyId = getKeyId();
+        return new ArrayList<>(
+                Arrays.asList(
+                        new CEJPAEntityCollector(editor, keyId, codePoint, "javax.persistence"),
+                        new CEJPAEntityCollector(editor, keyId, codePoint, "jakarta.persistence"),
+                        new CEJPAEmbeddableCollector(editor, keyId, codePoint, "javax.persistence"),
+                        new CEJPAEmbeddableCollector(editor, keyId, codePoint, "jakarta.persistence"),
+                        new CESpringConfigurationCollector(editor, keyId, codePoint),
+                        new CESpringControllerCollector(editor, keyId, codePoint),
+                        new CESpringRestControllerCollector(editor, keyId, codePoint)
+                ));
+    }
+
+    //source code omitted...
+}
+````
 
 ## Internationalization
 
