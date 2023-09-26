@@ -326,7 +326,9 @@ configured using the plugin's global settings. See Figure below.
 # How to Extend
 
 **codEEmoji** plugin is licensed under the [GPL v3.0](https://github.com/codeemoji/codeemoji-plugin/blob/main/LICENSE)
-license. It is fully developed based
+license. The source code is available on [GitHub](https://github.com/codeemoji/codeemoji-plugin/) and has two branches
+in the repository: _main_ for release and _develop_
+for current development. It is fully developed based
 on [IntelliJ Platform Plugin SDK](https://plugins.jetbrains.com/docs/intellij/welcome.html). If you are not familiar
 with how to develop plugins for the _IntelliJ IDEA_ IDE,
 visit the [site](https://plugins.jetbrains.com/docs/intellij/welcome.html) to learn the basics. A suitable starting
@@ -429,15 +431,35 @@ subsidize the addition or not of an inlay hint.
 
 ### CEProjectCollector
 
-abc
+_CEProjectCollector_ provides ways to work with a specific case of collector. It allows you to collect elements
+configurable according to the _codeemoji.json_ configuration file directly in the user's project. The plugin already
+provides classes for collecting elements of type _Class_, _Method_ and _Variable_. The diagram below shows these
+collectors and displays the available interfaces.
+
+![CEExternalAnalyzer Class Diagram - Example](docs/screenshots/howtoextend07.png)
 
 ### CEImplictCollector
 
-abc
+_CEImplicitCollector_ is also a specific type of collector in the plugin. It allows you to detect the need for implicit
+annotations hints to be added via block-type inlay hint. It also allows you to detect implicit annotation attributes as
+well as their respective implicit values.
 
-## Resources
+The plugin already provides implementation for several annotations of the _JPA_ and
+_Spring_, being fully extensible to other frameworks. In the diagram below, an example of _JPA_ with
+_@Entity_ and _@Column_. _CEJPAEntityCollector_ defines a collector to work with the main annotation _@Entity_. The
+collector has a list of classes that implement the _CEImplicit_ interface. This way, each item in this list is
+invoked to investigate whether to process an inlay hint.
 
-abc
+![CEExternalAnalyzer Class Diagram - Example](docs/screenshots/howtoextend08.png)
+
+## Internationalization
+
+The plugin is fully ready for internationalization. The _CEBundle.properties_ bundle is provided. All strings
+for tooltips, settings, warnings, information and exceptions can be internationalized centrally. At the moment, all
+these messages are in the English language. To extend it to another language, simply create a file named with
+_CEBundle_XX.properties_, where _XX_ stands for the language acronym. The IDE will automatically detect the language
+used and
+carry out the appropriate configuration.
 
 # Acknowledgements
 
