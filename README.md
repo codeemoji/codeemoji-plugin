@@ -386,7 +386,8 @@ allows you to implement this method using a list of collectors, useful for use w
 
 The _CECollector_ abstract class is the main class for implementing a collector. It extends the abstract class of
 service
-_CEInlayBuilder_ which contains all the methods for manipulating inlay hints.
+_CEInlayBuilder_ which contains all the methods for manipulating inlay hints. Child classes must implement
+_processCollect(PsiElement, Editor, InlayHintsSink)_.
 
 ![CECollector Class Diagram - Example](docs/screenshots/howtoextend03.png)
 
