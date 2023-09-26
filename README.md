@@ -398,11 +398,31 @@ projects. The following sections explore each case.
 
 ### CESimpleCollector
 
-abc
+Child classes of _CESimpleCollector_ must implement the _needsHint(H, Map)_ method. This method is parameterized by
+type of element to be analyzed and answers whether it is necessary to add an inlay hint according to the logic of the
+concrete child class.
+
+**codEEmoji** provides six abstract classes that directly extend _CESimpleCollector_ that allow you to abstract the
+collect of
+elements of type _Class_, _Method_ and _Variable (Field, Parameter and Local Variable)_, in addition to elements that
+are
+referenced in the source code: _Reference Class_, _Reference Field_ and _Reference Method_.
+
+![CESimpleCollector Class Diagram - Example](docs/screenshots/howtoextend04.png)
+
+![CESimpleCollector Class Diagram - Example](docs/screenshots/howtoextend05.png)
 
 #### External Analyzers
 
-abc
+The plugin ensures that before invoking the _needsHint(H, Map)_ method, the element under collect analysis is sent to
+everyone
+analyzers with external services using _processExternalInfo(H)_ method. To do this, a Map is passed to fill in the
+respective information for each
+service using a _CEExternalAnalyzer_ singleton and the list of implementations of _CEEExternalService_ interface. This
+way, in the concrete child class, the _needsHint(H, Map)_ method receives a Map with information that can
+subsidize the addition or not of an inlay hint.
+
+![CEExternalAnalyzer Class Diagram - Example](docs/screenshots/howtoextend06.png)
 
 ### CEProjectCollector
 
