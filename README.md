@@ -333,7 +333,7 @@ contains two distinct branches: _"main"_ for official
 releases and _"develop"_ for ongoing development activities. The software is extensively developed using
 the [IntelliJ Platform Plugin SDK](https://plugins.jetbrains.com/docs/intellij/welcome.html). For individuals without
 familiarity with the process of developing plugins for the IntelliJ IDEA
-IDE, it is recommended to visit the [official websitesite](https://plugins.jetbrains.com/docs/intellij/welcome.html) in
+IDE, it is recommended to visit the [official website](https://plugins.jetbrains.com/docs/intellij/welcome.html) in
 order to acquire a foundational understanding of the subject. An appropriate first reference for individuals with
 further expertise would be the section pertaining
 to [Inlay hints](https://plugins.jetbrains.com/docs/intellij/inlay-hints.html). It is noteworthy to acknowledge that the
