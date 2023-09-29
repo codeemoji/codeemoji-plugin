@@ -224,7 +224,13 @@ public enum CEUtils {
             var qualifiedName = Objects.requireNonNull(psiTypeClass.getQualifiedName());
             return resolveQualifiedName(qualifiedName, psiTypeClass);
         } catch (RuntimeException ignored) {
-            return psiType != null ? psiType.getName() : null;
+            if (psiType != null) {
+                try {
+                    return psiType.getName();
+                } catch (IllegalStateException ignored1) {
+                }
+            }
+            return null;
         }
     }
 
