@@ -12,9 +12,7 @@ methods, parameters or local variables that are being used. Likewise, the develo
 all these elements, according
 to a rule, for example, for a class being instantiated that implements a specific interface, for a method being invoked
 that is annotated by a certain
-annotation , a local variable of a given type, and so on. For the next version, in addition to emojis, the plugin will
-be able to show implicit
-annotations for JakartaEE and Spring frameworks.
+annotation , a local variable of a given type, and so on. Furthermore, the plugin has the capability to display implicit annotations for the JakartaEE and Spring frameworks.
 
 <!-- DESCRIPTION HEADER END -->
 
