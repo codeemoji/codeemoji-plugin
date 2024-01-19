@@ -57,5 +57,9 @@
                                    implementationClass="codeemoji.inlay.showingspecifics.ShowingSpecifics"/>
         <codeInsight.inlayProvider language="JAVA"
                                    implementationClass="codeemoji.inlay.implicit.ImplicitAnnotations"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.structuralinspection.method.PureGetterMethod"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.structuralinspection.method.PureSetterMethod"/>
     </extensions>
 </idea-plugin>
