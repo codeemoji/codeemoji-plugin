@@ -61,5 +61,11 @@
                                    implementationClass="codeemoji.inlay.structuralinspection.method.PureGetterMethod"/>
         <codeInsight.inlayProvider language="JAVA"
                                    implementationClass="codeemoji.inlay.structuralinspection.method.PureSetterMethod"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.structuralinspection.method.StateIndependentMethod"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.structuralinspection.method.StateChangingMethod"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.structuralinspection.method.SideEffectingMethod"/>
     </extensions>
 </idea-plugin>
