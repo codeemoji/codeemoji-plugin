@@ -12,7 +12,8 @@ methods, parameters or local variables that are being used. Likewise, the develo
 all these elements, according
 to a rule, for example, for a class being instantiated that implements a specific interface, for a method being invoked
 that is annotated by a certain
-annotation , a local variable of a given type, and so on. Furthermore, the plugin has the capability to display implicit annotations for the JakartaEE and Spring frameworks.
+annotation , a local variable of a given type, and so on. Furthermore, the plugin has the capability to display implicit
+annotations for the JakartaEE and Spring frameworks.
 
 <!-- DESCRIPTION HEADER END -->
 
@@ -42,7 +43,18 @@ annotation , a local variable of a given type, and so on. Furthermore, the plugi
 * [Cases of Showing Modifiers](#cases-of-showing-modifiers)
 * [Cases of Showing Specifics of Projects](#cases-of-showing-specifics-of-projects)
 * [Cases of Showing Implicit Annotations](#cases-of-showing-implicit-annotations)
-* [External Services API](#external-services-api)
+* [Cases of Structural Analysis](#cases-of-structural-analysis)
+    * [Code Complexity](#code-complexity)
+        * [High Cyclomatic Complexity Method](#high-cyclomatic-complexity-method)
+        * [Large Identifier Count Method](#large-identifier-count-method)
+        * [Large Line Count Method](#large-line-count-method)
+        * [Large Method Count Class](#large-method-count-class)
+    * [Methods](#methods)
+        * [External Functionality Invoking Method](#external-functionality-invoking-method)
+        * [Pure Getter Method](#pure-getter-method)
+        * [Pure Setter Method](#pure-setter-method)
+        * [State Changing Method](#state-changing-method)
+        * [State Independent Method](#state-independent-method)
 * [How to Extend](#how-to-extend)
     * [Providers](#providers)
     * [Collectors](#collectors)
@@ -250,7 +262,7 @@ each element, as follows:
 - Element: Field
     - Features: Annotations, Types
 - Element: Method
-    - Features: Annotations, Returns
+    - Features: Annotations, Returns, Packages
 - Element: Parameter
     - Features: Annotations, Types
 - Element: Local Variable
@@ -302,6 +314,183 @@ Here's an examples of usage with _Spring_ from a code snipped:
 ![Showing Implicit Annotations - Example](docs/screenshots/showingimplicitsspringsample1.png)
 
 ![Showing Implicit Annotations - Example](docs/screenshots/showingimplicitsspringsample2.png)
+
+# Cases of Structural Analysis
+
+The plugin also incorporates implementations of inlay hint providers for displaying structural characteristics of 
+programming constructs, which are useful for extracting implicit information contained in them. The visual aid provided 
+by such hints might facilitate scenarios in which the creation of complex code requires the programmer to contextualize 
+otherwise difficultly inferable knowledge. A subset of these implementations specifically concerns the calculation of 
+code complexity metrics that might help determining the difficulty level in understanding and maintaining code.
+
+
+## Code Complexity
+
+The computed code complexity metrics encompass the total number of methods per class, the cyclomatic complexity per
+method, the total number of identifiers per method and the total number of lines per method. Each one of them has a
+predetermined but configurable threshold which, if exceeded, triggers the addition of an inlay hint displaying a
+warning.
+
+### High Cyclomatic Complexity Method
+
+A code complexity metric that, based on a configurable threshold, indicates whether a method has a "very high" number of
+linearly independent paths with respect to the number of lines in it.
+
+The algorithm for calculating the metric is adapted from the specification defined by
+Watson and McCabe ("Structured Testing: A Testing Methodology Using the Cyclomatic Complexity Metric", 1996).
+Starting from a value _S := 1_, the code elements present in the method are analyzed to match keywords that create a
+decision point, therefore, triggering the addition of a new path, which entails increasing _S_ by a factor of 1.
+The keywords and operators considered in such analysis avoid inspecting single multi-way branch statements
+(eg. if a switch statement is recognized, add 1 to S for each case label); they are the following:
+
+- "&&" and "||"
+- "if" and "else if"
+- "case"
+- "for" and "while"
+- "try"
+
+The default value for the metric is set to  _0.36 Cyclomatic Complexity / Lines of Code_, which corresponds to the
+statistical threshold cited by Lanza and Marinescu ("Object-Oriented Metrics in Practice", 2006).
+
+_**Impacted identifiers: Method names**_
+
+![High Cyclomatic Complexity Method - Configuration](docs/screenshots/highcyclomaticcomplexitymethod.png)
+
+![High Cyclomatic Complexity Method - Example](docs/screenshots/highcyclomaticcomplexitymethodsample.png)
+
+### Large Identifier Count Method
+
+A code complexity metric that indicates whether a method contains a "very high" number of identifiers based on a
+configurable threshold.
+
+An identifier indicates a lexical token that associates a symbolic name to a Java syntax entity. For instance, some of
+the entities an identifier might denote include: variables, data types, classes or methods
+
+The default value is set to <em>70 Identifiers / Method</em>.
+
+
+_**Impacted identifiers: Method names**_
+
+![Large Identifier Count Method - Configuration](docs/screenshots/largeidentifiercountmethod.png)
+
+![Large Identifier Count Method - Example](docs/screenshots/largeidentifiercountmethodsample.png)
+
+### Large Line Count Method
+
+A code complexity metric that indicates whether a method contains a "very high" number of lines of code based on a 
+configurable threshold.
+
+The default value is set to <em>20 Lines of Code / Method</em>, which corresponds to the rounded up statistical
+threshold of <em>19.5 Lines of Code / Method</em> cited by Lanza and Marinescu ("Object-Oriented Metrics in Practice",
+2006).
+
+
+_**Impacted identifiers: Method names**_
+
+![Large Line Count Method - Configuration](docs/screenshots/largelinecountmethod.png)
+
+![Large Line Count Method - Example](docs/screenshots/largelinecountmethodsample.png)
+
+### Large Method Count Class
+
+A code complexity metric that indicates whether a class contains a "very high" number of methods based on a configurable
+threshold.
+
+The default value is set to _15 Methods/Class_, which corresponds to the statistical threshold cited by
+Lanza and Marinescu ("Object-Oriented Metrics in Practice", 2006).
+
+_**Impacted identifiers: Class names**_
+
+![Large Method Count Class - Configuration](docs/screenshots/largemethodcountclass.png)
+
+![Large Method Count Class - Example](docs/screenshots/largemethodcountclasssample.png)
+
+## Methods
+
+Aside from the recognition of state-independent and state-changing methods, the cases taken into consideration 
+during the structural analysis of methods range from the detection of purely defined getters and setters to the 
+identification of calls to external functionality.
+
+### External Functionality Invoking Method
+
+A method invoking external functionality contains calls to methods defined outside the project currently opened in the
+editor. Additionally, any method originating from a class belonging to a Java core library (inside a "java.*" 
+package) is excluded from the analysis. 
+
+Note that each method call can be followed recursively until reaching its original caller. If _any_ method on the 
+invocation path to the root invoker matches the criteria specified above, the method being currently analyzed is marked
+with a hint indicating its external source. Since this might be a costly operation for methods comprising many method
+calls, this option is turned off by default in the IDE's Inlay Hint settings menu.
+
+_**Impacted identifiers: Method names**_
+
+![External Functionality Invoking Method - Configuration](docs/screenshots/externalfunctionalityinvokingmethod.png)
+
+![External Functionality Invoking Method - Example](docs/screenshots/externalfunctionalityinvokingmethodsample.png)
+
+![External Functionality Invoking Method - Example](docs/screenshots/externalfunctionalityinvokingmethodsample1.png)
+
+### Pure Getter Method
+
+Also known as "getter", a pure accessor method only contains one statement that returns a field which must be defined
+within the class the method is defined in.
+
+The application of the
+standard <a href="https://www.oreilly.com/library/view/javaserver-pages-3rd/0596005636/ch20s01s01.html">
+JavaBeans naming convention</a> on the signature's name can be enforced by selecting or deselecting a checkbox
+in the IDE's Inlay Hint settings menu.
+
+_**Impacted identifiers: Method names**_
+
+![Pure Getter Method - Configuration](docs/screenshots/puregettermethod.png)
+
+![Pure Getter Method - Example](docs/screenshots/puregettermethodsample.png)
+
+### Pure Setter Method
+
+Also known as "setter", a pure mutator method only contains one statement that assigns a single parameter value to a
+homonymous field which must be qualified and within the class the method is defined in. The application of the
+standard <a href="https://www.oreilly.com/library/view/javaserver-pages-3rd/0596005636/ch20s01s01.html">
+JavaBeans naming convention</a> on the signature's name can be enforced by selecting or deselecting a checkbox
+in the IDE's Inlay Hint settings menu.
+
+_**Impacted identifiers: Methods**_
+
+![Pure Setter Method - Configuration](docs/screenshots/puresettermethod.png)
+
+![Pure Setter Method - Example](docs/screenshots/puresettermethodsample1.png)
+
+### State Changing Method
+
+A method changing state contains value assignments to class fields that are either stated explicitly or implicitly
+by invoking mutator methods.
+
+Note that each implicit method call can be followed recursively until reaching its original caller. If _any_ method on the
+invocation path to the root invoker matches the criteria specified above, the method being currently analyzed is marked
+with a hint indicating its state-changing effect. Since this might be a costly operation for methods comprising many 
+method calls, this option is turned off by default in the IDE's Inlay Hint settings menu.
+
+_**Impacted identifiers: Method names**_
+
+![State Changing Method - Configuration](docs/screenshots/statechangingmethodconfiguration.png)
+
+![State Changing Method - Example](docs/screenshots/statechangingmethodsample.png)
+
+![State Changing Method - Example](docs/screenshots/statechangingmethodsample1.png)
+
+### State Independent Method
+
+A method that is independent of state does not contain any expressions that reference a class field either explicitly 
+or implicitly through method invocations.
+
+Note that each implicit method call can be followed recursively until reaching its original caller. If _all_ methods on 
+the invocation path to the root invoker match the criteria specified above, the method being currently analyzed is 
+marked with a hint indicating its state independence. Since this might be a costly operation for methods comprising many
+method calls, this option is turned off by default in the IDE's Inlay Hint settings menu.
+
+_**Impacted identifiers: Method names**_
+
+![State Independent Method - Example](docs/screenshots/stateindependentmethodsample.png)
 
 # External Services API
 
@@ -589,4 +778,10 @@ This work was supported by the **Free University of Bozen-Bolzano - UNIBZ**.
 Arnaoudova, Venera, Massimiliano Di Penta, and Giuliano Antoniol. "Linguistic antipatterns: What they are and how
 mainers perceive them."
 _Empirical Software Engineering_ 21 (2016): 104-158.
+
+Michele Lanza and Radu Marinescu. "Object-Oriented Metrics in Practice" _Springer Berlin, Heidelberg_, Edition 1 
+(2006): Table 2.1.
+
+Arthur H. Watson and Thomas J. McCabe, "Structured Testing: A Testing Methodology Using the Cyclomatic Complexity 
+Metric." _NIST Special Publication (SP)_ (1996).
 
