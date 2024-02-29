@@ -14,6 +14,8 @@
 
     <extensions defaultExtensionNs="com.intellij">
 
+        <!-- START OF CONFIGURABLE & SERVICES SECTION-->
+
         <!--suppress PluginXmlCapitalization -->
         <applicationConfigurable groupId="other" displayName="codEEmoji Settings"
                                  instance="codeemoji.core.config.CEGlobalConfigurable"/>
@@ -23,6 +25,29 @@
         <applicationService serviceImplementation="codeemoji.inlay.showingmodifiers.ShowingModifiersSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.showingspecifics.ShowingSpecificsSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.implicit.ImplicitAnnotationsSettings"/>
+        <applicationService
+                serviceImplementation="codeemoji.inlay.structuralanalysis.codecomplexity.HighCyclomaticComplexityMethodSettings"/>
+        <applicationService
+                serviceImplementation="codeemoji.inlay.structuralanalysis.codecomplexity.LargeIdentifierCountMethodSettings"/>
+        <applicationService
+                serviceImplementation="codeemoji.inlay.structuralanalysis.codecomplexity.LargeLineCountMethodSettings"/>
+        <applicationService
+                serviceImplementation="codeemoji.inlay.structuralanalysis.codecomplexity.LargeMethodCountClassSettings"/>
+        <applicationService
+                serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.ExternalFunctionalityInvokingMethodSettings"/>
+        <applicationService
+                serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.PureGetterMethodSettings"/>
+        <applicationService
+                serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.PureSetterMethodSettings"/>
+        <applicationService
+                serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.StateChangingMethodSettings"/>
+        <applicationService
+                serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.StateIndependentMethodSettings"/>
+
+        <!--END OF CONFIGURABLE & SERVICES SECTION-->
+
+        <!-- START IMPLEMENTATIONS SECTION-->
+
         <codeInsight.inlayProvider language="JAVA"
                                    implementationClass="codeemoji.inlay.nameviolation.ShortDescriptiveName"/>
         <codeInsight.inlayProvider language="JAVA"
@@ -58,14 +83,25 @@
         <codeInsight.inlayProvider language="JAVA"
                                    implementationClass="codeemoji.inlay.implicit.ImplicitAnnotations"/>
         <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlay.structuralinspection.method.PureGetterMethod"/>
+                                   implementationClass="codeemoji.inlay.structuralanalysis.codecomplexity.HighCyclomaticComplexityMethod"/>
         <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlay.structuralinspection.method.PureSetterMethod"/>
+                                   implementationClass="codeemoji.inlay.structuralanalysis.codecomplexity.LargeIdentifierCountMethod"/>
         <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlay.structuralinspection.method.StateIndependentMethod"/>
+                                   implementationClass="codeemoji.inlay.structuralanalysis.codecomplexity.LargeLineCountMethod"/>
         <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlay.structuralinspection.method.StateChangingMethod"/>
+                                   implementationClass="codeemoji.inlay.structuralanalysis.codecomplexity.LargeMethodCountClass"/>
         <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlay.structuralinspection.method.SideEffectingMethod"/>
+                                   implementationClass="codeemoji.inlay.structuralanalysis.element.method.ExternalFunctionalityInvokingMethod"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.structuralanalysis.element.method.PureGetterMethod"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.structuralanalysis.element.method.PureSetterMethod"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.structuralanalysis.element.method.StateChangingMethod"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.structuralanalysis.element.method.StateIndependentMethod"/>
+
+        <!--END OF IMPLEMENTATIONS SECTION-->
+
     </extensions>
 </idea-plugin>

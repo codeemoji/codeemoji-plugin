@@ -18,6 +18,7 @@ public enum CERuleFeature {
     IMPLEMENTS("implements"),
     TYPES("types"),
     RETURNS("returns"),
+    PACKAGES("packages"),
     UNKNOWN("unknown");
 
     private final @NotNull String value;
