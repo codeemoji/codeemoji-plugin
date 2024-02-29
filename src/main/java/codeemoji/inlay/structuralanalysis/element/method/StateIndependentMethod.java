@@ -60,23 +60,16 @@ public class StateIndependentMethod extends CEProviderMulti<StateIndependentMeth
 
 
     private boolean isStateIndependentMethod(PsiMethod method){
-        // Collect reference expressions
         var stateIndependentElements = PsiTreeUtil.collectElementsOfType(method.getNavigationElement(), PsiReferenceExpression.class);
 
-        // The method contains either 1 or more reference expressions, of whom some resolve to fields
         if(stateIndependentElements.stream().noneMatch(stateIndependentElement -> stateIndependentElement.resolve() instanceof PsiField)){
-
-            // Every reference expression resolving to a method contained in the currently analyzed method body is recursively checked for independence
             if(getSettings().isCheckMethodCallsForStateIndependenceApplied()) {
                 return stateIndependentElements.stream().noneMatch(stateIndependentElement -> stateIndependentElement.resolve() instanceof PsiMethod referenceMethod && !method.isEquivalentTo(referenceMethod) && !isStateIndependentMethod(referenceMethod));
             }
-            // No reference expression resolving to a method contained in the currently analyzed method body is recursively checked for independence
             else {
                 return true;
             }
         }
-
-        // The method contains either 0 or more than 0 reference expressions, of whom none resolve to fields
         else {
             return false;
         }

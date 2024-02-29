@@ -41,7 +41,6 @@ public class StateChangingMethod extends CEProviderMulti<StateChangingMethodSett
                 new CEMethodCollector(editor, getKeyId(), STATE_CHANGING_METHOD) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        // TODO 2: read externalInfo map: if there's a key informing about whether the PureSetterMethod inlay hint is active return false (eg. editor.getInlayModel().hasInlineElementAt(element.getStartOffsetInParent()))
                         return isStateChangingMethod(element);
                     }
 
@@ -62,29 +61,27 @@ public class StateChangingMethod extends CEProviderMulti<StateChangingMethodSett
     }
 
     private boolean isStateChangingMethod(PsiMethod method){
-        // Collect assignment expressions to fields
-        PsiElement[] stateChangingElements = PsiTreeUtil.collectElements(method.getNavigationElement(), element -> element instanceof PsiAssignmentExpression assignmentExpression && assignmentExpression.getLExpression() instanceof PsiReferenceExpression referenceExpression && referenceExpression.resolve() instanceof PsiField);
+        PsiElement[] stateChangingElements = PsiTreeUtil.collectElements(
+                method.getNavigationElement(),
+                element ->
+                        element instanceof PsiAssignmentExpression assignmentExpression &&
+                        assignmentExpression.getLExpression() instanceof PsiReferenceExpression referenceExpression && referenceExpression.resolve() instanceof PsiField
+        );
 
-        // The method contains 1 or more assignment expressions to fields
         if (stateChangingElements.length > 0) {
             return true;
         }
-
-        // The method does not contain any assignment expressions to fields, check if it invokes other state changing methods
         else {
 
-            // Every method call contained in the currently analyzed method body is recursively checked for assessing whether it changes state
             if(getSettings().isCheckMethodCallsForStateChangeApplied()){
-
-                // Collect non-recursive method calls
-                stateChangingElements = PsiTreeUtil.collectElements(method.getNavigationElement(), element -> element instanceof PsiMethodCallExpression methodCallExpression && methodCallExpression.resolveMethod() != null && !method.isEquivalentTo(methodCallExpression.resolveMethod()));
-
-                // The method changes state if any of the method calls contains 1 or more assignment expressions to fields
+                stateChangingElements = PsiTreeUtil.collectElements(
+                        method.getNavigationElement(),
+                        element ->
+                                element instanceof PsiMethodCallExpression methodCallExpression &&
+                                methodCallExpression.resolveMethod() != null && !method.isEquivalentTo(methodCallExpression.resolveMethod())
+                );
                 return stateChangingElements.length > 0 && Arrays.stream(stateChangingElements).anyMatch(stateChangingElement -> isStateChangingMethod(((PsiMethodCallExpression) stateChangingElement).resolveMethod()));
-
             }
-
-            // No method call contained in the currently analyzed method body is recursively checked for assessing whether it changes state
             else{
                 return false;
             }

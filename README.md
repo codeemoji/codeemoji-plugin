@@ -776,12 +776,11 @@ This work was supported by the **Free University of Bozen-Bolzano - UNIBZ**.
 # References
 
 Arnaoudova, Venera, Massimiliano Di Penta, and Giuliano Antoniol. "Linguistic antipatterns: What they are and how
-mainers perceive them."
-_Empirical Software Engineering_ 21 (2016): 104-158.
+mainers perceive them." _Empirical Software Engineering_ 21 (2016): 104-158.
 
-Michele Lanza and Radu Marinescu. "Object-Oriented Metrics in Practice" _Springer Berlin, Heidelberg_, Edition 1 
+Michele Lanza and Radu Marinescu. "Object-Oriented Metrics in Practice". _Springer Berlin, Heidelberg_, Edition 1 
 (2006): Table 2.1.
 
-Arthur H. Watson and Thomas J. McCabe, "Structured Testing: A Testing Methodology Using the Cyclomatic Complexity 
+Arthur H. Watson and Thomas J. McCabe. "Structured Testing: A Testing Methodology Using the Cyclomatic Complexity 
 Metric." _NIST Special Publication (SP)_ (1996).
 

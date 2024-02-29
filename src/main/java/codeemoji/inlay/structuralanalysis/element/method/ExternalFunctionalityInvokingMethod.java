@@ -58,7 +58,6 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
     }
 
     public boolean isExternalFunctionalityInvokingMethod(PsiMethod method, Project project) {
-        // Collect non-recursive method calls
         PsiElement[] externalFunctionalityInvokingElements = PsiTreeUtil.collectElements(
                 method.getNavigationElement(),
                 externalFunctionalityInvokingElement ->
@@ -66,7 +65,6 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
                         methodCallExpression.resolveMethod() != null && !method.isEquivalentTo(methodCallExpression.resolveMethod())
         );
 
-        // The method contains 1 or more "direct" method calls that originate from files defined in external packages
         if (
                 externalFunctionalityInvokingElements.length > 0 &&
                 Arrays.stream(externalFunctionalityInvokingElements)
@@ -75,23 +73,15 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
         ) {
             return true;
         }
-
-        // The method contains 1 or more "indirect" non-recursive method calls that might invoke methods that originate from files defined outside the currently opened project
         else {
-
-            // Every method call contained in the currently analyzed method body is recursively checked for externality
             if (getSettings().isCheckMethodCallsForExternalityApplied()) {
 
-
-                // The method changes state if any of the method calls contains 1 or more method calls that originate from files defined outside the currently opened project
                 return externalFunctionalityInvokingElements.length > 0 &&
                         Arrays.stream(externalFunctionalityInvokingElements)
                                 .map(externalFunctionalityInvokingElement -> ((PsiMethodCallExpression) externalFunctionalityInvokingElement).resolveMethod())
                                 .filter(externalFunctionalityInvokingElement -> !checkMethodExternality((PsiMethod) externalFunctionalityInvokingElement.getNavigationElement(), project))
                                 .anyMatch(externalFunctionalityInvokingElement -> isExternalFunctionalityInvokingMethod(externalFunctionalityInvokingElement, project));
             }
-
-            // No method call contained in the currently analyzed method body is recursively checked for externality
             else {
                 return false;
             }
