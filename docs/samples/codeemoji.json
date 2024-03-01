@@ -54,6 +54,11 @@
       ]
     },
     {
+      "element": "method",
+      "feature": "packages",
+      "values": []
+    },
+    {
       "element": "localvariable",
       "feature": "annotations",
       "values": [

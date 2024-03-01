@@ -11,6 +11,8 @@ public final class ProjectRuleSymbol {
     public static final CESymbol IMPLEMENTS_SYMBOL = new CESymbol(0x1F91D); //handshake
     public static final CESymbol TYPES_SYMBOL = new CESymbol(0x1F4D1); //bookmark
     public static final CESymbol RETURNS_SYMBOL = new CESymbol(0x21A9); //right arrow curving left
+    public static final CESymbol PACKAGES_SYMBOL = new CESymbol(0x1F4E6); //package
+
 
     private ProjectRuleSymbol() {
     }
@@ -31,6 +33,9 @@ public final class ProjectRuleSymbol {
             }
             case TYPES -> {
                 return TYPES_SYMBOL;
+            }
+            case PACKAGES -> {
+                return PACKAGES_SYMBOL;
             }
             default -> {
                 return new CESymbol();

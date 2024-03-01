@@ -4,36 +4,35 @@ import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.JavaRecursiveElementVisitor;
-import com.intellij.psi.PsiCallExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiJavaFile;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.psi.*;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import static codeemoji.core.collector.project.ProjectRuleSymbol.ANNOTATIONS_SYMBOL;
-import static codeemoji.core.collector.project.ProjectRuleSymbol.RETURNS_SYMBOL;
+import static codeemoji.core.collector.project.ProjectRuleSymbol.*;
 import static codeemoji.core.config.CERuleElement.METHOD;
-import static codeemoji.core.config.CERuleFeature.ANNOTATIONS;
-import static codeemoji.core.config.CERuleFeature.RETURNS;
+import static codeemoji.core.config.CERuleFeature.*;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
 public final class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiMethodCallExpression>
-        implements CEProjectTypes<PsiMethodCallExpression> {
+        implements CEProjectTypes<PsiMethodCallExpression>, CEProjectPackages<PsiMethodCallExpression> {
 
     private final @NotNull String returnsKey;
+    private final @NotNull String packagesKey;
+
     private final @NotNull CESymbol returnsSymbol;
+    private final @NotNull CESymbol packagesSymbol;
 
     public CEProjectMethodCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
         super(editor, mainKeyId + ".method");
         returnsKey = getMainKeyId() + "." + RETURNS.getValue() + ".tooltip";
         returnsSymbol = new CESymbol();
+
+        packagesKey = getMainKeyId() + "." + PACKAGES.getValue() + ".tooltip";
+        packagesSymbol = new CESymbol();
     }
 
     @Override
@@ -64,11 +63,22 @@ public final class CEProjectMethodCollector extends CEProjectCollector<PsiMethod
         if (!evaluationElement.isConstructor() && null != type) {
             processTypesFR(METHOD, RETURNS, type, addHintElement, sink, getReturnsSymbol(), returnsKey);
         }
+        if(evaluationElement.getContainingFile() instanceof PsiJavaFile javaFile && javaFile.getPackageStatement() != null) {
+            processStructuralAnalysisFR(METHOD, PACKAGES, javaFile.getPackageStatement(), addHintElement, sink, getPackagesSymbol(), packagesKey);
+        }
     }
 
     @Override
     public void addInlayTypesFR(@NotNull PsiMethodCallExpression addHintElement, @NotNull List<String> hintValues,
                                 @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
+        if (!hintValues.isEmpty()) {
+            var inlay = buildInlayWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
+            addInlayInline(addHintElement, sink, inlay);
+        }
+    }
+
+    @Override
+    public void addInlayStructuralAnalysisFR(@NotNull PsiMethodCallExpression addHintElement, @NotNull List<String> hintValues, @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
             var inlay = buildInlayWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
             addInlayInline(addHintElement, sink, inlay);
@@ -94,4 +104,7 @@ public final class CEProjectMethodCollector extends CEProjectCollector<PsiMethod
         return readRuleEmoji(METHOD, RETURNS, RETURNS_SYMBOL);
     }
 
+    private CESymbol getPackagesSymbol(){
+        return readRuleEmoji(METHOD, PACKAGES, PACKAGES_SYMBOL);
+    }
 }

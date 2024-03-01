@@ -3,8 +3,13 @@ package codeemoji.core.util;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassType;
@@ -30,8 +35,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import static com.intellij.psi.PsiModifier.FINAL;
@@ -445,6 +453,15 @@ public enum CEUtils {
                 BorderFactory.createEmptyBorder(borderTop, borderLeft, borderBottom, borderRight),
                 title, justification, position, font, color));
         return result;
+    }
+
+    public static List<VirtualFile> getSourceRootsInProject(@NotNull Project project){
+        return Arrays.stream(ModuleManager.getInstance(project).getModules()).map(module -> ModuleRootManager.getInstance(module).getSourceRoots()).flatMap(Arrays::stream).toList();
+    }
+
+    public static <E extends PsiElement> int calculateLineCountFromPsiElementOffsets(@NotNull E element, @NotNull E firstElement, @NotNull E lastElement, @NotNull Predicate<E> guard){
+        Document documentOfMethod = element.getContainingFile().getViewProvider().getDocument();
+        return (guard.test(element)) ? documentOfMethod.getLineNumber(lastElement.getTextOffset())-documentOfMethod.getLineNumber(firstElement.getTextOffset())+1 : 1;
     }
 
 }
