@@ -1,5 +1,12 @@
 # codEEmoji Plugin Changelog
 
+## 4.0.0 (March 1st, 2024)
+
+### Added
+
+- New cases of showing specifics of projects
+- Cases of structural analysis
+
 ## 3.0.1 (September 29th, 2023)
 
 ### Fixes
