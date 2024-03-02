@@ -18,7 +18,7 @@ public record StateIndependentMethodConfigurable(StateIndependentMethodSettings 
             changeListener.settingsChanged();
         });
         return FormBuilder.createFormBuilder()
-                .addLabeledComponent("Follow method calls and recursively check state change", checkBox)
+                .addLabeledComponent("Follow method calls and recursively check state independence", checkBox)
                 .getPanel();
     }
 }

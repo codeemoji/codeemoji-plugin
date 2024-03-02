@@ -61,6 +61,11 @@ public class StateChangingMethod extends CEProviderMulti<StateChangingMethodSett
     }
 
     private boolean isStateChangingMethod(PsiMethod method){
+
+        if (method.isConstructor()){
+            return false;
+        }
+
         PsiElement[] stateChangingElements = PsiTreeUtil.collectElements(
                 method.getNavigationElement(),
                 element ->

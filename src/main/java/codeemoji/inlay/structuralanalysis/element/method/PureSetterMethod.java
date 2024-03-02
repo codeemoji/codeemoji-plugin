@@ -64,7 +64,8 @@ public class PureSetterMethod extends CEProviderMulti<PureSetterMethodSettings> 
     }
 
     private boolean isPureSetterMethod(PsiMethod method) {
-        return method.hasParameters() &&
+        return !method.isConstructor() &&
+                method.hasParameters() &&
                 method.getParameterList().getParameters().length == 1 &&
                 method.getBody() != null && method.getBody().getStatements().length == 1 &&
                 method.getBody().getStatements()[0] instanceof PsiExpressionStatement expressionStatement &&
