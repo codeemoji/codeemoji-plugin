@@ -39,14 +39,14 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
                 new CEMethodCollector(editor, getKeyId(), EXTERNAL_FUNCTIONALITY_INVOKING_METHOD) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isExternalFunctionalityInvokingMethod(element, editor.getProject());
+                        return isExternalFunctionalityInvokingMethod(element, editor.getProject(), false);
                     }
                 },
 
                 new CEReferenceMethodCollector(editor, getKeyId(), EXTERNAL_FUNCTIONALITY_INVOKING_METHOD) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isExternalFunctionalityInvokingMethod(element, editor.getProject());
+                        return isExternalFunctionalityInvokingMethod(element, editor.getProject(), true);
                     }
                 }
         );
@@ -57,9 +57,9 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
         return new ExternalFunctionalityInvokingMethodConfigurable(settings);
     }
 
-    public boolean isExternalFunctionalityInvokingMethod(PsiMethod method, Project project) {
+    public boolean isExternalFunctionalityInvokingMethod(PsiMethod method, Project project, boolean fromReferenceMethod) {
 
-        if(!checkMethodExternality(method, project)){
+        if(fromReferenceMethod && !checkMethodExternality(method, project)){
             return false;
         }
 
@@ -85,7 +85,7 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
                         Arrays.stream(externalFunctionalityInvokingElements)
                                 .map(externalFunctionalityInvokingElement -> ((PsiMethodCallExpression) externalFunctionalityInvokingElement).resolveMethod())
                                 .filter(externalFunctionalityInvokingElement -> !checkMethodExternality((PsiMethod) externalFunctionalityInvokingElement.getNavigationElement(), project))
-                                .anyMatch(externalFunctionalityInvokingElement -> isExternalFunctionalityInvokingMethod(externalFunctionalityInvokingElement, project));
+                                .anyMatch(externalFunctionalityInvokingElement -> isExternalFunctionalityInvokingMethod(externalFunctionalityInvokingElement, project, fromReferenceMethod));
             }
             else {
                 return false;
