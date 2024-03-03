@@ -93,12 +93,12 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
         }
     }
 
-    public boolean checkMethodExternality(PsiMethod element, Project project) {
-        return element.getContainingFile() instanceof PsiJavaFile javaFile &&
-                element.getContainingClass() != null &&
+    public boolean checkMethodExternality(PsiMethod method, Project project) {
+        return method.getContainingFile() instanceof PsiJavaFile javaFile &&
+                method.getContainingClass() != null &&
                 javaFile.getPackageStatement() != null &&
                 !javaFile.getPackageName().startsWith("java") &&
-                !CEUtils.getSourceRootsInProject(project).contains(ProjectFileIndex.getInstance(element.getProject()).getSourceRootForFile(element.getNavigationElement().getContainingFile().getVirtualFile()));
+                !CEUtils.getSourceRootsInProject(project).contains(ProjectFileIndex.getInstance(method.getProject()).getSourceRootForFile(method.getNavigationElement().getContainingFile().getVirtualFile()));
     }
 
 }
