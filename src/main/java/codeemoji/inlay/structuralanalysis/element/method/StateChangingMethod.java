@@ -27,7 +27,6 @@ public class StateChangingMethod extends CEProviderMulti<StateChangingMethodSett
                     private int attribute;
                                 
                     public void stateChangingMethod() {
-                        // Perform operations on the class attribute here
                         this.attribute = this.attribute * 2;
                     }
                 }

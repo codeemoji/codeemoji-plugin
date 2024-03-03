@@ -58,6 +58,11 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
     }
 
     public boolean isExternalFunctionalityInvokingMethod(PsiMethod method, Project project) {
+
+        if(!checkMethodExternality(method, project)){
+            return false;
+        }
+
         PsiElement[] externalFunctionalityInvokingElements = PsiTreeUtil.collectElements(
                 method.getNavigationElement(),
                 externalFunctionalityInvokingElement ->
@@ -68,7 +73,7 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
         if (
                 externalFunctionalityInvokingElements.length > 0 &&
                 Arrays.stream(externalFunctionalityInvokingElements)
-                        .map(externalFunctionalityInvokingElement -> ((PsiMethodCallExpression) externalFunctionalityInvokingElement).resolveMethod())
+                        .map(externalFunctionalityInvokingElement -> ((PsiMethodCallExpression) externalFunctionalityInvokingElement.getNavigationElement()).resolveMethod())
                         .anyMatch(externalFunctionalityInvokingElement -> checkMethodExternality(externalFunctionalityInvokingElement, project))
         ) {
             return true;

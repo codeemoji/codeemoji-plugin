@@ -340,7 +340,7 @@ Watson and McCabe ("Structured Testing: A Testing Methodology Using the Cyclomat
 Starting from a value _S := 1_, the code elements present in the method are analyzed to match keywords that create a
 decision point, therefore, triggering the addition of a new path, which entails increasing _S_ by a factor of 1.
 The keywords and operators considered in such analysis avoid inspecting single multi-way branch statements
-(eg. if a switch statement is recognized, add 1 to S for each case label); they are the following:
+(eg. if a switch statement is recognized, only add 1 to S for each case label); they are the following:
 
 - "&&" and "||"
 - "if" and "else if"
@@ -369,13 +369,15 @@ statistical threshold cited by Lanza and Marinescu ("Object-Oriented Metrics in 
 </tbody>
 </table>
 
-|                                           ![High Cyclomatic Complexity Method - Configuration](docs/screenshots/highcyclomaticcomplexitymethod.png)                                            |
-|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| *Configuration: Set a custom threshold by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; High Cyclomatic Complexity Method**.* |
+| **_Configuration_**                                                                                                                                                              |
+|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![High Cyclomatic Complexity Method - Configuration](docs/screenshots/highcyclomaticcomplexitymethod.png)                                                                        |
+| *Set a custom threshold by opening the settings/preferences and navigating to: **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; High Cyclomatic Complexity Method**.* |
 
-| ![High Cyclomatic Complexity Method - Example](docs/screenshots/highcyclomaticcomplexitymethodsample.png) |
-|:---------------------------------------------------------------------------------------------------------:|
-|                                                *Example:*                                                 |
+| **_Example_**                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![High Cyclomatic Complexity Method - Example](docs/screenshots/highcyclomaticcomplexitymethodsample.png)                                                                                                                                                                                                                                                                                                                                             |
+| *The method shown above has a **cyclomatic complexity of 15**. Such number is obtained by summing the amount of the matching keywords and operations from sections 0 trough 5. The method also spans over **41 lines of code**. The rounded up ratio between these two numbers equals to **0.37 cyclomatic complexity / lines of code**. The plugin displays the inlay hint if the threshold is set to a value smaller than or equal to such amount.* |
 
 ### Large Identifier Count Method
 
@@ -405,13 +407,15 @@ The default value is set to <em>70 Identifiers / Method</em>.
 </tbody>
 </table>
 
-|                                             ![Large Identifier Count Method - Configuration](docs/screenshots/largeidentifiercountmethod.png)                                              |
-|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| *Configuration: Set a custom threshold by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Large Identifier Count Method**.* |
+| **_Configuration_**                                                                                                                                                         |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Large Identifier Count Method - Configuration](docs/screenshots/largeidentifiercountmethod.png)                                                                           |
+| *Set a custom threshold by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Large Identifier Count Method**.* |
 
-| ![Large Identifier Count Method - Example](docs/screenshots/largeidentifiercountmethodsample.png) |
-|:-------------------------------------------------------------------------------------------------:|
-|                                            *Example:*                                             |
+| **_Example_**                                                                                                                                                     |
+|:------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Large Identifier Count Method - Example](docs/screenshots/largeidentifiercountmethodsample.png)                                                                 |
+| *The method shown above contains **70 identifiers**. The plugin displays the inlay hint if the threshold is set to a value smaller than or equal to such amount.* |
 
 ### Large Line Count Method
 
@@ -439,13 +443,15 @@ threshold of _19.5 Lines of Code / Method_ cited by Lanza and Marinescu ("Object
 </tbody>
 </table>
 
-|                                                ![Large Line Count Method - Configuration](docs/screenshots/largelinecountmethod.png)                                                 |
-|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| *Configuration: Set a custom threshold by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Large Line Count Method**.* |
+| _*Configuration*_                                                                                                                                                     |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Large Line Count Method - Configuration](docs/screenshots/largelinecountmethod.png)                                                                                 |
+| *Set a custom threshold by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Large Line Count Method**.* |
 
-| ![Large Line Count Method - Example](docs/screenshots/largelinecountmethodsample.png) |
-|:-------------------------------------------------------------------------------------:|
-|                                      *Example:*                                       |
+| _*Example*_                                                                                                                                                           |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Large Line Count Method - Example](docs/screenshots/largelinecountmethodsample.png)                                                                                 |
+| *The method shown above spans over **40 lines of code**. The plugin displays the inlay hint if the threshold is set to a value smaller than or equal to such amount.* |
 
 ### Large Method Count Class
 
@@ -464,7 +470,7 @@ Lanza and Marinescu ("Object-Oriented Metrics in Practice", 2006).
 <tbody>
   <tr>
     <td><b>Emoji</b></td>
-    <td>🦣</td>
+    <td>🐘</td>
   </tr>
   <tr>
     <td><b>Impacted identifiers</b></td>
@@ -473,13 +479,15 @@ Lanza and Marinescu ("Object-Oriented Metrics in Practice", 2006).
 </tbody>
 </table>
 
-|                                                ![Large Method Count Class - Configuration](docs/screenshots/largemethodcountclass.png)                                                |
-|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| *Configuration: Set a custom threshold by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Large Method Count Class**.* |
+| _**Configuration**_                                                                                                                                                   |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Large Method Count Class - Configuration](docs/screenshots/largemethodcountclass.png)                                                                               |
+| Set a custom threshold by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Large Method Count Class**.* |
 
-| ![Large Method Count Class - Example](docs/screenshots/largemethodcountclasssample.png) |
-|:---------------------------------------------------------------------------------------:|
-|                                       *Example:*                                        |
+| _**Example**_                                                                                                                                                |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Large Method Count Class - Example](docs/screenshots/largemethodcountclasssample.png)                                                                      |
+| *The class shown above contains **16 methods**. The plugin displays the inlay hint if the threshold is set to a value smaller than or equal to such amount.* |
 
 ## Methods
 
@@ -515,17 +523,20 @@ calls, this option is turned off by default in the IDE's corresponding Inlay Hin
 </tbody>
 </table>
 
-|                                                                ![External Functionality Invoking Method - Configuration](docs/screenshots/externalfunctionalityinvokingmethod.png)                                                                | 
-|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:| 
-| *Configuration: Set the "Follow method calls and recursively check externality" flag by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; External Functionality Invoking Method**.* |
+| _**Configuration**_                                                                                                                                                                                                                |
+|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![External Functionality Invoking Method - Configuration](docs/screenshots/externalfunctionalityinvokingmethod.png)                                                                                                                |
+| *Set the "Follow method calls and recursively check externality" flag by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; External Functionality Invoking Method**.* |
 
-| ![External Functionality Invoking Method - Example 1](docs/screenshots/externalfunctionalityinvokingmethodsample.png) | 
-|:---------------------------------------------------------------------------------------------------------------------:| 
-|               *Example 1: "Follow method calls and recursively check externality" flag **is** checked*                |
+| _**Example 1**_                                                                                                       |
+|:----------------------------------------------------------------------------------------------------------------------|
+| ![External Functionality Invoking Method - Example 1](docs/screenshots/externalfunctionalityinvokingmethodsample.png) |
+| *"Follow method calls and recursively check externality" flag **is** checked*.                                        |
 
-| ![External Functionality Invoking Method - Example 2](docs/screenshots/externalfunctionalityinvokingmethodsample1.png) | 
-|:----------------------------------------------------------------------------------------------------------------------:| 
-|                *Example 2: "Follow method calls and recursively check externality" flag **is not** set*                |
+| _**Example 2**_                                                                                                        |
+|:-----------------------------------------------------------------------------------------------------------------------|
+| ![External Functionality Invoking Method - Example 2](docs/screenshots/externalfunctionalityinvokingmethodsample1.png) |
+| *"Follow method calls and recursively check externality" flag **is not** set*.                                         |
 
 ### Pure Getter Method
 
@@ -555,17 +566,20 @@ settings menu.
 </tbody>
 </table>
 
-|                                                               ![Pure Getter Method - Configuration](docs/screenshots/puregettermethod.png)                                                                |
-|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| *Configuration: Set the "Apply JavaBeans naming convention" flag by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Pure Getter Method**.* |
+| _**Configuration**_                                                                                                                                                                        |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Pure Getter Method - Configuration](docs/screenshots/puregettermethod.png)                                                                                                               |
+| *Set the "Apply JavaBeans naming convention" flag by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Pure Getter Method**.* |
 
-| ![Pure Getter Method - Example 1](docs/screenshots/puregettermethodsample.png) | 
-|:------------------------------------------------------------------------------:| 
-|        *Example 1: "Apply JavaBeans naming convention" flag **is** set*        |
+| _**Example 1**_                                                                |
+|:-------------------------------------------------------------------------------|
+| ![Pure Getter Method - Example 1](docs/screenshots/puregettermethodsample.png) |
+| *"Apply JavaBeans naming convention" flag **is** set*.                         |
 
-| ![Pure Getter Method - Example 2](docs/screenshots/puregettermethodsample1.png) | 
-|:-------------------------------------------------------------------------------:| 
-|      *Example 2: "Apply JavaBeans naming convention" flag **is not** set*       |
+| _**Example 2**_                                                                 |
+|:--------------------------------------------------------------------------------|
+| ![Pure Getter Method - Example 2](docs/screenshots/puregettermethodsample1.png) |
+| *"Apply JavaBeans naming convention" flag **is not** set*.                      |
 
 ### Pure Setter Method
 
@@ -594,17 +608,20 @@ settings menu.
 </tbody>
 </table>
 
-|                                                               ![Pure Setter Method - Configuration](docs/screenshots/puresettermethod.png)                                                                |
-|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| *Configuration: Set the "Apply JavaBeans naming convention" flag by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Pure Setter Method**.* |
+| _**Configuration**_                                                                                                                                                                        |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Pure Setter Method - Configuration](docs/screenshots/puresettermethod.png)                                                                                                               |
+| *Set the "Apply JavaBeans naming convention" flag by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Pure Setter Method**.* |
 
-| ![Pure Setter Method - Example 1](docs/screenshots/puresettermethodsample.png) | 
-|:------------------------------------------------------------------------------:| 
-|        *Example 1: "Apply JavaBeans naming convention" flag **is** set*        |
+| _**Example 1**_                                                                |
+|:-------------------------------------------------------------------------------|
+| ![Pure Setter Method - Example 1](docs/screenshots/puresettermethodsample.png) |
+| *"Apply JavaBeans naming convention" flag **is** set*.                         |
 
-| ![Pure Setter Method - Example 2](docs/screenshots/puresettermethodsample1.png) | 
-|:-------------------------------------------------------------------------------:| 
-|      *Example 2: "Apply JavaBeans naming convention" flag **is not** set*       |
+| _**Example 2**_                                                                 |
+|:--------------------------------------------------------------------------------|
+| ![Pure Setter Method - Example 2](docs/screenshots/puresettermethodsample1.png) |
+| *"Apply JavaBeans naming convention" flag **is not** set*.                      |
 
 ### State Changing Method
 
@@ -612,10 +629,9 @@ A method changing state contains value assignments to class fields that are eith
 by invoking mutator methods.
 
 Note that each implicit method call can be followed recursively until reaching its original caller. If _any_ method on
-the
-invocation path to the root invoker matches the criteria specified above, the method being currently analyzed is marked
-with a hint indicating its state-changing effect. Since this might be a costly operation for methods comprising many
-method calls, this option is turned off by default in the IDE's corresponding Inlay Hint settings menu.
+the invocation path to the root invoker matches the criteria specified above, the method being currently analyzed is
+marked with a hint indicating its state-changing effect. Since this might be a costly operation for methods comprising
+many method calls, this option is turned off by default in the IDE's corresponding Inlay Hint settings menu.
 
 <table>
 <thead>
@@ -635,17 +651,20 @@ method calls, this option is turned off by default in the IDE's corresponding In
 </tbody>
 </table>
 
-|                                                                  ![State Changing Method - Configuration](docs/screenshots/statechangingmethodconfiguration.png)                                                                  |
-|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| *Configuration: Set the "Follow method calls and recursively check state change" flag by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; State Changing Method**.* |
+| _**Configuration**_                                                                                                                                                                                                |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![State Changing Method - Configuration](docs/screenshots/statechangingmethod.png)                                                                                                                                 |
+| *Set the "Follow method calls and recursively check state change" flag by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; State Changing Method**.* |
 
-| ![State Changing Method - Example 1](docs/screenshots/statechangingmethodsample.png)  | 
-|:-------------------------------------------------------------------------------------:| 
-| *Example 1: "Follow method calls and recursively check state change" flag **is** set* |
+| _**Example 1**_                                                                      |
+|:-------------------------------------------------------------------------------------|
+| ![State Changing Method - Example 1](docs/screenshots/statechangingmethodsample.png) |
+| *"Follow method calls and recursively check state change" flag **is** set*.          |
 
-|   ![State Changing Method - Example 2](docs/screenshots/statechangingmethodsample1.png)   | 
-|:-----------------------------------------------------------------------------------------:| 
-| *Example 2: "Follow method calls and recursively check state change" flag **is not** set* |
+| _**Example 2**_                                                                       |
+|:--------------------------------------------------------------------------------------|
+| ![State Changing Method - Example 2](docs/screenshots/statechangingmethodsample1.png) |
+| *"Follow method calls and recursively check state change" flag **is not** set*.       |
 
 ### State Independent Method
 
@@ -675,17 +694,20 @@ method calls, this option is turned off by default in the IDE's Inlay Hint setti
 </tbody>
 </table>
 
-|                                                                   ![State Independent Method - Configuration](docs/screenshots/stateindependentmethodconfiguration.png)                                                                    |
-|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| *Configuration: Set the "Follow method calls and recursively check state independence" flag by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; State Independent Method**.* |
+| _**Configuration**_                                                                                                                                                                                                         |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![State Independent Method - Configuration](docs/screenshots/stateindependentmethod.png)                                                                                                                                    |
+| *Set the "Follow method calls and recursively check state independence" flag by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; State Independent Method**.* |
 
-| ![State Independent Method - Example 1](docs/screenshots/stateindependentmethodsample.png)  | 
-|:-------------------------------------------------------------------------------------------:| 
-| *Example 1: "Follow method calls and recursively check state independence" flag **is** set* |
+| _**Example 1**_                                                                            |
+|:-------------------------------------------------------------------------------------------|
+| ![State Independent Method - Example 1](docs/screenshots/stateindependentmethodsample.png) |
+| *"Follow method calls and recursively check state independence" flag **is** set*.          |
 
-|   ![State Independent Method - Example 2](docs/screenshots/stateindependentmethodsample1.png)   | 
-|:-----------------------------------------------------------------------------------------------:| 
-| *Example 2: "Follow method calls and recursively check state independence" flag **is not** set* |
+| _**Example 2**_                                                                             |
+|:--------------------------------------------------------------------------------------------|
+| ![State Independent Method - Example 2](docs/screenshots/stateindependentmethodsample1.png) |
+| *"Follow method calls and recursively check state independence" flag **is not** set*.       |
 
 # External Services API
 
