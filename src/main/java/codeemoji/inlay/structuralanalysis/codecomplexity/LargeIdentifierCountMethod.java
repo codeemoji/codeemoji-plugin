@@ -40,6 +40,6 @@ public class LargeIdentifierCountMethod extends CEProvider<LargeIdentifierCountM
     }
     
     private boolean isLargeIdentifierCountMethod(PsiMethod method){
-        return (PsiTreeUtil.collectElementsOfType(method.getBody(), PsiIdentifier.class).size() - 1) >= getSettings().getIdentifierCount();
+        return (PsiTreeUtil.collectElementsOfType(method.getBody(), PsiIdentifier.class).size()) >= getSettings().getIdentifierCount();
     }
 }

@@ -60,6 +60,11 @@ public class StateIndependentMethod extends CEProviderMulti<StateIndependentMeth
 
 
     private boolean isStateIndependentMethod(PsiMethod method){
+
+        if (method.isConstructor()){
+            return false;
+        }
+
         var stateIndependentElements = PsiTreeUtil.collectElementsOfType(method.getNavigationElement(), PsiReferenceExpression.class);
 
         if(stateIndependentElements.stream().noneMatch(stateIndependentElement -> stateIndependentElement.resolve() instanceof PsiField)){

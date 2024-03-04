@@ -317,19 +317,18 @@ Here's an examples of usage with _Spring_ from a code snipped:
 
 # Cases of Structural Analysis
 
-The plugin also incorporates implementations of inlay hint providers for displaying structural characteristics of 
-programming constructs, which are useful for extracting implicit information contained in them. The visual aid provided 
-by such hints might facilitate scenarios in which the creation of complex code requires the programmer to contextualize 
-otherwise difficultly inferable knowledge. A subset of these implementations specifically concerns the calculation of 
-code complexity metrics that might help determining the difficulty level in understanding and maintaining code.
-
+The plugin also incorporates implementations of inlay hints that are used to display structural characteristics of
+syntactic elements in order to deduce implicit information contained in them. The visual aid provided
+by such hints can facilitate the creation of complex code where the programmer is required to contextualize
+otherwise difficultly inferable knowledge. A subset of these implementations specifically concerns the calculation of
+code complexity metrics that help determining the difficulty level in understanding and maintaining code.
 
 ## Code Complexity
 
 The computed code complexity metrics encompass the total number of methods per class, the cyclomatic complexity per
-method, the total number of identifiers per method and the total number of lines per method. Each one of them has a
-predetermined but configurable threshold which, if exceeded, triggers the addition of an inlay hint displaying a
-warning.
+number of lines of code in a method, the total number of identifiers per method and the total number of lines per
+method. Each one of them has a predetermined but configurable threshold which, if exceeded, triggers the addition of
+an inlay hint displaying a warning.
 
 ### High Cyclomatic Complexity Method
 
@@ -341,7 +340,7 @@ Watson and McCabe ("Structured Testing: A Testing Methodology Using the Cyclomat
 Starting from a value _S := 1_, the code elements present in the method are analyzed to match keywords that create a
 decision point, therefore, triggering the addition of a new path, which entails increasing _S_ by a factor of 1.
 The keywords and operators considered in such analysis avoid inspecting single multi-way branch statements
-(eg. if a switch statement is recognized, add 1 to S for each case label); they are the following:
+(eg. if a switch statement is recognized, only add 1 to S for each case label); they are the following:
 
 - "&&" and "||"
 - "if" and "else if"
@@ -352,11 +351,33 @@ The keywords and operators considered in such analysis avoid inspecting single m
 The default value for the metric is set to  _0.36 Cyclomatic Complexity / Lines of Code_, which corresponds to the
 statistical threshold cited by Lanza and Marinescu ("Object-Oriented Metrics in Practice", 2006).
 
-_**Impacted identifiers: Method names**_
+<table>
+<thead>
+  <tr>
+    <th colspan="2">Inlay hint information</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><b>Emoji</b></td>
+    <td>🧩</td>
+  </tr>
+  <tr>
+    <td><b>Impacted identifiers</b></td>
+    <td>Method names</td>
+  </tr>
+</tbody>
+</table>
 
-![High Cyclomatic Complexity Method - Configuration](docs/screenshots/highcyclomaticcomplexitymethod.png)
+| **_Configuration_**                                                                                                                                                              |
+|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![High Cyclomatic Complexity Method - Configuration](docs/screenshots/highcyclomaticcomplexitymethod.png)                                                                        |
+| *Set a custom threshold by opening the settings/preferences and navigating to: **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; High Cyclomatic Complexity Method**.* |
 
-![High Cyclomatic Complexity Method - Example](docs/screenshots/highcyclomaticcomplexitymethodsample.png)
+| **_Example_**                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![High Cyclomatic Complexity Method - Example](docs/screenshots/highcyclomaticcomplexitymethodsample.png)                                                                                                                                                                                                                                                                                                                                             |
+| *The method shown above has a **cyclomatic complexity of 15**. Such number is obtained by summing the amount of the matching keywords and operations from sections 0 trough 5. The method also spans over **41 lines of code**. The rounded up ratio between these two numbers equals to **0.37 cyclomatic complexity / lines of code**. The plugin displays the inlay hint if the threshold is set to a value smaller than or equal to such amount.* |
 
 ### Large Identifier Count Method
 
@@ -368,28 +389,69 @@ the entities an identifier might denote include: variables, data types, classes 
 
 The default value is set to <em>70 Identifiers / Method</em>.
 
+<table>
+<thead>
+  <tr>
+    <th colspan="2">Inlay hint information</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><b>Emoji</b></td>
+    <td>📚</td>
+  </tr>
+  <tr>
+    <td><b>Impacted identifiers</b></td>
+    <td>Method names</td>
+  </tr>
+</tbody>
+</table>
 
-_**Impacted identifiers: Method names**_
+| **_Configuration_**                                                                                                                                                         |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Large Identifier Count Method - Configuration](docs/screenshots/largeidentifiercountmethod.png)                                                                           |
+| *Set a custom threshold by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Large Identifier Count Method**.* |
 
-![Large Identifier Count Method - Configuration](docs/screenshots/largeidentifiercountmethod.png)
-
-![Large Identifier Count Method - Example](docs/screenshots/largeidentifiercountmethodsample.png)
+| **_Example_**                                                                                                                                                     |
+|:------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Large Identifier Count Method - Example](docs/screenshots/largeidentifiercountmethodsample.png)                                                                 |
+| *The method shown above contains **70 identifiers**. The plugin displays the inlay hint if the threshold is set to a value smaller than or equal to such amount.* |
 
 ### Large Line Count Method
 
-A code complexity metric that indicates whether a method contains a "very high" number of lines of code based on a 
+A code complexity metric that indicates whether a method contains a "very high" number of lines of code based on a
 configurable threshold.
 
-The default value is set to <em>20 Lines of Code / Method</em>, which corresponds to the rounded up statistical
-threshold of <em>19.5 Lines of Code / Method</em> cited by Lanza and Marinescu ("Object-Oriented Metrics in Practice",
-2006).
+The default value is set to _20 Lines of Code / Method_, which corresponds to the rounded up statistical
+threshold of _19.5 Lines of Code / Method_ cited by Lanza and Marinescu ("Object-Oriented Metrics in Practice", 2006).
 
+<table>
+<thead>
+  <tr>
+    <th colspan="2">Inlay hint information</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><b>Emoji</b></td>
+    <td>🐘</td>
+  </tr>
+  <tr>
+    <td><b>Impacted identifiers</b></td>
+    <td>Method names</td>
+  </tr>
+</tbody>
+</table>
 
-_**Impacted identifiers: Method names**_
+| _*Configuration*_                                                                                                                                                     |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Large Line Count Method - Configuration](docs/screenshots/largelinecountmethod.png)                                                                                 |
+| *Set a custom threshold by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Large Line Count Method**.* |
 
-![Large Line Count Method - Configuration](docs/screenshots/largelinecountmethod.png)
-
-![Large Line Count Method - Example](docs/screenshots/largelinecountmethodsample.png)
+| _*Example*_                                                                                                                                                           |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Large Line Count Method - Example](docs/screenshots/largelinecountmethodsample.png)                                                                                 |
+| *The method shown above spans over **40 lines of code**. The plugin displays the inlay hint if the threshold is set to a value smaller than or equal to such amount.* |
 
 ### Large Method Count Class
 
@@ -399,98 +461,253 @@ threshold.
 The default value is set to _15 Methods/Class_, which corresponds to the statistical threshold cited by
 Lanza and Marinescu ("Object-Oriented Metrics in Practice", 2006).
 
-_**Impacted identifiers: Class names**_
+<table>
+<thead>
+  <tr>
+    <th colspan="2">Inlay hint information</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><b>Emoji</b></td>
+    <td>🐘</td>
+  </tr>
+  <tr>
+    <td><b>Impacted identifiers</b></td>
+    <td>Class names</td>
+  </tr>
+</tbody>
+</table>
 
-![Large Method Count Class - Configuration](docs/screenshots/largemethodcountclass.png)
+| _**Configuration**_                                                                                                                                                   |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Large Method Count Class - Configuration](docs/screenshots/largemethodcountclass.png)                                                                               |
+| Set a custom threshold by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Large Method Count Class**.* |
 
-![Large Method Count Class - Example](docs/screenshots/largemethodcountclasssample.png)
+| _**Example**_                                                                                                                                                |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Large Method Count Class - Example](docs/screenshots/largemethodcountclasssample.png)                                                                      |
+| *The class shown above contains **16 methods**. The plugin displays the inlay hint if the threshold is set to a value smaller than or equal to such amount.* |
 
 ## Methods
 
-Aside from the recognition of state-independent and state-changing methods, the cases taken into consideration 
-during the structural analysis of methods range from the detection of purely defined getters and setters to the 
-identification of calls to external functionality.
+Aside from recognizing state-independent and state-changing methods, the structural analysis of methods also foresees
+the detection of purely defined getters and setters and the identification of calls to external functionality.
 
 ### External Functionality Invoking Method
 
 A method invoking external functionality contains calls to methods defined outside the project currently opened in the
-editor. Additionally, any method originating from a class belonging to a Java core library (inside a "java.*" 
-package) is excluded from the analysis. 
+editor. Additionally, any method originating from a class belonging to a Java core library (inside a "java.*"
+package) is excluded from the analysis.
 
-Note that each method call can be followed recursively until reaching its original caller. If _any_ method on the 
+Note that each method call can be followed recursively until its original caller is reached. If _any_ method on the
 invocation path to the root invoker matches the criteria specified above, the method being currently analyzed is marked
 with a hint indicating its external source. Since this might be a costly operation for methods comprising many method
-calls, this option is turned off by default in the IDE's Inlay Hint settings menu.
+calls, this option is turned off by default in the IDE's corresponding Inlay Hint settings menu.
 
-_**Impacted identifiers: Method names**_
+<table>
+<thead>
+  <tr>
+    <th colspan="2">Inlay hint information</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><b>Emoji</b></td>
+    <td>👽</td>
+  </tr>
+  <tr>
+    <td><b>Impacted identifiers</b></td>
+    <td>Method names</td>
+  </tr>
+</tbody>
+</table>
 
-![External Functionality Invoking Method - Configuration](docs/screenshots/externalfunctionalityinvokingmethod.png)
+| _**Configuration**_                                                                                                                                                                                                                |
+|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![External Functionality Invoking Method - Configuration](docs/screenshots/externalfunctionalityinvokingmethod.png)                                                                                                                |
+| *Set the "Follow method calls and recursively check externality" flag by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; External Functionality Invoking Method**.* |
 
-![External Functionality Invoking Method - Example](docs/screenshots/externalfunctionalityinvokingmethodsample.png)
+| _**Example 1**_                                                                                                       |
+|:----------------------------------------------------------------------------------------------------------------------|
+| ![External Functionality Invoking Method - Example 1](docs/screenshots/externalfunctionalityinvokingmethodsample.png) |
+| *"Follow method calls and recursively check externality" flag **is** checked*.                                        |
 
-![External Functionality Invoking Method - Example](docs/screenshots/externalfunctionalityinvokingmethodsample1.png)
+| _**Example 2**_                                                                                                        |
+|:-----------------------------------------------------------------------------------------------------------------------|
+| ![External Functionality Invoking Method - Example 2](docs/screenshots/externalfunctionalityinvokingmethodsample1.png) |
+| *"Follow method calls and recursively check externality" flag **is not** set*.                                         |
 
 ### Pure Getter Method
 
 Also known as "getter", a pure accessor method only contains one statement that returns a field which must be defined
-within the class the method is defined in.
+within the same class the method is defined in.
 
-The application of the
-standard <a href="https://www.oreilly.com/library/view/javaserver-pages-3rd/0596005636/ch20s01s01.html">
-JavaBeans naming convention</a> on the signature's name can be enforced by selecting or deselecting a checkbox
-in the IDE's Inlay Hint settings menu.
+The application of the standard
+[JavaBeans naming convention](https://www.oreilly.com/library/view/javaserver-pages-3rd/0596005636/ch20s01s01.html)
+on the signature's name can be enforced by selecting or deselecting a checkbox in the IDE's corresponding Inlay Hint
+settings menu.
 
-_**Impacted identifiers: Method names**_
+<table>
+<thead>
+  <tr>
+    <th colspan="2">Inlay hint information</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><b>Emoji</b></td>
+    <td>📤</td>
+  </tr>
+  <tr>
+    <td><b>Impacted identifiers</b></td>
+    <td>Method names</td>
+  </tr>
+</tbody>
+</table>
 
-![Pure Getter Method - Configuration](docs/screenshots/puregettermethod.png)
+| _**Configuration**_                                                                                                                                                                        |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Pure Getter Method - Configuration](docs/screenshots/puregettermethod.png)                                                                                                               |
+| *Set the "Apply JavaBeans naming convention" flag by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Pure Getter Method**.* |
 
-![Pure Getter Method - Example](docs/screenshots/puregettermethodsample.png)
+| _**Example 1**_                                                                |
+|:-------------------------------------------------------------------------------|
+| ![Pure Getter Method - Example 1](docs/screenshots/puregettermethodsample.png) |
+| *"Apply JavaBeans naming convention" flag **is** set*.                         |
+
+| _**Example 2**_                                                                 |
+|:--------------------------------------------------------------------------------|
+| ![Pure Getter Method - Example 2](docs/screenshots/puregettermethodsample1.png) |
+| *"Apply JavaBeans naming convention" flag **is not** set*.                      |
 
 ### Pure Setter Method
 
 Also known as "setter", a pure mutator method only contains one statement that assigns a single parameter value to a
 homonymous field which must be qualified and within the class the method is defined in. The application of the
-standard <a href="https://www.oreilly.com/library/view/javaserver-pages-3rd/0596005636/ch20s01s01.html">
-JavaBeans naming convention</a> on the signature's name can be enforced by selecting or deselecting a checkbox
-in the IDE's Inlay Hint settings menu.
+standard
+[JavaBeans naming convention](https://www.oreilly.com/library/view/javaserver-pages-3rd/0596005636/ch20s01s01.html)
+on the signature's name can be enforced by selecting or deselecting a checkbox in the IDE's corresponding Inlay Hint
+settings menu.
 
-_**Impacted identifiers: Methods**_
+<table>
+<thead>
+  <tr>
+    <th colspan="2">Inlay hint information</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><b>Emoji</b></td>
+    <td>📥</td>
+  </tr>
+  <tr>
+    <td><b>Impacted identifiers</b></td>
+    <td>Method names</td>
+  </tr>
+</tbody>
+</table>
 
-![Pure Setter Method - Configuration](docs/screenshots/puresettermethod.png)
+| _**Configuration**_                                                                                                                                                                        |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Pure Setter Method - Configuration](docs/screenshots/puresettermethod.png)                                                                                                               |
+| *Set the "Apply JavaBeans naming convention" flag by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Pure Setter Method**.* |
 
-![Pure Setter Method - Example](docs/screenshots/puresettermethodsample1.png)
+| _**Example 1**_                                                                |
+|:-------------------------------------------------------------------------------|
+| ![Pure Setter Method - Example 1](docs/screenshots/puresettermethodsample.png) |
+| *"Apply JavaBeans naming convention" flag **is** set*.                         |
+
+| _**Example 2**_                                                                 |
+|:--------------------------------------------------------------------------------|
+| ![Pure Setter Method - Example 2](docs/screenshots/puresettermethodsample1.png) |
+| *"Apply JavaBeans naming convention" flag **is not** set*.                      |
 
 ### State Changing Method
 
 A method changing state contains value assignments to class fields that are either stated explicitly or implicitly
 by invoking mutator methods.
 
-Note that each implicit method call can be followed recursively until reaching its original caller. If _any_ method on the
-invocation path to the root invoker matches the criteria specified above, the method being currently analyzed is marked
-with a hint indicating its state-changing effect. Since this might be a costly operation for methods comprising many 
-method calls, this option is turned off by default in the IDE's Inlay Hint settings menu.
+Note that each implicit method call can be followed recursively until reaching its original caller. If _any_ method on
+the invocation path to the root invoker matches the criteria specified above, the method being currently analyzed is
+marked with a hint indicating its state-changing effect. Since this might be a costly operation for methods comprising
+many method calls, this option is turned off by default in the IDE's corresponding Inlay Hint settings menu.
 
-_**Impacted identifiers: Method names**_
+<table>
+<thead>
+  <tr>
+    <th colspan="2">Inlay hint information</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><b>Emoji</b></td>
+    <td>🎚️</td>
+  </tr>
+  <tr>
+    <td><b>Impacted identifiers</b></td>
+    <td>Method names</td>
+  </tr>
+</tbody>
+</table>
 
-![State Changing Method - Configuration](docs/screenshots/statechangingmethodconfiguration.png)
+| _**Configuration**_                                                                                                                                                                                                |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![State Changing Method - Configuration](docs/screenshots/statechangingmethod.png)                                                                                                                                 |
+| *Set the "Follow method calls and recursively check state change" flag by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; State Changing Method**.* |
 
-![State Changing Method - Example](docs/screenshots/statechangingmethodsample.png)
+| _**Example 1**_                                                                      |
+|:-------------------------------------------------------------------------------------|
+| ![State Changing Method - Example 1](docs/screenshots/statechangingmethodsample.png) |
+| *"Follow method calls and recursively check state change" flag **is** set*.          |
 
-![State Changing Method - Example](docs/screenshots/statechangingmethodsample1.png)
+| _**Example 2**_                                                                       |
+|:--------------------------------------------------------------------------------------|
+| ![State Changing Method - Example 2](docs/screenshots/statechangingmethodsample1.png) |
+| *"Follow method calls and recursively check state change" flag **is not** set*.       |
 
 ### State Independent Method
 
-A method that is independent of state does not contain any expressions that reference a class field either explicitly 
+A method that is independent of state does not contain any expressions that reference a class field either explicitly
 or implicitly through method invocations.
 
-Note that each implicit method call can be followed recursively until reaching its original caller. If _all_ methods on 
-the invocation path to the root invoker match the criteria specified above, the method being currently analyzed is 
+Note that each implicit method call can be followed recursively until its original caller is reached. If _all_ methods
+on the invocation path to the root invoker match the criteria specified above, the method being currently analyzed is
 marked with a hint indicating its state independence. Since this might be a costly operation for methods comprising many
 method calls, this option is turned off by default in the IDE's Inlay Hint settings menu.
 
-_**Impacted identifiers: Method names**_
+<table>
+<thead>
+  <tr>
+    <th colspan="2">Inlay hint information</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><b>Emoji</b></td>
+    <td>🧊</td>
+  </tr>
+  <tr>
+    <td><b>Impacted identifiers</b></td>
+    <td>Method names</td>
+  </tr>
+</tbody>
+</table>
 
-![State Independent Method - Example](docs/screenshots/stateindependentmethodsample.png)
+| _**Configuration**_                                                                                                                                                                                                         |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![State Independent Method - Configuration](docs/screenshots/stateindependentmethod.png)                                                                                                                                    |
+| *Set the "Follow method calls and recursively check state independence" flag by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; State Independent Method**.* |
+
+| _**Example 1**_                                                                            |
+|:-------------------------------------------------------------------------------------------|
+| ![State Independent Method - Example 1](docs/screenshots/stateindependentmethodsample.png) |
+| *"Follow method calls and recursively check state independence" flag **is** set*.          |
+
+| _**Example 2**_                                                                             |
+|:--------------------------------------------------------------------------------------------|
+| ![State Independent Method - Example 2](docs/screenshots/stateindependentmethodsample1.png) |
+| *"Follow method calls and recursively check state independence" flag **is not** set*.       |
 
 # External Services API
 
@@ -778,9 +995,9 @@ This work was supported by the **Free University of Bozen-Bolzano - UNIBZ**.
 Arnaoudova, Venera, Massimiliano Di Penta, and Giuliano Antoniol. "Linguistic antipatterns: What they are and how
 mainers perceive them." _Empirical Software Engineering_ 21 (2016): 104-158.
 
-Michele Lanza and Radu Marinescu. "Object-Oriented Metrics in Practice". _Springer Berlin, Heidelberg_, Edition 1 
+Michele Lanza and Radu Marinescu. "Object-Oriented Metrics in Practice". _Springer Berlin, Heidelberg_, Edition 1
 (2006): Table 2.1.
 
-Arthur H. Watson and Thomas J. McCabe. "Structured Testing: A Testing Methodology Using the Cyclomatic Complexity 
+Arthur H. Watson and Thomas J. McCabe. "Structured Testing: A Testing Methodology Using the Cyclomatic Complexity
 Metric." _NIST Special Publication (SP)_ (1996).
 

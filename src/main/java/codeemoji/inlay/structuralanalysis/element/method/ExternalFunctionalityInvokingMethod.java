@@ -39,14 +39,14 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
                 new CEMethodCollector(editor, getKeyId(), EXTERNAL_FUNCTIONALITY_INVOKING_METHOD) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isExternalFunctionalityInvokingMethod(element, editor.getProject());
+                        return isExternalFunctionalityInvokingMethod(element, editor.getProject(), false);
                     }
                 },
 
                 new CEReferenceMethodCollector(editor, getKeyId(), EXTERNAL_FUNCTIONALITY_INVOKING_METHOD) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isExternalFunctionalityInvokingMethod(element, editor.getProject());
+                        return isExternalFunctionalityInvokingMethod(element, editor.getProject(), true);
                     }
                 }
         );
@@ -57,7 +57,12 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
         return new ExternalFunctionalityInvokingMethodConfigurable(settings);
     }
 
-    public boolean isExternalFunctionalityInvokingMethod(PsiMethod method, Project project) {
+    public boolean isExternalFunctionalityInvokingMethod(PsiMethod method, Project project, boolean fromReferenceMethod) {
+
+        if(fromReferenceMethod && !checkMethodExternality(method, project)){
+            return false;
+        }
+
         PsiElement[] externalFunctionalityInvokingElements = PsiTreeUtil.collectElements(
                 method.getNavigationElement(),
                 externalFunctionalityInvokingElement ->
@@ -68,7 +73,7 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
         if (
                 externalFunctionalityInvokingElements.length > 0 &&
                 Arrays.stream(externalFunctionalityInvokingElements)
-                        .map(externalFunctionalityInvokingElement -> ((PsiMethodCallExpression) externalFunctionalityInvokingElement).resolveMethod())
+                        .map(externalFunctionalityInvokingElement -> ((PsiMethodCallExpression) externalFunctionalityInvokingElement.getNavigationElement()).resolveMethod())
                         .anyMatch(externalFunctionalityInvokingElement -> checkMethodExternality(externalFunctionalityInvokingElement, project))
         ) {
             return true;
@@ -80,7 +85,7 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
                         Arrays.stream(externalFunctionalityInvokingElements)
                                 .map(externalFunctionalityInvokingElement -> ((PsiMethodCallExpression) externalFunctionalityInvokingElement).resolveMethod())
                                 .filter(externalFunctionalityInvokingElement -> !checkMethodExternality((PsiMethod) externalFunctionalityInvokingElement.getNavigationElement(), project))
-                                .anyMatch(externalFunctionalityInvokingElement -> isExternalFunctionalityInvokingMethod(externalFunctionalityInvokingElement, project));
+                                .anyMatch(externalFunctionalityInvokingElement -> isExternalFunctionalityInvokingMethod(externalFunctionalityInvokingElement, project, fromReferenceMethod));
             }
             else {
                 return false;
@@ -88,12 +93,12 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
         }
     }
 
-    public boolean checkMethodExternality(PsiMethod element, Project project) {
-        return element.getContainingFile() instanceof PsiJavaFile javaFile &&
-                element.getContainingClass() != null &&
+    public boolean checkMethodExternality(PsiMethod method, Project project) {
+        return method.getContainingFile() instanceof PsiJavaFile javaFile &&
+                method.getContainingClass() != null &&
                 javaFile.getPackageStatement() != null &&
                 !javaFile.getPackageName().startsWith("java") &&
-                !CEUtils.getSourceRootsInProject(project).contains(ProjectFileIndex.getInstance(element.getProject()).getSourceRootForFile(element.getNavigationElement().getContainingFile().getVirtualFile()));
+                !CEUtils.getSourceRootsInProject(project).contains(ProjectFileIndex.getInstance(method.getProject()).getSourceRootForFile(method.getNavigationElement().getContainingFile().getVirtualFile()));
     }
 
 }
