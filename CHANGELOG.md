@@ -1,6 +1,6 @@
 # codEEmoji Plugin Changelog
 
-## 4.0.0 (March 1st, 2024)
+## 4.0.0 (March 4th, 2024)
 
 ### Added
 
