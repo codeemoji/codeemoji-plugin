@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 @State(name = "CEGlobalSettings", storages = @Storage("codeemoji-global-settings.xml"))
 public class CEGlobalSettings implements PersistentStateComponent<CEGlobalSettings> {
 
-    private Boolean myExternalServiceState = false;
+    private Boolean myExternalServiceState = true;
 
     public static CEGlobalSettings getInstance() {
         return ApplicationManager.getApplication().getService(CEGlobalSettings.class);

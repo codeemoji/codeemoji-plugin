@@ -47,7 +47,8 @@
         <!--END OF CONFIGURABLE & SERVICES SECTION-->
 
         <!-- START IMPLEMENTATIONS SECTION-->
-
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.vulnerabilities.VunerableMethods"/>
         <codeInsight.inlayProvider language="JAVA"
                                    implementationClass="codeemoji.inlay.nameviolation.ShortDescriptiveName"/>
         <codeInsight.inlayProvider language="JAVA"
