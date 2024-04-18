@@ -43,6 +43,7 @@ public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticCom
         return new CEMethodCollector(editor, getKeyId(), HIGH_CYCLOMATIC_COMPLEXITY_METHOD) {
             @Override
             protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                if(isHighCyclomaticComplexityMethod(element)) System.out.println("Found HIGH_CYCLOMATIC_COMPLEXITY_METHOD in " + element.getName());
                 return isHighCyclomaticComplexityMethod(element);
             }
         };
@@ -54,7 +55,7 @@ public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticCom
     }
 
     private boolean isHighCyclomaticComplexityMethod(PsiMethod method){
-        int numberOfLinesInMethod = CEUtils.calculateLineCountFromPsiElementOffsets(method, method.getFirstChild(), method.getBody() != null ? method.getBody().getLastChild() : method.getLastChild(), methodElement -> ((PsiMethod) methodElement).getBody() != null && !((PsiMethod) methodElement).getBody().isEmpty());
+        int numberOfLinesInMethod = CEUtils.calculateMethodBodyLineCount(method);
         return method.getBody() != null && numberOfLinesInMethod > 1 && (((double) calculateCyclomaticComplexity(method) / numberOfLinesInMethod) >= getSettings().getCyclomaticComplexity());
     }
 

@@ -5,13 +5,16 @@ import codeemoji.core.provider.CEProvider;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.LARGE_LINE_COUNT_METHOD;
 
@@ -39,13 +42,17 @@ public class LargeLineCountMethod extends CEProvider<LargeLineCountMethodSetting
     }
 
     private boolean isLargeLineCountMethod(PsiMethod method) {
-        int methodLineCount = CEUtils.calculateLineCountFromPsiElementOffsets(
-                method,
-                method.getFirstChild(),
-                method.getBody() != null ? method.getBody().getLastChild() : method.getLastChild(),
-                methodElement -> ((PsiMethod) methodElement).getBody() != null && !((PsiMethod) methodElement).getBody().isEmpty()
-        );
+        int methodLineCount = CEUtils.calculateMethodBodyLineCount(method);
+        if(getSettings().isCommentExclusionApplied()){
+            methodLineCount = methodLineCount - calculateCommentPadding(method);
+        }
         return method.getBody() != null && methodLineCount >= getSettings().getLinesOfCode();
+    }
+
+    private int calculateCommentPadding(PsiMethod method){
+        return Arrays.stream(PsiTreeUtil.collectElements(method.getBody(), element -> element instanceof PsiComment))
+                .mapToInt(CEUtils::calculateLinesOfPsiElement)
+                .sum();
     }
 
 }

@@ -459,9 +459,25 @@ public enum CEUtils {
         return Arrays.stream(ModuleManager.getInstance(project).getModules()).map(module -> ModuleRootManager.getInstance(module).getSourceRoots()).flatMap(Arrays::stream).toList();
     }
 
-    public static <E extends PsiElement> int calculateLineCountFromPsiElementOffsets(@NotNull E element, @NotNull E firstElement, @NotNull E lastElement, @NotNull Predicate<E> guard){
+    public static <E extends PsiElement> int calculateLinesBetweenPsiElements(@NotNull E parentElement, @NotNull E firstElement, @NotNull E lastElement, @NotNull Predicate<E> guard){
+        Document documentOfMethod = parentElement.getContainingFile().getViewProvider().getDocument();
+        return (guard.test(parentElement)) ?
+                (documentOfMethod.getLineNumber(lastElement.getTextOffset())-documentOfMethod.getLineNumber(firstElement.getTextOffset())) :
+                1;
+    }
+
+    public static int calculateMethodBodyLineCount(PsiMethod method){
+        return CEUtils.calculateLinesBetweenPsiElements(
+                method,
+                method.getBody() != null ? method.getBody() : method,
+                method.getBody() != null ? method.getBody().getChildren()[method.getBody().getChildren().length-2] : method.getLastChild(),
+                methodElement -> ((PsiMethod) methodElement).getBody() != null && !((PsiMethod) methodElement).getBody().isEmpty()
+        );
+    }
+
+    public static <E extends PsiElement> int calculateLinesOfPsiElement(@NotNull E element){
         Document documentOfMethod = element.getContainingFile().getViewProvider().getDocument();
-        return (guard.test(element)) ? documentOfMethod.getLineNumber(lastElement.getTextOffset())-documentOfMethod.getLineNumber(firstElement.getTextOffset())+1 : 1;
+        return 1 + (documentOfMethod.getLineNumber(element.getTextOffset() + element.getTextLength()) - documentOfMethod.getLineNumber(element.getTextOffset()));
     }
 
 }

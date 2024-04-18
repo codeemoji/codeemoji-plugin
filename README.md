@@ -425,6 +425,9 @@ configurable threshold.
 The default value is set to _20 Lines of Code / Method_, which corresponds to the rounded up statistical
 threshold of _19.5 Lines of Code / Method_ cited by Lanza and Marinescu ("Object-Oriented Metrics in Practice", 2006).
 
+Notice that the default calculation also includes any lines covered by comments; the additional padding created by them
+can be excluded in the configuration.
+
 <table>
 <thead>
   <tr>
@@ -443,10 +446,11 @@ threshold of _19.5 Lines of Code / Method_ cited by Lanza and Marinescu ("Object
 </tbody>
 </table>
 
-| _*Configuration*_                                                                                                                                                     |
-|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ![Large Line Count Method - Configuration](docs/screenshots/largelinecountmethod.png)                                                                                 |
-| *Set a custom threshold by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Large Line Count Method**.* |
+| _*Configuration*_                                                                                                                                                                                                                       |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Large Line Count Method - Configuration](docs/screenshots/largelinecountmethod.png)                                                                                                                                                   |
+| ![Large Line Count Method - Configuration](docs/screenshots/largelinecountmethod1.png)                                                                                                                                                  |
+| *Choose whether comments should be included in the calculation and set a custom threshold by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Large Line Count Method**.* |
 
 | _*Example*_                                                                                                                                                           |
 |:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|

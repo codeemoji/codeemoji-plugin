@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 public class LargeLineCountMethodSettings implements PersistentStateComponent<LargeLineCountMethodSettings> {
 
     private int linesOfCode = 20;
+    private boolean commentExclusionApplied = false;
 
     @Override
     public @Nullable LargeLineCountMethodSettings getState() {
