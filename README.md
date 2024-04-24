@@ -348,6 +348,9 @@ The keywords and operators considered in such analysis avoid inspecting single m
 - "for" and "while"
 - "try"
 
+Notice that the calculation is triggered once the method exceeds the thresholds for the cyclomatic complexity and the
+line count (which does not include superfluous comment lines), which are both set to 1 by default.
+
 The default value for the metric is set to  _0.36 Cyclomatic Complexity / Lines of Code_, which corresponds to the
 statistical threshold cited by Lanza and Marinescu ("Object-Oriented Metrics in Practice", 2006).
 
@@ -369,10 +372,12 @@ statistical threshold cited by Lanza and Marinescu ("Object-Oriented Metrics in 
 </tbody>
 </table>
 
-| **_Configuration_**                                                                                                                                                              |
-|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ![High Cyclomatic Complexity Method - Configuration](docs/screenshots/highcyclomaticcomplexitymethod.png)                                                                        |
-| *Set a custom threshold by opening the settings/preferences and navigating to: **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; High Cyclomatic Complexity Method**.* |
+| **_Configuration_**                                                                                                                                                             |
+|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![High Cyclomatic Complexity Method - Configuration](docs/screenshots/highcyclomaticcomplexitymethod.png)                                                                       |
+| ![High Cyclomatic Complexity Method - Configuration](docs/screenshots/highcyclomaticcomplexitymethod1.png)                                                                      |
+| ![High Cyclomatic Complexity Method - Configuration](docs/screenshots/highcyclomaticcomplexitymethod2.png)                                                                      |
+| *Set custom thresholds by opening the settings/preferences and navigating to: **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; High Cyclomatic Complexity Method**.* |
 
 | **_Example_**                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

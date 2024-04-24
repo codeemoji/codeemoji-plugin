@@ -10,22 +10,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiClassType;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiModifierList;
-import com.intellij.psi.PsiModifierListOwner;
-import com.intellij.psi.PsiParameterList;
-import com.intellij.psi.PsiPrimitiveType;
-import com.intellij.psi.PsiReferenceExpression;
-import com.intellij.psi.PsiReferenceParameterList;
-import com.intellij.psi.PsiType;
-import com.intellij.psi.PsiTypeElement;
-import com.intellij.psi.PsiTypeParameterList;
-import com.intellij.psi.PsiTypes;
-import com.intellij.psi.PsiVariable;
+import com.intellij.psi.*;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -473,6 +459,12 @@ public enum CEUtils {
                 method.getBody() != null ? method.getBody().getChildren()[method.getBody().getChildren().length-2] : method.getLastChild(),
                 methodElement -> ((PsiMethod) methodElement).getBody() != null && !((PsiMethod) methodElement).getBody().isEmpty()
         );
+    }
+
+    public static int calculateCommentPaddingLinesInMetod(PsiMethod method){
+        return Arrays.stream(PsiTreeUtil.collectElements(method.getBody(), element -> element instanceof PsiComment))
+                .mapToInt(CEUtils::calculateLinesOfPsiElement)
+                .sum();
     }
 
     public static <E extends PsiElement> int calculateLinesOfPsiElement(@NotNull E element){

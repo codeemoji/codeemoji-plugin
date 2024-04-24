@@ -55,8 +55,12 @@ public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticCom
     }
 
     private boolean isHighCyclomaticComplexityMethod(PsiMethod method){
-        int numberOfLinesInMethod = CEUtils.calculateMethodBodyLineCount(method);
-        return method.getBody() != null && numberOfLinesInMethod > 1 && (((double) calculateCyclomaticComplexity(method) / numberOfLinesInMethod) >= getSettings().getCyclomaticComplexity());
+        int numberOfLinesInMethod = CEUtils.calculateMethodBodyLineCount(method) - CEUtils.calculateCommentPaddingLinesInMetod(method);
+        int cyclomaticComplexityOfMethod = calculateCyclomaticComplexity(method);
+        return method.getBody() != null &&
+                cyclomaticComplexityOfMethod > getSettings().getCyclomaticComplexityThreshold() &&
+                numberOfLinesInMethod > getSettings().getLineCountStartThreshold() &&
+                (((double) cyclomaticComplexityOfMethod / numberOfLinesInMethod) >= getSettings().getCyclomaticComplexityPerLine());
     }
 
     private int calculateCyclomaticComplexity(PsiMethod method){

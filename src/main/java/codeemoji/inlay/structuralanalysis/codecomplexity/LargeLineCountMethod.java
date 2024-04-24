@@ -44,15 +44,8 @@ public class LargeLineCountMethod extends CEProvider<LargeLineCountMethodSetting
     private boolean isLargeLineCountMethod(PsiMethod method) {
         int methodLineCount = CEUtils.calculateMethodBodyLineCount(method);
         if(getSettings().isCommentExclusionApplied()){
-            methodLineCount = methodLineCount - calculateCommentPadding(method);
+            methodLineCount = methodLineCount - CEUtils.calculateCommentPaddingLinesInMetod(method);
         }
         return method.getBody() != null && methodLineCount >= getSettings().getLinesOfCode();
     }
-
-    private int calculateCommentPadding(PsiMethod method){
-        return Arrays.stream(PsiTreeUtil.collectElements(method.getBody(), element -> element instanceof PsiComment))
-                .mapToInt(CEUtils::calculateLinesOfPsiElement)
-                .sum();
-    }
-
 }

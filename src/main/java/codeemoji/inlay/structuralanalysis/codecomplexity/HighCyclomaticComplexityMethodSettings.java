@@ -12,7 +12,9 @@ import org.jetbrains.annotations.Nullable;
 @State(name = "HighCyclomaticComplexityMethodSettings", storages = @Storage("codeemoji-high-cyclomatic-complexity-method-settings.xml"))
 public class HighCyclomaticComplexityMethodSettings implements PersistentStateComponent<HighCyclomaticComplexityMethodSettings> {
 
-    private double cyclomaticComplexity = 0.36;
+    private int cyclomaticComplexityThreshold = 1;
+    private int lineCountStartThreshold = 1;
+    private double cyclomaticComplexityPerLine = 0.36;
 
     @Override
     public @Nullable HighCyclomaticComplexityMethodSettings getState() {
