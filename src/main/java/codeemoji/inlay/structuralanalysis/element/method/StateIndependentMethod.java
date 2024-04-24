@@ -13,6 +13,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -61,13 +62,13 @@ public class StateIndependentMethod extends CEProviderMulti<StateIndependentMeth
 
     private boolean isStateIndependentMethod(PsiMethod method){
 
-        if (method.isConstructor()){
-            return false;
-        }
+        Collection<PsiReferenceExpression> stateIndependentElements = PsiTreeUtil.collectElementsOfType(method.getNavigationElement(), PsiReferenceExpression.class);
 
-        var stateIndependentElements = PsiTreeUtil.collectElementsOfType(method.getNavigationElement(), PsiReferenceExpression.class);
-
-        if(stateIndependentElements.stream().noneMatch(stateIndependentElement -> stateIndependentElement.resolve() instanceof PsiField)){
+        if(
+                !method.isConstructor() &&
+                method.getBody() != null &&
+                stateIndependentElements.stream().noneMatch(stateIndependentElement -> stateIndependentElement.resolve() instanceof PsiField)
+        ){
             if(getSettings().isCheckMethodCallsForStateIndependenceApplied()) {
                 return stateIndependentElements.stream().noneMatch(stateIndependentElement -> stateIndependentElement.resolve() instanceof PsiMethod referenceMethod && !method.isEquivalentTo(referenceMethod) && !isStateIndependentMethod(referenceMethod));
             }
