@@ -348,11 +348,12 @@ The keywords and operators considered in such analysis avoid inspecting single m
 - "for" and "while"
 - "try"
 
-Notice that the calculation is triggered once the method exceeds the thresholds for the cyclomatic complexity and the
-line count (which does not include superfluous comment lines), which are both set to 1 by default.
-
-The default value for the metric is set to  _0.36 Cyclomatic Complexity / Lines of Code_, which corresponds to the
+The default value for this metric is set to  _0.36 Cyclomatic Complexity / Lines of Code_, which corresponds to the
 statistical threshold cited by Lanza and Marinescu ("Object-Oriented Metrics in Practice", 2006).
+
+Notice that the calculation is triggered once the method exceeds the thresholds for the cyclomatic complexity and the
+line count, which are both set to 1 by default. The line count does not include any superfluous lines
+covered by comments.
 
 <table>
 <thead>
@@ -390,7 +391,7 @@ A code complexity metric that indicates whether a method contains a "very high" 
 configurable threshold.
 
 An identifier indicates a lexical token that associates a symbolic name to a Java syntax entity. For instance, some of
-the entities an identifier might denote include: variables, data types, classes or methods
+the entities an identifier might denote include: variables, data types, classes or methods.
 
 The default value is set to <em>70 Identifiers / Method</em>.
 
@@ -505,9 +506,10 @@ the detection of purely defined getters and setters and the identification of ca
 
 ### External Functionality Invoking Method
 
-A method invoking external functionality contains calls to methods defined outside the project currently opened in the
-editor. Additionally, any method originating from a class belonging to a Java core library (inside a "java.*"
-package) is excluded from the analysis.
+A method invoking external functionality contains calls to methods defined outside the source roots of the project 
+currently opened in the editor (see [IntelliJ "content roots"](https://www.jetbrains.com/help/idea/content-roots.html)). 
+Additionally, any method originating from a class or interface belonging to a Java core library 
+(inside a "java.*" package) is excluded from the analysis.
 
 Note that each method call can be followed recursively until its original caller is reached. If _any_ method on the
 invocation path to the root invoker matches the criteria specified above, the method being currently analyzed is marked
