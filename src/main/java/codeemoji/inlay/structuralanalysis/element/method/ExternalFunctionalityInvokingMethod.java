@@ -9,7 +9,6 @@ import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiMethodCallExpression;
@@ -58,15 +57,16 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
     }
 
     private PsiMethod[] collectExternalFunctionalityInvokingMethods(PsiMethod method){
-
-        PsiElement[] externalFunctionalityInvokingElements = PsiTreeUtil.collectElements(
-                method.getNavigationElement(),
-                externalFunctionalityInvokingElement ->
-                        externalFunctionalityInvokingElement instanceof PsiMethodCallExpression methodCallExpression &&
-                                methodCallExpression.resolveMethod() != null && !method.isEquivalentTo(methodCallExpression.resolveMethod())
-        );
-
-        return Arrays.stream(externalFunctionalityInvokingElements).map(externalFunctionalityInvokingElement -> ((PsiMethodCallExpression) externalFunctionalityInvokingElement.getNavigationElement()).resolveMethod()).toArray(PsiMethod[]::new);
+        return PsiTreeUtil.collectElementsOfType(method.getNavigationElement(), PsiMethodCallExpression.class)
+                .stream()
+                .distinct()
+                .<PsiMethod>mapMulti((methodCallExpression, consumer) -> {
+                    PsiMethod resolvedMethodCallExpression = methodCallExpression.resolveMethod();
+                    if (resolvedMethodCallExpression != null && !method.isEquivalentTo(resolvedMethodCallExpression)) {
+                        consumer.accept(resolvedMethodCallExpression);
+                    }
+                })
+                .toArray(PsiMethod[]::new);
     }
 
     private boolean isExternalFunctionalityInvokingMethod(PsiMethod method, Project project) {
@@ -95,12 +95,12 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
     }
 
     private boolean checkMethodExternality(PsiMethod method, Project project) {
-        return method.getContainingFile() instanceof PsiJavaFile javaFile &&
+        return method.getNavigationElement().getContainingFile() instanceof PsiJavaFile javaFile &&
                 method.getContainingClass() != null &&
                 javaFile.getPackageStatement() != null &&
                 !javaFile.getPackageName().startsWith("java") &&
-                method.getNavigationElement().getContainingFile().getVirtualFile() != null &&
-                !CEUtils.getSourceRootsInProject(project).contains(ProjectFileIndex.getInstance(method.getProject()).getSourceRootForFile(method.getNavigationElement().getContainingFile().getVirtualFile()));
+                javaFile.getVirtualFile() != null &&
+                !CEUtils.getSourceRootsInProject(project).contains(ProjectFileIndex.getInstance(project).getSourceRootForFile(javaFile.getVirtualFile()));
     }
 
 }

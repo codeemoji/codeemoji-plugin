@@ -6,6 +6,7 @@ import codeemoji.core.provider.CEProviderMulti;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiReferenceExpression;
@@ -62,15 +63,33 @@ public class StateIndependentMethod extends CEProviderMulti<StateIndependentMeth
 
     private boolean isStateIndependentMethod(PsiMethod method){
 
-        Collection<PsiReferenceExpression> stateIndependentElements = PsiTreeUtil.collectElementsOfType(method.getNavigationElement(), PsiReferenceExpression.class);
+        Collection<PsiReferenceExpression> referenceExpressions = PsiTreeUtil.collectElementsOfType(method.getNavigationElement(), PsiReferenceExpression.class);
 
         if(
                 !method.isConstructor() &&
                 method.getBody() != null &&
-                stateIndependentElements.stream().noneMatch(stateIndependentElement -> stateIndependentElement.resolve() instanceof PsiField)
+                referenceExpressions.stream()
+                        .<PsiField>mapMulti((referenceExpression, consumer) -> {
+                            PsiElement resolvedStateIndependentElement = referenceExpression.resolve();
+                            if (resolvedStateIndependentElement instanceof PsiField resolvedField) {
+                                consumer.accept(resolvedField);
+                            }
+                        })
+                        .distinct()
+                        .findAny()
+                        .isEmpty()
         ){
             if(getSettings().isCheckMethodCallsForStateIndependenceApplied()) {
-                return stateIndependentElements.stream().noneMatch(stateIndependentElement -> stateIndependentElement.resolve() instanceof PsiMethod referenceMethod && !method.isEquivalentTo(referenceMethod) && !isStateIndependentMethod(referenceMethod));
+
+                return referenceExpressions.stream()
+                        .<PsiMethod>mapMulti((referenceExpression, consumer) -> {
+                            if (referenceExpression.resolve() instanceof PsiMethod referenceMethod && !method.isEquivalentTo(referenceMethod) && !isStateIndependentMethod(referenceMethod)) {
+                                consumer.accept(referenceMethod);
+                            }
+                        })
+                        .distinct()
+                        .findAny()
+                        .isEmpty();
             }
             else {
                 return true;

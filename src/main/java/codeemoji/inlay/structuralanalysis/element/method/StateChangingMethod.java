@@ -69,14 +69,16 @@ public class StateChangingMethod extends CEProviderMulti<StateChangingMethodSett
     }
 
     private PsiMethod[] collectStateChangingMethods(PsiMethod method){
-        PsiElement[] stateChangingElements =  PsiTreeUtil.collectElements(
-                method.getNavigationElement(),
-                element ->
-                        element instanceof PsiMethodCallExpression methodCallExpression &&
-                        methodCallExpression.resolveMethod() != null && !method.isEquivalentTo(methodCallExpression.resolveMethod())
-        );
-
-        return Arrays.stream(stateChangingElements).map(stateChangingElement -> ((PsiMethodCallExpression) stateChangingElement.getNavigationElement()).resolveMethod()).toArray(PsiMethod[]::new);
+        return PsiTreeUtil.collectElementsOfType(method.getNavigationElement(), PsiMethodCallExpression.class)
+                .stream()
+                .distinct()
+                .<PsiMethod>mapMulti((methodCallExpression, consumer) -> {
+                    PsiMethod resolvedMethodCallExpression = methodCallExpression.resolveMethod();
+                    if (resolvedMethodCallExpression != null && !method.isEquivalentTo(resolvedMethodCallExpression)) {
+                        consumer.accept(resolvedMethodCallExpression);
+                    }
+                })
+                .toArray(PsiMethod[]::new);
     }
 
     private boolean isStateChangingMethod(PsiMethod method){

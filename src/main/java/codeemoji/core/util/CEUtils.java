@@ -443,17 +443,20 @@ public enum CEUtils {
     public static int calculateMethodBodyLineCount(PsiMethod method){
         Document documentOfMethod = method.getContainingFile().getViewProvider().getDocument();
         int methodBodyLineCount = 0;
+        final PsiCodeBlock methodBody = method.getBody();
+        final PsiElement[] methodBodyChildren = methodBody != null ? methodBody.getChildren() : null;
 
-        if(method.getBody() != null && !method.getBody().isEmpty()){
-            PsiElement leftParenthesis = method.getBody().getChildren()[0];
-            PsiElement rightParenthesis = method.getBody().getChildren()[method.getBody().getChildren().length-1];
+        if(methodBody != null && !methodBody.isEmpty()){
+            PsiElement leftParenthesis = methodBodyChildren[0];
+            PsiElement rightParenthesis = methodBodyChildren[methodBodyChildren.length-1];
+            final PsiStatement[] methodBodyStatements = methodBody.getStatements();
 
-            methodBodyLineCount = documentOfMethod.getLineNumber(method.getBody().getTextRange().getEndOffset()) - documentOfMethod.getLineNumber(method.getBody().getTextRange().getStartOffset()) - 1;
+            methodBodyLineCount = documentOfMethod.getLineNumber(rightParenthesis.getTextOffset()) - documentOfMethod.getLineNumber(leftParenthesis.getTextOffset()) - 1;
 
-            if(documentOfMethod.getLineNumber(leftParenthesis.getTextOffset()) == documentOfMethod.getLineNumber(method.getBody().getStatements()[0].getTextOffset())){
+            if(documentOfMethod.getLineNumber(leftParenthesis.getTextOffset()) == documentOfMethod.getLineNumber(methodBodyStatements[0].getTextOffset())){
                 methodBodyLineCount = methodBodyLineCount + 1;
             }
-            if(documentOfMethod.getLineNumber(rightParenthesis.getTextOffset()) == documentOfMethod.getLineNumber(method.getBody().getStatements()[method.getBody().getStatements().length - 1].getTextOffset())){
+            if(documentOfMethod.getLineNumber(rightParenthesis.getTextOffset()) == documentOfMethod.getLineNumber(methodBodyStatements[methodBodyStatements.length - 1].getTextOffset())){
                 methodBodyLineCount = methodBodyLineCount + 1;
             }
         }
@@ -466,7 +469,8 @@ public enum CEUtils {
         return Arrays.stream(PsiTreeUtil.collectElements(method.getBody(), element -> element instanceof PsiComment))
                 .mapToInt(commentElement -> {
                     int commentPaddingLines = documentOfMethod.getLineNumber(method.getTextOffset()) == documentOfMethod.getLineNumber(commentElement.getTextOffset()) ? 0 : calculateLinesOfPsiElement(commentElement);
-                    return (method.getBody() != null && !method.getBody().isEmpty()) ? commentPaddingLines : 0;
+                    final PsiCodeBlock methodBody = method.getBody();
+                    return (methodBody != null && !methodBody.isEmpty()) ? commentPaddingLines : 0;
                 })
                 .sum();
     }

@@ -62,11 +62,13 @@ public class PureSetterMethod extends CEProviderMulti<PureSetterMethodSettings> 
     }
 
     private boolean isPureSetterMethod(PsiMethod method) {
+        final PsiCodeBlock methodBody = method.getBody();
+        final PsiStatement[] methodBodyStatements = methodBody != null ? methodBody.getStatements() : null;
         return !method.isConstructor() &&
                 method.hasParameters() &&
                 method.getParameterList().getParameters().length == 1 &&
-                method.getBody() != null && method.getBody().getStatements().length == 1 &&
-                method.getBody().getStatements()[0] instanceof PsiExpressionStatement expressionStatement &&
+                methodBody != null && methodBodyStatements.length == 1 &&
+                methodBodyStatements[0] instanceof PsiExpressionStatement expressionStatement &&
                 expressionStatement.getExpression() instanceof PsiAssignmentExpression assignmentExpression &&
                 assignmentExpression.getLExpression() instanceof PsiReferenceExpression leftReferenceExpression &&
                 leftReferenceExpression.resolve() instanceof PsiField field &&
