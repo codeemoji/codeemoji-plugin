@@ -338,8 +338,8 @@ linearly independent paths with respect to the number of lines in it.
 The algorithm for calculating the metric is adapted from the specification defined by
 Watson and McCabe ("Structured Testing: A Testing Methodology Using the Cyclomatic Complexity Metric", 1996).
 Starting from a value _S := 1_, the code elements present in the method are analyzed to match keywords that create a
-decision point, therefore, triggering the addition of a new path, which entails increasing _S_ by a factor of 1.
-The keywords and operators considered in such analysis avoid inspecting single multi-way branch statements
+decision point, therefore, triggering the addition of a new path, which, in turn, entails increasing _S_ by a factor of 1.
+The keywords and operators considered in such analysis do not allow the inspection single multi-way branch statements
 (eg. if a switch statement is recognized, only add 1 to S for each case label); they are the following:
 
 - "&&" and "||"
@@ -383,7 +383,7 @@ covered by comments.
 | **_Example_**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 |:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | ![High Cyclomatic Complexity Method - Example](docs/screenshots/highcyclomaticcomplexitymethodsample.png)                                                                                                                                                                                                                                                                                                                                                                                                       |
-| *The method shown above has a **cyclomatic complexity of 15**. Such number is obtained by summing the amount of the matching keywords and operations from sections 0 trough 5. The method's also spans over **34 lines of code (excluding those covered by comments)**, from line 6 to line 44. The rounded ratio between these two numbers equals **0.44 cyclomatic complexity / lines of code**. The plugin displays the inlay hint if the threshold is set to a value smaller than or equal to such amount.* |
+| *The method shown above has a **cyclomatic complexity of 15**. Such number is obtained by summing the amount of the matching keywords and operations from sections 0 trough 5. The method also spans over **34 lines of code (excluding those covered by comments)**, from line 6 to line 44. The rounded ratio between these two numbers equals to **0.44 cyclomatic complexity / lines of code**. The plugin displays the inlay hint if the threshold is set to a value smaller than or equal to such amount.* |
 
 ### Large Identifier Count Method
 
@@ -502,7 +502,7 @@ Lanza and Marinescu ("Object-Oriented Metrics in Practice", 2006).
 ## Methods
 
 Aside from recognizing state-independent and state-changing methods, the structural analysis of methods also foresees
-the detection of purely defined getters and setters and the identification of calls to external functionality.
+the detection of purely defined getters and setters as well as the identification of calls to external functionality.
 
 ### External Functionality Invoking Method
 
@@ -639,7 +639,7 @@ settings menu.
 A method changing state contains value assignments to class fields that are either stated explicitly or implicitly
 by invoking mutator methods.
 
-Note that each implicit method call can be followed recursively until reaching its original caller. If _any_ method on
+Note that each implicitly state-changing method call can be followed recursively until reaching its original caller. If _any_ method on
 the invocation path to the root invoker matches the criteria specified above, the method being currently analyzed is
 marked with a hint indicating its state-changing effect. Since this might be a costly operation for methods comprising
 many method calls, this option is turned off by default in the IDE's corresponding Inlay Hint settings menu.
@@ -682,7 +682,7 @@ many method calls, this option is turned off by default in the IDE's correspondi
 A method that is independent of state does not contain any expressions that reference a class field either explicitly
 or implicitly through method invocations.
 
-Note that each implicit method call can be followed recursively until its original caller is reached. If _all_ methods
+Note that each implicitly state-independent method call can be followed recursively until its original caller is reached. If _all_ methods
 on the invocation path to the root invoker match the criteria specified above, the method being currently analyzed is
 marked with a hint indicating its state independence. Since this might be a costly operation for methods comprising many
 method calls, this option is turned off by default in the IDE's Inlay Hint settings menu.
