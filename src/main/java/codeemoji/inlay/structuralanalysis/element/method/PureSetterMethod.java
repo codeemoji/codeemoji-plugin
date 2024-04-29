@@ -14,8 +14,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.PURE_SETTER_METHOD;
 

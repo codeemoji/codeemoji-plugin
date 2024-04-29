@@ -23,6 +23,7 @@ import java.util.Map;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.EXTERNAL_FUNCTIONALITY_INVOKING_METHOD;
 
+@SuppressWarnings("UnstableApiUsage")
 public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<ExternalFunctionalityInvokingMethodSettings> {
 
     @Nullable
@@ -38,14 +39,14 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
                 new CEMethodCollector(editor, getKeyId(), EXTERNAL_FUNCTIONALITY_INVOKING_METHOD) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isExternalFunctionalityInvokingMethod(element, editor.getProject(), false);
+                        return isExternalFunctionalityInvokingMethod(element, editor.getProject());
                     }
                 },
 
                 new CEReferenceMethodCollector(editor, getKeyId(), EXTERNAL_FUNCTIONALITY_INVOKING_METHOD) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isExternalFunctionalityInvokingMethod(element, editor.getProject(), true);
+                        return isExternalFunctionalityInvokingMethod(element, editor.getProject());
                     }
                 }
         );
@@ -68,11 +69,7 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
         return Arrays.stream(externalFunctionalityInvokingElements).map(externalFunctionalityInvokingElement -> ((PsiMethodCallExpression) externalFunctionalityInvokingElement.getNavigationElement()).resolveMethod()).toArray(PsiMethod[]::new);
     }
 
-    private boolean isExternalFunctionalityInvokingMethod(PsiMethod method, Project project, boolean fromReferenceMethod) {
-
-        if(method.getBody() == null && checkMethodExternality(method, project)){
-            return true;
-        }
+    private boolean isExternalFunctionalityInvokingMethod(PsiMethod method, Project project) {
 
         PsiMethod[] externalFunctionalityInvokingMethods = collectExternalFunctionalityInvokingMethods(method);
 
@@ -88,7 +85,7 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
             if (getSettings().isCheckMethodCallsForExternalityApplied()){
                 return Arrays.stream(externalFunctionalityInvokingMethods)
                         .filter(externalFunctionalityInvokingMethod -> !checkMethodExternality(externalFunctionalityInvokingMethod, project))
-                        .anyMatch(externalFunctionalityInvokingMethod -> isExternalFunctionalityInvokingMethod(externalFunctionalityInvokingMethod, project, fromReferenceMethod));
+                        .anyMatch(externalFunctionalityInvokingMethod -> isExternalFunctionalityInvokingMethod(externalFunctionalityInvokingMethod, project));
             }
 
             else{
@@ -98,8 +95,7 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
     }
 
     private boolean checkMethodExternality(PsiMethod method, Project project) {
-        return !method.isConstructor() &&
-                method.getContainingFile() instanceof PsiJavaFile javaFile &&
+        return method.getContainingFile() instanceof PsiJavaFile javaFile &&
                 method.getContainingClass() != null &&
                 javaFile.getPackageStatement() != null &&
                 !javaFile.getPackageName().startsWith("java") &&

@@ -5,15 +5,11 @@ import codeemoji.core.provider.CEProvider;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.Map;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.LARGE_LINE_COUNT_METHOD;
@@ -44,7 +40,7 @@ public class LargeLineCountMethod extends CEProvider<LargeLineCountMethodSetting
     private boolean isLargeLineCountMethod(PsiMethod method) {
         int methodLineCount = CEUtils.calculateMethodBodyLineCount(method);
         if(getSettings().isCommentExclusionApplied()){
-            methodLineCount = methodLineCount - CEUtils.calculateCommentPaddingLinesInMetod(method);
+            methodLineCount = methodLineCount - CEUtils.calculateCommentPaddingLinesInMethod(method);
         }
         return method.getBody() != null && methodLineCount >= getSettings().getLinesOfCode();
     }

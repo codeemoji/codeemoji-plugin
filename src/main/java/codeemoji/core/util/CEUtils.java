@@ -25,14 +25,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import static com.intellij.psi.PsiModifier.FINAL;
-import static com.intellij.psi.PsiModifier.PRIVATE;
-import static com.intellij.psi.PsiModifier.PROTECTED;
-import static com.intellij.psi.PsiModifier.PUBLIC;
-import static com.intellij.psi.PsiModifier.STATIC;
+import static com.intellij.psi.PsiModifier.*;
 
 public enum CEUtils {
     ;
@@ -445,25 +440,34 @@ public enum CEUtils {
         return Arrays.stream(ModuleManager.getInstance(project).getModules()).map(module -> ModuleRootManager.getInstance(module).getSourceRoots()).flatMap(Arrays::stream).toList();
     }
 
-    public static <E extends PsiElement> int calculateLinesBetweenPsiElements(@NotNull E parentElement, @NotNull E firstElement, @NotNull E lastElement, @NotNull Predicate<E> guard){
-        Document documentOfMethod = parentElement.getContainingFile().getViewProvider().getDocument();
-        return (guard.test(parentElement)) ?
-                (documentOfMethod.getLineNumber(lastElement.getTextOffset())-documentOfMethod.getLineNumber(firstElement.getTextOffset())) :
-                1;
-    }
-
     public static int calculateMethodBodyLineCount(PsiMethod method){
-        return CEUtils.calculateLinesBetweenPsiElements(
-                method,
-                method.getBody() != null ? method.getBody() : method,
-                method.getBody() != null ? method.getBody().getChildren()[method.getBody().getChildren().length-2] : method.getLastChild(),
-                methodElement -> ((PsiMethod) methodElement).getBody() != null && !((PsiMethod) methodElement).getBody().isEmpty()
-        );
+        Document documentOfMethod = method.getContainingFile().getViewProvider().getDocument();
+        int methodBodyLineCount = 0;
+
+        if(method.getBody() != null && !method.getBody().isEmpty()){
+            PsiElement leftParenthesis = method.getBody().getChildren()[0];
+            PsiElement rightParenthesis = method.getBody().getChildren()[method.getBody().getChildren().length-1];
+
+            methodBodyLineCount = documentOfMethod.getLineNumber(method.getBody().getTextRange().getEndOffset()) - documentOfMethod.getLineNumber(method.getBody().getTextRange().getStartOffset()) - 1;
+
+            if(documentOfMethod.getLineNumber(leftParenthesis.getTextOffset()) == documentOfMethod.getLineNumber(method.getBody().getStatements()[0].getTextOffset())){
+                methodBodyLineCount = methodBodyLineCount + 1;
+            }
+            if(documentOfMethod.getLineNumber(rightParenthesis.getTextOffset()) == documentOfMethod.getLineNumber(method.getBody().getStatements()[method.getBody().getStatements().length - 1].getTextOffset())){
+                methodBodyLineCount = methodBodyLineCount + 1;
+            }
+        }
+
+        return methodBodyLineCount;
     }
 
-    public static int calculateCommentPaddingLinesInMetod(PsiMethod method){
+    public static int calculateCommentPaddingLinesInMethod(PsiMethod method){
+        Document documentOfMethod = method.getContainingFile().getViewProvider().getDocument();
         return Arrays.stream(PsiTreeUtil.collectElements(method.getBody(), element -> element instanceof PsiComment))
-                .mapToInt(CEUtils::calculateLinesOfPsiElement)
+                .mapToInt(commentElement -> {
+                    int commentPaddingLines = documentOfMethod.getLineNumber(method.getTextOffset()) == documentOfMethod.getLineNumber(commentElement.getTextOffset()) ? 0 : calculateLinesOfPsiElement(commentElement);
+                    return (method.getBody() != null && !method.getBody().isEmpty()) ? commentPaddingLines : 0;
+                })
                 .sum();
     }
 
