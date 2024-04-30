@@ -6,10 +6,7 @@ import codeemoji.core.provider.CEProviderMulti;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiReferenceExpression;
-import com.intellij.psi.PsiReturnStatement;
+import com.intellij.psi.*;
 import org.codehaus.plexus.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -68,9 +65,11 @@ public class PureGetterMethod extends CEProviderMulti<PureGetterMethodSettings> 
     }
 
     private boolean isPureGetterMethod(PsiMethod method) {
+        final PsiCodeBlock methodBody = method.getBody();
+        final PsiStatement[] methodBodyStatements = methodBody != null ? methodBody.getStatements() : null;
         return !method.hasParameters() &&
-                method.getBody() != null && method.getBody().getStatements().length == 1 &&
-                method.getBody().getStatements()[0] instanceof PsiReturnStatement returnStatement &&
+                methodBody != null && methodBodyStatements.length == 1 &&
+                methodBodyStatements[0] instanceof PsiReturnStatement returnStatement &&
                 returnStatement.getReturnValue() instanceof PsiReferenceExpression referenceExpression &&
                 referenceExpression.resolve() instanceof PsiField field &&
                 Objects.equals(field.getContainingClass(), method.getContainingClass()) &&
