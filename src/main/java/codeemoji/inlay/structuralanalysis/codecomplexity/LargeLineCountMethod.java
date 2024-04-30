@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.function.Predicate;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.LARGE_LINE_COUNT_METHOD;
 
@@ -39,13 +38,10 @@ public class LargeLineCountMethod extends CEProvider<LargeLineCountMethodSetting
     }
 
     private boolean isLargeLineCountMethod(PsiMethod method) {
-        int methodLineCount = CEUtils.calculateLineCountFromPsiElementOffsets(
-                method,
-                method.getFirstChild(),
-                method.getBody() != null ? method.getBody().getLastChild() : method.getLastChild(),
-                methodElement -> ((PsiMethod) methodElement).getBody() != null && !((PsiMethod) methodElement).getBody().isEmpty()
-        );
+        int methodLineCount = CEUtils.calculateMethodBodyLineCount(method);
+        if(getSettings().isCommentExclusionApplied()){
+            methodLineCount = methodLineCount - CEUtils.calculateCommentPaddingLinesInMethod(method);
+        }
         return method.getBody() != null && methodLineCount >= getSettings().getLinesOfCode();
     }
-
 }

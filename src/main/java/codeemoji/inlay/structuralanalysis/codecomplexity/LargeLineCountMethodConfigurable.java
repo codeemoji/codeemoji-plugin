@@ -12,6 +12,12 @@ record LargeLineCountMethodConfigurable(LargeLineCountMethodSettings settings) i
 
     @Override
     public @NotNull JComponent createComponent(@NotNull ChangeListener changeListener) {
+        var checkBox = new JCheckBox();
+        checkBox.setSelected(settings().isCommentExclusionApplied());
+        checkBox.addChangeListener(event -> {
+            settings().setCommentExclusionApplied(checkBox.isSelected());
+            changeListener.settingsChanged();
+        });
         var jSpinner = new JSpinner();
         jSpinner.setValue(settings().getLinesOfCode());
         jSpinner.addChangeListener(event -> {
@@ -19,6 +25,7 @@ record LargeLineCountMethodConfigurable(LargeLineCountMethodSettings settings) i
             changeListener.settingsChanged();
         });
         return FormBuilder.createFormBuilder()
+                .addLabeledComponent("Exclude comments from calculation", checkBox)
                 .addLabeledComponent("Lines of Code", jSpinner)
                 .getPanel();
     }

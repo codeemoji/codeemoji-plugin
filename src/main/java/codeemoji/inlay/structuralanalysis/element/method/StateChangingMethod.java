@@ -59,32 +59,42 @@ public class StateChangingMethod extends CEProviderMulti<StateChangingMethodSett
         return new StateChangingMethodConfigurable(settings);
     }
 
-    private boolean isStateChangingMethod(PsiMethod method){
-
-        if (method.isConstructor()){
-            return false;
-        }
-
-        PsiElement[] stateChangingElements = PsiTreeUtil.collectElements(
+    private PsiElement[] collectStateChangingElements(PsiMethod method){
+        return PsiTreeUtil.collectElements(
                 method.getNavigationElement(),
                 element ->
                         element instanceof PsiAssignmentExpression assignmentExpression &&
                         assignmentExpression.getLExpression() instanceof PsiReferenceExpression referenceExpression && referenceExpression.resolve() instanceof PsiField
         );
+    }
 
-        if (stateChangingElements.length > 0) {
+    private PsiMethod[] collectStateChangingMethods(PsiMethod method){
+        return PsiTreeUtil.collectElementsOfType(method.getNavigationElement(), PsiMethodCallExpression.class)
+                .stream()
+                .distinct()
+                .<PsiMethod>mapMulti((methodCallExpression, consumer) -> {
+                    PsiMethod resolvedMethodCallExpression = methodCallExpression.resolveMethod();
+                    if (resolvedMethodCallExpression != null && !method.isEquivalentTo(resolvedMethodCallExpression)) {
+                        consumer.accept(resolvedMethodCallExpression);
+                    }
+                })
+                .toArray(PsiMethod[]::new);
+    }
+
+    private boolean isStateChangingMethod(PsiMethod method){
+
+        if (
+                !method.isConstructor() &&
+                method.getBody() != null &&
+                collectStateChangingElements(method).length > 0
+        ) {
             return true;
         }
+
         else {
 
             if(getSettings().isCheckMethodCallsForStateChangeApplied()){
-                stateChangingElements = PsiTreeUtil.collectElements(
-                        method.getNavigationElement(),
-                        element ->
-                                element instanceof PsiMethodCallExpression methodCallExpression &&
-                                methodCallExpression.resolveMethod() != null && !method.isEquivalentTo(methodCallExpression.resolveMethod())
-                );
-                return stateChangingElements.length > 0 && Arrays.stream(stateChangingElements).anyMatch(stateChangingElement -> isStateChangingMethod(((PsiMethodCallExpression) stateChangingElement).resolveMethod()));
+                return Arrays.stream(collectStateChangingMethods(method)).anyMatch(this::isStateChangingMethod);
             }
             else{
                 return false;
