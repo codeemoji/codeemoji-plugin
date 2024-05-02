@@ -17,6 +17,8 @@ annotations for the JakartaEE and Spring frameworks.
 
 <!-- DESCRIPTION HEADER END -->
 
+https://github.com/codeemoji/codeemoji-plugin/assets/7922567/b551c5e5-9b9a-490c-9538-c0cf818b49ee
+
 <!-- TOC -->
 
 * [Setup and Use](#setup-and-use)
