@@ -17,7 +17,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -90,6 +89,7 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
             else {
                 return false;
             }
+            //return false;
         }
     }
 

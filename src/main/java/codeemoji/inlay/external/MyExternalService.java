@@ -10,18 +10,16 @@ import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import lombok.Getter;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 @Service
 @Getter
@@ -32,12 +30,36 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
     List<String> librariesFromFiles = new ArrayList<>();
     Library[] librariesFromProject = null;
     List<String> dependencies = new ArrayList<>();
+    HashMap<Library, JSONArray> hashMap = new HashMap<>();
+    DependencyParser parser = new DependencyParser();
+    DependencyChecker checker = new DependencyChecker();
 
     public void preProcess(@NotNull Project project) {
         persistedData.put(project.getWorkspaceFile(), null);
-        //getLibraries(project);
         getProjectLibraries(project);
-        //getAllDependencies(project);
+
+        for (Library lib : librariesFromProject) {
+            String library = parser.parseDependencyToString(lib);
+            JSONObject vulnerability = checker.checkDependency(library);
+            // System.out.println("Risposta dall'API OSS Index (JSONArray):");
+
+            try {
+                String coordinates = vulnerability.getString("coordinates");
+                JSONArray vulnerabilities = vulnerability.getJSONArray("vulnerabilities");
+
+                // Aggiungi all'HashMap solo se il JSONArray vulnerabilities non è vuoto
+                if (vulnerabilities.length() != 0) {
+                    hashMap.putIfAbsent(lib, vulnerabilities);
+                } else {
+                    // System.out.println(coordinates + " not added to hashmap because no vulnerabilities has been found");
+                }
+
+                // Stampa la HashMap
+                System.out.println(hashMap);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
     }
 
@@ -51,37 +73,6 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
         librariesFromProject = librarytable.getLibraries();
     }
 
-
-    // to ask for vulnerabilities
-    private void retrieveVulnerabilitiesInfo(String libraryName, Map<String, Object> infoResult) {
-        OkHttpClient client = new OkHttpClient();
-
-        // Costruisci l'URL per la richiesta
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(API_BASE_URL + "vulnerabilities").newBuilder();
-        urlBuilder.addQueryParameter("library", libraryName); // Aggiungi il parametro "library" con il nome della libreria
-        String url = urlBuilder.build().toString();
-
-        // Crea la richiesta HTTP
-        Request request = new Request.Builder()
-                .url(url)
-                .get()
-                .build();
-
-        // Esegui la richiesta e gestisci la risposta
-        try {
-            Response response = client.newCall(request).execute();
-            if (response.isSuccessful()) {
-                String responseBody = response.body().string();
-                // Gestisci la risposta qui
-                System.out.println("Risposta dall'API di WhiteSource: " + responseBody);
-            } else {
-                System.out.println("Errore durante la richiesta: " + response.code());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void buildInfo(@NotNull Map infoResult, @Nullable PsiElement element) {
         try {
@@ -89,7 +80,7 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
                 // Retrieves preprocessed persistent values
                 var data = retrieveData(element.getProject().getWorkspaceFile());
                 // Put informations about element
-                infoResult.put("externalParam", null);
+                infoResult.putAll(hashMap);
             }
             // Per ogni libreria nella lista libraries, richiama retrieveVulnerabilitiesInfo per ottenere le informazioni sulle vulnerabilità
 //            for (String libraryName : libraries) {

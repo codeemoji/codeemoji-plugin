@@ -15,6 +15,9 @@ version = properties("pluginVersion")
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://snyk.io/repository/maven-releases")
+    }
 }
 
 dependencies {
@@ -22,6 +25,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.28")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation("org.openapitools:openapi-generator-maven-plugin:7.5.0")
+    implementation("org.json:json:20240303")
 }
 
 intellij {
