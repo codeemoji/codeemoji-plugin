@@ -43,6 +43,8 @@
                 serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.StateChangingMethodSettings"/>
         <applicationService
                 serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.StateIndependentMethodSettings"/>
+        <applicationService
+                serviceImplementation="codeemoji.inlay.vulnerabilities.VulnerableMethodsSettings"/>
 
         <!--END OF CONFIGURABLE & SERVICES SECTION-->
 

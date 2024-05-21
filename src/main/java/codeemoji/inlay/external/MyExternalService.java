@@ -3,13 +3,11 @@ package codeemoji.inlay.external;
 import codeemoji.core.external.CEExternalService;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +15,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @Getter
@@ -26,16 +25,14 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
     Map<VirtualFile, Object> persistedData = new HashMap<>(); // is this really necessary?
     HashMap<Library, JSONArray> hashMap = new HashMap<>();
 
-    List<String> librariesFromFiles = new ArrayList<>();
     Library[] librariesFromProject = null;
 
     DependencyParser parser = new DependencyParser();
     DependencyChecker checker = new DependencyChecker();
 
-    public void preProcess(@NotNull Project project) {
+    /*public void preProcess(@NotNull Project project) {
         persistedData.put(project.getWorkspaceFile(), null);
         getProjectLibraries(project);
-        // PsiPackageStatement[] statements = getPsiPackageStatementsFromLibraries(project);
 
         for (Library lib : librariesFromProject) {
             String library = parser.parseDependencyToString(lib);
@@ -54,57 +51,33 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
                 throw new RuntimeException(e);
             }
         }
-    }
+    }*/
 
-    public PsiPackageStatement[] getPsiPackageStatementsFromLibraries(Project project) {
-        LibraryTable libraryTable = LibraryTablesRegistrar.getInstance().getLibraryTable(project);
-        Library[] librariesFromProject = libraryTable.getLibraries();
-        Set<PsiPackageStatement> packageStatementsSet = new HashSet<>();
+    public void preProcess(@NotNull Project project) {
+        persistedData.put(project.getWorkspaceFile(), null);
+        getProjectLibraries(project);
 
-        for (Library library : librariesFromProject) {
-            for (VirtualFile root : library.getFiles(OrderRootType.CLASSES)) {
-                Set<PsiJavaFile> psiJavaFiles = getPsiJavaFilesFromRoot(project, root);
-                for (PsiJavaFile psiJavaFile : psiJavaFiles) {
-                    PsiPackageStatement packageStatement = psiJavaFile.getPackageStatement();
-                    if (packageStatement != null) {
-                        packageStatementsSet.add(packageStatement);
-                    }
+        for (Library lib : librariesFromProject) {
+            try {
+                String library = parser.parseDependencyToString(lib);
+                JSONObject vulnerability = checker.checkDependency(library);
+
+                String coordinates = vulnerability.getString("coordinates");
+                JSONArray vulnerabilities = vulnerability.getJSONArray("vulnerabilities");
+
+                if (vulnerabilities.length() != 0) {
+                    hashMap.putIfAbsent(lib, vulnerabilities);
+                } else {
+                    System.out.println(coordinates + " not added to hashmap because no vulnerabilities have been found");
                 }
+            } catch (JSONException e) {
+                System.err.println("Error processing library: " + lib.getName() + ". Error: " + e.getMessage());
+            } catch (Exception e) {
+                System.err.println("Unexpected error processing library: " + lib.getName() + ". Error: " + e.getMessage());
             }
         }
-        return packageStatementsSet.toArray(new PsiPackageStatement[0]);
-    }
 
-    private Set<PsiJavaFile> getPsiJavaFilesFromRoot(Project project, VirtualFile root) {
-        Set<PsiJavaFile> psiJavaFiles = new HashSet<>();
-        if (root.isDirectory()) {
-            for (VirtualFile child : root.getChildren()) {
-                psiJavaFiles.addAll(getPsiJavaFilesFromRoot(project, child));
-            }
-        } else if (root.getFileType().getDefaultExtension().equals("jar")) {
-            // Handle jar files
-            extractPsiJavaFilesFromJar(project, root, psiJavaFiles);
-        } else if (root.getFileType().getDefaultExtension().equals("java")) {
-            PsiFile psiFile = PsiManager.getInstance(project).findFile(root);
-            if (psiFile instanceof PsiJavaFile) {
-                psiJavaFiles.add((PsiJavaFile) psiFile);
-            }
-        }
-        return psiJavaFiles;
-    }
-
-    private void extractPsiJavaFilesFromJar(Project project, VirtualFile jarFile, Set<PsiJavaFile> psiJavaFiles) {
-        VirtualFile jarRoot = JarFileSystem.getInstance().getJarRootForLocalFile(jarFile);
-        if (jarRoot != null) {
-            for (VirtualFile file : jarRoot.getChildren()) {
-                if (file.getFileType().getDefaultExtension().equals("java")) {
-                    PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
-                    if (psiFile instanceof PsiJavaFile) {
-                        psiJavaFiles.add((PsiJavaFile) psiFile);
-                    }
-                }
-            }
-        }
+        System.out.println(hashMap);
     }
 
     @Override
