@@ -8,6 +8,7 @@ import codeemoji.inlay.structuralanalysis.element.method.ExternalFunctionalityIn
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -20,9 +21,10 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static codeemoji.inlay.vulnerabilities.VulnerableSymbols.VULNERABLE_LOW;
-
+import static codeemoji.inlay.vulnerabilities.VulnerableSymbols.*;
 
 
 @SuppressWarnings("UnstableApiUsage")
@@ -43,12 +45,19 @@ public class VunerableMethods extends CEProviderMulti<ExternalFunctionalityInvok
                         return isExternalFunctionalityInvokingMethod(element, editor.getProject(), false, externalInfo);
                     }
                 },
-                new CEReferenceMethodCollector(editor, getKeyId(), VULNERABLE_LOW) {
+                new CEMethodCollector(editor, getKeyId(), VULNERABLE_MEDIUM) {
                     @Override
                     public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isExternalFunctionalityInvokingMethod(element, editor.getProject(), true, externalInfo);
+                        return isExternalFunctionalityInvokingMethod(element, editor.getProject(), false, externalInfo);
+                    }
+                },
+                new CEMethodCollector(editor, getKeyId(), VULNERABLE_HIGH) {
+                    @Override
+                    public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                        return isExternalFunctionalityInvokingMethod(element, editor.getProject(), false, externalInfo);
                     }
                 }
+
         );
     }
 
@@ -57,12 +66,6 @@ public class VunerableMethods extends CEProviderMulti<ExternalFunctionalityInvok
             return false;
         }
 
-        PsiJavaFile file = (PsiJavaFile) method.getContainingFile();
-        PsiClass clas = method.getContainingClass();
-        PsiPackageStatement statement = file.getPackageStatement();
-        String st = statement.getPackageName();
-        List<VirtualFile> listRoot = CEUtils.getSourceRootsInProject(project);
-        VirtualFile virtualFile = ProjectFileIndex.getInstance(method.getProject()).getSourceRootForFile(method.getNavigationElement().getContainingFile().getVirtualFile());
 
         PsiElement[] externalFunctionalityInvokingElements = PsiTreeUtil.collectElements(
                 method.getNavigationElement(),
@@ -106,39 +109,61 @@ public class VunerableMethods extends CEProviderMulti<ExternalFunctionalityInvok
 
     public boolean checkVulnerability(PsiMethod method, Map<?, ?> externalInfo) {
         double maxCvssScore = Double.MIN_VALUE; // Inizializza il massimo punteggio CVSS a un valore molto basso
-        String qualifiedName = method.getContainingClass().getQualifiedName();
-        if (qualifiedName == null) {
+        PsiFile containingFile = method.getContainingFile();
+        if (containingFile == null) {
             return false;
         }
+
+        // Get the virtual file and its path
+        VirtualFile virtualFile = containingFile.getVirtualFile();
+        if (virtualFile == null) {
+            return false;
+        }
+        String methodFilePath = virtualFile.getPath();
+
+        // Normalize the path to extract relevant parts
+        String methodFilePathNormalized = normalizePath(methodFilePath);
+
         for (Object key : externalInfo.keySet()) {
             if (key instanceof Library) {
+
                 Library library = (Library) key;
-
-                String libraryName = library.getName();
-                // String[] urls = library.getUrls(OrderRootType.CLASSES);
-                String[] parts = libraryName.split(":");
-                String group = parts[1];
-                String artifact = parts[2];
-
-                if (qualifiedName.contains(group) || qualifiedName.contains(artifact)) {
-                    Object value = externalInfo.get(key);
-                    if (value instanceof JSONArray) {
-                        JSONArray jsonArray = (JSONArray) value;
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            double cvssScore = jsonObject.getDouble("cvssScore");
-                            if (cvssScore > maxCvssScore) {
-                                maxCvssScore = cvssScore;
+                for (String url : library.getUrls(OrderRootType.CLASSES)) {
+                    // Normalize the library path to extract relevant parts
+                    String libraryPathNormalized = normalizePath(url);
+                    // Compare normalized paths
+                    if (methodFilePathNormalized.contains(libraryPathNormalized)) {
+                        Object value = externalInfo.get(key);
+                        if (value instanceof JSONArray) {
+                            JSONArray jsonArray = (JSONArray) value;
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                double cvssScore = jsonObject.getDouble("cvssScore");
+                                if (cvssScore > maxCvssScore) {
+                                    maxCvssScore = cvssScore;
+                                }
                             }
+                            System.out.println("Vulnerability MAX SCORE: " + maxCvssScore);
+                        } else {
+                            return false;
                         }
-                        System.out.println("Vulnerability MAX SCORE: " + maxCvssScore);
+                        return true;
                     }
-                    return true;
                 }
             }
         }
 
         return false;
+    }
+
+    private String normalizePath(String path) {
+        // Regex to match the relevant parts of the path
+        Pattern pattern = Pattern.compile(".*/modules-2/files-2.1/([^/]+)/([^/]+)/([^/]+)/.*");
+        Matcher matcher = pattern.matcher(path);
+        if (matcher.find()) {
+            return matcher.group(1) + "/" + matcher.group(2);  // Return group/artifact
+        }
+        return path;
     }
 
     /*public boolean checkVulnerability(@NotNull PsiMethod method, Map<?, ?> externalInfo, @NotNull Project project) {
