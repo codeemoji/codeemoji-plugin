@@ -79,9 +79,7 @@ public class VunerableMethods extends CEProviderMulti<VulnerableMethodsSettings>
         if (externalFunctionalityInvokingElements.length > 0 &&
                 Arrays.stream(externalFunctionalityInvokingElements)
                         .map(externalFunctionalityInvokingElement -> ((PsiMethodCallExpression) externalFunctionalityInvokingElement.getNavigationElement()).resolveMethod())
-                        .anyMatch(externalFunctionalityInvokingElement -> {
-                            return checkVulnerability(externalFunctionalityInvokingElement, externalInfo, treshold);
-                        })
+                        .anyMatch(externalFunctionalityInvokingElement -> checkVulnerability(externalFunctionalityInvokingElement, externalInfo, treshold))
         ) {
             return true;
         } else {
@@ -156,7 +154,7 @@ public class VunerableMethods extends CEProviderMulti<VulnerableMethodsSettings>
                 return false;
             }
         } else {
-            return false;
+            return true;
         }
     }
 

@@ -24,11 +24,12 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
 
     Map<VirtualFile, Object> persistedData = new HashMap<>(); // is this really necessary?
     HashMap<Library, JSONArray> hashMap = new HashMap<>();
-
     Library[] librariesFromProject = null;
 
     DependencyParser parser = new DependencyParser();
     DependencyChecker checker = new DependencyChecker();
+
+
 
     /*public void preProcess(@NotNull Project project) {
         persistedData.put(project.getWorkspaceFile(), null);
