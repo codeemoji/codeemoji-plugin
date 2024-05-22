@@ -10,26 +10,28 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static codeemoji.inlay.vulnerabilities.VulnerableSymbols.*;
 
-
 @SuppressWarnings("UnstableApiUsage")
 public class VunerableMethods extends CEProviderMulti<VulnerableMethodsSettings> {
+
+    private static final Map<CESymbol, Double[]> VULNERABILITY_THRESHOLDS = new HashMap<>();
+
+    static {
+        VULNERABILITY_THRESHOLDS.put(VULNERABLE_LOW, new Double[]{0.0, 5.0});
+        VULNERABILITY_THRESHOLDS.put(VULNERABLE_MEDIUM, new Double[]{5.0, 7.5});
+        VULNERABILITY_THRESHOLDS.put(VULNERABLE_HIGH, new Double[]{7.5, 10.0});
+    }
 
     @Override
     public String getPreviewText() {
@@ -43,19 +45,19 @@ public class VunerableMethods extends CEProviderMulti<VulnerableMethodsSettings>
                 new CEMethodCollector(editor, getKeyId(), VULNERABLE_LOW) {
                     @Override
                     public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_LOW, externalInfo);
+                        return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_LOW, externalInfo, new HashSet<PsiMethod>());
                     }
                 },
                 new CEMethodCollector(editor, getKeyId(), VULNERABLE_MEDIUM) {
                     @Override
                     public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_MEDIUM, externalInfo);
+                        return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_MEDIUM, externalInfo, new HashSet<PsiMethod>());
                     }
                 },
                 new CEMethodCollector(editor, getKeyId(), VULNERABLE_HIGH) {
                     @Override
                     public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_HIGH, externalInfo);
+                        return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_HIGH, externalInfo, new HashSet<PsiMethod>());
                     }
                 }
 
@@ -67,107 +69,94 @@ public class VunerableMethods extends CEProviderMulti<VulnerableMethodsSettings>
         return new VulnerableMethodsConfigurable(settings);
     }
 
-    public boolean isExternalFunctionalityVulnerable(PsiMethod method, Project project, CESymbol treshold, Map<?, ?> externalInfo) {
+    public boolean isExternalFunctionalityVulnerable(PsiMethod method, Project project, CESymbol threshold, Map<?, ?> externalInfo, Set<PsiMethod> visitedMethods) {
+        // to avoid infinite loop if the method was already visited
+        if (!visitedMethods.add(method)) {
+            return false;
+        }
 
-        PsiElement[] externalFunctionalityInvokingElements = PsiTreeUtil.collectElements(
+        PsiElement[] vulnerabilityElements = PsiTreeUtil.collectElements(
                 method.getNavigationElement(),
-                externalFunctionalityInvokingElement ->
-                        externalFunctionalityInvokingElement instanceof PsiMethodCallExpression methodCallExpression &&
-                                methodCallExpression.resolveMethod() != null && !method.isEquivalentTo(methodCallExpression.resolveMethod())
+                vulElement -> vulElement instanceof PsiMethodCallExpression
+                        && ((PsiMethodCallExpression) vulElement).resolveMethod() != null
+                        && !method.isEquivalentTo(((PsiMethodCallExpression) vulElement).resolveMethod())
         );
 
-        if (externalFunctionalityInvokingElements.length > 0 &&
-                Arrays.stream(externalFunctionalityInvokingElements)
-                        .map(externalFunctionalityInvokingElement -> ((PsiMethodCallExpression) externalFunctionalityInvokingElement.getNavigationElement()).resolveMethod())
-                        .anyMatch(externalFunctionalityInvokingElement -> checkVulnerability(externalFunctionalityInvokingElement, externalInfo, treshold))
-        ) {
-            return true;
-        } else {
-            if (getSettings().isCheckMethodCallsForExternalityApplied()) {
-                return externalFunctionalityInvokingElements.length > 0 &&
-                        Arrays.stream(externalFunctionalityInvokingElements)
-                                .map(externalFunctionalityInvokingElement -> ((PsiMethodCallExpression) externalFunctionalityInvokingElement).resolveMethod())
-                                .filter(externalFunctionalityInvokingElement -> !checkVulnerability((PsiMethod) externalFunctionalityInvokingElement.getNavigationElement(), externalInfo, treshold))
-                                .anyMatch(externalFunctionalityInvokingElement -> isExternalFunctionalityVulnerable(externalFunctionalityInvokingElement, project, treshold, externalInfo));
-            } else {
-                return false;
+        for (PsiElement vulElement : vulnerabilityElements) {
+            PsiMethod resolvedMethod = ((PsiMethodCallExpression) vulElement).resolveMethod();
+            if (resolvedMethod != null && checkVulnerability(resolvedMethod, externalInfo, threshold)) {
+                return true;
             }
         }
-    }
 
-
-    public boolean checkVulnerability(PsiMethod method, Map<?, ?> externalInfo, CESymbol treshold) {
-        double maxCvssScore = Double.MIN_VALUE;
-        PsiFile containingFile = method.getContainingFile();
-        if (containingFile == null) {
-            return false;
-        }
-        VirtualFile virtualFile = containingFile.getVirtualFile();
-        if (virtualFile == null) {
-            return false;
-        }
-        String methodFilePath = virtualFile.getPath();
-        String methodFilePathNormalized = normalizePath(methodFilePath);
-
-        for (Object key : externalInfo.keySet()) {
-            if (key instanceof Library) {
-                Library library = (Library) key;
-                for (String url : library.getUrls(OrderRootType.CLASSES)) {
-                    String libraryPathNormalized = normalizePath(url);
-                    if (methodFilePathNormalized.contains(libraryPathNormalized)) {
-
-                        Object value = externalInfo.get(key);
-                        if (value instanceof JSONArray) {
-                            JSONArray jsonArray = (JSONArray) value;
-                            maxCvssScore = getCvssScore(jsonArray);
-                            return isEnoughVulnerable(maxCvssScore, treshold);
-
-                        } else {
-                            return false;
-                        }
-
+        // if we need to search recursively
+        if (getSettings().isCheckMethodCallsForExternalityApplied()) {
+            for (PsiElement externalFunctionalityInvokingElement : vulnerabilityElements) {
+                PsiMethod resolvedMethod = ((PsiMethodCallExpression) externalFunctionalityInvokingElement).resolveMethod();
+                if (resolvedMethod != null && !checkVulnerability(resolvedMethod, externalInfo, threshold)) {
+                    if (isExternalFunctionalityVulnerable(resolvedMethod, project, threshold, externalInfo, visitedMethods)) {
+                        return true;
                     }
                 }
             }
         }
-
         return false;
     }
 
-    private boolean isEnoughVulnerable(double maxCvssScore, CESymbol treshold) {
-        if (treshold.equals(VULNERABLE_LOW)) {
-            if (maxCvssScore > 0.0 && maxCvssScore <= 5) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if (treshold.equals(VULNERABLE_MEDIUM)) {
-            if (maxCvssScore > 5 && maxCvssScore <= 7.5) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if (treshold.equals(VULNERABLE_HIGH)) {
-            if (maxCvssScore > 7.5 && maxCvssScore <= 10.0) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return true;
+    public boolean checkVulnerability(PsiMethod method, Map<?, ?> externalInfo, CESymbol threshold) {
+        if (!checkMethodExternality(method)) {
+            return false;
         }
+        VirtualFile virtualFile = method.getContainingFile().getVirtualFile();
+        if (virtualFile == null) {
+            return false;
+        }
+
+        String methodFilePathNormalized = normalizePath(virtualFile.getPath());
+        for (Object key : externalInfo.keySet()) {
+            if (key instanceof Library library) {
+                if (libraryContainsMethod(library, methodFilePathNormalized)) {
+                    Object value = externalInfo.get(key);
+                    if (value instanceof JSONArray jsonArray) {
+                        double maxCvssScore = getCvssScore(jsonArray);
+                        return isEnoughVulnerable(maxCvssScore, threshold);
+                    }
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean libraryContainsMethod(Library library, String methodFilePathNormalized) {
+        for (String url : library.getUrls(OrderRootType.CLASSES)) {
+            String libraryPathNormalized = normalizePath(url);
+            if (methodFilePathNormalized.contains(libraryPathNormalized)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isEnoughVulnerable(double maxCvssScore, CESymbol threshold) {
+        Double[] range = VULNERABILITY_THRESHOLDS.get(threshold);
+        return range != null && maxCvssScore > range[0] && maxCvssScore <= range[1];
+    }
+
+    public boolean checkMethodExternality(PsiMethod method) {
+        return method.getContainingFile() instanceof PsiJavaFile javaFile &&
+                method.getContainingClass() != null &&
+                javaFile.getPackageStatement() != null &&
+                !javaFile.getPackageName().startsWith("java");
+                // && !CEUtils.getSourceRootsInProject(project).contains(ProjectFileIndex.getInstance(method.getProject()).getSourceRootForFile(method.getNavigationElement().getContainingFile().getVirtualFile()));
     }
 
     private double getCvssScore(JSONArray jsonArray) {
-        double maxCvssScore = Double.MIN_VALUE;
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = jsonArray.getJSONObject(i);
-            double cvssScore = jsonObject.getDouble("cvssScore");
-            if (cvssScore > maxCvssScore) {
-                maxCvssScore = cvssScore;
-            }
-        }
-        return maxCvssScore;
+        return jsonArray.toList().stream()
+                .mapToDouble(obj -> ((Map<String, Object>) obj).get("cvssScore") instanceof Number
+                        ? ((Number) ((Map<String, Object>) obj).get("cvssScore")).doubleValue()
+                        : Double.MIN_VALUE)
+                .max().orElse(Double.MIN_VALUE);
     }
 
     private String normalizePath(String path) {
