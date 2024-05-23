@@ -71,10 +71,9 @@ public class VunerableMethods extends CEProviderMulti<VulnerableMethodsSettings>
 
     public boolean isExternalFunctionalityVulnerable(PsiMethod method, Project project, CESymbol threshold, Map<?, ?> externalInfo, Set<PsiMethod> visitedMethods) {
         // to avoid infinite loop if the method was already visited
-        if (!visitedMethods.add(method)) {
+        if (!visitedMethods.add(method) || !checkMethodExternality(method)) {
             return false;
         }
-
         PsiElement[] vulnerabilityElements = PsiTreeUtil.collectElements(
                 method.getNavigationElement(),
                 vulElement -> vulElement instanceof PsiMethodCallExpression
@@ -104,9 +103,6 @@ public class VunerableMethods extends CEProviderMulti<VulnerableMethodsSettings>
     }
 
     public boolean checkVulnerability(PsiMethod method, Map<?, ?> externalInfo, CESymbol threshold) {
-        if (!checkMethodExternality(method)) {
-            return false;
-        }
         VirtualFile virtualFile = method.getContainingFile().getVirtualFile();
         if (virtualFile == null) {
             return false;

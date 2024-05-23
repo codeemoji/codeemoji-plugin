@@ -29,15 +29,4 @@ public class DependencyParser {
         return String.format("%s/%s@%s", groupId, artifactId, version);
     }
 
-    private static String getVersion() {
-        return "";
-    }
-
-    private static String getArtifactId() {
-        return "";
-    }
-
-    private static String getGroupId() {
-        return "";
-    }
 }

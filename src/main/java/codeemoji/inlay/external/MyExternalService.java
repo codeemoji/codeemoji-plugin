@@ -15,8 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Getter
@@ -31,54 +30,53 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
 
 
 
-    /*public void preProcess(@NotNull Project project) {
-        persistedData.put(project.getWorkspaceFile(), null);
-        getProjectLibraries(project);
-
-        for (Library lib : librariesFromProject) {
-            String library = parser.parseDependencyToString(lib);
-            JSONObject vulnerability = checker.checkDependency(library);
-            // System.out.println("Risposta dall'API OSS Index (JSONArray):");
-            try {
-                String coordinates = vulnerability.getString("coordinates");
-                JSONArray vulnerabilities = vulnerability.getJSONArray("vulnerabilities");
-                if (vulnerabilities.length() != 0) {
-                    hashMap.putIfAbsent(lib, vulnerabilities);
-                } else {
-                    // System.out.println(coordinates + " not added to hashmap because no vulnerabilities has been found");
-                }
-                System.out.println(hashMap);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }*/
-
     public void preProcess(@NotNull Project project) {
         persistedData.put(project.getWorkspaceFile(), null);
         getProjectLibraries(project);
+        getVulnerabilities();
+
+
+        System.out.println(hashMap);
+    }
+
+    public void getVulnerabilities() {
+        List<String> libraryCoordinates = new ArrayList<>();
 
         for (Library lib : librariesFromProject) {
             try {
                 String library = parser.parseDependencyToString(lib);
-                JSONObject vulnerability = checker.checkDependency(library);
-
-                String coordinates = vulnerability.getString("coordinates");
-                JSONArray vulnerabilities = vulnerability.getJSONArray("vulnerabilities");
-
-                if (vulnerabilities.length() != 0) {
-                    hashMap.putIfAbsent(lib, vulnerabilities);
-                } else {
-                    System.out.println(coordinates + " not added to hashmap because no vulnerabilities have been found");
-                }
-            } catch (JSONException e) {
+                libraryCoordinates.add("pkg:maven/" + library);
+            } catch (IllegalArgumentException e) {
                 System.err.println("Error processing library: " + lib.getName() + ". Error: " + e.getMessage());
-            } catch (Exception e) {
-                System.err.println("Unexpected error processing library: " + lib.getName() + ". Error: " + e.getMessage());
             }
         }
 
-        System.out.println(hashMap);
+        JSONArray vulnerabilityData = checker.checkDependencies(libraryCoordinates);
+
+        for (String lib : libraryCoordinates) {
+            for (int i = 0; i < vulnerabilityData.length(); i++) {
+                try {
+                    // Ottieni l'oggetto JSON corrente dall'array
+                    JSONObject jsonObject = vulnerabilityData.getJSONObject(i);
+
+                    // Estrai le coordinate dall'oggetto JSON corrente
+                    String coordinates = jsonObject.getString("coordinates");
+
+                    // Controlla se le coordinate correnti corrispondono a quelle desiderate
+                    if (coordinates.equals(lib)) {
+                        // Controlla se il campo "vulnerabilities" non è vuoto
+                        JSONArray vulnerabilities = jsonObject.getJSONArray("vulnerabilities");
+                        if (vulnerabilities.length() > 0) {
+                            // Aggiungi l'intero oggetto JSON corrispondente all'HashMap
+                            hashMap.put(librariesFromProject[i], vulnerabilities);
+                            break;
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override
@@ -91,8 +89,27 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
         librariesFromProject = librarytable.getLibraries();
     }
 
+    private boolean checkIfLibrariesChanged(@Nullable PsiElement element) {
+        LibraryTable librarytable = LibraryTablesRegistrar.getInstance().getLibraryTable(element.getProject());
+        Library[] newLibrariesFromProject = librarytable.getLibraries();
+        if (newLibrariesFromProject.length != librariesFromProject.length) {
+            return true;
+        }
+        for (int i = 0; i < newLibrariesFromProject.length; i++) {
+            if (newLibrariesFromProject[i].getName() != librariesFromProject[i].getName()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void buildInfo(@NotNull Map infoResult, @Nullable PsiElement element) {
+        if (checkIfLibrariesChanged(element)) {
+            System.out.println("Libraries of project changed");
+            getProjectLibraries(element.getProject());
+            getVulnerabilities();
+        }
         try {
             if (element != null) {
                 // Retrieves preprocessed persistent values
