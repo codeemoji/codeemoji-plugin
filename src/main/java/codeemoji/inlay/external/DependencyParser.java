@@ -7,21 +7,15 @@ public class DependencyParser {
     public static String parseDependencyToString(Library library) {
         String dependencyName = library.getName();
         if (!dependencyName.startsWith("Gradle: ")) {
-            throw new IllegalArgumentException("Formato di dipendenza non valido");
+            throw new IllegalArgumentException("Invalid format: not starting with Gradle");
         }
-
-        // Rimuovi il prefisso "Gradle: "
+        // Removing "Gradle: "
         String dependency = dependencyName.substring(8);
 
-        // Dividi la stringa rimanente usando ":" come delimitatore
         String[] parts = dependency.split(":");
-
-        // Verifica che ci siano esattamente 3 parti (groupId, artifactId, version)
         if (parts.length != 3) {
-            throw new IllegalArgumentException("Formato di dipendenza non valido");
+            throw new IllegalArgumentException("Invalid format: no groupId, artifactId or version");
         }
-
-        // Costruisci la stringa nel formato desiderato
         String groupId = parts[0];
         String artifactId = parts[1];
         String version = parts[2];

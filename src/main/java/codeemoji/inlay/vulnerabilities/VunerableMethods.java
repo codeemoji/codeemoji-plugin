@@ -90,8 +90,8 @@ public class VunerableMethods extends CEProviderMulti<VulnerableMethodsSettings>
 
         // if we need to search recursively
         if (getSettings().isCheckMethodCallsForExternalityApplied()) {
-            for (PsiElement externalFunctionalityInvokingElement : vulnerabilityElements) {
-                PsiMethod resolvedMethod = ((PsiMethodCallExpression) externalFunctionalityInvokingElement).resolveMethod();
+            for (PsiElement vulnerabilityElement : vulnerabilityElements) {
+                PsiMethod resolvedMethod = ((PsiMethodCallExpression) vulnerabilityElement).resolveMethod();
                 if (resolvedMethod != null && !checkVulnerability(resolvedMethod, externalInfo, threshold)) {
                     if (isExternalFunctionalityVulnerable(resolvedMethod, project, threshold, externalInfo, visitedMethods)) {
                         return true;
@@ -113,8 +113,9 @@ public class VunerableMethods extends CEProviderMulti<VulnerableMethodsSettings>
             if (key instanceof Library library) {
                 if (libraryContainsMethod(library, methodFilePathNormalized)) {
                     Object value = externalInfo.get(key);
-                    if (value instanceof JSONArray jsonArray) {
-                        double maxCvssScore = getCvssScore(jsonArray);
+                    if (value instanceof JSONObject jsonObject) {
+                        JSONArray vulnerabilities = jsonObject.getJSONArray("vulnerabilities");
+                        double maxCvssScore = getCvssScore(vulnerabilities );
                         return isEnoughVulnerable(maxCvssScore, threshold);
                     }
                     return false;
