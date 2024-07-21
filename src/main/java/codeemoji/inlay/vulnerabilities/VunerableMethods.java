@@ -4,11 +4,13 @@ import codeemoji.core.collector.simple.CEMethodCollector;
 import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.util.CESymbol;
+import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -46,37 +48,37 @@ public class VunerableMethods extends CEProviderMulti<VulnerableMethodsSettings>
     @Override
     protected @NotNull List<InlayHintsCollector> buildCollectors(@NotNull Editor editor) {
         return List.of(
-                new CEMethodCollector(editor, getKeyId(), VULNERABLE_LOW) {
+                new CEMethodCollector(editor, getKeyId() + ".low", VULNERABLE_LOW) {
                     @Override
                     public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                         return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_LOW, externalInfo, new HashSet<PsiMethod>(), false);
                     }
                 },
-                new CEReferenceMethodCollector(editor, getKeyId(), VULNERABLE_LOW) {
+                new CEReferenceMethodCollector(editor, getKeyId()  + ".low", VULNERABLE_LOW) {
                     @Override
                     public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                         return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_LOW, externalInfo, new HashSet<PsiMethod>(), true);
                     }
                 },
-                new CEMethodCollector(editor, getKeyId(), VULNERABLE_MEDIUM) {
+                new CEMethodCollector(editor, getKeyId() + ".medium", VULNERABLE_MEDIUM) {
                     @Override
                     public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                         return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_MEDIUM, externalInfo, new HashSet<PsiMethod>(), false);
                     }
                 },
-                new CEReferenceMethodCollector(editor, getKeyId(), VULNERABLE_MEDIUM) {
+                new CEReferenceMethodCollector(editor, getKeyId()  + ".medium", VULNERABLE_MEDIUM) {
                     @Override
                     public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                         return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_MEDIUM, externalInfo, new HashSet<PsiMethod>(), true);
                     }
                 },
-                new CEMethodCollector(editor, getKeyId(), VULNERABLE_HIGH) {
+                new CEMethodCollector(editor, getKeyId() + ".high", VULNERABLE_HIGH) {
                     @Override
                     public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                         return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_HIGH, externalInfo, new HashSet<PsiMethod>(), false);
                     }
                 },
-                new CEReferenceMethodCollector(editor, getKeyId(), VULNERABLE_HIGH) {
+                new CEReferenceMethodCollector(editor, getKeyId()  + ".high", VULNERABLE_HIGH) {
                     @Override
                     public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                         return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_HIGH, externalInfo, new HashSet<PsiMethod>(), true);
@@ -91,13 +93,14 @@ public class VunerableMethods extends CEProviderMulti<VulnerableMethodsSettings>
         return new VulnerableMethodsConfigurable(settings);
     }
 
+
     public boolean isExternalFunctionalityVulnerable(PsiMethod method, Project project, CESymbol threshold, Map<?, ?> externalInfo, Set<PsiMethod> visitedMethods, boolean fromReferenceMethod) {
-        if(fromReferenceMethod && !checkVulnerability(method, externalInfo, threshold)){
+        if(fromReferenceMethod && !checkMethodExternality(method, project)) {
             return false;
         }
 
         // to avoid infinite loop if the method was already visited
-        if (!visitedMethods.add(method) || !checkMethodExternality(method)) {
+        if (!visitedMethods.add(method)) {
             return false;
         }
         PsiElement[] vulnerabilityElements = PsiTreeUtil.collectElements(
@@ -166,12 +169,12 @@ public class VunerableMethods extends CEProviderMulti<VulnerableMethodsSettings>
         return range != null && maxCvssScore > range[0] && maxCvssScore <= range[1];
     }
 
-    public boolean checkMethodExternality(PsiMethod method) {
+    public boolean checkMethodExternality(PsiMethod method, Project project) {
         return method.getContainingFile() instanceof PsiJavaFile javaFile &&
                 method.getContainingClass() != null &&
-                javaFile.getPackageStatement() != null; // &&
-                // !javaFile.getPackageName().startsWith("java");
-                // && !CEUtils.getSourceRootsInProject(project).contains(ProjectFileIndex.getInstance(method.getProject()).getSourceRootForFile(method.getNavigationElement().getContainingFile().getVirtualFile()));
+                javaFile.getPackageStatement() != null &&
+                !javaFile.getPackageName().startsWith("java")
+                && !CEUtils.getSourceRootsInProject(project).contains(ProjectFileIndex.getInstance(method.getProject()).getSourceRootForFile(method.getNavigationElement().getContainingFile().getVirtualFile()));
     }
 
     private double getCvssScore(JSONArray jsonArray) {
