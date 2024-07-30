@@ -20,6 +20,9 @@ import java.util.stream.Collectors;
 @Service
 public final class MyExternalService implements CEExternalService<VirtualFile, Object> {
 
+    // TODO remove hardcoded variables
+    private static final int NIST_BATCH_SIZE = 50;
+
     private static final Logger LOG = Logger.getInstance(MyExternalService.class);
 
     private final Map<VirtualFile, Object> persistedData = new HashMap<>();
@@ -33,28 +36,41 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
     public void preProcess(@NotNull Project project) {
         persistedData.put(project.getWorkspaceFile(), null);
         lastScannedDependencies = dependencyExtractor.extractProjectDependencies(project);
-        scanVulnerabilities();
+        scanVulnerabilitiesInBatches(lastScannedDependencies);
     }
 
-    public void scanVulnerabilities() {
+    private void scanVulnerabilitiesInBatches(List<JSONObject> dependencies) {
+        for (int i = 0; i < dependencies.size(); i += NIST_BATCH_SIZE) {
+            List<JSONObject> batch = dependencies.subList(i, Math.min(i + NIST_BATCH_SIZE, dependencies.size()));
+            scanVulnerabilities(batch);
+            if (i + NIST_BATCH_SIZE < dependencies.size()) {
+                try {
+                    Thread.sleep(30000); // Wait for 30 seconds before the next batch - NIST directives with API_KEY
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    LOG.error("Interrupted while waiting between batches", e);
+                }
+            }
+        }
+    }
 
-        List<CompletableFuture<JSONObject>> futures = lastScannedDependencies.stream()
+    private void scanVulnerabilities(List<JSONObject> dependencies) {
+        List<CompletableFuture<JSONObject>> futures = dependencies.stream()
                 .map(vulnerabilityScanner::scanDependencyAsyncNist)
                 .collect(Collectors.toList());
 
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
-        for (int i = 0; i < lastScannedDependencies.size(); i++) {
-            JSONObject lib = lastScannedDependencies.get(i);
+        for (int i = 0; i < dependencies.size(); i++) {
+            JSONObject lib = dependencies.get(i);
             JSONObject vulnerabilityReport = futures.get(i).join();
             try {
                 JSONArray vulnerabilities = vulnerabilityReport.getJSONArray("vulnerabilities");
-                // saving lib only if vulnerabilities are present
                 if (vulnerabilities.length() > 0) {
                     vulnerabilitiesMap.put(lib, vulnerabilityReport);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error("Error processing vulnerability report", e);
             }
         }
     }
@@ -64,45 +80,27 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
         return persistedData;
     }
 
-    private boolean hasDependenciesChanged(@Nullable PsiElement element) {
-        if (element == null) {
-            return false;
-        }
-        Project project = element.getProject();
-        if (project == null) {
-            return false;
-        }
-        List<JSONObject> currentDependencies = dependencyExtractor.extractProjectDependencies(element.getProject());
-
-        if (currentDependencies.size() != lastScannedDependencies.size()) {
-            return true;
-        }
-        // TODO evaluate optimization
-        for (int i = 0; i < currentDependencies.size(); i++) {
-            JSONObject obj1 = currentDependencies.get(i);
-            JSONObject obj2 = lastScannedDependencies.get(i);
-            if (!obj1.similar(obj2)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void buildInfo(@NotNull Map infoResult, @Nullable PsiElement element) {
-        if (hasDependenciesChanged(element)) {
-            LOG.info("Project dependencies have changed. Rescanning vulnerabilities.");
-            lastScannedDependencies = dependencyExtractor.extractProjectDependencies(element.getProject());
-            scanVulnerabilities();
-        }
-
         if (element != null) {
-            // Retrieves preprocessed persistent values
-            Object data = retrieveData(element.getProject().getWorkspaceFile());
+            List<JSONObject> currentDependencies = dependencyExtractor.extractProjectDependencies(element.getProject());
+            List<JSONObject> newDependencies = getNewDependencies(currentDependencies);
+
+            if (!newDependencies.isEmpty()) {
+                LOG.info("New or changed dependencies detected. Scanning " + newDependencies.size() + " dependencies.");
+                scanVulnerabilitiesInBatches(newDependencies);
+                lastScannedDependencies = currentDependencies;
+            }
+
             infoResult.putAll(vulnerabilitiesMap);
         }
+    }
+
+    private List<JSONObject> getNewDependencies(List<JSONObject> currentDependencies) {
+        return currentDependencies.stream()
+                .filter(dep -> !lastScannedDependencies.stream().anyMatch(lastDep -> lastDep.similar(dep)))
+                .collect(Collectors.toList());
     }
 
     @Nullable
