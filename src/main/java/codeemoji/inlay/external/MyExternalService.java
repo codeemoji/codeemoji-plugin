@@ -2,116 +2,111 @@ package codeemoji.inlay.external;
 
 import codeemoji.core.external.CEExternalService;
 import com.intellij.openapi.components.Service;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Service
-@Getter
 public final class MyExternalService implements CEExternalService<VirtualFile, Object> {
 
-    Map<VirtualFile, Object> persistedData = new HashMap<>(); // is this really necessary?
-    HashMap<Library, JSONObject> vulnerabilitiesMap = new HashMap<>();
-    Library[] librariesList = null;
+    private static final Logger LOG = Logger.getInstance(MyExternalService.class);
 
-    DependencyParser parser = new DependencyParser();
-    DependencyChecker checker = new DependencyChecker();
+    private final Map<VirtualFile, Object> persistedData = new HashMap<>();
+    private final Map<JSONObject, JSONObject> vulnerabilitiesMap = new HashMap<>();
+    private final DependencyExtractor dependencyExtractor = new DependencyExtractor();
+    private final VulnerabilityScanner vulnerabilityScanner = new VulnerabilityScanner();
 
+    private List<JSONObject> lastScannedDependencies;
 
-
+    @Override
     public void preProcess(@NotNull Project project) {
         persistedData.put(project.getWorkspaceFile(), null);
-        getProjectLibraries(project);
-        getVulnerabilities();
+        lastScannedDependencies = dependencyExtractor.extractProjectDependencies(project);
+        scanVulnerabilities();
     }
 
-    public void getVulnerabilities() {
-        List<String> libraryCoordinates = new ArrayList<>();
+    public void scanVulnerabilities() {
 
-        for (Library lib : librariesList) {
+        List<CompletableFuture<JSONObject>> futures = lastScannedDependencies.stream()
+                .map(vulnerabilityScanner::scanDependencyAsyncNist)
+                .collect(Collectors.toList());
+
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
+        for (int i = 0; i < lastScannedDependencies.size(); i++) {
+            JSONObject lib = lastScannedDependencies.get(i);
+            JSONObject vulnerabilityReport = futures.get(i).join();
             try {
-                String library = parser.parseDependencyToString(lib);
-                libraryCoordinates.add("pkg:maven/" + library);
-            } catch (IllegalArgumentException e) {
-                System.err.println("Error processing library: " + lib.getName() + ". Error: " + e.getMessage());
-            }
-        }
-
-        JSONArray vulnerabilityData = checker.checkDependencies(libraryCoordinates);
-        for (String lib : libraryCoordinates) {
-            for (int i = 0; i < vulnerabilityData.length(); i++) {
-                try {
-                    JSONObject jsonObject = vulnerabilityData.getJSONObject(i);
-                    String coordinates = jsonObject.getString("coordinates");
-
-                    if (coordinates.equals(lib)) {
-                        JSONArray vulnerabilities = jsonObject.getJSONArray("vulnerabilities");
-                        // adding lib to the Map only if at least 1 vulnerability is present
-                        if (vulnerabilities.length() > 0) {
-                            vulnerabilitiesMap.put(librariesList[i], jsonObject);
-                            break;
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                JSONArray vulnerabilities = vulnerabilityReport.getJSONArray("vulnerabilities");
+                // saving lib only if vulnerabilities are present
+                if (vulnerabilities.length() > 0) {
+                    vulnerabilitiesMap.put(lib, vulnerabilityReport);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
-
 
     @Override
     public Map<VirtualFile, Object> getPersistedData() {
-        return null;
+        return persistedData;
     }
 
-    public void getProjectLibraries(Project project) {
-        LibraryTable librarytable = LibraryTablesRegistrar.getInstance().getLibraryTable(project);
-        librariesList = librarytable.getLibraries();
-    }
+    private boolean hasDependenciesChanged(@Nullable PsiElement element) {
+        if (element == null) {
+            return false;
+        }
+        Project project = element.getProject();
+        if (project == null) {
+            return false;
+        }
+        List<JSONObject> currentDependencies = dependencyExtractor.extractProjectDependencies(element.getProject());
 
-    private boolean checkIfLibrariesChanged(@Nullable PsiElement element) {
-        LibraryTable librarytable = LibraryTablesRegistrar.getInstance().getLibraryTable(element.getProject());
-        Library[] newLibrariesFromProject = librarytable.getLibraries();
-        if (newLibrariesFromProject.length != librariesList.length) {
+        if (currentDependencies.size() != lastScannedDependencies.size()) {
             return true;
         }
-        for (int i = 0; i < newLibrariesFromProject.length; i++) {
-            if (newLibrariesFromProject[i].getName() != librariesList[i].getName()) {
+        // TODO evaluate optimization
+        for (int i = 0; i < currentDependencies.size(); i++) {
+            JSONObject obj1 = currentDependencies.get(i);
+            JSONObject obj2 = lastScannedDependencies.get(i);
+            if (!obj1.similar(obj2)) {
                 return true;
             }
         }
+
         return false;
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
     public void buildInfo(@NotNull Map infoResult, @Nullable PsiElement element) {
-        if (checkIfLibrariesChanged(element)) {
-            System.out.println("Libraries of project changed");
-            getProjectLibraries(element.getProject());
-            getVulnerabilities();
+        if (hasDependenciesChanged(element)) {
+            LOG.info("Project dependencies have changed. Rescanning vulnerabilities.");
+            lastScannedDependencies = dependencyExtractor.extractProjectDependencies(element.getProject());
+            scanVulnerabilities();
         }
-        try {
-            if (element != null) {
-                // Retrieves preprocessed persistent values
-                var data = retrieveData(element.getProject().getWorkspaceFile());
-                infoResult.putAll(vulnerabilitiesMap);
-            }
-        } catch (RuntimeException ignored) {
+
+        if (element != null) {
+            // Retrieves preprocessed persistent values
+            Object data = retrieveData(element.getProject().getWorkspaceFile());
+            infoResult.putAll(vulnerabilitiesMap);
         }
+    }
+
+    @Nullable
+    public Object retrieveData(VirtualFile file) {
+        return persistedData.get(file);
     }
 }

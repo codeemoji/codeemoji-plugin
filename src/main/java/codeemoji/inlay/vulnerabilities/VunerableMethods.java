@@ -128,6 +128,7 @@ public class VunerableMethods extends CEProviderMulti<VulnerableMethodsSettings>
                 }
             }
         }
+
         return false;
     }
 
