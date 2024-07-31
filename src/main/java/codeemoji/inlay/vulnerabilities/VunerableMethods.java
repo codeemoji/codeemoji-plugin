@@ -5,6 +5,7 @@ import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
+import codeemoji.inlay.external.VulnerabilityInfo;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
@@ -51,40 +52,76 @@ public class VunerableMethods extends CEProviderMulti<VulnerableMethodsSettings>
                 new CEMethodCollector(editor, getKeyId() + ".low", VULNERABLE_LOW) {
                     @Override
                     public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_LOW, externalInfo, new HashSet<PsiMethod>(), false);
+                        if (externalInfo instanceof Map<?, ?> && allEntriesMatch(externalInfo)) {
+                            @SuppressWarnings("unchecked")
+                            Map<JSONObject, List<VulnerabilityInfo>> castedInfo = (Map<JSONObject, List<VulnerabilityInfo>>) externalInfo;
+                            return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_LOW, castedInfo, new HashSet<>(), false);
+                        }
+                        return false;
                     }
                 },
-                new CEReferenceMethodCollector(editor, getKeyId()  + ".low", VULNERABLE_LOW) {
+                new CEReferenceMethodCollector(editor, getKeyId() + ".low", VULNERABLE_LOW) {
                     @Override
                     public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_LOW, externalInfo, new HashSet<PsiMethod>(), true);
+                        if (externalInfo instanceof Map<?, ?> && allEntriesMatch(externalInfo)) {
+                            @SuppressWarnings("unchecked")
+                            Map<JSONObject, List<VulnerabilityInfo>> castedInfo = (Map<JSONObject, List<VulnerabilityInfo>>) externalInfo;
+                            return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_LOW, castedInfo, new HashSet<>(), true);
+                        }
+                        return false;
                     }
                 },
                 new CEMethodCollector(editor, getKeyId() + ".medium", VULNERABLE_MEDIUM) {
                     @Override
                     public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_MEDIUM, externalInfo, new HashSet<PsiMethod>(), false);
+                        if (externalInfo instanceof Map<?, ?> && allEntriesMatch(externalInfo)) {
+                            @SuppressWarnings("unchecked")
+                            Map<JSONObject, List<VulnerabilityInfo>> castedInfo = (Map<JSONObject, List<VulnerabilityInfo>>) externalInfo;
+                            return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_MEDIUM, castedInfo, new HashSet<>(), false);
+                        }
+                        return false;
                     }
                 },
-                new CEReferenceMethodCollector(editor, getKeyId()  + ".medium", VULNERABLE_MEDIUM) {
+                new CEReferenceMethodCollector(editor, getKeyId() + ".medium", VULNERABLE_MEDIUM) {
                     @Override
                     public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_MEDIUM, externalInfo, new HashSet<PsiMethod>(), true);
+                        if (externalInfo instanceof Map<?, ?> && allEntriesMatch(externalInfo)) {
+                            @SuppressWarnings("unchecked")
+                            Map<JSONObject, List<VulnerabilityInfo>> castedInfo = (Map<JSONObject, List<VulnerabilityInfo>>) externalInfo;
+                            return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_MEDIUM, castedInfo, new HashSet<>(), true);
+                        }
+                        return false;
                     }
                 },
                 new CEMethodCollector(editor, getKeyId() + ".high", VULNERABLE_HIGH) {
                     @Override
                     public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_HIGH, externalInfo, new HashSet<PsiMethod>(), false);
+                        if (externalInfo instanceof Map<?, ?> && allEntriesMatch(externalInfo)) {
+                            @SuppressWarnings("unchecked")
+                            Map<JSONObject, List<VulnerabilityInfo>> castedInfo = (Map<JSONObject, List<VulnerabilityInfo>>) externalInfo;
+                            return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_HIGH, castedInfo, new HashSet<>(), false);
+                        }
+                        return false;
                     }
                 },
-                new CEReferenceMethodCollector(editor, getKeyId()  + ".high", VULNERABLE_HIGH) {
+                new CEReferenceMethodCollector(editor, getKeyId() + ".high", VULNERABLE_HIGH) {
                     @Override
                     public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_HIGH, externalInfo, new HashSet<PsiMethod>(), true);
+                        if (externalInfo instanceof Map<?, ?> && allEntriesMatch(externalInfo)) {
+                            @SuppressWarnings("unchecked")
+                            Map<JSONObject, List<VulnerabilityInfo>> castedInfo = (Map<JSONObject, List<VulnerabilityInfo>>) externalInfo;
+                            return isExternalFunctionalityVulnerable(element, editor.getProject(), VULNERABLE_HIGH, castedInfo, new HashSet<>(), true);
+                        }
+                        return false;
                     }
-                }
+                });
+    }
 
+    private boolean allEntriesMatch(Map<?, ?> map) {
+        return map.entrySet().stream().allMatch(entry ->
+                entry.getKey() instanceof JSONObject &&
+                        entry.getValue() instanceof List &&
+                        ((List<?>) entry.getValue()).stream().allMatch(item -> item instanceof VulnerabilityInfo)
         );
     }
 
@@ -94,7 +131,8 @@ public class VunerableMethods extends CEProviderMulti<VulnerableMethodsSettings>
     }
 
 
-    public boolean isExternalFunctionalityVulnerable(PsiMethod method, Project project, CESymbol threshold, Map<?, ?> externalInfo, Set<PsiMethod> visitedMethods, boolean fromReferenceMethod) {
+    public boolean isExternalFunctionalityVulnerable(PsiMethod method, Project project, CESymbol threshold, Map<JSONObject,
+            List<VulnerabilityInfo>> externalInfo, Set<PsiMethod> visitedMethods, boolean fromReferenceMethod) {
         if(fromReferenceMethod && !checkMethodExternality(method, project)) {
             return false;
         }
@@ -132,27 +170,40 @@ public class VunerableMethods extends CEProviderMulti<VulnerableMethodsSettings>
         return false;
     }
 
-    public boolean checkVulnerability(PsiMethod method, Map<?, ?> externalInfo, CESymbol threshold) {
+    private boolean checkVulnerability(PsiMethod method, Map<JSONObject, List<VulnerabilityInfo>> externalInfo, CESymbol threshold) {
         VirtualFile virtualFile = method.getContainingFile().getVirtualFile();
         if (virtualFile == null) {
             return false;
         }
 
         String methodFilePathNormalized = normalizePath(virtualFile.getPath());
-        for (Object key : externalInfo.keySet()) {
-            if (key instanceof Library library) {
-                if (libraryContainsMethod(library, methodFilePathNormalized)) {
-                    Object value = externalInfo.get(key);
-                    if (value instanceof JSONObject jsonObject) {
-                        JSONArray vulnerabilities = jsonObject.getJSONArray("vulnerabilities");
-                        double maxCvssScore = getCvssScore(vulnerabilities);
-                        return isEnoughVulnerable(maxCvssScore, threshold);
-                    }
-                    return false;
-                }
+        for (Map.Entry<JSONObject, List<VulnerabilityInfo>> entry : externalInfo.entrySet()) {
+            JSONObject dependency = entry.getKey();
+            String dependencyName = dependency.getString("name"); // Assuming the JSONObject has a "name" field
+            if (methodFilePathNormalized.contains(dependencyName)) {
+                List<VulnerabilityInfo> vulnerabilities = entry.getValue();
+                double maxCvssScore = getMaxCvssScore(vulnerabilities);
+                return isEnoughVulnerable(maxCvssScore, threshold);
             }
         }
         return false;
+    }
+
+    private double getMaxCvssScore(List<VulnerabilityInfo> vulnerabilities) {
+        return vulnerabilities.stream()
+                .mapToDouble(this::getCvssScoreFromSeverity)
+                .max()
+                .orElse(Double.MIN_VALUE);
+    }
+
+    private double getCvssScoreFromSeverity(VulnerabilityInfo vulnerabilityInfo) {
+        return switch (vulnerabilityInfo.getSeverity().toUpperCase()) {
+            case "CRITICAL" -> 9.5;
+            case "HIGH" -> 8.0;
+            case "MEDIUM" -> 6.0;
+            case "LOW" -> 3.0;
+            default -> 0.0;
+        };
     }
 
     private boolean libraryContainsMethod(Library library, String methodFilePathNormalized) {

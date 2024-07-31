@@ -122,26 +122,19 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void buildInfo(@NotNull Map infoResult, @Nullable PsiElement element) {
-        if (element != null) {
+        if (element != null && element.getProject() != null) {
             List<JSONObject> currentDependencies = dependencyExtractor.extractProjectDependencies(element.getProject());
             List<JSONObject> newDependencies = getNewDependencies(currentDependencies);
 
-            Map<String, List<Map<String, String>>> vulnerabilityInfo = new HashMap<>();
-            for (Map.Entry<JSONObject, List<VulnerabilityInfo>> entry : vulnerabilityMap.entrySet()) {
-                String dependencyName = entry.getKey().getString("name");
-                List<Map<String, String>> vulnerabilities = entry.getValue().stream()
-                        .map(v -> Map.of(
-                                "CVE", v.getCve(),
-                                "Description", v.getDescription(),
-                                "Severity", v.getSeverity()
-                        ))
-                        .collect(Collectors.toList());
-                vulnerabilityInfo.put(dependencyName, vulnerabilities);
+            if (!newDependencies.isEmpty()) {
+                lastScannedDependencies = currentDependencies;
+                scanVulnerabilitiesInBatches(newDependencies);
             }
-
-            infoResult.put("vulnerabilities", vulnerabilityInfo);
-
         }
+        for (Map.Entry<JSONObject, List<VulnerabilityInfo>> entry : vulnerabilityMap.entrySet()) {
+            infoResult.put(entry.getKey(), entry.getValue());
+        }
+
     }
 
     private List<JSONObject> getNewDependencies(List<JSONObject> currentDependencies) {
