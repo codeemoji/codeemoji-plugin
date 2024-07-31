@@ -1,5 +1,7 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.tasks.RunIdeTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun properties(key: String) = project.findProperty(key).toString()
 
@@ -27,7 +29,11 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.1")
     implementation("org.openapitools:openapi-generator-maven-plugin:7.5.0")
     implementation("org.json:json:20240303")
+    implementation("org.owasp:dependency-check-core:8.4.2")
 }
+
+
+
 
 intellij {
     version.set(properties("platformVersion"))
@@ -56,11 +62,11 @@ tasks {
         targetCompatibility = "17"
     }
 
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "17"
     }
 
-    withType<org.jetbrains.intellij.tasks.RunIdeTask> {
+    withType<RunIdeTask> {
         this.maxHeapSize = "4g"
     }
 

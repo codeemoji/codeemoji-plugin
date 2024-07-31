@@ -4,6 +4,9 @@ import codeemoji.core.external.CEExternalService;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.libraries.LibraryTable;
+import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +41,54 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
         persistedData.put(project.getWorkspaceFile(), null);
         lastScannedDependencies = dependencyExtractor.extractProjectDependencies(project);
         scanVulnerabilitiesInBatches(lastScannedDependencies);
+        Library[] dependenciesOSS = getProjectLibraries(project);
+        scanVulnerabilitiesOSS(dependenciesOSS);
+    }
+
+    public void scanVulnerabilitiesOSS(Library[] librariesList) {
+        List<String> libraryCoordinates = new ArrayList<>();
+
+        for (Library lib : librariesList) {
+            try {
+                String library = dependencyExtractor.parseDependencyToString(lib);
+                libraryCoordinates.add("pkg:maven/" + library);
+            } catch (IllegalArgumentException e) {
+                System.err.println("Error processing library: " + lib.getName() + ". Error: " + e.getMessage());
+            }
+        }
+
+        CompletableFuture<JSONArray> future = vulnerabilityScanner.scanDependenciesAsyncOSS(libraryCoordinates);
+
+        future.thenAccept(this::processResults)
+                .exceptionally(this::handleError);
+    }
+
+    private void processResults(JSONArray results) {
+        for (int i = 0; i < results.length(); i++) {
+            JSONObject dependency = results.getJSONObject(i);
+            String coordinate = dependency.getString("coordinates");
+            JSONArray vulnerabilities = dependency.getJSONArray("vulnerabilities");
+
+            System.out.println("Dependency: " + coordinate);
+            System.out.println("Vulnerabilities found: " + vulnerabilities.length());
+
+            for (int j = 0; j < vulnerabilities.length(); j++) {
+                JSONObject vulnerability = vulnerabilities.getJSONObject(j);
+                System.out.println("  - " + vulnerability.getString("title"));
+            }
+        }
+    }
+
+    private Void handleError(Throwable throwable) {
+        System.err.println("Error occurred while scanning dependencies: " + throwable.getMessage());
+        throwable.printStackTrace();
+        return null;
+    }
+
+    public Library[] getProjectLibraries(Project project) {
+        LibraryTable librarytable = LibraryTablesRegistrar.getInstance().getLibraryTable(project);
+        Library[] librariesList = librarytable.getLibraries();
+        return librariesList;
     }
 
     private void scanVulnerabilitiesInBatches(List<JSONObject> dependencies) {

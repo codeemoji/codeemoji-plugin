@@ -6,8 +6,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.libraries.Library;
 import org.json.JSONObject;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +35,44 @@ public class DependencyExtractor {
             }
         }
         return dependencies;
+    }
+
+    public List<String> extractProjectDependenciesOWASP(Project project) {
+        List<String> dependencies = new ArrayList<>();
+        ModuleManager moduleManager = ModuleManager.getInstance(project);
+
+        for (Module module : moduleManager.getModules()) {
+            ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
+            for (OrderEntry entry : rootManager.getOrderEntries()) {
+                if (entry instanceof LibraryOrderEntry) {
+                    LibraryOrderEntry libraryEntry = (LibraryOrderEntry) entry;
+                    String[] urls = libraryEntry.getUrls(OrderRootType.CLASSES);
+                    for (String url : urls) {
+                        try {
+                            String path = extractPathFromUrl(url);
+                            if (path != null && (path.endsWith(".jar") || path.endsWith(".war"))) {
+                                dependencies.add(path);
+                            }
+                        } catch (URISyntaxException e) {
+                            // Log the error or handle it as appropriate for your application
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+        return dependencies;
+    }
+
+    private String extractPathFromUrl(String url) throws URISyntaxException {
+        if (url.startsWith("jar:")) {
+            url = url.substring(4);
+        }
+        if (url.endsWith("!/")) {
+            url = url.substring(0, url.length() - 2);
+        }
+        URI uri = new URI(url);
+        return uri.getPath();
     }
 
     private static void addIfNotExists(List<JSONObject> jsonList, JSONObject jsonObject) {
@@ -80,5 +122,25 @@ public class DependencyExtractor {
         dependencyObject.put("version", version);
 
         return dependencyObject;
+    }
+
+
+    public static String parseDependencyToString(Library library) {
+        String dependencyName = library.getName();
+        if (!dependencyName.startsWith("Gradle: ")) {
+            throw new IllegalArgumentException("Invalid format: not starting with Gradle");
+        }
+        // Removing "Gradle: "
+        String dependency = dependencyName.substring(8);
+
+        String[] parts = dependency.split(":");
+        if (parts.length != 3) {
+            throw new IllegalArgumentException("Invalid format: no groupId, artifactId or version");
+        }
+        String groupId = parts[0];
+        String artifactId = parts[1];
+        String version = parts[2];
+
+        return String.format("%s/%s@%s", groupId, artifactId, version);
     }
 }
