@@ -6,7 +6,7 @@ import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import codeemoji.inlay.external.VulnerabilityInfo;
-import codeemoji.inlay.external.VulnerabilityScanner;
+import codeemoji.inlay.external.NistVulnerabilityScanner;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
@@ -32,7 +32,7 @@ public class VulnerableMethods extends CEProviderMulti<NoSettings> {
 
     private static final Map<CESymbol, String> VULNERABILITY_THRESHOLDS = new HashMap<>();
 
-    private VulnerabilityScanner vulnerabilityScanner = new VulnerabilityScanner();
+    private NistVulnerabilityScanner nistVulnerabilityScanner = new NistVulnerabilityScanner("", "");
     static {
         VULNERABILITY_THRESHOLDS.put(VULNERABLE_LOW, "LOW");
         VULNERABILITY_THRESHOLDS.put(VULNERABLE_MEDIUM, "MEDIUM");
