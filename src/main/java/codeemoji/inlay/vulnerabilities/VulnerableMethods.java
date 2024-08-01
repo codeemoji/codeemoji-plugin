@@ -5,8 +5,9 @@ import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
-import codeemoji.inlay.external.VulnerabilityInfo;
+import codeemoji.inlay.external.DependencyInfo;
 import codeemoji.inlay.external.NistVulnerabilityScanner;
+import codeemoji.inlay.external.VulnerabilityInfo;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
@@ -20,7 +21,6 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONObject;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -162,8 +162,8 @@ public class VulnerableMethods extends CEProviderMulti<NoSettings> {
         VirtualFile file = method.getNavigationElement().getContainingFile().getVirtualFile();
         String path = normalizePath(file.getPath());
         for (Map.Entry<?, ?> entry : externalInfo.entrySet()) {
-            if (entry.getKey() instanceof JSONObject dependencyInfo) {
-                String name = dependencyInfo.optString("name");
+            if (entry.getKey() instanceof DependencyInfo dependencyInfo) {
+                String name = dependencyInfo.getName();
                 String[] nameParts = name.split("@");
                 String dependency = nameParts[0];
                 if (dependency.equals(path)) {

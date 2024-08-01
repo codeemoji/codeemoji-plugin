@@ -75,7 +75,7 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
         if (element != null && element.getProject() != null) {
             Library[] currentDependencies = getProjectLibraries(element.getProject());
 
-            if (Arrays.equals(scannedDependencies, currentDependencies)) {
+            if (!Arrays.equals(scannedDependencies, currentDependencies)) {
                 scannedDependencies = currentDependencies;
                 dependencyInfos = Arrays.stream(scannedDependencies)
                         .map(dep -> {
