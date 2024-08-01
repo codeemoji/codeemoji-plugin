@@ -36,14 +36,13 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
 
     private List<JSONObject> lastScannedDependencies;
     private DependencyInfo[] dependencyInfos;
+    private Library[] scannedDependencies;
 
     @Override
     public void preProcess(@NotNull Project project) {
         persistedData.put(project.getWorkspaceFile(), null);
-        // lastScannedDependencies = dependencyExtractor.extractProjectDependencies(project);
-        // scanVulnerabilitiesInBatches(lastScannedDependencies);
-        Library[] dependencies = getProjectLibraries(project);
-        dependencyInfos = Arrays.stream(dependencies)
+        scannedDependencies = getProjectLibraries(project);
+        dependencyInfos = Arrays.stream(scannedDependencies)
                 .map(dep -> {
                     try {
                         return dependencyExtractor.getDependecyInfo(dep);
@@ -65,80 +64,6 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
         return librariesList;
     }
 
-    /*private void scanVulnerabilitiesInBatches(List<JSONObject> dependencies) {
-        for (int i = 0; i < dependencies.size(); i += NIST_BATCH_SIZE) {
-            List<JSONObject> batch = dependencies.subList(i, Math.min(i + NIST_BATCH_SIZE, dependencies.size()));
-            scanVulnerabilities(batch);
-            if (i + NIST_BATCH_SIZE < dependencies.size()) {
-                try {
-                    Thread.sleep(30000); // Wait for 30 seconds before the next batch - NIST directives with API_KEY
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    LOG.error("Interrupted while waiting between batches", e);
-                }
-            }
-        }
-    }
-
-    private void scanVulnerabilities(List<JSONObject> dependencies) {
-        List<CompletableFuture<JSONObject>> futures = dependencies.stream()
-                .map(nistVulnerabilityScanner::scanDependencyAsyncNist)
-                .collect(Collectors.toList());
-
-        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-
-        for (int i = 0; i < dependencies.size(); i++) {
-            JSONObject lib = dependencies.get(i);
-            JSONObject vulnerabilityReport = futures.get(i).join();
-            try {
-                List<VulnerabilityInfo> vulnerabilities = parseVulnerabilities(vulnerabilityReport);
-                if (!vulnerabilities.isEmpty()) {
-                    vulnerabilityMap.put(lib, vulnerabilities);
-                }
-            } catch (Exception e) {
-                LOG.error("Error processing vulnerability report", e);
-            }
-        }
-    }
-
-    private List<VulnerabilityInfo> parseVulnerabilities(JSONObject vulnerabilityReport) {
-        List<VulnerabilityInfo> vulnerabilities = new ArrayList<>();
-        JSONArray vulnerabilitiesArray = vulnerabilityReport.getJSONArray("vulnerabilities");
-
-        for (int i = 0; i < vulnerabilitiesArray.length(); i++) {
-            JSONObject vuln = vulnerabilitiesArray.getJSONObject(i);
-            JSONObject cveInfo = vuln.getJSONObject("cve");
-
-            String cve = cveInfo.getString("id");
-
-            String description = "";
-            JSONArray descriptions = cveInfo.getJSONArray("descriptions");
-            for (int j = 0; j < descriptions.length(); j++) {
-                JSONObject desc = descriptions.getJSONObject(j);
-                if (desc.getString("lang").equals("en")) {
-                    description = desc.getString("value");
-                    break;
-                }
-            }
-
-            String severity = "UNKNOWN";
-            if (cveInfo.has("metrics")) {
-                JSONObject metrics = cveInfo.getJSONObject("metrics");
-                if (metrics.has("cvssMetricV31")) {
-                    JSONArray cvssV31 = metrics.getJSONArray("cvssMetricV31");
-                    if (cvssV31.length() > 0) {
-                        JSONObject cvssData = cvssV31.getJSONObject(0).getJSONObject("cvssData");
-                        severity = cvssData.getString("baseSeverity");
-                    }
-                }
-            }
-
-            vulnerabilities.add(new VulnerabilityInfo(cve, description, severity));
-        }
-
-        return vulnerabilities;
-    }*/
-
     @Override
     public Map<VirtualFile, Object> getPersistedData() {
         return persistedData;
@@ -148,17 +73,27 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
     @Override
     public void buildInfo(@NotNull Map infoResult, @Nullable PsiElement element) {
         if (element != null && element.getProject() != null) {
-            List<JSONObject> currentDependencies = dependencyExtractor.extractProjectDependencies(element.getProject());
-            List<JSONObject> newDependencies = getNewDependencies(currentDependencies);
+            Library[] currentDependencies = getProjectLibraries(element.getProject());
 
-            /*if (!newDependencies.isEmpty()) {
-                lastScannedDependencies = currentDependencies;
-                scanVulnerabilitiesInBatches(newDependencies);
-            }*/
+            if (Arrays.equals(scannedDependencies, currentDependencies)) {
+                scannedDependencies = currentDependencies;
+                dependencyInfos = Arrays.stream(scannedDependencies)
+                        .map(dep -> {
+                            try {
+                                return dependencyExtractor.getDependecyInfo(dep);
+                            } catch (IllegalArgumentException e) {
+                                System.err.println("Error processing dependency: " + dep.getName() + ". Error: " + e.getMessage());
+                                return null;
+                            }
+                        })
+                        .filter(Objects::nonNull)
+                        .toArray(DependencyInfo[]::new);
+                vulnerabilityMap = ossVulnerabilityScanner.scanVulnerability(dependencyInfos);
+            }
         }
-        /*for (Map.Entry<JSONObject, List<VulnerabilityInfo>> entry : vulnerabilityMap.entrySet()) {
+        for (Map.Entry<DependencyInfo, List<VulnerabilityInfo>> entry : vulnerabilityMap.entrySet()) {
             infoResult.put(entry.getKey(), entry.getValue());
-        }*/
+        }
 
     }
 
