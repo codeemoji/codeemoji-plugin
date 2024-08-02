@@ -20,18 +20,21 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
 
     // TODO remove hard-coded variables
     private static final String OSS_INDEX_API_URL = "https://ossindex.sonatype.org/api/v3/component-report";
+    private static final String OSS_API_TOKEN = "d8b039a32f7113c9d23e5baa798322a1e92c2202";
+    private static final int OSS_BATCH_SIZE = 128;
     private static final String NIST_NVD_API_URL = "https://services.nvd.nist.gov/rest/json/cves/2.0";
     private static final String NIST_API_TOKEN = "624e5c6d-6f7d-4c3e-b7ad-7352e2958ef6";
-    private static final String OSS_API_TOKEN = "d8b039a32f7113c9d23e5baa798322a1e92c2202";
     private static final int NIST_BATCH_SIZE = 50;
+
+
 
     private static final Logger LOG = Logger.getInstance(MyExternalService.class);
 
     private final Map<VirtualFile, Object> persistedData = new HashMap<>();
     private Map<DependencyInfo, List<VulnerabilityInfo>> vulnerabilityMap = new HashMap<>();
     private final DependencyExtractor dependencyExtractor = new DependencyExtractor();
-    private final NistVulnerabilityScanner nistVulnerabilityScanner = new NistVulnerabilityScanner(NIST_NVD_API_URL, NIST_API_TOKEN);
-    private final OSSVulnerabilityScanner ossVulnerabilityScanner = new OSSVulnerabilityScanner(OSS_INDEX_API_URL, OSS_API_TOKEN);
+    private final NistVulnerabilityScanner nistVulnerabilityScanner = new NistVulnerabilityScanner(NIST_NVD_API_URL, NIST_API_TOKEN, NIST_BATCH_SIZE);
+    private final OSSVulnerabilityScanner ossVulnerabilityScanner = new OSSVulnerabilityScanner(OSS_INDEX_API_URL, OSS_API_TOKEN, OSS_BATCH_SIZE);
 
     private List<JSONObject> lastScannedDependencies;
     private DependencyInfo[] dependencyInfos;
