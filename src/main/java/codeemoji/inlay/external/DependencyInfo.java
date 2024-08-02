@@ -1,5 +1,7 @@
 package codeemoji.inlay.external;
 
+import java.util.Objects;
+
 public class DependencyInfo {
     private String name;
     private String groupId;
@@ -21,5 +23,23 @@ public class DependencyInfo {
     public String getArtifactId() { return artifactId; }
     public String getVersion() { return version; }
     public String getPath() { return path; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DependencyInfo that = (DependencyInfo) o;
+        return Objects.equals(name, that.name) &&
+                Objects.equals(groupId, that.groupId) &&
+                Objects.equals(artifactId, that.artifactId) &&
+                Objects.equals(version, that.version) &&
+                Objects.equals(path, that.path);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, groupId, artifactId, version, path);
+    }
+
 
 }
