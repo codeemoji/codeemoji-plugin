@@ -2,7 +2,6 @@ package codeemoji.inlay.external;
 
 import codeemoji.core.external.CEExternalService;
 import com.intellij.openapi.components.Service;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
@@ -11,7 +10,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONObject;
 
 import java.util.*;
 
@@ -26,25 +24,25 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
     private static final String NIST_API_TOKEN = "624e5c6d-6f7d-4c3e-b7ad-7352e2958ef6";
     private static final int NIST_BATCH_SIZE = 50;
 
-
-
-    private static final Logger LOG = Logger.getInstance(MyExternalService.class);
-
     private final Map<VirtualFile, Object> persistedData = new HashMap<>();
     private Map<DependencyInfo, List<VulnerabilityInfo>> vulnerabilityMap = new HashMap<>();
     private final DependencyExtractor dependencyExtractor = new DependencyExtractor();
     private final NistVulnerabilityScanner nistVulnerabilityScanner = new NistVulnerabilityScanner(NIST_NVD_API_URL, NIST_API_TOKEN, NIST_BATCH_SIZE);
     private final OSSVulnerabilityScanner ossVulnerabilityScanner = new OSSVulnerabilityScanner(OSS_INDEX_API_URL, OSS_API_TOKEN, OSS_BATCH_SIZE);
 
-    private List<JSONObject> lastScannedDependencies;
     private DependencyInfo[] dependencyInfos;
-    private Library[] scannedDependencies;
 
     @Override
     public void preProcess(@NotNull Project project) {
         persistedData.put(project.getWorkspaceFile(), null);
-        scannedDependencies = getProjectLibraries(project);
-        dependencyInfos = Arrays.stream(scannedDependencies)
+        dependencyInfos =  getProjectLibraries(project);
+        vulnerabilityMap = ossVulnerabilityScanner.scanVulnerability(dependencyInfos);
+    }
+
+    public DependencyInfo[] getProjectLibraries(Project project) {
+        LibraryTable librarytable = LibraryTablesRegistrar.getInstance().getLibraryTable(project);
+        Library[] librariesList = librarytable.getLibraries();
+        return Arrays.stream(librariesList)
                 .map(dep -> {
                     try {
                         return dependencyExtractor.getDependecyInfo(dep);
@@ -55,15 +53,6 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
                 })
                 .filter(Objects::nonNull)
                 .toArray(DependencyInfo[]::new);
-        vulnerabilityMap = ossVulnerabilityScanner.scanVulnerability(dependencyInfos);
-    }
-
-
-
-    public Library[] getProjectLibraries(Project project) {
-        LibraryTable librarytable = LibraryTablesRegistrar.getInstance().getLibraryTable(project);
-        Library[] librariesList = librarytable.getLibraries();
-        return librariesList;
     }
 
     @Override
@@ -75,21 +64,10 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
     @Override
     public void buildInfo(@NotNull Map infoResult, @Nullable PsiElement element) {
         if (element != null && element.getProject() != null) {
-            Library[] currentDependencies = getProjectLibraries(element.getProject());
+            DependencyInfo[] currentDependencies = getProjectLibraries(element.getProject());
 
-            if (!Arrays.equals(scannedDependencies, currentDependencies)) {
-                scannedDependencies = currentDependencies;
-                dependencyInfos = Arrays.stream(scannedDependencies)
-                        .map(dep -> {
-                            try {
-                                return dependencyExtractor.getDependecyInfo(dep);
-                            } catch (IllegalArgumentException e) {
-                                System.err.println("Error processing dependency: " + dep.getName() + ". Error: " + e.getMessage());
-                                return null;
-                            }
-                        })
-                        .filter(Objects::nonNull)
-                        .toArray(DependencyInfo[]::new);
+            if (!Arrays.equals(dependencyInfos, currentDependencies)) {
+                dependencyInfos = currentDependencies;
                 vulnerabilityMap = ossVulnerabilityScanner.scanVulnerability(dependencyInfos);
             }
         }
