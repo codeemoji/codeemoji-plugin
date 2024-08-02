@@ -163,7 +163,7 @@ public class VulnerableMethods extends CEProviderMulti<NoSettings> {
         String path = normalizePath(file.getPath());
         for (Map.Entry<?, ?> entry : externalInfo.entrySet()) {
             if (entry.getKey() instanceof DependencyInfo dependencyInfo) {
-                String name = dependencyInfo.getName();
+                String name = dependencyInfo.getPath();
                 String[] nameParts = name.split("@");
                 String dependency = nameParts[0];
                 if (dependency.equals(path)) {

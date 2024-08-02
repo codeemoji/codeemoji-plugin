@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public final class MyExternalService implements CEExternalService<VirtualFile, Object> {
@@ -95,12 +94,6 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
             infoResult.put(entry.getKey(), entry.getValue());
         }
 
-    }
-
-    private List<JSONObject> getNewDependencies(List<JSONObject> currentDependencies) {
-        return currentDependencies.stream()
-                .filter(dep -> !lastScannedDependencies.stream().anyMatch(lastDep -> lastDep.similar(dep)))
-                .collect(Collectors.toList());
     }
 
     @Nullable
