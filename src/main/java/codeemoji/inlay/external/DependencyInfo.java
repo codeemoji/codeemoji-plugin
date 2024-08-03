@@ -3,14 +3,12 @@ package codeemoji.inlay.external;
 import java.util.Objects;
 
 public class DependencyInfo {
-    private String name;
     private String groupId;
     private String artifactId;
     private String version;
     private String path;
 
-    public DependencyInfo(String name, String groupId, String artifactId, String version, String path) {
-        this.name = name;
+    public DependencyInfo(String groupId, String artifactId, String version, String path) {
         this.groupId = groupId;
         this.artifactId = artifactId;
         this.version = version;
@@ -18,7 +16,6 @@ public class DependencyInfo {
     }
 
     // Getters
-    public String getName() { return name; }
     public String getGroupId() { return groupId; }
     public String getArtifactId() { return artifactId; }
     public String getVersion() { return version; }
@@ -29,16 +26,15 @@ public class DependencyInfo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DependencyInfo that = (DependencyInfo) o;
-        return Objects.equals(name, that.name) &&
-                Objects.equals(groupId, that.groupId) &&
-                Objects.equals(artifactId, that.artifactId) &&
-                Objects.equals(version, that.version) &&
-                Objects.equals(path, that.path);
+        return Objects.equals(groupId, that.groupId) &&
+                    Objects.equals(artifactId, that.artifactId) &&
+                    Objects.equals(version, that.version) &&
+                    Objects.equals(path, that.path);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, groupId, artifactId, version, path);
+        return Objects.hash(groupId, artifactId, version, path);
     }
 
 
