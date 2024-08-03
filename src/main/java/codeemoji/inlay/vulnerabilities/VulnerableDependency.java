@@ -49,57 +49,34 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
     @Override
     protected List<InlayHintsCollector> buildCollectors(Editor editor) {
-        return List.of(
-                new CEMethodCollector(editor, getKeyId() + ".low", VULNERABLE_LOW) {
-                    @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isInvokingMethodVulnerable(element, editor.getProject(), false, externalInfo, VULNERABLE_LOW);
-                    }
-                },
-                new CEReferenceMethodCollector(editor, getKeyId() + ".low", VULNERABLE_LOW) {
-                    @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isInvokingMethodVulnerable(element, editor.getProject(), true, externalInfo, VULNERABLE_LOW);
-                    }
-                },
-                new CEMethodCollector(editor, getKeyId() + ".medium", VULNERABLE_MEDIUM) {
-                    @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isInvokingMethodVulnerable(element, editor.getProject(), false, externalInfo, VULNERABLE_MEDIUM);
-                    }
-                },
-                new CEReferenceMethodCollector(editor, getKeyId() + ".medium", VULNERABLE_MEDIUM) {
-                    @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isInvokingMethodVulnerable(element, editor.getProject(), true, externalInfo, VULNERABLE_MEDIUM);
-                    }
-                },
-                new CEMethodCollector(editor, getKeyId() + ".high", VULNERABLE_HIGH) {
-                    @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isInvokingMethodVulnerable(element, editor.getProject(), false, externalInfo, VULNERABLE_HIGH);
-                    }
-                },
-                new CEReferenceMethodCollector(editor, getKeyId() + ".high", VULNERABLE_HIGH) {
-                    @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isInvokingMethodVulnerable(element, editor.getProject(), true, externalInfo, VULNERABLE_HIGH);
-                    }
-                },
-                new CEMethodCollector(editor, getKeyId() + ".critical", VULNERABLE_CRITICAL) {
-                    @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isInvokingMethodVulnerable(element, editor.getProject(), false, externalInfo, VULNERABLE_CRITICAL);
-                    }
-                },
-                new CEReferenceMethodCollector(editor, getKeyId() + ".critical", VULNERABLE_CRITICAL) {
-                    @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isInvokingMethodVulnerable(element, editor.getProject(), true, externalInfo, VULNERABLE_CRITICAL);
-                    }
-                }
-
+        return Arrays.asList(
+                createCollector(editor, ".low", VULNERABLE_LOW),
+                createReferenceCollector(editor, ".low", VULNERABLE_LOW),
+                createCollector(editor, ".medium", VULNERABLE_MEDIUM),
+                createReferenceCollector(editor, ".medium", VULNERABLE_MEDIUM),
+                createCollector(editor, ".high", VULNERABLE_HIGH),
+                createReferenceCollector(editor, ".high", VULNERABLE_HIGH),
+                createCollector(editor, ".critical", VULNERABLE_CRITICAL),
+                createReferenceCollector(editor, ".critical", VULNERABLE_CRITICAL)
         );
+    }
+
+    private InlayHintsCollector createCollector(Editor editor, String suffix, CESymbol symbol) {
+        return new CEMethodCollector(editor, getKeyId() + suffix, symbol) {
+            @Override
+            protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                return isInvokingMethodVulnerable(element, editor.getProject(), externalInfo, symbol);
+            }
+        };
+    }
+
+    private InlayHintsCollector createReferenceCollector(Editor editor, String suffix, CESymbol symbol) {
+        return new CEReferenceMethodCollector(editor, getKeyId() + suffix, symbol) {
+            @Override
+            protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                return isInvokingMethodVulnerable(element, editor.getProject(), externalInfo, symbol);
+            }
+        };
     }
 
     @Override
@@ -107,11 +84,11 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         return new VulnerableDependencyConfigurable(settings);
     }
 
-    public boolean isInvokingMethodVulnerable(PsiMethod method, Project project, boolean fromReferenceMethod, Map<?, ?> externalInfo, CESymbol threshold) {
-        return isInvokingMethodVulnerable(method, project, fromReferenceMethod, externalInfo, new HashSet<>(), threshold);
+    public boolean isInvokingMethodVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo, CESymbol threshold) {
+        return isInvokingMethodVulnerable(method, project, externalInfo, threshold, new HashSet<>());
     }
 
-    private boolean isInvokingMethodVulnerable(PsiMethod method, Project project, boolean fromReferenceMethod, Map<?, ?> externalInfo, Set<PsiMethod> visitedMethods, CESymbol threshold) {
+    private boolean isInvokingMethodVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo, CESymbol threshold, Set<PsiMethod> visitedMethods) {
         if (visitedMethods.contains(method)) {
             return false; // We've already checked this method, so return false to avoid infinite recursion
         }
@@ -131,7 +108,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
             if (getSettings().isCheckVulnerableDependecyApplied()){
                 return Arrays.stream(externalFunctionalityInvokingMethods)
                         .filter(externalFunctionalityInvokingMethod -> !isVulnerable(externalFunctionalityInvokingMethod, project, externalInfo, threshold))
-                        .anyMatch(externalFunctionalityInvokingMethod -> isInvokingMethodVulnerable(externalFunctionalityInvokingMethod, project, fromReferenceMethod, externalInfo, visitedMethods, threshold));
+                        .anyMatch(externalFunctionalityInvokingMethod -> isInvokingMethodVulnerable(externalFunctionalityInvokingMethod, project, externalInfo, threshold, visitedMethods));
             }
 
             else{
