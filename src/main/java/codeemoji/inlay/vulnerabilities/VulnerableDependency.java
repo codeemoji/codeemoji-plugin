@@ -4,6 +4,7 @@ import codeemoji.core.collector.simple.CEMethodCollector;
 import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.util.CESymbol;
+import codeemoji.core.util.CEUtils;
 import codeemoji.inlay.external.DependencyInfo;
 import codeemoji.inlay.external.VulnerabilityInfo;
 import codeemoji.inlay.structuralanalysis.element.method.ExternalFunctionalityInvokingMethod;
@@ -11,15 +12,17 @@ import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -105,24 +108,70 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
     }
 
     public boolean isInvokingMethodVulnerable(PsiMethod method, Project project, boolean fromReferenceMethod, Map<?, ?> externalInfo, CESymbol threshold) {
-        return externalFunctionalityChecker.isExternalFunctionalityInvokingMethod(
-                method,
-                project,
-                fromReferenceMethod,
-                calledMethod -> isVulnerable(calledMethod, externalInfo, threshold)
+        return isInvokingMethodVulnerable(method, project, fromReferenceMethod, externalInfo, new HashSet<>(), threshold);
+    }
+
+    private boolean isInvokingMethodVulnerable(PsiMethod method, Project project, boolean fromReferenceMethod, Map<?, ?> externalInfo, Set<PsiMethod> visitedMethods, CESymbol threshold) {
+        if (visitedMethods.contains(method)) {
+            return false; // We've already checked this method, avoid recursion
+        }
+        visitedMethods.add(method);
+
+        if (fromReferenceMethod && !checkMethodExternality(method, project)) {
+            return false;
+        }
+
+        PsiElement[] externalFunctionalityInvokingElements = PsiTreeUtil.collectElements(
+                method.getNavigationElement(),
+                element -> element instanceof PsiMethodCallExpression methodCallExpression &&
+                        methodCallExpression.resolveMethod() != null &&
+                        !method.isEquivalentTo(methodCallExpression.resolveMethod())
         );
+
+        for (PsiElement element : externalFunctionalityInvokingElements) {
+            PsiMethod calledMethod = ((PsiMethodCallExpression) element).resolveMethod();
+            if (calledMethod != null && checkMethodExternality(calledMethod, project)) {
+                if (isVulnerable(calledMethod, externalInfo, threshold)) {
+                    return true;
+                }
+            }
+        }
+        if (getSettings().isCheckVulnerableDependecyApplied()) {
+            for (PsiElement element : externalFunctionalityInvokingElements) {
+                PsiMethod calledMethod = ((PsiMethodCallExpression) element).resolveMethod();
+                if (calledMethod != null && !checkMethodExternality(calledMethod, project)) {
+                    if (isInvokingMethodVulnerable(calledMethod, project, fromReferenceMethod, externalInfo, visitedMethods, threshold)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean checkMethodExternality(PsiMethod method, Project project) {
+        return method.getContainingFile() instanceof PsiJavaFile javaFile &&
+                method.getContainingClass() != null &&
+                javaFile.getPackageStatement() != null &&
+                !javaFile.getPackageName().startsWith("java") &&
+                !CEUtils.getSourceRootsInProject(project).contains(
+                        ProjectFileIndex.getInstance(method.getProject()).getSourceRootForFile(
+                                method.getNavigationElement().getContainingFile().getVirtualFile()
+                        )
+                );
     }
 
     private boolean isVulnerable(PsiMethod method, Map<?, ?> externalInfo, CESymbol threshold) {
-        VirtualFile file = method.getNavigationElement().getContainingFile().getVirtualFile();
-        String depPath = normalizePath(file.getPath());
 
+        VirtualFile file = method.getNavigationElement().getContainingFile().getVirtualFile();
+        String path = normalizePath(file.getPath());
         for (Map.Entry<?, ?> entry : externalInfo.entrySet()) {
             if (entry.getKey() instanceof DependencyInfo dependencyInfo) {
-                String vulnPath = dependencyInfo.getPath();
-                String[] nameParts = vulnPath.split("@");
+                String name = dependencyInfo.getPath();
+                String[] nameParts = name.split("@");
                 String dependency = nameParts[0];
-                if (dependency.equals(depPath)) {
+                if (dependency.equals(path)) {
                     String thresholdString = VULNERABILITY_THRESHOLDS.get(threshold);
                     ArrayList<VulnerabilityInfo> cveList = (ArrayList<VulnerabilityInfo>) entry.getValue();
                     String maxSeverity = getMaxSeverity(cveList);
@@ -130,6 +179,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
                 }
             }
         }
+
         return false;
     }
 

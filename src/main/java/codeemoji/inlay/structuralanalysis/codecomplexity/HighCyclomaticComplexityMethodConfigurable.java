@@ -11,16 +11,34 @@ import javax.swing.*;
 record HighCyclomaticComplexityMethodConfigurable(HighCyclomaticComplexityMethodSettings settings) implements ImmediateConfigurable {
     @Override
     public @NotNull JComponent createComponent(@NotNull ChangeListener changeListener) {
-        var jSpinner = new JSpinner(new SpinnerNumberModel(0.00,0.00 ,10.00,0.01));
-        var editor = new JSpinner.NumberEditor(jSpinner) ;
-        jSpinner.setEditor(editor);
-        jSpinner.setValue(settings().getCyclomaticComplexity());
-        jSpinner.addChangeListener(event -> {
-            settings().setCyclomaticComplexity((double) jSpinner.getValue());
+
+        var jSpinnerCyclomaticComplexityThreshold = new JSpinner();
+        jSpinnerCyclomaticComplexityThreshold.setValue(settings().getCyclomaticComplexityThreshold());
+        jSpinnerCyclomaticComplexityThreshold.addChangeListener(event -> {
+            settings().setCyclomaticComplexityThreshold((Integer) jSpinnerCyclomaticComplexityThreshold.getValue());
             changeListener.settingsChanged();
         });
+
+        var jSpinnerLineCountStartThreshold = new JSpinner();
+        jSpinnerLineCountStartThreshold.setValue(settings().getLineCountStartThreshold());
+        jSpinnerLineCountStartThreshold.addChangeListener(event -> {
+            settings().setLineCountStartThreshold((Integer) jSpinnerLineCountStartThreshold.getValue());
+            changeListener.settingsChanged();
+        });
+
+        var jSpinnerCyclomaticComplexityPerLine = new JSpinner(new SpinnerNumberModel(0.00,0.00 ,10.00,0.01));
+        var editor = new JSpinner.NumberEditor(jSpinnerCyclomaticComplexityPerLine) ;
+        jSpinnerCyclomaticComplexityPerLine.setEditor(editor);
+        jSpinnerCyclomaticComplexityPerLine.setValue(settings().getCyclomaticComplexityPerLine());
+        jSpinnerCyclomaticComplexityPerLine.addChangeListener(event -> {
+            settings().setCyclomaticComplexityPerLine((double) jSpinnerCyclomaticComplexityPerLine.getValue());
+            changeListener.settingsChanged();
+        });
+
         return FormBuilder.createFormBuilder()
-                .addLabeledComponent("Cyclomatic Complexity / Lines of Code", jSpinner)
+                .addLabeledComponent("Cyclomatic Complexity Threshold", jSpinnerCyclomaticComplexityThreshold)
+                .addLabeledComponent("Line Count Threshold", jSpinnerLineCountStartThreshold)
+                .addLabeledComponent("Cyclomatic Complexity / Lines of Code", jSpinnerCyclomaticComplexityPerLine)
                 .getPanel();
     }
 }

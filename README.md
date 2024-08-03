@@ -17,6 +17,8 @@ annotations for the JakartaEE and Spring frameworks.
 
 <!-- DESCRIPTION HEADER END -->
 
+https://github.com/codeemoji/codeemoji-plugin/assets/7922567/b551c5e5-9b9a-490c-9538-c0cf818b49ee
+
 <!-- TOC -->
 
 * [Setup and Use](#setup-and-use)
@@ -28,7 +30,7 @@ annotations for the JakartaEE and Spring frameworks.
 * [Cases of Naming Violation](#cases-of-naming-violation)
     * [Short Descriptive Name](#short-descriptive-name)
     * [Getter More Than Accessor](#getter-more-than-accessor)
-    * [_Is_ Returns More Than a Boolean](#is-returns-more-than-a-boolean)
+    * [_Is_ Returns More Than a Boolean](#_is_-returns-more-than-a-boolean)
     * [Setter Method Returns](#setter-method-returns)
     * [Expecting But Not Getting a Single Instance](#expecting-but-not-getting-a-single-instance)
     * [Validation Method Does Not Confirm](#validation-method-does-not-confirm)
@@ -55,6 +57,7 @@ annotations for the JakartaEE and Spring frameworks.
         * [Pure Setter Method](#pure-setter-method)
         * [State Changing Method](#state-changing-method)
         * [State Independent Method](#state-independent-method)
+* [External Services API](#external-services-api)
 * [How to Extend](#how-to-extend)
     * [Providers](#providers)
     * [Collectors](#collectors)
@@ -338,8 +341,9 @@ linearly independent paths with respect to the number of lines in it.
 The algorithm for calculating the metric is adapted from the specification defined by
 Watson and McCabe ("Structured Testing: A Testing Methodology Using the Cyclomatic Complexity Metric", 1996).
 Starting from a value _S := 1_, the code elements present in the method are analyzed to match keywords that create a
-decision point, therefore, triggering the addition of a new path, which entails increasing _S_ by a factor of 1.
-The keywords and operators considered in such analysis avoid inspecting single multi-way branch statements
+decision point, therefore, triggering the addition of a new path, which, in turn, entails increasing _S_ by a factor of
+1.
+The keywords and operators considered in such analysis do not allow the inspection single multi-way branch statements
 (eg. if a switch statement is recognized, only add 1 to S for each case label); they are the following:
 
 - "&&" and "||"
@@ -348,8 +352,12 @@ The keywords and operators considered in such analysis avoid inspecting single m
 - "for" and "while"
 - "try"
 
-The default value for the metric is set to  _0.36 Cyclomatic Complexity / Lines of Code_, which corresponds to the
+The default value for this metric is set to  _0.36 Cyclomatic Complexity / Lines of Code_, which corresponds to the
 statistical threshold cited by Lanza and Marinescu ("Object-Oriented Metrics in Practice", 2006).
+
+Notice that the calculation is triggered once the method exceeds the thresholds for the cyclomatic complexity and the
+line count, which are both set to 1 by default. The line count does not include any superfluous lines
+covered by comments.
 
 <table>
 <thead>
@@ -369,15 +377,17 @@ statistical threshold cited by Lanza and Marinescu ("Object-Oriented Metrics in 
 </tbody>
 </table>
 
-| **_Configuration_**                                                                                                                                                              |
-|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ![High Cyclomatic Complexity Method - Configuration](docs/screenshots/highcyclomaticcomplexitymethod.png)                                                                        |
-| *Set a custom threshold by opening the settings/preferences and navigating to: **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; High Cyclomatic Complexity Method**.* |
+| **_Configuration_**                                                                                                                                                             |
+|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![High Cyclomatic Complexity Method - Configuration](docs/screenshots/highcyclomaticcomplexitymethod.png)                                                                       |
+| ![High Cyclomatic Complexity Method - Configuration](docs/screenshots/highcyclomaticcomplexitymethod1.png)                                                                      |
+| ![High Cyclomatic Complexity Method - Configuration](docs/screenshots/highcyclomaticcomplexitymethod2.png)                                                                      |
+| *Set custom thresholds by opening the settings/preferences and navigating to: **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; High Cyclomatic Complexity Method**.* |
 
-| **_Example_**                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ![High Cyclomatic Complexity Method - Example](docs/screenshots/highcyclomaticcomplexitymethodsample.png)                                                                                                                                                                                                                                                                                                                                             |
-| *The method shown above has a **cyclomatic complexity of 15**. Such number is obtained by summing the amount of the matching keywords and operations from sections 0 trough 5. The method also spans over **41 lines of code**. The rounded up ratio between these two numbers equals to **0.37 cyclomatic complexity / lines of code**. The plugin displays the inlay hint if the threshold is set to a value smaller than or equal to such amount.* |
+| **_Example_**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![High Cyclomatic Complexity Method - Example](docs/screenshots/highcyclomaticcomplexitymethodsample.png)                                                                                                                                                                                                                                                                                                                                                                                                        |
+| *The method shown above has a **cyclomatic complexity of 15**. Such number is obtained by summing the amount of the matching keywords and operations from sections 0 trough 5. The method also spans over **34 lines of code (excluding those covered by comments)**, from line 6 to line 44. The rounded ratio between these two numbers equals to **0.44 cyclomatic complexity / lines of code**. The plugin displays the inlay hint if the threshold is set to a value smaller than or equal to such amount.* |
 
 ### Large Identifier Count Method
 
@@ -385,7 +395,7 @@ A code complexity metric that indicates whether a method contains a "very high" 
 configurable threshold.
 
 An identifier indicates a lexical token that associates a symbolic name to a Java syntax entity. For instance, some of
-the entities an identifier might denote include: variables, data types, classes or methods
+the entities an identifier might denote include: variables, data types, classes or methods.
 
 The default value is set to <em>70 Identifiers / Method</em>.
 
@@ -425,6 +435,9 @@ configurable threshold.
 The default value is set to _20 Lines of Code / Method_, which corresponds to the rounded up statistical
 threshold of _19.5 Lines of Code / Method_ cited by Lanza and Marinescu ("Object-Oriented Metrics in Practice", 2006).
 
+Notice that the default calculation also includes any lines covered by comments; the additional padding created by them
+can be excluded in the configuration.
+
 <table>
 <thead>
   <tr>
@@ -443,15 +456,16 @@ threshold of _19.5 Lines of Code / Method_ cited by Lanza and Marinescu ("Object
 </tbody>
 </table>
 
-| _*Configuration*_                                                                                                                                                     |
-|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ![Large Line Count Method - Configuration](docs/screenshots/largelinecountmethod.png)                                                                                 |
-| *Set a custom threshold by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Large Line Count Method**.* |
+| _*Configuration*_                                                                                                                                                                                                                       |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ![Large Line Count Method - Configuration](docs/screenshots/largelinecountmethod.png)                                                                                                                                                   |
+| ![Large Line Count Method - Configuration](docs/screenshots/largelinecountmethod1.png)                                                                                                                                                  |
+| *Choose whether comments should be included in the calculation and set a custom threshold by opening the settings/preferences and navigating to **Editor &rarr; Inlay Hints &rarr; Other &rarr; Java &rarr; Large Line Count Method**.* |
 
 | _*Example*_                                                                                                                                                           |
 |:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | ![Large Line Count Method - Example](docs/screenshots/largelinecountmethodsample.png)                                                                                 |
-| *The method shown above spans over **40 lines of code**. The plugin displays the inlay hint if the threshold is set to a value smaller than or equal to such amount.* |
+| *The method shown above spans over **38 lines of code**. The plugin displays the inlay hint if the threshold is set to a value smaller than or equal to such amount.* |
 
 ### Large Method Count Class
 
@@ -492,13 +506,14 @@ Lanza and Marinescu ("Object-Oriented Metrics in Practice", 2006).
 ## Methods
 
 Aside from recognizing state-independent and state-changing methods, the structural analysis of methods also foresees
-the detection of purely defined getters and setters and the identification of calls to external functionality.
+the detection of purely defined getters and setters as well as the identification of calls to external functionality.
 
 ### External Functionality Invoking Method
 
-A method invoking external functionality contains calls to methods defined outside the project currently opened in the
-editor. Additionally, any method originating from a class belonging to a Java core library (inside a "java.*"
-package) is excluded from the analysis.
+A method invoking external functionality contains calls to methods defined outside the source roots of the project
+currently opened in the editor (see [IntelliJ "content roots"](https://www.jetbrains.com/help/idea/content-roots.html)).
+Additionally, any method originating from a class or interface belonging to a Java core library
+(inside a "java.*" package) is excluded from the analysis.
 
 Note that each method call can be followed recursively until its original caller is reached. If _any_ method on the
 invocation path to the root invoker matches the criteria specified above, the method being currently analyzed is marked
@@ -628,7 +643,8 @@ settings menu.
 A method changing state contains value assignments to class fields that are either stated explicitly or implicitly
 by invoking mutator methods.
 
-Note that each implicit method call can be followed recursively until reaching its original caller. If _any_ method on
+Note that each implicitly state-changing method call can be followed recursively until reaching its original caller. If
+_any_ method on
 the invocation path to the root invoker matches the criteria specified above, the method being currently analyzed is
 marked with a hint indicating its state-changing effect. Since this might be a costly operation for methods comprising
 many method calls, this option is turned off by default in the IDE's corresponding Inlay Hint settings menu.
@@ -671,7 +687,8 @@ many method calls, this option is turned off by default in the IDE's correspondi
 A method that is independent of state does not contain any expressions that reference a class field either explicitly
 or implicitly through method invocations.
 
-Note that each implicit method call can be followed recursively until its original caller is reached. If _all_ methods
+Note that each implicitly state-independent method call can be followed recursively until its original caller is
+reached. If _all_ methods
 on the invocation path to the root invoker match the criteria specified above, the method being currently analyzed is
 marked with a hint indicating its state independence. Since this might be a costly operation for methods comprising many
 method calls, this option is turned off by default in the IDE's Inlay Hint settings menu.

@@ -1,6 +1,13 @@
 # codEEmoji Plugin Changelog
 
-## 4.0.0 (March 1st, 2024)
+## 4.0.1 (May 2nd, 2024)
+
+### Added
+
+- Changes for the structural analysis of methods, mainly incorporating small error fixes, minor configuration changes
+  for some scenarios, refactoring modifications and a correspondingly updated documentation.
+
+## 4.0.0 (March 4th, 2024)
 
 ### Added
 
