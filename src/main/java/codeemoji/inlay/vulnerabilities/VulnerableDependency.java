@@ -4,7 +4,6 @@ import codeemoji.core.collector.simple.CEMethodCollector;
 import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.util.CESymbol;
-import codeemoji.core.util.CEUtils;
 import codeemoji.inlay.external.DependencyInfo;
 import codeemoji.inlay.external.VulnerabilityInfo;
 import codeemoji.inlay.structuralanalysis.element.method.ExternalFunctionalityInvokingMethod;
@@ -12,19 +11,15 @@ import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static codeemoji.inlay.vulnerabilities.VulnerableDependencySymbols.*;
 
@@ -117,7 +112,6 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         }
     }
 
-
     private boolean isVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo, CESymbol threshold) {
 
         if (!MethodAnalysisUtils.checkMethodExternality(method, project)) {
@@ -128,21 +122,27 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         if (file == null) {
             return false;
         }
-        String path = normalizePath(file.getPath());
-        for (Map.Entry<?, ?> entry : externalInfo.entrySet()) {
+        String normalizedPath = normalizePath(file.getPath());
+
+        String thresholdString = VULNERABILITY_THRESHOLDS.get(threshold);
+        Iterator<? extends Map.Entry<?, ?>> iterator = externalInfo.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<?, ?> entry = iterator.next();
             if (entry.getKey() instanceof DependencyInfo dependencyInfo) {
                 String name = dependencyInfo.getPath();
                 String[] nameParts = name.split("@");
                 String dependency = nameParts[0];
-                if (dependency.equals(path)) {
-                    String thresholdString = VULNERABILITY_THRESHOLDS.get(threshold);
-                    ArrayList<VulnerabilityInfo> cveList = (ArrayList<VulnerabilityInfo>) entry.getValue();
-                    String maxSeverity = getMaxSeverity(cveList);
-                    return maxSeverity.equals(thresholdString);
+                if (dependency.equals(normalizedPath)) {
+                    if (entry.getValue() instanceof ArrayList<?> cveList) {
+                        String maxSeverity = getMaxSeverity(cveList.stream()
+                                .filter(VulnerabilityInfo.class::isInstance)
+                                .map(VulnerabilityInfo.class::cast)
+                                .collect(Collectors.toList()));
+                        return maxSeverity.equals(thresholdString);
+                    }
                 }
             }
         }
-
         return false;
     }
 
