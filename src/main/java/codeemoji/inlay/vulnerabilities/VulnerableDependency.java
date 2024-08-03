@@ -112,7 +112,12 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
     }
 
     private boolean isInvokingMethodVulnerable(PsiMethod method, Project project, boolean fromReferenceMethod, Map<?, ?> externalInfo, Set<PsiMethod> visitedMethods, CESymbol threshold) {
-        PsiMethod[] externalFunctionalityInvokingMethods = collectExternalFunctionalityInvokingMethods(method);
+        if (visitedMethods.contains(method)) {
+            return false; // We've already checked this method, so return false to avoid infinite recursion
+        }
+        visitedMethods.add(method);
+
+        PsiMethod[] externalFunctionalityInvokingMethods = MethodAnalysisUtils.collectExternalFunctionalityInvokingMethods(method);
 
         if(
                 externalFunctionalityInvokingMethods.length > 0 &&
@@ -126,7 +131,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
             if (getSettings().isCheckVulnerableDependecyApplied()){
                 return Arrays.stream(externalFunctionalityInvokingMethods)
                         .filter(externalFunctionalityInvokingMethod -> !MethodAnalysisUtils.checkMethodExternality(externalFunctionalityInvokingMethod, project))
-                        .anyMatch(externalFunctionalityInvokingMethod -> isInvokingMethodVulnerable(externalFunctionalityInvokingMethod, project, fromReferenceMethod,externalInfo, threshold));
+                        .anyMatch(externalFunctionalityInvokingMethod -> isInvokingMethodVulnerable(externalFunctionalityInvokingMethod, project, fromReferenceMethod, externalInfo, visitedMethods, threshold));
             }
 
             else{
@@ -135,23 +140,13 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         }
     }
 
-    private PsiMethod[] collectExternalFunctionalityInvokingMethods(PsiMethod method){
-        return PsiTreeUtil.collectElementsOfType(method.getNavigationElement(), PsiMethodCallExpression.class)
-                .stream()
-                .distinct()
-                .<PsiMethod>mapMulti((methodCallExpression, consumer) -> {
-                    PsiMethod resolvedMethodCallExpression = methodCallExpression.resolveMethod();
-                    if (resolvedMethodCallExpression != null && !method.isEquivalentTo(resolvedMethodCallExpression)) {
-                        consumer.accept(resolvedMethodCallExpression);
-                    }
-                })
-                .toArray(PsiMethod[]::new);
-    }
-
 
     private boolean isVulnerable(PsiMethod method, Map<?, ?> externalInfo, CESymbol threshold) {
 
         VirtualFile file = method.getNavigationElement().getContainingFile().getVirtualFile();
+        if (file == null) {
+            return false;
+        }
         String path = normalizePath(file.getPath());
         for (Map.Entry<?, ?> entry : externalInfo.entrySet()) {
             if (entry.getKey() instanceof DependencyInfo dependencyInfo) {

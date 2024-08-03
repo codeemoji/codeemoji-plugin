@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 @State(name = "VulnerableMethodsSettings", storages = @Storage("codeemoji-vulnerable-methods-settings.xml"))
 public class VulnerableDependencySettings implements PersistentStateComponent<VulnerableDependencySettings> {
 
-    private boolean checkVulnerableDependencyApplied = false;
+    private boolean checkVulnerableDependencyApplied = true;
 
     @Override
     public VulnerableDependencySettings getState() {

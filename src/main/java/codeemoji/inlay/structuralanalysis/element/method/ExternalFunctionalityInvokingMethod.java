@@ -57,22 +57,11 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
         return new ExternalFunctionalityInvokingMethodConfigurable(settings);
     }
 
-    private PsiMethod[] collectExternalFunctionalityInvokingMethods(PsiMethod method){
-        return PsiTreeUtil.collectElementsOfType(method.getNavigationElement(), PsiMethodCallExpression.class)
-                .stream()
-                .distinct()
-                .<PsiMethod>mapMulti((methodCallExpression, consumer) -> {
-                    PsiMethod resolvedMethodCallExpression = methodCallExpression.resolveMethod();
-                    if (resolvedMethodCallExpression != null && !method.isEquivalentTo(resolvedMethodCallExpression)) {
-                        consumer.accept(resolvedMethodCallExpression);
-                    }
-                })
-                .toArray(PsiMethod[]::new);
-    }
+
 
     private boolean isExternalFunctionalityInvokingMethod(PsiMethod method, Project project) {
 
-        PsiMethod[] externalFunctionalityInvokingMethods = collectExternalFunctionalityInvokingMethods(method);
+        PsiMethod[] externalFunctionalityInvokingMethods = MethodAnalysisUtils.collectExternalFunctionalityInvokingMethods(method);
 
         if(
                 externalFunctionalityInvokingMethods.length > 0 &&
