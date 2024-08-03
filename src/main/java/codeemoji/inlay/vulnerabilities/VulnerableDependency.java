@@ -112,42 +112,40 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
     }
 
     private boolean isInvokingMethodVulnerable(PsiMethod method, Project project, boolean fromReferenceMethod, Map<?, ?> externalInfo, Set<PsiMethod> visitedMethods, CESymbol threshold) {
-        if (visitedMethods.contains(method)) {
-            return false; // We've already checked this method, avoid recursion
+        PsiMethod[] externalFunctionalityInvokingMethods = collectExternalFunctionalityInvokingMethods(method);
+
+        if(
+                externalFunctionalityInvokingMethods.length > 0 &&
+                        Arrays.stream(externalFunctionalityInvokingMethods).anyMatch(externalFunctionalityInvokingMethod -> isVulnerable(externalFunctionalityInvokingMethod, externalInfo, threshold))
+        ){
+            return true;
         }
-        visitedMethods.add(method);
 
-        if (fromReferenceMethod && !MethodAnalysisUtils.checkMethodExternality(method, project)) {
-            return false;
-        }
+        else {
 
-        PsiElement[] externalFunctionalityInvokingElements = PsiTreeUtil.collectElements(
-                method.getNavigationElement(),
-                element -> element instanceof PsiMethodCallExpression methodCallExpression &&
-                        methodCallExpression.resolveMethod() != null &&
-                        !method.isEquivalentTo(methodCallExpression.resolveMethod())
-        );
+            if (getSettings().isCheckVulnerableDependecyApplied()){
+                return Arrays.stream(externalFunctionalityInvokingMethods)
+                        .filter(externalFunctionalityInvokingMethod -> !MethodAnalysisUtils.checkMethodExternality(externalFunctionalityInvokingMethod, project))
+                        .anyMatch(externalFunctionalityInvokingMethod -> isInvokingMethodVulnerable(externalFunctionalityInvokingMethod, project, fromReferenceMethod,externalInfo, threshold));
+            }
 
-        for (PsiElement element : externalFunctionalityInvokingElements) {
-            PsiMethod calledMethod = ((PsiMethodCallExpression) element).resolveMethod();
-            if (calledMethod != null && MethodAnalysisUtils.checkMethodExternality(calledMethod, project)) {
-                if (isVulnerable(calledMethod, externalInfo, threshold)) {
-                    return true;
-                }
+            else{
+                return  false;
             }
         }
-        if (getSettings().isCheckVulnerableDependecyApplied()) {
-            for (PsiElement element : externalFunctionalityInvokingElements) {
-                PsiMethod calledMethod = ((PsiMethodCallExpression) element).resolveMethod();
-                if (calledMethod != null && !MethodAnalysisUtils.checkMethodExternality(calledMethod, project)) {
-                    if (isInvokingMethodVulnerable(calledMethod, project, fromReferenceMethod, externalInfo, visitedMethods, threshold)) {
-                        return true;
+    }
+
+    private PsiMethod[] collectExternalFunctionalityInvokingMethods(PsiMethod method){
+        return PsiTreeUtil.collectElementsOfType(method.getNavigationElement(), PsiMethodCallExpression.class)
+                .stream()
+                .distinct()
+                .<PsiMethod>mapMulti((methodCallExpression, consumer) -> {
+                    PsiMethod resolvedMethodCallExpression = methodCallExpression.resolveMethod();
+                    if (resolvedMethodCallExpression != null && !method.isEquivalentTo(resolvedMethodCallExpression)) {
+                        consumer.accept(resolvedMethodCallExpression);
                     }
-                }
-            }
-        }
-
-        return false;
+                })
+                .toArray(PsiMethod[]::new);
     }
 
 
