@@ -121,7 +121,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
         if(
                 externalFunctionalityInvokingMethods.length > 0 &&
-                        Arrays.stream(externalFunctionalityInvokingMethods).anyMatch(externalFunctionalityInvokingMethod -> isVulnerable(externalFunctionalityInvokingMethod, externalInfo, threshold))
+                        Arrays.stream(externalFunctionalityInvokingMethods).anyMatch(externalFunctionalityInvokingMethod -> isVulnerable(externalFunctionalityInvokingMethod, project, externalInfo, threshold))
         ){
             return true;
         }
@@ -130,7 +130,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
             if (getSettings().isCheckVulnerableDependecyApplied()){
                 return Arrays.stream(externalFunctionalityInvokingMethods)
-                        .filter(externalFunctionalityInvokingMethod -> !MethodAnalysisUtils.checkMethodExternality(externalFunctionalityInvokingMethod, project))
+                        .filter(externalFunctionalityInvokingMethod -> !isVulnerable(externalFunctionalityInvokingMethod, project, externalInfo, threshold))
                         .anyMatch(externalFunctionalityInvokingMethod -> isInvokingMethodVulnerable(externalFunctionalityInvokingMethod, project, fromReferenceMethod, externalInfo, visitedMethods, threshold));
             }
 
@@ -141,7 +141,11 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
     }
 
 
-    private boolean isVulnerable(PsiMethod method, Map<?, ?> externalInfo, CESymbol threshold) {
+    private boolean isVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo, CESymbol threshold) {
+
+        if (!MethodAnalysisUtils.checkMethodExternality(method, project)) {
+            return false;
+        }
 
         VirtualFile file = method.getNavigationElement().getContainingFile().getVirtualFile();
         if (file == null) {
