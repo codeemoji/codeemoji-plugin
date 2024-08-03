@@ -9,17 +9,25 @@ import org.jetbrains.annotations.NotNull;
 
 @Data
 @State(name = "VulnerableMethodsSettings", storages = @Storage("codeemoji-vulnerable-methods-settings.xml"))
-public class VulnerableMethodsSettings implements PersistentStateComponent<codeemoji.inlay.vulnerabilities.VulnerableMethodsSettings> {
+public class VulnerableDependencySettings implements PersistentStateComponent<VulnerableDependencySettings> {
 
-    private boolean checkMethodCallsForExternalityApplied = false;
+    private boolean checkVulnerableDependencyApplied = false;
 
     @Override
-    public codeemoji.inlay.vulnerabilities.VulnerableMethodsSettings getState() {
+    public VulnerableDependencySettings getState() {
         return this;
     }
 
     @Override
-    public void loadState(@NotNull codeemoji.inlay.vulnerabilities.VulnerableMethodsSettings state) {
+    public void loadState(@NotNull VulnerableDependencySettings state) {
         XmlSerializerUtil.copyBean(state, this);
+    }
+
+    public boolean isCheckVulnerableDependecyApplied() {
+        return checkVulnerableDependencyApplied;
+    }
+
+    public void setCheckVulnerableDependecyApplied(boolean selected) {
+        checkVulnerableDependencyApplied = selected;
     }
 }

@@ -2,7 +2,7 @@ package codeemoji.inlay.vulnerabilities;
 
 import codeemoji.core.util.CESymbol;
 
-public enum VulnerableSymbols {
+public enum VulnerableDependencySymbols {
 
     ;
     public static final CESymbol VULNERABLE_NOT_VULNERABLE = new CESymbol(0xFFFFF);

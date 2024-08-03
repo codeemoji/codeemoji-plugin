@@ -7,8 +7,8 @@ import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.external.DependencyInfo;
 import codeemoji.inlay.external.VulnerabilityInfo;
 import codeemoji.inlay.structuralanalysis.element.method.ExternalFunctionalityInvokingMethod;
+import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
-import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -23,9 +23,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static codeemoji.inlay.vulnerabilities.VulnerableSymbols.*;
+import static codeemoji.inlay.vulnerabilities.VulnerableDependencySymbols.*;
 
-public class VulnerableMethods extends CEProviderMulti<NoSettings> {
+public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySettings> {
 
     private static final Map<CESymbol, String> VULNERABILITY_THRESHOLDS = new HashMap<>();
 
@@ -50,56 +50,61 @@ public class VulnerableMethods extends CEProviderMulti<NoSettings> {
                 new CEMethodCollector(editor, getKeyId() + ".low", VULNERABLE_LOW) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isVulnerableExternalFunctionalityInvokingMethod(element, editor.getProject(), false, externalInfo, VULNERABLE_LOW);
+                        return isInvokingMethodVulnerable(element, editor.getProject(), false, externalInfo, VULNERABLE_LOW);
                     }
                 },
                 new CEReferenceMethodCollector(editor, getKeyId() + ".low", VULNERABLE_LOW) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isVulnerableExternalFunctionalityInvokingMethod(element, editor.getProject(), true, externalInfo, VULNERABLE_LOW);
+                        return isInvokingMethodVulnerable(element, editor.getProject(), true, externalInfo, VULNERABLE_LOW);
                     }
                 },
                 new CEMethodCollector(editor, getKeyId() + ".medium", VULNERABLE_MEDIUM) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isVulnerableExternalFunctionalityInvokingMethod(element, editor.getProject(), false, externalInfo, VULNERABLE_MEDIUM);
+                        return isInvokingMethodVulnerable(element, editor.getProject(), false, externalInfo, VULNERABLE_MEDIUM);
                     }
                 },
                 new CEReferenceMethodCollector(editor, getKeyId() + ".medium", VULNERABLE_MEDIUM) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isVulnerableExternalFunctionalityInvokingMethod(element, editor.getProject(), true, externalInfo, VULNERABLE_MEDIUM);
+                        return isInvokingMethodVulnerable(element, editor.getProject(), true, externalInfo, VULNERABLE_MEDIUM);
                     }
                 },
                 new CEMethodCollector(editor, getKeyId() + ".high", VULNERABLE_HIGH) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isVulnerableExternalFunctionalityInvokingMethod(element, editor.getProject(), false, externalInfo, VULNERABLE_HIGH);
+                        return isInvokingMethodVulnerable(element, editor.getProject(), false, externalInfo, VULNERABLE_HIGH);
                     }
                 },
                 new CEReferenceMethodCollector(editor, getKeyId() + ".high", VULNERABLE_HIGH) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isVulnerableExternalFunctionalityInvokingMethod(element, editor.getProject(), true, externalInfo, VULNERABLE_HIGH);
+                        return isInvokingMethodVulnerable(element, editor.getProject(), true, externalInfo, VULNERABLE_HIGH);
                     }
                 },
                 new CEMethodCollector(editor, getKeyId() + ".critical", VULNERABLE_CRITICAL) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isVulnerableExternalFunctionalityInvokingMethod(element, editor.getProject(), false, externalInfo, VULNERABLE_CRITICAL);
+                        return isInvokingMethodVulnerable(element, editor.getProject(), false, externalInfo, VULNERABLE_CRITICAL);
                     }
                 },
                 new CEReferenceMethodCollector(editor, getKeyId() + ".critical", VULNERABLE_CRITICAL) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                        return isVulnerableExternalFunctionalityInvokingMethod(element, editor.getProject(), true, externalInfo, VULNERABLE_CRITICAL);
+                        return isInvokingMethodVulnerable(element, editor.getProject(), true, externalInfo, VULNERABLE_CRITICAL);
                     }
                 }
 
         );
     }
 
-    public boolean isVulnerableExternalFunctionalityInvokingMethod(PsiMethod method, Project project, boolean fromReferenceMethod, Map<?, ?> externalInfo, CESymbol threshold) {
+    @Override
+    public @NotNull ImmediateConfigurable createConfigurable(@NotNull VulnerableDependencySettings settings) {
+        return new VulnerableDependencyConfigurable(settings);
+    }
+
+    public boolean isInvokingMethodVulnerable(PsiMethod method, Project project, boolean fromReferenceMethod, Map<?, ?> externalInfo, CESymbol threshold) {
         return externalFunctionalityChecker.isExternalFunctionalityInvokingMethod(
                 method,
                 project,
@@ -109,15 +114,15 @@ public class VulnerableMethods extends CEProviderMulti<NoSettings> {
     }
 
     private boolean isVulnerable(PsiMethod method, Map<?, ?> externalInfo, CESymbol threshold) {
-
         VirtualFile file = method.getNavigationElement().getContainingFile().getVirtualFile();
-        String path = normalizePath(file.getPath());
+        String depPath = normalizePath(file.getPath());
+
         for (Map.Entry<?, ?> entry : externalInfo.entrySet()) {
             if (entry.getKey() instanceof DependencyInfo dependencyInfo) {
-                String name = dependencyInfo.getPath();
-                String[] nameParts = name.split("@");
+                String vulnPath = dependencyInfo.getPath();
+                String[] nameParts = vulnPath.split("@");
                 String dependency = nameParts[0];
-                if (dependency.equals(path)) {
+                if (dependency.equals(depPath)) {
                     String thresholdString = VULNERABILITY_THRESHOLDS.get(threshold);
                     ArrayList<VulnerabilityInfo> cveList = (ArrayList<VulnerabilityInfo>) entry.getValue();
                     String maxSeverity = getMaxSeverity(cveList);
@@ -125,7 +130,6 @@ public class VulnerableMethods extends CEProviderMulti<NoSettings> {
                 }
             }
         }
-
         return false;
     }
 
@@ -137,26 +141,15 @@ public class VulnerableMethods extends CEProviderMulti<NoSettings> {
         }
         return path;
     }
-    // TODO optimize
-    public String getMaxSeverity(ArrayList<VulnerabilityInfo> vulnerabilities) {
-        for (VulnerabilityInfo v : vulnerabilities) {
-            if (v.getSeverity().equals("CRITICAL")) {
-                return v.getSeverity();
-            }
-        }
-        for (VulnerabilityInfo v : vulnerabilities) {
-            if (v.getSeverity().equals("HIGH")) {
-                return v.getSeverity();
-            }
-        }
-        for (VulnerabilityInfo v : vulnerabilities) {
-            if (v.getSeverity().equals("MEDIUM")) {
-                return v.getSeverity();
-            }
-        }
-        for (VulnerabilityInfo v : vulnerabilities) {
-            if (v.getSeverity().equals("LOW")) {
-                return v.getSeverity();
+
+    public String getMaxSeverity(List<VulnerabilityInfo> vulnerabilities) {
+        String[] severityOrder = {"CRITICAL", "HIGH", "MEDIUM", "LOW"};
+
+        for (String severity : severityOrder) {
+            for (VulnerabilityInfo v : vulnerabilities) {
+                if (v.getSeverity().equals(severity)) {
+                    return severity;
+                }
             }
         }
         return "ERROR";

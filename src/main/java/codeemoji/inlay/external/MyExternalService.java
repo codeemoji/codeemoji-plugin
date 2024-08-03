@@ -32,7 +32,7 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
     private final DependencyExtractor dependencyExtractor = new DependencyExtractor();
     private final NistVulnerabilityScanner nistVulnerabilityScanner = new NistVulnerabilityScanner(NIST_NVD_API_URL, NIST_API_TOKEN, NIST_BATCH_SIZE);
     private final OSSVulnerabilityScanner ossVulnerabilityScanner = new OSSVulnerabilityScanner(OSS_INDEX_API_URL, OSS_API_TOKEN, OSS_BATCH_SIZE);
-    private final OSVVulnerabilityScanner OSVVulnerabilityScanner = new OSVVulnerabilityScanner(OSV_API_URL, "", 0);
+    private final OSVVulnerabilityScanner osvVulnerabilityScanner = new OSVVulnerabilityScanner(OSV_API_URL, "", 0);
     private DependencyInfo[] dependencyInfos;
 
     @Override
@@ -41,7 +41,7 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
         dependencyInfos =  getProjectLibraries(project);
         // vulnerabilityMap = ossVulnerabilityScanner.scanVulnerability(dependencyInfos);
         // vulnerabilityMap = nistVulnerabilityScanner.scanVulnerability((dependencyInfos));
-        vulnerabilityMap = OSVVulnerabilityScanner.scanVulnerability((dependencyInfos));
+        vulnerabilityMap = osvVulnerabilityScanner.scanVulnerability((dependencyInfos));
     }
 
     public DependencyInfo[] getProjectLibraries(Project project) {
@@ -74,7 +74,7 @@ public final class MyExternalService implements CEExternalService<VirtualFile, O
             if (changes) {
                 dependencyInfos = currentDependencies;
                 // vulnerabilityMap = ossVulnerabilityScanner.scanVulnerability(dependencyInfos);
-                vulnerabilityMap = OSVVulnerabilityScanner.scanVulnerability((dependencyInfos));
+                vulnerabilityMap = osvVulnerabilityScanner.scanVulnerability((dependencyInfos));
             }
         }
         Iterator<Map.Entry<DependencyInfo, List<VulnerabilityInfo>>> iterator = vulnerabilityMap.entrySet().iterator();

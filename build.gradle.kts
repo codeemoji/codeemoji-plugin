@@ -26,10 +26,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.28")
     annotationProcessor("org.projectlombok:lombok:1.18.28")
     implementation("com.google.code.gson:gson:2.10.1")
-    implementation("com.squareup.okhttp3:okhttp:4.9.1")
-    implementation("org.openapitools:openapi-generator-maven-plugin:7.5.0")
     implementation("org.json:json:20240303")
-    implementation("org.owasp:dependency-check-core:8.4.2")
 }
 
 

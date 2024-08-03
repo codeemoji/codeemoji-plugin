@@ -44,13 +44,13 @@
         <applicationService
                 serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.StateIndependentMethodSettings"/>
         <applicationService
-                serviceImplementation="codeemoji.inlay.vulnerabilities.VulnerableMethodsSettings"/>
+                serviceImplementation="codeemoji.inlay.vulnerabilities.VulnerableDependencySettings"/>
 
         <!--END OF CONFIGURABLE & SERVICES SECTION-->
 
         <!-- START IMPLEMENTATIONS SECTION-->
         <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlay.vulnerabilities.VulnerableMethods"/>
+                                   implementationClass="codeemoji.inlay.vulnerabilities.VulnerableDependency"/>
         <codeInsight.inlayProvider language="JAVA"
                                    implementationClass="codeemoji.inlay.nameviolation.ShortDescriptiveName"/>
         <codeInsight.inlayProvider language="JAVA"
