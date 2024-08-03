@@ -4,6 +4,7 @@ import codeemoji.core.collector.simple.CEMethodCollector;
 import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.util.CEUtils;
+import codeemoji.inlay.vulnerabilities.MethodAnalysisUtils;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
@@ -75,7 +76,7 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
 
         if(
                 externalFunctionalityInvokingMethods.length > 0 &&
-                        Arrays.stream(externalFunctionalityInvokingMethods).anyMatch(externalFunctionalityInvokingMethod -> checkMethodExternality(externalFunctionalityInvokingMethod, project))
+                        Arrays.stream(externalFunctionalityInvokingMethods).anyMatch(externalFunctionalityInvokingMethod -> MethodAnalysisUtils.checkMethodExternality(externalFunctionalityInvokingMethod, project))
         ){
             return true;
         }
@@ -84,7 +85,7 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
 
             if (getSettings().isCheckMethodCallsForExternalityApplied()){
                 return Arrays.stream(externalFunctionalityInvokingMethods)
-                        .filter(externalFunctionalityInvokingMethod -> !checkMethodExternality(externalFunctionalityInvokingMethod, project))
+                        .filter(externalFunctionalityInvokingMethod -> !MethodAnalysisUtils.checkMethodExternality(externalFunctionalityInvokingMethod, project))
                         .anyMatch(externalFunctionalityInvokingMethod -> isExternalFunctionalityInvokingMethod(externalFunctionalityInvokingMethod, project));
             }
 
@@ -94,13 +95,5 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
         }
     }
 
-    private boolean checkMethodExternality(PsiMethod method, Project project) {
-        return method.getNavigationElement().getContainingFile() instanceof PsiJavaFile javaFile &&
-                method.getContainingClass() != null &&
-                javaFile.getPackageStatement() != null &&
-                !javaFile.getPackageName().startsWith("java") &&
-                javaFile.getVirtualFile() != null &&
-                !CEUtils.getSourceRootsInProject(project).contains(ProjectFileIndex.getInstance(project).getSourceRootForFile(javaFile.getVirtualFile()));
-    }
 
 }

@@ -117,7 +117,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         }
         visitedMethods.add(method);
 
-        if (fromReferenceMethod && !checkMethodExternality(method, project)) {
+        if (fromReferenceMethod && !MethodAnalysisUtils.checkMethodExternality(method, project)) {
             return false;
         }
 
@@ -130,7 +130,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
         for (PsiElement element : externalFunctionalityInvokingElements) {
             PsiMethod calledMethod = ((PsiMethodCallExpression) element).resolveMethod();
-            if (calledMethod != null && checkMethodExternality(calledMethod, project)) {
+            if (calledMethod != null && MethodAnalysisUtils.checkMethodExternality(calledMethod, project)) {
                 if (isVulnerable(calledMethod, externalInfo, threshold)) {
                     return true;
                 }
@@ -139,7 +139,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         if (getSettings().isCheckVulnerableDependecyApplied()) {
             for (PsiElement element : externalFunctionalityInvokingElements) {
                 PsiMethod calledMethod = ((PsiMethodCallExpression) element).resolveMethod();
-                if (calledMethod != null && !checkMethodExternality(calledMethod, project)) {
+                if (calledMethod != null && !MethodAnalysisUtils.checkMethodExternality(calledMethod, project)) {
                     if (isInvokingMethodVulnerable(calledMethod, project, fromReferenceMethod, externalInfo, visitedMethods, threshold)) {
                         return true;
                     }
@@ -150,17 +150,6 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         return false;
     }
 
-    private boolean checkMethodExternality(PsiMethod method, Project project) {
-        return method.getContainingFile() instanceof PsiJavaFile javaFile &&
-                method.getContainingClass() != null &&
-                javaFile.getPackageStatement() != null &&
-                !javaFile.getPackageName().startsWith("java") &&
-                !CEUtils.getSourceRootsInProject(project).contains(
-                        ProjectFileIndex.getInstance(method.getProject()).getSourceRootForFile(
-                                method.getNavigationElement().getContainingFile().getVirtualFile()
-                        )
-                );
-    }
 
     private boolean isVulnerable(PsiMethod method, Map<?, ?> externalInfo, CESymbol threshold) {
 
