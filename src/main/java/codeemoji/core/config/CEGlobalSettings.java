@@ -1,5 +1,6 @@
 package codeemoji.core.config;
 
+import codeemoji.inlay.external.VulnerabilityInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
@@ -15,8 +16,14 @@ public class CEGlobalSettings implements PersistentStateComponent<CEGlobalSettin
 
     private Boolean myExternalServiceState = true;
 
+    private VulnerabilityInfo.ScannerType scannerType = VulnerabilityInfo.ScannerType.OSS;
+
     public static CEGlobalSettings getInstance() {
         return ApplicationManager.getApplication().getService(CEGlobalSettings.class);
+    }
+
+    public VulnerabilityInfo.ScannerType getType() {
+        return this.scannerType;
     }
 
     @NotNull

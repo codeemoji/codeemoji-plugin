@@ -46,6 +46,10 @@
         <applicationService
                 serviceImplementation="codeemoji.inlay.vulnerabilities.VulnerableDependencySettings"/>
 
+        <projectService  serviceImplementation="codeemoji.inlay.external.OSSExternalService"/>
+        <projectService  serviceImplementation="codeemoji.inlay.external.OSVExternalService"/>
+
+
         <!--END OF CONFIGURABLE & SERVICES SECTION-->
 
         <!-- START IMPLEMENTATIONS SECTION-->
