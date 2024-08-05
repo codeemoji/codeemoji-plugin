@@ -12,6 +12,7 @@ import javax.swing.*;
 public class CEGlobalConfigurable implements Configurable {
 
     private JCheckBox cbMyExternalService;
+    private JCheckBox secondaryService;
 
     @SuppressWarnings("DialogTitleCapitalization")
     @Override
@@ -25,7 +26,10 @@ public class CEGlobalConfigurable implements Configurable {
         var innerPanel = CEUtils.createBasicInnerPanel("codeemoji.configurable.title", 2, 1);
         var analysersPanel = CEUtils.createBasicInnerPanel("codeemoji.configurable.external.analysers.title", 1, 1);
         cbMyExternalService = new JCheckBox("MyExternalService");
+        secondaryService = new JCheckBox("Use secondary Service for Vulnerable Methods scan");
+        secondaryService.setSelected(false);
         analysersPanel.add(cbMyExternalService);
+        analysersPanel.add(secondaryService);
         innerPanel.add(analysersPanel);
         globalPanel.add(innerPanel);
         return globalPanel;
@@ -34,22 +38,28 @@ public class CEGlobalConfigurable implements Configurable {
     @Override
     public boolean isModified() {
         Boolean myExternalServiceState = cbMyExternalService.isSelected();
-        return !myExternalServiceState.equals(CEGlobalSettings.getInstance().getMyExternalServiceState());
+        Boolean useSecondaryService = secondaryService.isSelected();
+        return (!myExternalServiceState.equals(CEGlobalSettings.getInstance().getMyExternalServiceState()) ||
+                !useSecondaryService.equals(CEGlobalSettings.getInstance().getUseSecondaryVulnerabilityScanner()));
     }
 
     @Override
     public void apply() throws ConfigurationException {
         Boolean myExternalServiceState = cbMyExternalService.isSelected();
+        Boolean useSecondaryService = secondaryService.isSelected();
         CEGlobalSettings.getInstance().setMyExternalServiceState(myExternalServiceState);
+        CEGlobalSettings.getInstance().setUseSecondaryVulnerabilityScanner(useSecondaryService);
     }
 
     @Override
     public void reset() {
         cbMyExternalService.setSelected(CEGlobalSettings.getInstance().getMyExternalServiceState());
+        secondaryService.setSelected(CEGlobalSettings.getInstance().getUseSecondaryVulnerabilityScanner());
     }
 
     @Override
     public void disposeUIResources() {
         cbMyExternalService = null;
+        secondaryService = null;
     }
 }

@@ -16,14 +16,20 @@ public class CEGlobalSettings implements PersistentStateComponent<CEGlobalSettin
 
     private Boolean myExternalServiceState = true;
 
-    private VulnerabilityInfo.ScannerType scannerType = VulnerabilityInfo.ScannerType.OSS;
+    private Boolean useSecondaryVulnerabilityScanner = false;
 
     public static CEGlobalSettings getInstance() {
         return ApplicationManager.getApplication().getService(CEGlobalSettings.class);
     }
 
     public VulnerabilityInfo.ScannerType getType() {
-        return this.scannerType;
+        if (useSecondaryVulnerabilityScanner) {
+            return VulnerabilityInfo.ScannerType.OSV;
+        }
+        else {
+            return VulnerabilityInfo.ScannerType.OSS;
+        }
+
     }
 
     @NotNull
@@ -35,6 +41,7 @@ public class CEGlobalSettings implements PersistentStateComponent<CEGlobalSettin
     @Override
     public void loadState(@NotNull CEGlobalSettings state) {
         myExternalServiceState = state.myExternalServiceState;
+        useSecondaryVulnerabilityScanner = state.useSecondaryVulnerabilityScanner;
     }
 
 }
