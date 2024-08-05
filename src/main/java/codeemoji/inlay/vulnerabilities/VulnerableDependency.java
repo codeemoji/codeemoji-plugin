@@ -4,6 +4,7 @@ import codeemoji.core.collector.simple.CEMethodCollector;
 import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.util.CESymbol;
+import codeemoji.core.util.CEUtils;
 import codeemoji.inlay.external.DependencyInfo;
 import codeemoji.inlay.external.VulnerabilityInfo;
 import codeemoji.inlay.structuralanalysis.element.method.ExternalFunctionalityInvokingMethod;
@@ -122,7 +123,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         if (file == null) {
             return false;
         }
-        String normalizedPath = normalizePath(file.getPath());
+        String normalizedPath = CEUtils.normalizeDependencyPath(file.getPath());
 
         String thresholdString = VULNERABILITY_THRESHOLDS.get(threshold);
         Iterator<? extends Map.Entry<?, ?>> iterator = externalInfo.entrySet().iterator();
@@ -146,14 +147,6 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         return false;
     }
 
-    private String normalizePath(String path) {
-        Pattern pattern = Pattern.compile(".*/modules-2/([^/]+)/([^/]+)/([^/]+)/([^/]+)/.*");
-        Matcher matcher = pattern.matcher(path);
-        if (matcher.find()) {
-            return matcher.group(2) + "/" + matcher.group(3);  // Return group/artifact
-        }
-        return path;
-    }
 
     public String getMaxSeverity(List<VulnerabilityInfo> vulnerabilities) {
         String[] severityOrder = {"CRITICAL", "HIGH", "MEDIUM", "LOW"};

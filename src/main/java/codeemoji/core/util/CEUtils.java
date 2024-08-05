@@ -1,5 +1,6 @@
 package codeemoji.core.util;
 
+import codeemoji.inlay.external.DependencyInfo;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.intellij.openapi.diagnostic.Logger;
@@ -9,6 +10,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -25,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.intellij.psi.PsiModifier.*;
@@ -478,6 +481,47 @@ public enum CEUtils {
     public static <E extends PsiElement> int calculateLinesOfPsiElement(@NotNull E element){
         Document documentOfMethod = element.getContainingFile().getViewProvider().getDocument();
         return 1 + (documentOfMethod.getLineNumber(element.getTextOffset() + element.getTextLength()) - documentOfMethod.getLineNumber(element.getTextOffset()));
+    }
+
+    public static DependencyInfo getDependecyInfo(Library library) {
+        String dependencyName = library.getName();
+        if (!dependencyName.startsWith("Gradle: ")) {
+            throw new IllegalArgumentException("Invalid format: not starting with Gradle");
+        }
+        // Removing "Gradle: "
+        String dependency = dependencyName.substring(8);
+
+        String[] parts = dependency.split(":");
+        if (parts.length != 3) {
+            throw new IllegalArgumentException("Invalid format: no groupId, artifactId or version");
+        }
+        String groupId = parts[0];
+        String artifactId = parts[1];
+        String version = parts[2];
+
+        // This is the path, which is the return value of the original function
+        String path = String.format("%s/%s@%s", groupId, artifactId, version);
+
+        // Process groupId and artifactId as in the first method
+        if (groupId.contains(".")) {
+            String[] groupParts = groupId.split("\\.");
+            groupId = groupParts[1];
+        }
+        if (artifactId.contains("-")) {
+            String[] artifactParts = artifactId.split("-");
+            artifactId = artifactParts[0];
+        }
+
+        return new DependencyInfo(groupId, artifactId, version, path);
+    }
+
+    public static String normalizeDependencyPath(String path) {
+        Pattern pattern = Pattern.compile(".*/modules-2/([^/]+)/([^/]+)/([^/]+)/([^/]+)/.*");
+        Matcher matcher = pattern.matcher(path);
+        if (matcher.find()) {
+            return matcher.group(2) + "/" + matcher.group(3);  // Return group/artifact
+        }
+        return path;
     }
 
 }
