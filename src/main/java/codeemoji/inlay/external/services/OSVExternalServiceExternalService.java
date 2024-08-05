@@ -1,13 +1,15 @@
-package codeemoji.inlay.external;
+package codeemoji.inlay.external.services;
 
+import codeemoji.inlay.external.scanners.OSVVulnerabilityScanner;
+import codeemoji.inlay.external.scanners.VulnerabilityScanner;
 import com.intellij.openapi.components.Service;
 
 @Service
-public final class OSVExternalService extends BaseExternalServiceForVulnerability {
+public final class OSVExternalServiceExternalService extends BaseVulnerabilityExternalService {
     private static final String OSV_API_URL = "https://api.osv.dev";
     private final OSVVulnerabilityScanner osvVulnerabilityScanner;
 
-    public OSVExternalService() {
+    public OSVExternalServiceExternalService() {
         this.osvVulnerabilityScanner = new OSVVulnerabilityScanner(OSV_API_URL, "", 0);
     }
 

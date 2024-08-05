@@ -28,8 +28,6 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
     private static final Map<CESymbol, String> VULNERABILITY_THRESHOLDS = new HashMap<>();
 
-    private final ExternalFunctionalityInvokingMethod externalFunctionalityChecker = new ExternalFunctionalityInvokingMethod();
-
     static {
         VULNERABILITY_THRESHOLDS.put(VULNERABLE_LOW, "LOW");
         VULNERABILITY_THRESHOLDS.put(VULNERABLE_MEDIUM, "MEDIUM");
@@ -90,7 +88,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         }
         visitedMethods.add(method);
 
-        PsiMethod[] externalFunctionalityInvokingMethods = MethodAnalysisUtils.collectExternalFunctionalityInvokingMethods(method);
+        PsiMethod[] externalFunctionalityInvokingMethods = CEUtils.collectExternalFunctionalityInvokingMethods(method);
 
         if(
                 externalFunctionalityInvokingMethods.length > 0 &&

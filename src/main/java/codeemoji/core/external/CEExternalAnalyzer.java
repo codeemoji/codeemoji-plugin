@@ -2,6 +2,8 @@ package codeemoji.core.external;
 
 import codeemoji.core.config.CEGlobalSettings;
 import codeemoji.inlay.external.*;
+import codeemoji.inlay.external.services.OSSExternalServiceExternalService;
+import codeemoji.inlay.external.services.OSVExternalServiceExternalService;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
@@ -24,9 +26,9 @@ public final class CEExternalAnalyzer {
         if (myExternalServiceState) {
             VulnerabilityInfo.ScannerType scannerType = globalSettings.getType();
             if (scannerType.equals(VulnerabilityInfo.ScannerType.OSV)) {
-                externalServices.add(project.getService(OSVExternalService.class));
+                externalServices.add(project.getService(OSVExternalServiceExternalService.class));
             } else if (scannerType.equals(VulnerabilityInfo.ScannerType.OSS)) {
-                externalServices.add(project.getService(OSSExternalService.class));
+                externalServices.add(project.getService(OSSExternalServiceExternalService.class));
             }
         }
         return externalServices;
