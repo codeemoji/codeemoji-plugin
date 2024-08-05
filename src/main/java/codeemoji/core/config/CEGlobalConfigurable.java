@@ -27,7 +27,6 @@ public class CEGlobalConfigurable implements Configurable {
         var analysersPanel = CEUtils.createBasicInnerPanel("codeemoji.configurable.external.analysers.title", 1, 1);
         cbMyExternalService = new JCheckBox("MyExternalService");
         secondaryService = new JCheckBox("Use secondary Service for Vulnerable Methods scan");
-        secondaryService.setSelected(false);
         analysersPanel.add(cbMyExternalService);
         analysersPanel.add(secondaryService);
         innerPanel.add(analysersPanel);

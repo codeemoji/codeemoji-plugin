@@ -28,7 +28,6 @@ public final class CEExternalAnalyzer {
             } else if (scannerType.equals(VulnerabilityInfo.ScannerType.OSS)) {
                 externalServices.add(project.getService(OSSExternalService.class));
             }
-            // externalServices.add(project.getService(MyExternalService.class));
         }
         return externalServices;
     }
