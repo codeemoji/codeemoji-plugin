@@ -10,6 +10,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
@@ -522,6 +523,31 @@ public enum CEUtils {
             return matcher.group(2) + "/" + matcher.group(3);  // Return group/artifact
         }
         return path;
+    }
+
+    public static boolean checkMethodExternality(PsiMethod method, Project project) {
+        return method.getContainingFile() instanceof PsiJavaFile javaFile &&
+                method.getContainingClass() != null &&
+                javaFile.getPackageStatement() != null &&
+                !javaFile.getPackageName().startsWith("java") &&
+                !CEUtils.getSourceRootsInProject(project).contains(
+                        ProjectFileIndex.getInstance(method.getProject()).getSourceRootForFile(
+                                method.getNavigationElement().getContainingFile().getVirtualFile()
+                        )
+                );
+    }
+
+    public static PsiMethod[] collectExternalFunctionalityInvokingMethods(PsiMethod method){
+        return PsiTreeUtil.collectElementsOfType(method.getNavigationElement(), PsiMethodCallExpression.class)
+                .stream()
+                .distinct()
+                .<PsiMethod>mapMulti((methodCallExpression, consumer) -> {
+                    PsiMethod resolvedMethodCallExpression = methodCallExpression.resolveMethod();
+                    if (resolvedMethodCallExpression != null && !method.isEquivalentTo(resolvedMethodCallExpression)) {
+                        consumer.accept(resolvedMethodCallExpression);
+                    }
+                })
+                .toArray(PsiMethod[]::new);
     }
 
 }

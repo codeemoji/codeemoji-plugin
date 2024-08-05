@@ -61,7 +61,7 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
 
     private boolean isExternalFunctionalityInvokingMethod(PsiMethod method, Project project) {
 
-        PsiMethod[] externalFunctionalityInvokingMethods = MethodAnalysisUtils.collectExternalFunctionalityInvokingMethods(method);
+        PsiMethod[] externalFunctionalityInvokingMethods = CEUtils.collectExternalFunctionalityInvokingMethods(method);
 
         if(
                 externalFunctionalityInvokingMethods.length > 0 &&
@@ -74,7 +74,7 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
 
             if (getSettings().isCheckMethodCallsForExternalityApplied()){
                 return Arrays.stream(externalFunctionalityInvokingMethods)
-                        .filter(externalFunctionalityInvokingMethod -> !MethodAnalysisUtils.checkMethodExternality(externalFunctionalityInvokingMethod, project))
+                        .filter(externalFunctionalityInvokingMethod -> !CEUtils.checkMethodExternality(externalFunctionalityInvokingMethod, project))
                         .anyMatch(externalFunctionalityInvokingMethod -> isExternalFunctionalityInvokingMethod(externalFunctionalityInvokingMethod, project));
             }
 

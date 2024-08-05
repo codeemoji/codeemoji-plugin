@@ -115,7 +115,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
     private boolean isVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo, CESymbol threshold) {
 
-        if (!MethodAnalysisUtils.checkMethodExternality(method, project)) {
+        if (!CEUtils.checkMethodExternality(method, project)) {
             return false;
         }
 

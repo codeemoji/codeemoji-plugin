@@ -9,28 +9,5 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.util.PsiTreeUtil;
 
 public class MethodAnalysisUtils {
-    public static boolean checkMethodExternality(PsiMethod method, Project project) {
-        return method.getContainingFile() instanceof PsiJavaFile javaFile &&
-                method.getContainingClass() != null &&
-                javaFile.getPackageStatement() != null &&
-                !javaFile.getPackageName().startsWith("java") &&
-                !CEUtils.getSourceRootsInProject(project).contains(
-                        ProjectFileIndex.getInstance(method.getProject()).getSourceRootForFile(
-                                method.getNavigationElement().getContainingFile().getVirtualFile()
-                        )
-                );
-    }
 
-    public static PsiMethod[] collectExternalFunctionalityInvokingMethods(PsiMethod method){
-        return PsiTreeUtil.collectElementsOfType(method.getNavigationElement(), PsiMethodCallExpression.class)
-                .stream()
-                .distinct()
-                .<PsiMethod>mapMulti((methodCallExpression, consumer) -> {
-                    PsiMethod resolvedMethodCallExpression = methodCallExpression.resolveMethod();
-                    if (resolvedMethodCallExpression != null && !method.isEquivalentTo(resolvedMethodCallExpression)) {
-                        consumer.accept(resolvedMethodCallExpression);
-                    }
-                })
-                .toArray(PsiMethod[]::new);
-    }
 }
