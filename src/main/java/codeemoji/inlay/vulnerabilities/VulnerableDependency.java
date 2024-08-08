@@ -7,9 +7,10 @@ import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import codeemoji.inlay.external.DependencyInfo;
 import codeemoji.inlay.external.VulnerabilityInfo;
-import codeemoji.inlay.structuralanalysis.element.method.ExternalFunctionalityInvokingMethod;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -18,8 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static codeemoji.inlay.vulnerabilities.VulnerableDependencySymbols.*;
@@ -40,6 +39,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
     public String getPreviewText() {
         return null;
     }
+
 
     @Override
     protected List<InlayHintsCollector> buildCollectors(Editor editor) {
