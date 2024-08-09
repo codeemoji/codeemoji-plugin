@@ -3,6 +3,7 @@ package codeemoji.inlay.vulnerabilities;
 import codeemoji.core.collector.CECollector;
 import codeemoji.core.collector.DynamicInlayBuilder;
 import codeemoji.core.collector.simple.CEDynamicMethodCollector;
+import codeemoji.core.collector.simple.CEDynamicReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
@@ -29,13 +30,13 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
     private CECollector collector;
 
-    private static final Map<CESymbol, String> VULNERABILITY_THRESHOLDS = new HashMap<>();
+    private static final Map<String, CESymbol> SEVERITY_SYMBOLS = new HashMap<>();
 
     static {
-        VULNERABILITY_THRESHOLDS.put(VULNERABLE_LOW, "LOW");
-        VULNERABILITY_THRESHOLDS.put(VULNERABLE_MEDIUM, "MEDIUM");
-        VULNERABILITY_THRESHOLDS.put(VULNERABLE_HIGH, "HIGH");
-        VULNERABILITY_THRESHOLDS.put(VULNERABLE_CRITICAL, "CRITICAL");
+        SEVERITY_SYMBOLS.put("LOW", VULNERABLE_LOW);
+        SEVERITY_SYMBOLS.put("MEDIUM", VULNERABLE_MEDIUM);
+        SEVERITY_SYMBOLS.put("HIGH", VULNERABLE_HIGH);
+        SEVERITY_SYMBOLS.put("CRITICAL", VULNERABLE_CRITICAL);
     }
 
     @Nullable
@@ -49,118 +50,113 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
     protected List<InlayHintsCollector> buildCollectors(Editor editor) {
         inlayBuilder = new DynamicInlayBuilder(editor);
         return Arrays.asList(
-                createCollector(editor, ".low", VULNERABLE_LOW),
-                //createReferenceCollector(editor, ".low", VULNERABLE_LOW),
-                createCollector(editor, ".medium", VULNERABLE_MEDIUM),
+                createCollector(editor),
+                createReferenceCollector(editor)
                 //createReferenceCollector(editor, ".medium", VULNERABLE_MEDIUM),
-                createCollector(editor, ".high", VULNERABLE_HIGH),
                 //createReferenceCollector(editor, ".high", VULNERABLE_HIGH),
-                createCollector(editor, ".critical", VULNERABLE_CRITICAL)
                 //createReferenceCollector(editor, ".critical", VULNERABLE_CRITICAL)
         );
     }
 
-    private InlayHintsCollector createCollector(Editor editor, String suffix, CESymbol symbol) {
+    private InlayHintsCollector createCollector(Editor editor) {
         return new CEDynamicMethodCollector(editor) {
             @Override
             public InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                return isInvokingMethodVulnerable(element, editor.getProject(), externalInfo, symbol);
+                return isInvokingMethodVulnerable(element, editor.getProject(), externalInfo);
             }
         };
     }
 
-    /*private InlayHintsCollector createReferenceCollector(Editor editor, String suffix, CESymbol symbol) {
-        return new CEReferenceMethodCollector(editor, getKeyId() + suffix, symbol) {
+    private InlayHintsCollector createReferenceCollector(Editor editor) {
+        return new CEDynamicReferenceMethodCollector(editor) {
             @Override
-            protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                return isInvokingMethodVulnerable(element, editor.getProject(), externalInfo, symbol);
+            protected InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                return isInvokingMethodVulnerable(element, editor.getProject(), externalInfo);
             }
         };
-    }*/
+    }
 
     @Override
     public @NotNull ImmediateConfigurable createConfigurable(@NotNull VulnerableDependencySettings settings) {
         return new VulnerableDependencyConfigurable(settings);
     }
 
-    public InlayPresentation isInvokingMethodVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo, CESymbol threshold) {
-        return isInvokingMethodVulnerable(method, project, externalInfo, threshold, new HashSet<>());
+    public InlayPresentation isInvokingMethodVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo) {
+        return isInvokingMethodVulnerable(method, project, externalInfo, new HashSet<>());
     }
 
-    private InlayPresentation isInvokingMethodVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo, CESymbol threshold, Set<PsiMethod> visitedMethods) {
+    private InlayPresentation isInvokingMethodVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo, Set<PsiMethod> visitedMethods) {
         if (visitedMethods.contains(method)) {
-            return null; // We've already checked this method, so return false to avoid infinite recursion
+            return null;
         }
         visitedMethods.add(method);
 
         PsiMethod[] externalFunctionalityInvokingMethods = CEUtils.collectExternalFunctionalityInvokingMethods(method);
 
-        if(
-                externalFunctionalityInvokingMethods.length > 0 &&
-                        Arrays.stream(externalFunctionalityInvokingMethods).anyMatch(externalFunctionalityInvokingMethod -> isVulnerable(externalFunctionalityInvokingMethod, project, externalInfo, threshold))
-        ){
-            return inlayBuilder.buildInlayWithEmoji(VULNERABLE_LOW, "inlay." + getKeyId() + ".reference.tooltip", null);
+        String highestSeverity = Arrays.stream(externalFunctionalityInvokingMethods)
+                .map(m -> isVulnerable(m, project, externalInfo))
+                .filter(Objects::nonNull)
+                .max(Comparator.comparingInt(this::getSeverityRank))
+                .orElse(null);
+
+        if (highestSeverity != null) {
+            CESymbol symbol = SEVERITY_SYMBOLS.get(highestSeverity);
+            return inlayBuilder.buildInlayWithEmoji(symbol, "inlay." + getKeyId() + "." + highestSeverity.toLowerCase() + ".tooltip", null);
         }
 
-        else {
-            return null;
-            /*if (getSettings().isCheckVulnerableDependecyApplied()){
-                return Arrays.stream(externalFunctionalityInvokingMethods)
-                        .filter(externalFunctionalityInvokingMethod -> !isVulnerable(externalFunctionalityInvokingMethod, project, externalInfo, threshold))
-                        .anyMatch(externalFunctionalityInvokingMethod -> isInvokingMethodVulnerable(externalFunctionalityInvokingMethod, project, externalInfo, threshold, visitedMethods));
-            }
-
-            else{
-                return  null;
-            }*/
+        if (getSettings().isCheckVulnerableDependecyApplied()) {
+            return Arrays.stream(externalFunctionalityInvokingMethods)
+                    .map(m -> isInvokingMethodVulnerable(m, project, externalInfo, visitedMethods))
+                    .filter(Objects::nonNull)
+                    .findFirst()
+                    .orElse(null);
         }
+
+        return null;
     }
 
-    private boolean isVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo, CESymbol threshold) {
-
+    private String isVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo) {
         if (!CEUtils.checkMethodExternality(method, project)) {
-            return false;
+            return null;
         }
 
         VirtualFile file = method.getNavigationElement().getContainingFile().getVirtualFile();
         if (file == null) {
-            return false;
+            return null;
         }
         String normalizedPath = CEUtils.normalizeDependencyPath(file.getPath());
 
-        String thresholdString = VULNERABILITY_THRESHOLDS.get(threshold);
-        Iterator<? extends Map.Entry<?, ?>> iterator = externalInfo.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<?, ?> entry = iterator.next();
+        for (Map.Entry<?, ?> entry : externalInfo.entrySet()) {
             if (entry.getKey() instanceof DependencyInfo dependencyInfo) {
                 String name = dependencyInfo.getPath();
-                String[] nameParts = name.split("@");
-                String dependency = nameParts[0];
+                String dependency = name.split("@")[0];
                 if (dependency.equals(normalizedPath)) {
                     if (entry.getValue() instanceof ArrayList<?> cveList) {
-                        String maxSeverity = getMaxSeverity(cveList.stream()
+                        return getMaxSeverity(cveList.stream()
                                 .filter(VulnerabilityInfo.class::isInstance)
                                 .map(VulnerabilityInfo.class::cast)
                                 .collect(Collectors.toList()));
-                        return maxSeverity.equals(thresholdString);
                     }
                 }
             }
         }
-        return false;
+        return null;
     }
 
-
     public String getMaxSeverity(List<VulnerabilityInfo> vulnerabilities) {
-        String[] severityOrder = {"CRITICAL", "HIGH", "MEDIUM", "LOW"};
+        return vulnerabilities.stream()
+                .map(VulnerabilityInfo::getSeverity)
+                .max(Comparator.comparingInt(this::getSeverityRank))
+                .orElse("NONE");
+    }
 
-        for (String severity : severityOrder) {
-            for (VulnerabilityInfo v : vulnerabilities) {
-                if (v.getSeverity().equals(severity)) {
-                    return severity;
-                }
-            }
+    private int getSeverityRank(String severity) {
+        switch (severity) {
+            case "CRITICAL": return 4;
+            case "HIGH": return 3;
+            case "MEDIUM": return 2;
+            case "LOW": return 1;
+            default: return 0;
         }
-        return "ERROR";
     }
 }

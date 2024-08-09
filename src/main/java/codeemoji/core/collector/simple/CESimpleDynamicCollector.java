@@ -21,7 +21,7 @@ import java.util.Map;
 @ToString
 @SuppressWarnings("UnstableApiUsage")
 public sealed abstract class CESimpleDynamicCollector<H extends PsiElement, A extends PsiElement> extends CECollector<A>
-        permits CEDynamicMethodCollector {
+        permits CEDynamicMethodCollector, CEDynamicReferenceMethodCollector {
 
     protected InlayPresentation inlay;
 
