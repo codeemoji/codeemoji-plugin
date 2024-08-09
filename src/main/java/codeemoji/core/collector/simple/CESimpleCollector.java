@@ -21,10 +21,9 @@ import java.util.Map;
 @ToString
 @SuppressWarnings("UnstableApiUsage")
 public sealed abstract class CESimpleCollector<H extends PsiElement, A extends PsiElement> extends CECollector<A>
-        permits CEClassCollector, CEMethodCollector, CEVariableCollector,
-        CEReferenceClassCollector, CEReferenceFieldCollector, CEReferenceMethodCollector {
+        permits CEClassCollector, CEDynamicMethodCollector, CEMethodCollector, CEReferenceClassCollector, CEReferenceFieldCollector, CEReferenceMethodCollector, CEVariableCollector {
 
-    private final InlayPresentation inlay;
+    protected InlayPresentation inlay;
 
     protected CESimpleCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
         super(editor);

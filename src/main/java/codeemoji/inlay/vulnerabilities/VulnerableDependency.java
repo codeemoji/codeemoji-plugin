@@ -1,5 +1,6 @@
 package codeemoji.inlay.vulnerabilities;
 
+import codeemoji.core.collector.simple.CEDynamicMethodCollector;
 import codeemoji.core.collector.simple.CEMethodCollector;
 import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
@@ -45,18 +46,23 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
     protected List<InlayHintsCollector> buildCollectors(Editor editor) {
         return Arrays.asList(
                 createCollector(editor, ".low", VULNERABLE_LOW),
-                createReferenceCollector(editor, ".low", VULNERABLE_LOW),
+                //createReferenceCollector(editor, ".low", VULNERABLE_LOW),
                 createCollector(editor, ".medium", VULNERABLE_MEDIUM),
-                createReferenceCollector(editor, ".medium", VULNERABLE_MEDIUM),
+                //createReferenceCollector(editor, ".medium", VULNERABLE_MEDIUM),
                 createCollector(editor, ".high", VULNERABLE_HIGH),
-                createReferenceCollector(editor, ".high", VULNERABLE_HIGH),
-                createCollector(editor, ".critical", VULNERABLE_CRITICAL),
-                createReferenceCollector(editor, ".critical", VULNERABLE_CRITICAL)
+                //createReferenceCollector(editor, ".high", VULNERABLE_HIGH),
+                createCollector(editor, ".critical", VULNERABLE_CRITICAL)
+                //createReferenceCollector(editor, ".critical", VULNERABLE_CRITICAL)
         );
     }
 
     private InlayHintsCollector createCollector(Editor editor, String suffix, CESymbol symbol) {
-        return new CEMethodCollector(editor, getKeyId() + suffix, symbol) {
+        return new CEDynamicMethodCollector(editor, getKeyId() + suffix, symbol) {
+            @Override
+            public InlayPresentation updateInlay() {
+                return buildInlayWithEmoji(symbol, "inlay." + getKeyId() + ".reference.tooltip", null);
+            }
+
             @Override
             protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                 return isInvokingMethodVulnerable(element, editor.getProject(), externalInfo, symbol);
