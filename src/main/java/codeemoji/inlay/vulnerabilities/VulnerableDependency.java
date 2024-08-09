@@ -28,8 +28,6 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
     private DynamicInlayBuilder inlayBuilder;
 
-    private CECollector collector;
-
     private static final Map<String, CESymbol> SEVERITY_SYMBOLS = new HashMap<>();
 
     static {
@@ -52,9 +50,6 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         return Arrays.asList(
                 createCollector(editor),
                 createReferenceCollector(editor)
-                //createReferenceCollector(editor, ".medium", VULNERABLE_MEDIUM),
-                //createReferenceCollector(editor, ".high", VULNERABLE_HIGH),
-                //createReferenceCollector(editor, ".critical", VULNERABLE_CRITICAL)
         );
     }
 
@@ -93,15 +88,11 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
         PsiMethod[] externalFunctionalityInvokingMethods = CEUtils.collectExternalFunctionalityInvokingMethods(method);
 
-        String highestSeverity = Arrays.stream(externalFunctionalityInvokingMethods)
-                .map(m -> isVulnerable(m, project, externalInfo))
-                .filter(Objects::nonNull)
-                .max(Comparator.comparingInt(this::getSeverityRank))
-                .orElse(null);
-
-        if (highestSeverity != null) {
-            CESymbol symbol = SEVERITY_SYMBOLS.get(highestSeverity);
-            return inlayBuilder.buildInlayWithEmoji(symbol, "inlay." + getKeyId() + "." + highestSeverity.toLowerCase() + ".tooltip", null);
+        for (PsiMethod invokingMethod : externalFunctionalityInvokingMethods) {
+            VulnerabilityResult result = isVulnerable(invokingMethod, project, externalInfo);
+            if (result != null) {
+                return createInlayPresentation(result);
+            }
         }
 
         if (getSettings().isCheckVulnerableDependecyApplied()) {
@@ -115,7 +106,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         return null;
     }
 
-    private String isVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo) {
+    private VulnerabilityResult isVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo) {
         if (!CEUtils.checkMethodExternality(method, project)) {
             return null;
         }
@@ -132,10 +123,15 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
                 String dependency = name.split("@")[0];
                 if (dependency.equals(normalizedPath)) {
                     if (entry.getValue() instanceof ArrayList<?> cveList) {
-                        return getMaxSeverity(cveList.stream()
+                        List<VulnerabilityInfo> vulnerabilities = cveList.stream()
                                 .filter(VulnerabilityInfo.class::isInstance)
                                 .map(VulnerabilityInfo.class::cast)
-                                .collect(Collectors.toList()));
+                                .collect(Collectors.toList());
+
+                        if (!vulnerabilities.isEmpty()) {
+                            String scanner = String.valueOf(vulnerabilities.get(0).getScanner());
+                            return new VulnerabilityResult(dependency, vulnerabilities.size(), scanner);
+                        }
                     }
                 }
             }
@@ -143,20 +139,20 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         return null;
     }
 
-    public String getMaxSeverity(List<VulnerabilityInfo> vulnerabilities) {
-        return vulnerabilities.stream()
-                .map(VulnerabilityInfo::getSeverity)
-                .max(Comparator.comparingInt(this::getSeverityRank))
-                .orElse("NONE");
+    private InlayPresentation createInlayPresentation(VulnerabilityResult result) {
+        String tooltip = result.dependencyName + " has " + result.numberOfVulnerabilities + " vulnerabilities";
+        return inlayBuilder.buildInlayWithEmoji(VULNERABLE_CRITICAL, result.scanner + "Scanner - ", tooltip);
     }
 
-    private int getSeverityRank(String severity) {
-        switch (severity) {
-            case "CRITICAL": return 4;
-            case "HIGH": return 3;
-            case "MEDIUM": return 2;
-            case "LOW": return 1;
-            default: return 0;
+    private static class VulnerabilityResult {
+        String dependencyName;
+        int numberOfVulnerabilities;
+        String scanner;
+
+        VulnerabilityResult(String dependencyName, int numberOfVulnerabilities, String scanner) {
+            this.dependencyName = dependencyName;
+            this.numberOfVulnerabilities = numberOfVulnerabilities;
+            this.scanner = scanner;
         }
     }
 }

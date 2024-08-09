@@ -2,7 +2,6 @@ package codeemoji.core.collector;
 
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
-import codeemoji.inlay.vulnerabilities.VulnerableDependency;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.codeInsight.hints.presentation.PresentationFactory;
 import com.intellij.openapi.editor.Editor;
@@ -37,7 +36,7 @@ public abstract sealed class CEInlayBuilder permits CECollector, DynamicInlayBui
         }
     }
 
-    public final InlayPresentation buildInlayWithEmoji(@Nullable CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+    public InlayPresentation buildInlayWithEmoji(@Nullable CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         if (null == symbol) {
             symbol = new CESymbol();
         } else if (null != symbol.getIcon()) {
@@ -50,7 +49,7 @@ public abstract sealed class CEInlayBuilder permits CECollector, DynamicInlayBui
         return formatInlay(factory.smallScaledIcon(icon), keyTooltip, suffixTooltip);
     }
 
-    protected final @NotNull InlayPresentation buildInlayWithText(@NotNull String fullText, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+    protected @NotNull InlayPresentation buildInlayWithText(@NotNull String fullText, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         return formatInlay(factory.smallText(fullText), keyTooltip, suffixTooltip);
     }
 
