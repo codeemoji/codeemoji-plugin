@@ -1,8 +1,8 @@
 package codeemoji.inlay.vulnerabilities;
 
+import codeemoji.core.collector.CECollector;
+import codeemoji.core.collector.DynamicInlayBuilder;
 import codeemoji.core.collector.simple.CEDynamicMethodCollector;
-import codeemoji.core.collector.simple.CEMethodCollector;
-import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
@@ -10,7 +10,6 @@ import codeemoji.inlay.external.DependencyInfo;
 import codeemoji.inlay.external.VulnerabilityInfo;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
-import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -25,6 +24,10 @@ import java.util.stream.Collectors;
 import static codeemoji.inlay.vulnerabilities.VulnerableDependencySymbols.*;
 
 public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySettings> {
+
+    private DynamicInlayBuilder inlayBuilder;
+
+    private CECollector collector;
 
     private static final Map<CESymbol, String> VULNERABILITY_THRESHOLDS = new HashMap<>();
 
@@ -44,6 +47,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
     @Override
     protected List<InlayHintsCollector> buildCollectors(Editor editor) {
+        inlayBuilder = new DynamicInlayBuilder(editor);
         return Arrays.asList(
                 createCollector(editor, ".low", VULNERABLE_LOW),
                 //createReferenceCollector(editor, ".low", VULNERABLE_LOW),
@@ -57,40 +61,35 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
     }
 
     private InlayHintsCollector createCollector(Editor editor, String suffix, CESymbol symbol) {
-        return new CEDynamicMethodCollector(editor, getKeyId() + suffix, symbol) {
+        return new CEDynamicMethodCollector(editor) {
             @Override
-            public InlayPresentation updateInlay() {
-                return buildInlayWithEmoji(symbol, "inlay." + getKeyId() + ".reference.tooltip", null);
-            }
-
-            @Override
-            protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+            public InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                 return isInvokingMethodVulnerable(element, editor.getProject(), externalInfo, symbol);
             }
         };
     }
 
-    private InlayHintsCollector createReferenceCollector(Editor editor, String suffix, CESymbol symbol) {
+    /*private InlayHintsCollector createReferenceCollector(Editor editor, String suffix, CESymbol symbol) {
         return new CEReferenceMethodCollector(editor, getKeyId() + suffix, symbol) {
             @Override
             protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                 return isInvokingMethodVulnerable(element, editor.getProject(), externalInfo, symbol);
             }
         };
-    }
+    }*/
 
     @Override
     public @NotNull ImmediateConfigurable createConfigurable(@NotNull VulnerableDependencySettings settings) {
         return new VulnerableDependencyConfigurable(settings);
     }
 
-    public boolean isInvokingMethodVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo, CESymbol threshold) {
+    public InlayPresentation isInvokingMethodVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo, CESymbol threshold) {
         return isInvokingMethodVulnerable(method, project, externalInfo, threshold, new HashSet<>());
     }
 
-    private boolean isInvokingMethodVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo, CESymbol threshold, Set<PsiMethod> visitedMethods) {
+    private InlayPresentation isInvokingMethodVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo, CESymbol threshold, Set<PsiMethod> visitedMethods) {
         if (visitedMethods.contains(method)) {
-            return false; // We've already checked this method, so return false to avoid infinite recursion
+            return null; // We've already checked this method, so return false to avoid infinite recursion
         }
         visitedMethods.add(method);
 
@@ -100,20 +99,20 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
                 externalFunctionalityInvokingMethods.length > 0 &&
                         Arrays.stream(externalFunctionalityInvokingMethods).anyMatch(externalFunctionalityInvokingMethod -> isVulnerable(externalFunctionalityInvokingMethod, project, externalInfo, threshold))
         ){
-            return true;
+            return inlayBuilder.buildInlayWithEmoji(VULNERABLE_LOW, "inlay." + getKeyId() + ".reference.tooltip", null);
         }
 
         else {
-
-            if (getSettings().isCheckVulnerableDependecyApplied()){
+            return null;
+            /*if (getSettings().isCheckVulnerableDependecyApplied()){
                 return Arrays.stream(externalFunctionalityInvokingMethods)
                         .filter(externalFunctionalityInvokingMethod -> !isVulnerable(externalFunctionalityInvokingMethod, project, externalInfo, threshold))
                         .anyMatch(externalFunctionalityInvokingMethod -> isInvokingMethodVulnerable(externalFunctionalityInvokingMethod, project, externalInfo, threshold, visitedMethods));
             }
 
             else{
-                return  false;
-            }
+                return  null;
+            }*/
         }
     }
 

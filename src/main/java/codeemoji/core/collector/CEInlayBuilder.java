@@ -2,6 +2,7 @@ package codeemoji.core.collector;
 
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
+import codeemoji.inlay.vulnerabilities.VulnerableDependency;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.codeInsight.hints.presentation.PresentationFactory;
 import com.intellij.openapi.editor.Editor;
@@ -18,12 +19,12 @@ import java.awt.*;
 @ToString
 @EqualsAndHashCode
 @SuppressWarnings("UnstableApiUsage")
-public abstract sealed class CEInlayBuilder permits CECollector {
+public abstract sealed class CEInlayBuilder permits CECollector, DynamicInlayBuilder {
 
     private final Editor editor;
     private final @NotNull PresentationFactory factory;
 
-    CEInlayBuilder(Editor editor) {
+    protected CEInlayBuilder(Editor editor) {
         this.editor = editor;
         factory = new PresentationFactory(this.editor);
     }
@@ -36,7 +37,7 @@ public abstract sealed class CEInlayBuilder permits CECollector {
         }
     }
 
-    protected final InlayPresentation buildInlayWithEmoji(@Nullable CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+    public final InlayPresentation buildInlayWithEmoji(@Nullable CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         if (null == symbol) {
             symbol = new CESymbol();
         } else if (null != symbol.getIcon()) {

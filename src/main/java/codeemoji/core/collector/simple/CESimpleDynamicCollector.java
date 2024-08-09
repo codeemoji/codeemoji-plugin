@@ -20,13 +20,16 @@ import java.util.Map;
 @Setter
 @ToString
 @SuppressWarnings("UnstableApiUsage")
-public sealed abstract class CESimpleCollector<H extends PsiElement, A extends PsiElement> extends CECollector<A>
-        permits CEClassCollector, CEMethodCollector, CEReferenceClassCollector, CEReferenceFieldCollector, CEReferenceMethodCollector, CEVariableCollector {
+public sealed abstract class CESimpleDynamicCollector<H extends PsiElement, A extends PsiElement> extends CECollector<A>
+        permits CEDynamicMethodCollector {
 
     protected InlayPresentation inlay;
 
-    protected CESimpleCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
+    protected CESimpleDynamicCollector(@NotNull Editor editor) {
         super(editor);
+    }
+
+    protected final void dynamicInlay(@NotNull String keyId, @Nullable CESymbol symbol){
         inlay = buildInlayWithEmoji(symbol, "inlay." + keyId + ".tooltip", null);
     }
 
@@ -42,5 +45,5 @@ public sealed abstract class CESimpleCollector<H extends PsiElement, A extends P
         return result;
     }
 
-    protected abstract boolean needsHint(@NotNull H element, @NotNull Map<?, ?> externalInfo);
+    protected abstract InlayPresentation needsHint(@NotNull H element, @NotNull Map<?, ?> externalInfo);
 }

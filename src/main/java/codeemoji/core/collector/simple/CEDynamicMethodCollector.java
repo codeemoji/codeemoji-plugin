@@ -1,17 +1,15 @@
 package codeemoji.core.collector.simple;
 
-import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public abstract non-sealed class CEDynamicMethodCollector extends CESimpleCollector<PsiMethod, PsiIdentifier> {
+public abstract non-sealed class CEDynamicMethodCollector extends CESimpleDynamicCollector<PsiMethod, PsiIdentifier> {
 
-    protected CEDynamicMethodCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
-        super(editor, keyId, symbol);
+    protected CEDynamicMethodCollector(@NotNull Editor editor) {
+        super(editor);
     }
 
     @Override
@@ -20,8 +18,9 @@ public abstract non-sealed class CEDynamicMethodCollector extends CESimpleCollec
             psiElement.accept(new JavaRecursiveElementVisitor() {
                 @Override
                 public void visitMethod(@NotNull PsiMethod method) {
-                    if (needsHint(method, processExternalInfo(method))) {
-                        inlay = updateInlay();
+                    InlayPresentation dynamicInlay = needsHint(method, processExternalInfo(method));
+                    if (dynamicInlay != null) {
+                        inlay = dynamicInlay;
                         addInlay(method.getNameIdentifier(), inlayHintsSink);
                     }
                     super.visitMethod(method);
@@ -30,7 +29,6 @@ public abstract non-sealed class CEDynamicMethodCollector extends CESimpleCollec
         }
         return false;
     }
-
-    public abstract InlayPresentation updateInlay();
+    // public abstract InlayPresentation getDynamicInlay(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo);
 }
 
