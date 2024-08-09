@@ -1,6 +1,5 @@
 package codeemoji.inlay.vulnerabilities;
 
-import codeemoji.core.collector.CECollector;
 import codeemoji.core.collector.DynamicInlayBuilder;
 import codeemoji.core.collector.simple.CEDynamicMethodCollector;
 import codeemoji.core.collector.simple.CEDynamicReferenceMethodCollector;
@@ -96,14 +95,23 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         }
 
         if (getSettings().isCheckVulnerableDependecyApplied()) {
-            return Arrays.stream(externalFunctionalityInvokingMethods)
+            InlayPresentation indirectVulnerability = Arrays.stream(externalFunctionalityInvokingMethods)
                     .map(m -> isInvokingMethodVulnerable(m, project, externalInfo, visitedMethods))
                     .filter(Objects::nonNull)
                     .findFirst()
                     .orElse(null);
+
+            if (indirectVulnerability != null) {
+                return createIndirectVulnerabilityInlay();
+            }
         }
 
         return null;
+    }
+
+    private InlayPresentation createIndirectVulnerabilityInlay() {
+        String tooltip = "Function calling function with vulnerable dependency usage";
+        return inlayBuilder.buildInlayWithEmoji(VULNERABLE_MEDIUM, tooltip, null);
     }
 
     private VulnerabilityResult isVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo) {
@@ -141,7 +149,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
     private InlayPresentation createInlayPresentation(VulnerabilityResult result) {
         String tooltip = result.dependencyName + " has " + result.numberOfVulnerabilities + " vulnerabilities";
-        return inlayBuilder.buildInlayWithEmoji(VULNERABLE_CRITICAL, result.scanner + "Scanner - ", tooltip);
+        return inlayBuilder.buildInlayWithEmoji(VULNERABLE_CRITICAL, result.scanner + " Scanners- ", tooltip);
     }
 
     private static class VulnerabilityResult {
