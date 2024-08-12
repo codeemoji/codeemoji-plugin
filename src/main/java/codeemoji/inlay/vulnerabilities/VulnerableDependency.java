@@ -49,7 +49,8 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         return Arrays.asList(
                 createCollector(editor),
                 createReferenceCollector(editor),
-                createReferenceCollector2(editor)
+                createReferenceCollector2(editor),
+                createIndirectVulnerabilityCollector(editor)
         );
     }
 
@@ -79,6 +80,18 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
                 InlayPresentation result = isMethodUsingVulnerableDependencies(element, editor.getProject(), externalInfo);
                 if (result != null && !CEUtils.checkMethodExternality(element, editor.getProject())) {
                     return result;
+                }
+                return null;
+            }
+        };
+    }
+
+    private InlayHintsCollector createIndirectVulnerabilityCollector(Editor editor) {
+        return new CEDynamicMethodCollector(editor) {
+            @Override
+            public InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                if (getSettings().isCheckVulnerableDependecyApplied()) {
+                    return isIndirectlyUsingVulnerableDependencies(element, editor.getProject(), externalInfo);
                 }
                 return null;
             }
@@ -125,14 +138,21 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         if (!vulnerableDependencies.isEmpty()) {
             return createMethodContainingVulnerableDependencyInlay(vulnerableDependencies.size());
         }
+        return null;
+    }
 
-        /*if (getSettings().isCheckVulnerableDependecyApplied()) {
-            return Arrays.stream(externalMethods)
-                    .map(m -> isInvokingMethodVulnerable(m, project, externalInfo, visitedMethods))
-                    .filter(Objects::nonNull)
-                    .findFirst()
-                    .orElse(null);
-        }*/
+    private InlayPresentation isIndirectlyUsingVulnerableDependencies(PsiMethod method, Project project, Map<?, ?> externalInfo) {
+        Set<PsiMethod> visitedMethods = new HashSet<>();
+        PsiMethod[] externalMethods = CEUtils.collectExternalFunctionalityInvokingMethods(method);
+
+        for (PsiMethod externalMethod : externalMethods) {
+            if (!visitedMethods.contains(externalMethod) && !CEUtils.checkMethodExternality(externalMethod, project)) {
+                InlayPresentation result = isMethodUsingVulnerableDependencies(externalMethod, project, externalInfo, visitedMethods);
+                if (result != null) {
+                    return createIndirectVulnerableDependencyInlay();
+                }
+            }
+        }
 
         return null;
     }
@@ -179,6 +199,11 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
     private InlayPresentation createDependencyCallInlay(VulnerabilityResult result) {
         String tooltip = result.dependencyName + " has " + result.numberOfVulnerabilities + " vulnerabilities";
         return inlayBuilder.buildInlayWithEmoji(VULNERABLE_CRITICAL, result.scanner + "Scanner - ", tooltip);
+    }
+
+    private InlayPresentation createIndirectVulnerableDependencyInlay() {
+        String tooltip = "Function calling function/s with vulnerable dependencies usage";
+        return inlayBuilder.buildInlayWithEmoji(VULNERABLE_HIGH, tooltip, null);
     }
 
     private static class VulnerabilityResult {
