@@ -1,6 +1,5 @@
 package codeemoji.inlay.vulnerabilities;
 
-import codeemoji.core.collector.CECollector;
 import codeemoji.core.collector.DynamicInlayBuilder;
 import codeemoji.core.collector.simple.CEDynamicMethodCollector;
 import codeemoji.core.collector.simple.CEDynamicReferenceMethodCollector;
@@ -91,7 +90,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         for (PsiMethod invokingMethod : externalFunctionalityInvokingMethods) {
             VulnerabilityResult result = isVulnerable(invokingMethod, project, externalInfo);
             if (result != null) {
-                return createInlayPresentation(result);
+                return createDependencyCallInlay(result);
             }
         }
 
@@ -116,9 +115,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         }
 
         if (!vulnerableDependencies.isEmpty()) {
-            String tooltip = "The method is using " + vulnerableDependencies.size() + " vulnerable " +
-                    (vulnerableDependencies.size() == 1 ? "dependency" : "dependencies");
-            return inlayBuilder.buildInlayWithEmoji(VULNERABLE_MEDIUM, tooltip, null);
+            return createMethodContainingVulnerableDependencyInlay(vulnerableDependencies.size());
         }
 
         if (getSettings().isCheckVulnerableDependecyApplied()) {
@@ -165,7 +162,13 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         return null;
     }
 
-    private InlayPresentation createInlayPresentation(VulnerabilityResult result) {
+    private InlayPresentation createMethodContainingVulnerableDependencyInlay(int vuln) {
+        String tooltip = "The method is using " + vuln + " vulnerable " +
+                (vuln == 1 ? "dependency" : "dependencies");
+        return inlayBuilder.buildInlayWithEmoji(VULNERABLE_MEDIUM, tooltip, null);
+    }
+
+    private InlayPresentation createDependencyCallInlay(VulnerabilityResult result) {
         String tooltip = result.dependencyName + " has " + result.numberOfVulnerabilities + " vulnerabilities";
         return inlayBuilder.buildInlayWithEmoji(VULNERABLE_CRITICAL, result.scanner + "Scanner - ", tooltip);
     }
