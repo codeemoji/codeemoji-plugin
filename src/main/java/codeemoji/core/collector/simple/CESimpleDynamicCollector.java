@@ -29,10 +29,6 @@ public sealed abstract class CESimpleDynamicCollector<H extends PsiElement, A ex
         super(editor);
     }
 
-    protected final void dynamicInlay(@NotNull String keyId, @Nullable CESymbol symbol){
-        inlay = buildInlayWithEmoji(symbol, "inlay." + keyId + ".tooltip", null);
-    }
-
     protected final void addInlay(@Nullable A element, InlayHintsSink sink) {
         addInlayInline(element, sink, getInlay());
     }
