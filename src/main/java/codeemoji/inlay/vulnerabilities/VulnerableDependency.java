@@ -56,7 +56,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         return new CEDynamicMethodCollector(editor) {
             @Override
             public InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                return isInvokingMethodVulnerable(element, editor.getProject(), externalInfo);
+                return isMethodUsingVulnerableDependencies(element, editor.getProject(), externalInfo);
             }
         };
     }
@@ -94,8 +94,34 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
             }
         }
 
+        return null;
+    }
+
+    private InlayPresentation isMethodUsingVulnerableDependencies(PsiMethod method, Project project, Map<?, ?> externalInfo) {
+        return isMethodUsingVulnerableDependencies(method, project, externalInfo, new HashSet<>());
+    }
+    private InlayPresentation isMethodUsingVulnerableDependencies(PsiMethod method, Project project, Map<?, ?> externalInfo, Set<PsiMethod> visitedMethods) {
+        if (visitedMethods.contains(method)) {
+            return null;
+        }
+        PsiMethod[] externalMethods = CEUtils.collectExternalFunctionalityInvokingMethods(method);
+        Set<String> vulnerableDependencies = new HashSet<>();
+
+        for (PsiMethod externalMethod : externalMethods) {
+            VulnerabilityResult result = isVulnerable(externalMethod, project, externalInfo);
+            if (result != null) {
+                vulnerableDependencies.add(result.dependencyName);
+            }
+        }
+
+        if (!vulnerableDependencies.isEmpty()) {
+            String tooltip = "The method is using " + vulnerableDependencies.size() + " vulnerable " +
+                    (vulnerableDependencies.size() == 1 ? "dependency" : "dependencies");
+            return inlayBuilder.buildInlayWithEmoji(VULNERABLE_MEDIUM, tooltip, null);
+        }
+
         if (getSettings().isCheckVulnerableDependecyApplied()) {
-            InlayPresentation indirectVulnerability = Arrays.stream(externalFunctionalityInvokingMethods)
+            InlayPresentation indirectVulnerability = Arrays.stream(externalMethods)
                     .map(m -> isInvokingMethodVulnerable(m, project, externalInfo, visitedMethods))
                     .filter(Objects::nonNull)
                     .findFirst()
