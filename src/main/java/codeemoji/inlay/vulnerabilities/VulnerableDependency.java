@@ -48,7 +48,8 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         inlayBuilder = new DynamicInlayBuilder(editor);
         return Arrays.asList(
                 createCollector(editor),
-                createReferenceCollector(editor)
+                createReferenceCollector(editor),
+                createReferenceCollector2(editor)
         );
     }
 
@@ -70,25 +71,27 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         };
     }
 
+    private InlayHintsCollector createReferenceCollector2(Editor editor) {
+        return new CEDynamicReferenceMethodCollector(editor) {
+            @Override
+            protected InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                return isMethodUsingVulnerableDependencies(element, editor.getProject(), externalInfo);
+            }
+        };
+    }
+
     @Override
     public @NotNull ImmediateConfigurable createConfigurable(@NotNull VulnerableDependencySettings settings) {
         return new VulnerableDependencyConfigurable(settings);
     }
 
-    public InlayPresentation isInvokingMethodVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo) {
+    /*public InlayPresentation isInvokingMethodVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo) {
         return isInvokingMethodVulnerable(method, project, externalInfo, new HashSet<>());
-    }
+    }*/
 
-    private InlayPresentation isInvokingMethodVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo, Set<PsiMethod> visitedMethods) {
-        if (visitedMethods.contains(method)) {
-            return null;
-        }
-        visitedMethods.add(method);
-
-        PsiMethod[] externalFunctionalityInvokingMethods = CEUtils.collectExternalFunctionalityInvokingMethods(method);
-
-        for (PsiMethod invokingMethod : externalFunctionalityInvokingMethods) {
-            VulnerabilityResult result = isVulnerable(invokingMethod, project, externalInfo);
+    public InlayPresentation isInvokingMethodVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo) {
+        if (CEUtils.checkMethodExternality(method, project)) {
+            VulnerabilityResult result = isVulnerable(method, project, externalInfo);
             if (result != null) {
                 return createDependencyCallInlay(result);
             }
@@ -118,13 +121,13 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
             return createMethodContainingVulnerableDependencyInlay(vulnerableDependencies.size());
         }
 
-        if (getSettings().isCheckVulnerableDependecyApplied()) {
+        /*if (getSettings().isCheckVulnerableDependecyApplied()) {
             return Arrays.stream(externalMethods)
                     .map(m -> isInvokingMethodVulnerable(m, project, externalInfo, visitedMethods))
                     .filter(Objects::nonNull)
                     .findFirst()
                     .orElse(null);
-        }
+        }*/
 
         return null;
     }
