@@ -75,7 +75,12 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         return new CEDynamicReferenceMethodCollector(editor) {
             @Override
             protected InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                return isMethodUsingVulnerableDependencies(element, editor.getProject(), externalInfo);
+                // Only show inlay if the method is not directly calling a vulnerable dependency
+                InlayPresentation result = isMethodUsingVulnerableDependencies(element, editor.getProject(), externalInfo);
+                if (result != null && !CEUtils.checkMethodExternality(element, editor.getProject())) {
+                    return result;
+                }
+                return null;
             }
         };
     }
