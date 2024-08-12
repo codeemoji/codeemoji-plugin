@@ -4,7 +4,6 @@ import codeemoji.core.collector.DynamicInlayBuilder;
 import codeemoji.core.collector.simple.CEDynamicMethodCollector;
 import codeemoji.core.collector.simple.CEDynamicReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
-import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import codeemoji.inlay.external.DependencyInfo;
 import codeemoji.inlay.external.VulnerabilityInfo;
@@ -27,14 +26,6 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
     private DynamicInlayBuilder inlayBuilder;
 
-    private static final Map<String, CESymbol> SEVERITY_SYMBOLS = new HashMap<>();
-
-    static {
-        SEVERITY_SYMBOLS.put("LOW", VULNERABLE_LOW);
-        SEVERITY_SYMBOLS.put("MEDIUM", VULNERABLE_MEDIUM);
-        SEVERITY_SYMBOLS.put("HIGH", VULNERABLE_HIGH);
-        SEVERITY_SYMBOLS.put("CRITICAL", VULNERABLE_CRITICAL);
-    }
 
     @Nullable
     @Override
@@ -103,13 +94,9 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         return new VulnerableDependencyConfigurable(settings);
     }
 
-    /*public InlayPresentation isInvokingMethodVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo) {
-        return isInvokingMethodVulnerable(method, project, externalInfo, new HashSet<>());
-    }*/
-
     public InlayPresentation isInvokingMethodVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo) {
         if (CEUtils.checkMethodExternality(method, project)) {
-            VulnerabilityResult result = isVulnerable(method, project, externalInfo);
+            InlayInfo result = isVulnerable(method, project, externalInfo);
             if (result != null) {
                 return createDependencyCallInlay(result);
             }
@@ -129,7 +116,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         Set<String> vulnerableDependencies = new HashSet<>();
 
         for (PsiMethod externalMethod : externalMethods) {
-            VulnerabilityResult result = isVulnerable(externalMethod, project, externalInfo);
+            InlayInfo result = isVulnerable(externalMethod, project, externalInfo);
             if (result != null) {
                 vulnerableDependencies.add(result.dependencyName);
             }
@@ -157,7 +144,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         return null;
     }
 
-    private VulnerabilityResult isVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo) {
+    private InlayInfo isVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo) {
         if (!CEUtils.checkMethodExternality(method, project)) {
             return null;
         }
@@ -181,7 +168,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
                         if (!vulnerabilities.isEmpty()) {
                             String scanner = String.valueOf(vulnerabilities.get(0).getScanner());
-                            return new VulnerabilityResult(dependency, vulnerabilities.size(), scanner);
+                            return new InlayInfo(dependency, vulnerabilities.size(), scanner);
                         }
                     }
                 }
@@ -196,7 +183,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         return inlayBuilder.buildInlayWithEmoji(VULNERABLE_MEDIUM, tooltip, null);
     }
 
-    private InlayPresentation createDependencyCallInlay(VulnerabilityResult result) {
+    private InlayPresentation createDependencyCallInlay(InlayInfo result) {
         String tooltip = result.dependencyName + " has " + result.numberOfVulnerabilities + " vulnerabilities";
         return inlayBuilder.buildInlayWithEmoji(VULNERABLE_CRITICAL, result.scanner + "Scanner - ", tooltip);
     }
@@ -206,15 +193,5 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         return inlayBuilder.buildInlayWithEmoji(VULNERABLE_HIGH, tooltip, null);
     }
 
-    private static class VulnerabilityResult {
-        String dependencyName;
-        int numberOfVulnerabilities;
-        String scanner;
 
-        VulnerabilityResult(String dependencyName, int numberOfVulnerabilities, String scanner) {
-            this.dependencyName = dependencyName;
-            this.numberOfVulnerabilities = numberOfVulnerabilities;
-            this.scanner = scanner;
-        }
-    }
 }
