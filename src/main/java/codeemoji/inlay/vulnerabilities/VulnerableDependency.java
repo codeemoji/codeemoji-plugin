@@ -4,6 +4,7 @@ import codeemoji.core.collector.DynamicInlayBuilder;
 import codeemoji.core.collector.simple.CEDynamicMethodCollector;
 import codeemoji.core.collector.simple.CEDynamicReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
@@ -140,18 +141,48 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
     // inlay parsers
     private InlayPresentation vulnerableMethodInlay(int vuln) {
-        String tooltip = "The method is using " + vuln + " vulnerable " +
-                (vuln == 1 ? "dependency" : "dependencies");
+        String pt1 = CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.pt1.tooltip");
+        String pt2 = CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.pt2.tooltip");
+        String pt3_1 = CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.pt3singular.tooltip");
+        String pt3_2 = CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.pt3plural.tooltip");
+        String tooltip = pt1 + vuln + " " + pt2 + (vuln == 1 ? pt3_1 : pt3_2);
         return inlayBuilder.buildInlayWithEmoji(VULNERABLE_METHOD, tooltip, null);
     }
 
     private InlayPresentation vulnerableDependencyCallInlay(InlayInfo result) {
-        String tooltip = result.dependencyName + " has " + result.numberOfVulnerabilities + " vulnerabilities";
-        return inlayBuilder.buildInlayWithEmoji(VULNERABLE_DEPENDENCY_CALL, result.scanner + "Scanner - ", tooltip);
+        StringBuilder tooltipBuilder = new StringBuilder(result.dependencyName + " " +
+                CEBundle.getString("inlay.vulnerabledependency.call.has") + " ");
+
+        String[] severities = {"CRITICAL", "HIGH", "MEDIUM", "LOW"};
+        boolean firstSeverity = true;
+        int totalVulnerabilities = 0;
+
+        for (String severity : severities) {
+            int count = result.severityCounts.getOrDefault(severity, 0);
+            if (count > 0) {
+                if (!firstSeverity) {
+                    tooltipBuilder.append(", ");
+                }
+                tooltipBuilder.append(count).append(" ")
+                        .append(CEBundle.getString("inlay.vulnerabledependency.call.severity." + severity.toLowerCase()));
+                firstSeverity = false;
+                totalVulnerabilities += count;
+            }
+        }
+
+        tooltipBuilder.append(" ")
+                .append(CEBundle.getString(totalVulnerabilities == 1 ?
+                        "inlay.vulnerabledependency.call.vulnerability" :
+                        "inlay.vulnerabledependency.call.vulnerabilities"));
+
+        String tooltip = tooltipBuilder.toString();
+        String scannerPrefix = CEBundle.getString("inlay.vulnerabledependency.call.scanner");
+        return inlayBuilder.buildInlayWithEmoji(VULNERABLE_DEPENDENCY_CALL,
+                result.scanner + scannerPrefix, tooltip);
     }
 
     private InlayPresentation indirectVulnerableMethodInlay() {
-        String tooltip = "Function calling function/s with vulnerable dependencies usage";
+        String tooltip = CEBundle.getString("inlay.vulnerabledependency.indirectvulnerable.tooltip");
         return inlayBuilder.buildInlayWithEmoji(INDIRECT_VULNERABLE_METHOD, tooltip, null);
     }
 

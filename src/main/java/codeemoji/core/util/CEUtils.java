@@ -575,7 +575,12 @@ public enum CEUtils {
 
                         if (!vulnerabilities.isEmpty()) {
                             String scanner = String.valueOf(vulnerabilities.get(0).getScanner());
-                            return new InlayInfo(dependency, vulnerabilities.size(), scanner);
+                            Map<String, Integer> severityCounts = new HashMap<>();
+                            for (VulnerabilityInfo vuln : vulnerabilities) {
+                                String severity = vuln.getSeverity();
+                                severityCounts.put(severity, severityCounts.getOrDefault(severity, 0) + 1);
+                            }
+                            return new InlayInfo(dependency, severityCounts, scanner);
                         }
                     }
                 }
