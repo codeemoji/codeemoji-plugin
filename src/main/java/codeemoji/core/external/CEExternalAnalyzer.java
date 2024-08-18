@@ -25,10 +25,12 @@ public final class CEExternalAnalyzer {
         var myExternalServiceState = globalSettings.getMyExternalServiceState();
         if (myExternalServiceState) {
             VulnerabilityInfo.ScannerType scannerType = globalSettings.getType();
-            if (scannerType.equals(VulnerabilityInfo.ScannerType.OSV)) {
+            if (scannerType.equals(VulnerabilityInfo.ScannerType.OSS)) {
+                OSSExternalServiceExternalService ossService = project.getService(OSSExternalServiceExternalService.class);
+                ossService.updateScanner();
+                externalServices.add(ossService);
+            } else if (scannerType.equals(VulnerabilityInfo.ScannerType.OSV)) {
                 externalServices.add(project.getService(OSVExternalServiceExternalService.class));
-            } else if (scannerType.equals(VulnerabilityInfo.ScannerType.OSS)) {
-                externalServices.add(project.getService(OSSExternalServiceExternalService.class));
             }
         }
         return externalServices;
