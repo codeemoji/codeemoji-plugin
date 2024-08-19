@@ -377,6 +377,7 @@ covered by comments.
 </tbody>
 </table>
 
+
 | **_Configuration_**                                                                                                                                                             |
 |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | ![High Cyclomatic Complexity Method - Configuration](docs/screenshots/highcyclomaticcomplexitymethod.png)                                                                       |
@@ -725,6 +726,46 @@ method calls, this option is turned off by default in the IDE's Inlay Hint setti
 |:--------------------------------------------------------------------------------------------|
 | ![State Independent Method - Example 2](docs/screenshots/stateindependentmethodsample1.png) |
 | *"Follow method calls and recursively check state independence" flag **is not** set*.       |
+
+
+# Cases of Vulnerable Depedendecies Usage
+
+In case a vulnerable dependency is used different inlays show information about the known vulnerabilities
+were a method call to the vulnerable dependency is performed in the code. In addition to the emoji a dinamic tooltip is
+displayed to give more information about the number and severity of the identified vulnerabilities.
+
+<table>
+<thead>
+  <tr>
+    <th colspan="3">Inlay hint information</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><b>Emoji</b></td>
+    <td><b>Usage</b></td>
+    <td><b>Tooltip</b></td>
+  </tr>
+  <tr>
+    <td> ☠️ </td>
+    <td>Vulnerable dependency method calls</td>
+    <td> <i>*Scanner*</i> - <i>*dependency name*</i> has <i>*numer and severity*</i> known vulnerabilities</td>
+  </tr>
+  <tr>
+    <td> 👽 </td>
+    <td>Methods using vulnerable dependencies</td>
+    <td>Method is using <i>*number of used vulnerable dependencies*</i> vulnerable dependencies</td>
+  </tr>
+  <tr>
+    <td> ⛔ </td>
+    <td>Methods calling methods with vulnerable dependencies usage</td>
+    <td>Function calling function/s with vulnerable dependencies usage</td>
+  </tr>
+</tbody>
+</table>
+
+To collect information about possible vulnerabilities in the dependencies of the project two different Scanners can be 
+used. The name of the used scanner will be shown in the tooltip of the dependency method call.
 
 # External Services API
 
