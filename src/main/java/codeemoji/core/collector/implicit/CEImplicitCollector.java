@@ -7,14 +7,7 @@ import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.lang.jvm.JvmAnnotatedElement;
 import com.intellij.lang.jvm.JvmAnnotation;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.JavaRecursiveElementVisitor;
-import com.intellij.psi.PsiAnnotation;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiJavaFile;
-import com.intellij.psi.PsiMember;
-import com.intellij.psi.PsiMethod;
+import com.intellij.psi.*;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +19,7 @@ import java.util.Objects;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public abstract class CEImplicitCollector extends CECollector<PsiElement> {
+public abstract class CEImplicitCollector extends CECollector {
 
     public final @NotNull String keyId;
     public final int codePoint;

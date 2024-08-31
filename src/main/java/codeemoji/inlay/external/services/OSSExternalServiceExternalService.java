@@ -8,7 +8,7 @@ import com.intellij.openapi.components.Service;
 @Service
 public final class OSSExternalServiceExternalService extends BaseVulnerabilityExternalService {
     private static final String OSS_INDEX_API_URL = "https://ossindex.sonatype.org/api/v3/component-report";
-    private static final int OSS_BATCH_SIZE = 128;
+    private static final int OSS_BATCH_SIZE = 32; // 128;
     private OSSVulnerabilityScanner ossVulnerabilityScanner;
 
     public OSSExternalServiceExternalService() {

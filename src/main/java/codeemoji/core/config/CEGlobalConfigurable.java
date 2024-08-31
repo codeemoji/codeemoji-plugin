@@ -8,8 +8,6 @@ import com.intellij.openapi.util.NlsContexts;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 public class CEGlobalConfigurable implements Configurable {
 
@@ -29,7 +27,7 @@ public class CEGlobalConfigurable implements Configurable {
         var innerPanel = CEUtils.createBasicInnerPanel("codeemoji.configurable.title", 2, 1);
         var analysersPanel = CEUtils.createBasicInnerPanel("codeemoji.configurable.external.analysers.title", 1, 1);
         cbMyExternalService = new JCheckBox("Vulnerability Scanner");
-        cbSecondaryService = new JCheckBox("Use secondary Service for Vulnerable Methods scan");
+        cbSecondaryService = new JCheckBox("Use secondary Service Sonatype OSS Index");
         analysersPanel.add(cbMyExternalService);
         analysersPanel.add(cbSecondaryService);
         innerPanel.add(analysersPanel);

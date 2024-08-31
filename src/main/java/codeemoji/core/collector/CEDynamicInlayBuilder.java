@@ -6,8 +6,8 @@ import codeemoji.core.util.CESymbol;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class DynamicInlayBuilder extends CEInlayBuilder {
-    public DynamicInlayBuilder(Editor editor) {
+public final class CEDynamicInlayBuilder extends CEInlayBuilder {
+    public CEDynamicInlayBuilder(Editor editor) {
         super(editor);
     }
 

@@ -1,6 +1,6 @@
 package codeemoji.inlay.vulnerabilities;
 
-import codeemoji.core.collector.DynamicInlayBuilder;
+import codeemoji.core.collector.CEDynamicInlayBuilder;
 import codeemoji.core.collector.simple.CEDynamicMethodCollector;
 import codeemoji.core.collector.simple.CEDynamicReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
@@ -22,7 +22,7 @@ import static codeemoji.inlay.vulnerabilities.VulnerableDependencySymbols.*;
 
 public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySettings> {
 
-    private DynamicInlayBuilder inlayBuilder;
+    private CEDynamicInlayBuilder inlayBuilder;
 
     @Nullable
     @Override
@@ -37,7 +37,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
     @Override
     protected List<InlayHintsCollector> buildCollectors(Editor editor) {
-        inlayBuilder = new DynamicInlayBuilder(editor);
+        inlayBuilder = new CEDynamicInlayBuilder(editor);
         return Arrays.asList(
                 vulnerableMethodCollector(editor),
                 vulnerableDependencyCallCollector(editor),

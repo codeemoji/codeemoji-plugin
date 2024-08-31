@@ -18,7 +18,7 @@ import java.awt.*;
 @ToString
 @EqualsAndHashCode
 @SuppressWarnings("UnstableApiUsage")
-public abstract sealed class CEInlayBuilder permits CECollector, DynamicInlayBuilder {
+public abstract sealed class CEInlayBuilder permits CECollector, CEDynamicInlayBuilder {
 
     private final Editor editor;
     private final @NotNull PresentationFactory factory;

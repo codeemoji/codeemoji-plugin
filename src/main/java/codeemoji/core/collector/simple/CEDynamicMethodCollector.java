@@ -29,6 +29,5 @@ public abstract non-sealed class CEDynamicMethodCollector extends CESimpleDynami
         }
         return false;
     }
-    // public abstract InlayPresentation getDynamicInlay(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo);
 }
 
