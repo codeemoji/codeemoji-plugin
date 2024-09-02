@@ -819,6 +819,10 @@ Example: "This method is indirectly using vulnerable dependencies"
 
 ![Indirect Vulnerable Method Example](docs/screenshots/stop_example.png)
 
+This inlay hint can be deactivated in case the user doesn't want to recursively check for vulnerable dependencies usage
+like in the image below.
+
+![Deactivate Recursion](docs/screenshots/avoid_recursion_vuln_dep.png)
 ## Configuration
 
 The VulnerableDependency provider allows for customization through the VulnerableDependencySettings class. Notably, the indirect vulnerable method check can be toggled on or off using the `isCheckVulnerableDependencies` setting.
