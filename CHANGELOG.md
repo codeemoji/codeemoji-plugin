@@ -1,5 +1,11 @@
 # codEEmoji Plugin Changelog
 
+## 5.0.0 (Sep 10th, 2024)
+
+### Added
+
+- Vulnerable dependency cases
+
 ## 4.0.1 (May 2nd, 2024)
 
 ### Added
