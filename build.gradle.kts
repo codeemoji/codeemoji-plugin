@@ -1,5 +1,7 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.tasks.RunIdeTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun properties(key: String) = project.findProperty(key).toString()
 
@@ -15,13 +17,20 @@ version = properties("pluginVersion")
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://snyk.io/repository/maven-releases")
+    }
 }
 
 dependencies {
     compileOnly("org.projectlombok:lombok:1.18.28")
     annotationProcessor("org.projectlombok:lombok:1.18.28")
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation("org.json:json:20240303")
 }
+
+
+
 
 intellij {
     version.set(properties("platformVersion"))
@@ -50,11 +59,11 @@ tasks {
         targetCompatibility = "17"
     }
 
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "17"
     }
 
-    withType<org.jetbrains.intellij.tasks.RunIdeTask> {
+    withType<RunIdeTask> {
         this.maxHeapSize = "4g"
     }
 

@@ -12,6 +12,8 @@ import javax.swing.*;
 public class CEGlobalConfigurable implements Configurable {
 
     private JCheckBox cbMyExternalService;
+    private JCheckBox cbSecondaryService;
+    private JTextField tfOssApiToken;
 
     @SuppressWarnings("DialogTitleCapitalization")
     @Override
@@ -24,9 +26,20 @@ public class CEGlobalConfigurable implements Configurable {
         var globalPanel = new JPanel();
         var innerPanel = CEUtils.createBasicInnerPanel("codeemoji.configurable.title", 2, 1);
         var analysersPanel = CEUtils.createBasicInnerPanel("codeemoji.configurable.external.analysers.title", 1, 1);
-        cbMyExternalService = new JCheckBox("MyExternalService");
+        cbMyExternalService = new JCheckBox("Vulnerability Scanner");
+        cbSecondaryService = new JCheckBox("Use secondary Service Sonatype OSS Index");
         analysersPanel.add(cbMyExternalService);
+        analysersPanel.add(cbSecondaryService);
         innerPanel.add(analysersPanel);
+
+        var apiTokenPanel = CEUtils.createBasicInnerPanel("codeemoji.configurable.oss.api.token", 1, 1);
+        tfOssApiToken = new JTextField();
+        tfOssApiToken.setText(CEGlobalSettings.getInstance().getOssApiToken());
+        apiTokenPanel.add(tfOssApiToken);
+        innerPanel.add(apiTokenPanel);
+
+
+
         globalPanel.add(innerPanel);
         return globalPanel;
     }
@@ -34,22 +47,34 @@ public class CEGlobalConfigurable implements Configurable {
     @Override
     public boolean isModified() {
         Boolean myExternalServiceState = cbMyExternalService.isSelected();
-        return !myExternalServiceState.equals(CEGlobalSettings.getInstance().getMyExternalServiceState());
+        Boolean useSecondaryService = cbSecondaryService.isSelected();
+        return (!myExternalServiceState.equals(CEGlobalSettings.getInstance().getMyExternalServiceState()) ||
+                !useSecondaryService.equals(CEGlobalSettings.getInstance().getUseSecondaryVulnerabilityScanner()) ||
+                !tfOssApiToken.getText().equals(CEGlobalSettings.getInstance().getOssApiToken()));
     }
 
     @Override
     public void apply() throws ConfigurationException {
         Boolean myExternalServiceState = cbMyExternalService.isSelected();
+        Boolean useSecondaryService = cbSecondaryService.isSelected();
         CEGlobalSettings.getInstance().setMyExternalServiceState(myExternalServiceState);
+        CEGlobalSettings.getInstance().setUseSecondaryVulnerabilityScanner(useSecondaryService);
+        CEGlobalSettings.getInstance().setOssApiToken(tfOssApiToken.getText());
+        CEGlobalSettings.getInstance().fireSettingsChanged();
     }
 
     @Override
     public void reset() {
         cbMyExternalService.setSelected(CEGlobalSettings.getInstance().getMyExternalServiceState());
+        cbSecondaryService.setSelected(CEGlobalSettings.getInstance().getUseSecondaryVulnerabilityScanner());
+        tfOssApiToken.setText(CEGlobalSettings.getInstance().getOssApiToken());
+        CEGlobalSettings.getInstance().fireSettingsChanged();
     }
 
     @Override
     public void disposeUIResources() {
         cbMyExternalService = null;
+        cbSecondaryService = null;
+        tfOssApiToken = null;
     }
 }

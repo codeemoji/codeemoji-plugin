@@ -8,11 +8,7 @@ import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,26 +52,15 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
         return new ExternalFunctionalityInvokingMethodConfigurable(settings);
     }
 
-    private PsiMethod[] collectExternalFunctionalityInvokingMethods(PsiMethod method){
-        return PsiTreeUtil.collectElementsOfType(method.getNavigationElement(), PsiMethodCallExpression.class)
-                .stream()
-                .distinct()
-                .<PsiMethod>mapMulti((methodCallExpression, consumer) -> {
-                    PsiMethod resolvedMethodCallExpression = methodCallExpression.resolveMethod();
-                    if (resolvedMethodCallExpression != null && !method.isEquivalentTo(resolvedMethodCallExpression)) {
-                        consumer.accept(resolvedMethodCallExpression);
-                    }
-                })
-                .toArray(PsiMethod[]::new);
-    }
+
 
     private boolean isExternalFunctionalityInvokingMethod(PsiMethod method, Project project) {
 
-        PsiMethod[] externalFunctionalityInvokingMethods = collectExternalFunctionalityInvokingMethods(method);
+        PsiMethod[] externalFunctionalityInvokingMethods = CEUtils.collectExternalFunctionalityInvokingMethods(method);
 
         if(
                 externalFunctionalityInvokingMethods.length > 0 &&
-                Arrays.stream(externalFunctionalityInvokingMethods).anyMatch(externalFunctionalityInvokingMethod -> checkMethodExternality(externalFunctionalityInvokingMethod, project))
+                        Arrays.stream(externalFunctionalityInvokingMethods).anyMatch(externalFunctionalityInvokingMethod -> CEUtils.checkMethodExternality(externalFunctionalityInvokingMethod, project))
         ){
             return true;
         }
@@ -84,7 +69,7 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
 
             if (getSettings().isCheckMethodCallsForExternalityApplied()){
                 return Arrays.stream(externalFunctionalityInvokingMethods)
-                        .filter(externalFunctionalityInvokingMethod -> !checkMethodExternality(externalFunctionalityInvokingMethod, project))
+                        .filter(externalFunctionalityInvokingMethod -> !CEUtils.checkMethodExternality(externalFunctionalityInvokingMethod, project))
                         .anyMatch(externalFunctionalityInvokingMethod -> isExternalFunctionalityInvokingMethod(externalFunctionalityInvokingMethod, project));
             }
 
@@ -94,13 +79,5 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
         }
     }
 
-    private boolean checkMethodExternality(PsiMethod method, Project project) {
-        return method.getNavigationElement().getContainingFile() instanceof PsiJavaFile javaFile &&
-                method.getContainingClass() != null &&
-                javaFile.getPackageStatement() != null &&
-                !javaFile.getPackageName().startsWith("java") &&
-                javaFile.getVirtualFile() != null &&
-                !CEUtils.getSourceRootsInProject(project).contains(ProjectFileIndex.getInstance(project).getSourceRootForFile(javaFile.getVirtualFile()));
-    }
 
 }

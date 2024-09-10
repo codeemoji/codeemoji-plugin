@@ -103,11 +103,42 @@ https://github.com/codeemoji/codeemoji-plugin/assets/7922567/b551c5e5-9b9a-490c-
 
 ## How to Configure
 
-The plugin creates new Inlay hints. All new inlay hints are enabled by default when installing the plugin. To disable
-inlay hints or configure
-options that are available for each one, go to "**_File>Settings>Editor>Inlay Hints_**". Click "**_Other>Java_**".
+The plugin creates new Inlay hints. All new inlay hints are enabled by default when installing the plugin. To disable inlay hints or configure options that are available for each one, go to "**_File>Settings>Editor>Inlay Hints_**". Click "**_Other>Java_**".
 
 ![How to Configure](docs/screenshots/howtoconfigure.png)
+
+### Global Configuration
+
+The service allows the use of an ExternalService to retrieve data about the project from external sources. The use of this service is transversal to the plugin and can slow down its performance. Currently, the only concrete implementation of inlay provider actively using this service is the Vulnerable Dependency Detector, which uses the external service to retrieve information about known vulnerabilities in project libraries.
+
+If you want to deactivate the use of the external service:
+
+1. Navigate to "**_File>Settings>Plugins>codEEmoji Settings_**".
+2. Deactivate the option as shown in the figure below:
+
+![External Service Configuration](docs/screenshots/externalservices.png)
+
+### Secondary Scanner and API_TOKEN Configuration
+
+The vulnerability scanner allows users to choose between two different scanners for inspecting project dependencies:
+
+1. **Default Scanner**: OSV.dev scanner (Documentation: [OSV.dev](https://google.github.io/osv.dev/))
+2. **Secondary Scanner**: Sonatype OSS Index scanner (Documentation: [OSS Index](https://ossindex.sonatype.org/))
+
+Our analysis showed that the two scanners present some discrepancies in their results, but neither consistently outperforms the other. If you wish to use the secondary scanner (Sonatype OSS Index), it's important to note that the number of requests to the API service is limited.
+
+To increase this limit:
+
+1. Create an API_TOKEN:
+    - Access [OSS Index](https://ossindex.sonatype.org/) and create a new account.
+    - Navigate to the account settings and click on "Generate API Token".
+    - Copy the API_TOKEN to your clipboard.
+
+2. Configure the plugin:
+    - In your IDE, navigate to the plugin global settings.
+    - Here you can activate/deactivate the use of the secondary service and insert the new token.
+
+![New Global Configuration Interface](docs/screenshots/secondaryScannerSetting.png)
 
 # Cases of Naming Violation
 
@@ -376,6 +407,7 @@ covered by comments.
   </tr>
 </tbody>
 </table>
+
 
 | **_Configuration_**                                                                                                                                                             |
 |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -726,23 +758,76 @@ method calls, this option is turned off by default in the IDE's Inlay Hint setti
 | ![State Independent Method - Example 2](docs/screenshots/stateindependentmethodsample1.png) |
 | *"Follow method calls and recursively check state independence" flag **is not** set*.       |
 
-# External Services API
 
-The **codeEEmoji** plugin is prepared to work with information provided from external services. It provides extension
-points
-for creating background services that can obtain information about a source code element for which the insertion of an
-inlay hint is being evaluated.
+# Vulnerable Dependency Usage Detection
 
-This API is experimental and the plugin currently does not contain any concrete services that use it. However, for
-future work it may be useful for cases of inlay hints that involve external services such as code versioners, quality
-analyzers, artificial intelligence tools for code prediction, among others.
+The CodeEmoji plugin now includes a new feature to detect and highlight the usage of vulnerable dependencies within Java projects. This functionality enhances the plugin's capability to assist developers in identifying potential security risks in their code.
 
-**codeEEmoji** is already prepared to enable or disable these services, as they can reduce the performance of the IDE,
-as
-they are transversal to the framework. Therefore, it is up to the user to use these services or not. Services can be
-configured using the plugin's global settings. See Figure below.
+## Inlay Types
 
-![External Services](docs/screenshots/externalservices.png)
+This feature introduces three distinct types of inlays to highlight different aspects of vulnerable dependency usage:
+
+### 1. Vulnerable Dependency Call
+
+| Aspect | Description |
+|--------|-------------|
+| Emoji | 💀 (Skull) |
+| Impacted Identifiers | Method references (i.e., method calls) |
+
+This inlay specifically marks calls to methods that are part of a vulnerable dependency.
+
+**Use Case:** Provides immediate, in-context information about specific vulnerable method calls, allowing developers to make informed decisions about using or replacing these calls.
+
+**Tooltip Information:** Provides detailed information about the vulnerability, including:
+- The name of the vulnerable dependency
+- The scanner used to identify the vulnerability
+- The number and severity of vulnerabilities (Critical, High, Medium, Low)
+
+Example: "OSVScanner - org.apache.commons/commons-text@1.9 has 1 critical, 1 medium vulnerability"
+
+![Vulnerable Dependency Call Example](docs/screenshots/skull_example.png)
+
+### 2. Vulnerable Method
+
+| Aspect | Description |
+|--------|-------------|
+| Emoji | ⚠️ (Warning Sign) |
+| Impacted Identifiers | Method names in signatures and references |
+
+This inlay indicates methods that directly use one or more vulnerable dependencies.
+
+**Use Case:** Quickly highlights methods that directly interact with known vulnerable dependencies, allowing developers to identify potential security risks in their code at a glance.
+
+**Tooltip Information:** Shows the number of vulnerable dependencies used by the method.
+Example: "This method is using 2 vulnerable dependencies"
+
+![Vulnerable Method Example](docs/screenshots/alert_example.png)
+
+### 3. Indirect Vulnerable Method
+
+| Aspect | Description                |
+|--------|----------------------------|
+| Emoji | ⛔ (Stop Sign)              |
+| Impacted Identifiers | Method names in signatures |
+
+This inlay identifies methods that indirectly use vulnerable dependencies through calls to other non-external methods.
+
+**Use Case:** Helps developers identify potential security risks that may not be immediately apparent, as the vulnerable dependency usage is indirect. It encourages a more thorough code review and consideration of the whole dependency chain.
+
+**Tooltip Information:** A simple statement indicating indirect usage of vulnerable dependencies.
+Example: "This method is indirectly using vulnerable dependencies"
+
+![Indirect Vulnerable Method Example](docs/screenshots/stop_example.png)
+
+This inlay hint can be deactivated in case the user doesn't want to recursively check for vulnerable dependencies usage
+like in the image below.
+
+![Deactivate Recursion](docs/screenshots/avoid_recursion_vuln_dep.png)
+## Configuration
+
+The VulnerableDependency provider allows for customization through the VulnerableDependencySettings class. Notably, the indirect vulnerable method check can be toggled on or off using the `isCheckVulnerableDependencies` setting.
+
+By implementing these three inlay hints, the VulnerableDependency provider offers a comprehensive view of vulnerable dependency usage in a Java project, from direct method calls to indirect usage through other methods. This multi-layered approach enables developers to identify and address potential security risks in their codebase quickly and efficiently.
 
 # How to Extend
 
@@ -808,7 +893,7 @@ The **codEEmoji** provides a rich API for implementing classes of type _InlayHin
 the
 class diagram available for this purpose.
 
-![Collector Class Diagram - Example](docs/screenshots/howtoextend02.png)
+![Collector Class Diagram - Example](docs/screenshots/CECollectorDiagram.png)
 
 The _InlayHintsCollector_ framework interface can be implemented in the plugin by the _CECollector_ and
 _CECollectorMulti_. The interface defines the _collect(PsiElement, Editor, InlayHintsSink)_ method. _CECollectorMulti_
@@ -818,10 +903,15 @@ The _CECollector_ abstract class is the main class for implementing a collector.
 _CEInlayBuilder_ which contains all the methods for manipulating inlay hints. Child classes must implement
 _processCollect(PsiElement, Editor, InlayHintsSink)_.
 
-![CECollector Class Diagram - Example](docs/screenshots/howtoextend03.png)
+![CECollector Class Diagram - Example](docs/screenshots/CECollectorWithInlayBuilder.png)
 
-The _CECollector_ has three main extensions: _CESimpleCollector_, _CEProjectCollector_ and _CEImplicitCollector_.
-The first is for general use. The other two extensions are specific cases for working with implicit annotations and
+The class CEDynamicInlayBuilder is extending the class CEInlayBuilder and overwriting some of its methods. This is 
+necessary to allow the dynamic creation of the inlays.
+
+The _CECollector_ has four main extensions: _CESimpleCollector_, _CEProjectCollector_, _CEImplicitCollector_ and 
+_CESimpleDynamicCollector_.
+The first is for general use and _CESimpleDynamicCollector_ is a almost identic implementation of that, that serves to 
+dynamically create the inlays. The other two extensions are specific cases for working with implicit annotations and
 specifications of
 projects. The following sections explore each case.
 
@@ -993,6 +1083,21 @@ public class ImplicitAnnotations extends CEProviderMulti<ImplicitAnnotationsSett
     //source code omitted...
 }
 ````
+
+### CESimpleDynamicCollector
+
+The CESimpleDynamicCollector is an implementation of the CECollector that allows for the dynamic creation of inlays. Its implementation is nearly identical to that of CESimpleCollector, with a key difference in the constructor:
+
+- The constructor only receives the editor as a parameter, as it doesn't need to create the inlay when the collector is defined.
+
+![New Dynamic Collector](docs/screenshots/newDynamicCollector.png)
+
+The primary changes that enable dynamic inlay creation are in the `processCollect` function implementation in the classes extending CESimpleDynamicCollector. As shown in the figure below, the `needsHint` method in these classes returns the inlay to be shown or `null` if no inlay should be displayed, rather than a boolean value as in other collectors.
+
+![Dynamic Process Collect](docs/screenshots/dynamicProcessCollect.png)
+*Example of processCollect implementation in class CEDynamicMethodCollector extending CESimpleDynamicCollector*
+
+This dynamic approach allows for more flexible and context-sensitive inlay creation, as the decision to display an inlay and its content can be determined at runtime based on the current state of the code being analyzed. This new structure provides greater flexibility in inlay generation, allowing for more complex and context-aware code augmentation scenarios.
 
 ## Internationalization
 

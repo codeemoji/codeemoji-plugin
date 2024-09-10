@@ -43,11 +43,18 @@
                 serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.StateChangingMethodSettings"/>
         <applicationService
                 serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.StateIndependentMethodSettings"/>
+        <applicationService
+                serviceImplementation="codeemoji.inlay.vulnerabilities.VulnerableDependencySettings"/>
+
+        <projectService  serviceImplementation="codeemoji.inlay.external.services.OSSExternalServiceExternalService"/>
+        <projectService  serviceImplementation="codeemoji.inlay.external.services.OSVExternalServiceExternalService"/>
+
 
         <!--END OF CONFIGURABLE & SERVICES SECTION-->
 
         <!-- START IMPLEMENTATIONS SECTION-->
-
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.vulnerabilities.VulnerableDependency"/>
         <codeInsight.inlayProvider language="JAVA"
                                    implementationClass="codeemoji.inlay.nameviolation.ShortDescriptiveName"/>
         <codeInsight.inlayProvider language="JAVA"

@@ -1,5 +1,8 @@
 package codeemoji.core.util;
 
+import codeemoji.inlay.external.DependencyInfo;
+import codeemoji.inlay.external.VulnerabilityInfo;
+import codeemoji.inlay.vulnerabilities.InlayInfo;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.intellij.openapi.diagnostic.Logger;
@@ -9,6 +12,8 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -21,11 +26,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static com.intellij.psi.PsiModifier.*;
 
@@ -478,6 +483,110 @@ public enum CEUtils {
     public static <E extends PsiElement> int calculateLinesOfPsiElement(@NotNull E element){
         Document documentOfMethod = element.getContainingFile().getViewProvider().getDocument();
         return 1 + (documentOfMethod.getLineNumber(element.getTextOffset() + element.getTextLength()) - documentOfMethod.getLineNumber(element.getTextOffset()));
+    }
+
+    public static DependencyInfo getDependecyInfo(Library library) {
+        String dependencyName = library.getName();
+        if (!dependencyName.startsWith("Gradle: ")) {
+            throw new IllegalArgumentException("Invalid format: not starting with Gradle");
+        }
+        // Removing "Gradle: "
+        String dependency = dependencyName.substring(8);
+
+        String[] parts = dependency.split(":");
+        if (parts.length != 3) {
+            throw new IllegalArgumentException("Invalid format: no groupId, artifactId or version");
+        }
+        String groupId = parts[0];
+        String artifactId = parts[1];
+        String version = parts[2];
+
+        // This is the path, which is the return value of the original function
+        String path = String.format("%s/%s@%s", groupId, artifactId, version);
+
+        // Process groupId and artifactId as in the first method
+        if (groupId.contains(".")) {
+            String[] groupParts = groupId.split("\\.");
+            groupId = groupParts[1];
+        }
+        if (artifactId.contains("-")) {
+            String[] artifactParts = artifactId.split("-");
+            artifactId = artifactParts[0];
+        }
+
+        return new DependencyInfo(groupId, artifactId, version, path);
+    }
+
+    public static String normalizeDependencyPath(String path) {
+        Pattern pattern = Pattern.compile(".*/modules-2/([^/]+)/([^/]+)/([^/]+)/([^/]+)/.*");
+        Matcher matcher = pattern.matcher(path);
+        if (matcher.find()) {
+            return matcher.group(2) + "/" + matcher.group(3);  // Return group/artifact
+        }
+        return path;
+    }
+
+    public static boolean checkMethodExternality(PsiMethod method, Project project) {
+        return method.getContainingFile() instanceof PsiJavaFile javaFile &&
+                method.getContainingClass() != null &&
+                javaFile.getPackageStatement() != null &&
+                !javaFile.getPackageName().startsWith("java") &&
+                !CEUtils.getSourceRootsInProject(project).contains(
+                        ProjectFileIndex.getInstance(method.getProject()).getSourceRootForFile(
+                                method.getNavigationElement().getContainingFile().getVirtualFile()
+                        )
+                );
+    }
+
+    public static PsiMethod[] collectExternalFunctionalityInvokingMethods(PsiMethod method){
+        return PsiTreeUtil.collectElementsOfType(method.getNavigationElement(), PsiMethodCallExpression.class)
+                .stream()
+                .distinct()
+                .<PsiMethod>mapMulti((methodCallExpression, consumer) -> {
+                    PsiMethod resolvedMethodCallExpression = methodCallExpression.resolveMethod();
+                    if (resolvedMethodCallExpression != null && !method.isEquivalentTo(resolvedMethodCallExpression)) {
+                        consumer.accept(resolvedMethodCallExpression);
+                    }
+                })
+                .toArray(PsiMethod[]::new);
+    }
+
+    public static InlayInfo isVulnerable(PsiMethod method, Project project, Map<?, ?> externalInfo) {
+        if (!CEUtils.checkMethodExternality(method, project)) {
+            return null;
+        }
+
+        VirtualFile file = method.getNavigationElement().getContainingFile().getVirtualFile();
+        if (file == null) {
+            return null;
+        }
+        String normalizedPath = CEUtils.normalizeDependencyPath(file.getPath());
+
+        for (Map.Entry<?, ?> entry : externalInfo.entrySet()) {
+            if (entry.getKey() instanceof DependencyInfo dependencyInfo) {
+                String name = dependencyInfo.getPath();
+                String dependency = name.split("@")[0];
+                if (dependency.equals(normalizedPath)) {
+                    if (entry.getValue() instanceof ArrayList<?> cveList) {
+                        List<VulnerabilityInfo> vulnerabilities = cveList.stream()
+                                .filter(VulnerabilityInfo.class::isInstance)
+                                .map(VulnerabilityInfo.class::cast)
+                                .collect(Collectors.toList());
+
+                        if (!vulnerabilities.isEmpty()) {
+                            String scanner = String.valueOf(vulnerabilities.get(0).getScanner());
+                            Map<String, Integer> severityCounts = new HashMap<>();
+                            for (VulnerabilityInfo vuln : vulnerabilities) {
+                                String severity = vuln.getSeverity();
+                                severityCounts.put(severity, severityCounts.getOrDefault(severity, 0) + 1);
+                            }
+                            return new InlayInfo(dependency, severityCounts, scanner);
+                        }
+                    }
+                }
+            }
+        }
+        return null;
     }
 
 }
