@@ -1,5 +1,7 @@
 package codeemoji.inlay.vcs.authoravatar;
 
+import codeemoji.core.util.CESymbol;
+import codeemoji.inlay.vcs.test.CESymbolHolder;
 import codeemoji.inlay.vcs.ui.EmojiPickerPanel;
 import codeemoji.inlay.vcs.ui.EmojiRepository;
 import com.intellij.codeInsight.hints.ChangeListener;
@@ -13,28 +15,44 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-public record AuthorAvatarConfigurable(AuthorAvatarSettings settings) implements ImmediateConfigurable {
+public class AuthorAvatarConfigurable implements ImmediateConfigurable {
+    private final AuthorAvatarSettings settings;
+    // local list to hold the author to avatar mappings
+    private final List<CESymbolHolder> localAuthorsToAvatars = new ArrayList<>();
+
+    public AuthorAvatarConfigurable(AuthorAvatarSettings settings) {
+        this.settings = settings;
+    }
+
     public @NotNull JComponent createComponent(ChangeListener listener) {
+        localAuthorsToAvatars.clear();
+        //make deep copy. we update later
+        for (CESymbolHolder pair : settings.getAvatars()) {
+            localAuthorsToAvatars.add(pair.makeCopy());
+        }
+
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         // Add existing rows to the panel
-        var currentPairs = new ArrayList<>(settings.getAvatars()); // Create a copy to avoid concurrent modification
-        for (AuthorAvatarSettings.Pair pair : currentPairs) {
-            addRow(panel, pair);
+        for (CESymbolHolder pair : localAuthorsToAvatars) {
+            addRow(panel, pair, listener);
         }
 
         // Add the "Add" button at the end
         JButton addButton = new JButton("Add Avatar");
         addButton.addActionListener(e -> {
-            AuthorAvatarSettings.Pair newPair = new AuthorAvatarSettings.Pair();
-            newPair.setAuthor("Author " + (settings.getAvatars().size() + 1));
-            newPair.setSymbol("\uD83D\uDC68\uFE0F");
-            settings.getAvatars().add(newPair); // Add to the settings list
-            settings.markDirty();
-            addRow(panel, newPair); // Add the new row to the panel
+            CESymbolHolder newPair = new CESymbolHolder(
+                    "Author " + (settings.getAvatars().size() + 1),
+                    CESymbol.of("\uD83D\uDC68\uFE0F")
+            );
+            localAuthorsToAvatars.add(newPair); // Add to the local list
+            addRow(panel, newPair, listener); // Add the new row to the panel
+
+            syncSettings(listener);
         });
 
         JPanel addPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -45,13 +63,20 @@ public record AuthorAvatarConfigurable(AuthorAvatarSettings settings) implements
         return panel;
     }
 
-    private void addRow(JPanel panel, AuthorAvatarSettings.Pair pair) {
+    private void syncSettings(ChangeListener listener) {
+        var copy = new ArrayList<CESymbolHolder>();
+        for (CESymbolHolder pair : localAuthorsToAvatars) {
+            copy.add(pair.makeCopy());
+        }
+        settings.setAvatars(copy);
+        listener.settingsChanged();
+    }
+
+    private void addRow(JPanel panel, CESymbolHolder holder, ChangeListener listener) {
         JPanel rowPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        int index = settings.getAvatars().indexOf(pair);
-
         // Create a text field for the author (editable)
-        JTextField authorTextField = new JTextField(pair.getAuthor());
+        JTextField authorTextField = new JTextField(holder.getName());
         authorTextField.setEditable(true);
         authorTextField.setPreferredSize(new Dimension(100, 30));
 
@@ -59,18 +84,16 @@ public record AuthorAvatarConfigurable(AuthorAvatarSettings settings) implements
         authorTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                AuthorAvatarSettings.Pair pair = settings.getAvatars().get(index);
-                if (pair == null) return;
-                pair.setAuthor(authorTextField.getText()); // Update the Pair's author value
-                settings.markDirty();
+                holder.setName(authorTextField.getText()); // Update the Pair's author value
+
+                syncSettings(listener);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                AuthorAvatarSettings.Pair pair = settings.getAvatars().get(index);
-                if (pair == null) return;
-                pair.setAuthor(authorTextField.getText()); // Update the Pair's author value
-                settings.markDirty();
+                holder.setName(authorTextField.getText()); // Update the Pair's author value
+
+                syncSettings(listener);
             }
 
             @Override
@@ -80,31 +103,32 @@ public record AuthorAvatarConfigurable(AuthorAvatarSettings settings) implements
 
 
         // Create a non-editable text field to display the emoji
-        JTextField emojiTextField = new JTextField(pair.getSymbol());
-        emojiTextField.setEditable(false); // Non-editable emoji
+        JLabel emojiTextField = holder.getSymbol().createLabel("");
         emojiTextField.setFocusable(false);
         emojiTextField.setPreferredSize(new Dimension(50, 30));
         emojiTextField.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                createPickEmojiMenu(index, rowPanel.getFont(), emojiTextField);
+                createPickEmojiMenu(holder, rowPanel.getFont(), emojiTextField, listener);
             }
         });
 
         // Create the button to pick a new emoji
         JButton pickEmojiButton = new JButton("Edit");
         pickEmojiButton.addActionListener(e -> createPickEmojiMenu(
-                index, rowPanel.getFont(), emojiTextField));
+                holder, rowPanel.getFont(), emojiTextField, listener));
 
         // Create the delete button to remove the current row
         JButton deleteButton = new JButton("Delete");
         deleteButton.addActionListener(e -> {
-            settings.getAvatars().remove(index); // Remove from the settings list
-            settings.markDirty();
             panel.remove(rowPanel); // Remove the row from the panel
             panel.revalidate(); // Revalidate the panel to update the layout
             panel.repaint(); // Repaint the panel to apply changes
+
+            localAuthorsToAvatars.remove(holder); // Remove from the settings list
+
+            syncSettings(listener);
         });
 
         // Add the components to the row panel
@@ -119,20 +143,19 @@ public record AuthorAvatarConfigurable(AuthorAvatarSettings settings) implements
         panel.repaint(); // Repaint the panel
     }
 
-    private void createPickEmojiMenu(int pairIndex, Font font, JTextField emojiTextField) {
+    private void createPickEmojiMenu(CESymbolHolder holder, Font font, JLabel emojiTextField, ChangeListener listener) {
         AtomicReference<JDialog> thisDialog = new AtomicReference<>();
         EmojiPickerPanel emojiPickerPanel = new EmojiPickerPanel(
                 EmojiRepository.getLocalEmojis(true),
                 font, 50,
                 em -> {
                     if (em != null) {
-                        AuthorAvatarSettings.Pair dataPair = settings.getAvatars().get(pairIndex);
-                        if (dataPair != null) {
                             // Update the emoji in the map and text field
-                            dataPair.setSymbol(em.symbol());
-                            emojiTextField.setText(em.symbol());  // Update the text field with the selected emoji
-                            settings.markDirty();
-                        }
+                            CESymbol.Utf emoji = CESymbol.of(em.symbol());
+                            holder.setSymbol(emoji);
+                            emoji.applyToLabel("", emojiTextField);  // Update the text field with the selected emoji
+
+                            syncSettings(listener);
                     }
 
                     // Close the dialog by disposing of it directly

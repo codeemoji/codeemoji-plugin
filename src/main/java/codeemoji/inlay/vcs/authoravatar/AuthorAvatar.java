@@ -42,6 +42,11 @@ public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
         return new RecentlyModifiedCollector(file, editor);
     }
 
+    @Override
+    public @NotNull ImmediateConfigurable createConfigurable(@NotNull AuthorAvatarSettings settings) {
+        return new AuthorAvatarConfigurable(settings);
+    }
+
     //screw anonymous classes. they are ugly
     private class RecentlyModifiedCollector extends CEDynamicMethodCollector {
         @Nullable
@@ -111,10 +116,6 @@ public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
         }
     }
 
-    @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull AuthorAvatarSettings settings) {
-        return new AuthorAvatarConfigurable(settings);
-    }
 
 }
 
