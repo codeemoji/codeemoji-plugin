@@ -39,7 +39,10 @@ intellij {
     updateSinceUntilBuild.set(true)
     val platformPlugins = properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty)
     plugins.set(
-            platformPlugins + listOf("com.intellij.java")
+            platformPlugins + listOf(
+                    "com.intellij.java",
+                    "Git4Idea"
+            )
     )
 }
 

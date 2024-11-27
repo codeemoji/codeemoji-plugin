@@ -46,6 +46,9 @@
         <applicationService
                 serviceImplementation="codeemoji.inlay.vulnerabilities.VulnerableDependencySettings"/>
 
+        <applicationService
+                serviceImplementation="codeemoji.inlay.vcs.authoravatar.AuthorAvatarSettings"/>
+
         <projectService  serviceImplementation="codeemoji.inlay.external.services.OSSExternalServiceExternalService"/>
         <projectService  serviceImplementation="codeemoji.inlay.external.services.OSVExternalServiceExternalService"/>
 
@@ -107,6 +110,13 @@
                                    implementationClass="codeemoji.inlay.structuralanalysis.element.method.StateChangingMethod"/>
         <codeInsight.inlayProvider language="JAVA"
                                    implementationClass="codeemoji.inlay.structuralanalysis.element.method.StateIndependentMethod"/>
+
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.vcs.GitTest"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.vcs.RecentlyModified"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.vcs.authoravatar.AuthorAvatar"/>
 
         <!--END OF IMPLEMENTATIONS SECTION-->
 
