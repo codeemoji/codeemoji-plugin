@@ -1,4 +1,4 @@
-package codeemoji.inlay.vcs.ui;
+package codeemoji.core.ui;
 
 import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.Nullable;
@@ -9,7 +9,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -24,9 +24,10 @@ public class EmojiPickerPanel extends JPanel {
     private final int emojiSize;
     private final JLabel emojiInfoLabel; // Label to show hovered emoji info
 
+
     public EmojiPickerPanel(List<Emoji> emojis, Font font,
                             int buttonsSize, Consumer<Emoji> emojiConsumer) {
-        this.emojiMap = new HashMap<>();
+        this.emojiMap = new LinkedHashMap<>();
         emojis.forEach(emoji -> emojiMap.computeIfAbsent(emoji.category(), k -> new ArrayList<>()).add(emoji));
         this.emojiConsumer = emojiConsumer;
         this.font = font;
@@ -76,7 +77,7 @@ public class EmojiPickerPanel extends JPanel {
 
         // Ensure the category panel doesn't stretch unnecessarily in the scroll pane
         JScrollPane categoryScrollPane = new JBScrollPane(categoryPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        categoryScrollPane.setPreferredSize(new Dimension(buttonsSize * 4/3, categoryPanel.getPreferredSize().height)); // Set preferred size to avoid scrollbar length issue
+        categoryScrollPane.setPreferredSize(new Dimension(buttonsSize * 4 / 3, categoryPanel.getPreferredSize().height)); // Set preferred size to avoid scrollbar length issue
         categoryScrollPane.getVerticalScrollBar().setUnitIncrement(emojiSize / 4);
         add(categoryScrollPane, BorderLayout.WEST);
 

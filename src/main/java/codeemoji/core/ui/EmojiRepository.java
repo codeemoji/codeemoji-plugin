@@ -1,5 +1,6 @@
-package codeemoji.inlay.vcs.ui;
+package codeemoji.core.ui;
 
+import codeemoji.core.util.CEParsingUtils;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
@@ -67,7 +68,7 @@ public class EmojiRepository {
                     description = removeTagsFromDescription(description);
 
                     // Convert Unicode code points to actual emoji symbol
-                    String emojiSymbol = Emoji.parseSymbolFromCodePoints(emojiCode, colored);
+                    String emojiSymbol = CEParsingUtils.parseSymbolFromCodePointString(emojiCode, colored);
 
                     // Skip duplicates based on symbol
                     if (!seenSymbols.contains(emojiSymbol)) {

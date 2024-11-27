@@ -1,4 +1,4 @@
-package codeemoji.inlay.vcs.ui;
+package codeemoji.core.ui;
 
 import java.awt.*;
 import javax.swing.JScrollPane;
