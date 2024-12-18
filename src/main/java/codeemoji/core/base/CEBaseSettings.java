@@ -7,7 +7,6 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Transient;
 import lombok.Data;
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -24,9 +23,10 @@ public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements Per
         this.symbols.addAll(Arrays.stream(symbols).toList());
     }
 
+    // bad
     @Transient
     @Deprecated
-    public CESymbol getFirstSymbol() {
+    public CESymbol getMainSymbol() {
         return symbols.get(0).getSymbol();
     }
 

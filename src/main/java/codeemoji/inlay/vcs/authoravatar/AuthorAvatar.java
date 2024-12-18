@@ -51,7 +51,7 @@ public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
     private class RecentlyModifiedCollector extends CEDynamicMethodCollector {
         @Nullable
         private final FileAnnotation vcsBlame;
-        private final CEDynamicInlayBuilder presentationBuilder;
+        private final CEDynamicInlayBuilder presentationBuilder; //presentation builder. helper object basically
         private final Editor editor;
 
         protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor) {

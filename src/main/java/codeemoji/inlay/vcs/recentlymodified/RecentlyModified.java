@@ -3,11 +3,11 @@ package codeemoji.inlay.vcs.recentlymodified;
 import codeemoji.core.collector.CEDynamicInlayBuilder;
 import codeemoji.core.collector.simple.CEDynamicMethodCollector;
 import codeemoji.core.provider.CEProvider;
+import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
-import com.intellij.codeInsight.hints.presentation.PresentationFactory;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -19,6 +19,7 @@ import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
@@ -72,18 +73,22 @@ public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
             long diff = System.currentTimeMillis() - date.getTime();
             long diffDays = diff / (24 * 60 * 60 * 1000);
 
-            if (diffDays <= getSettings().getDays()) {
+            if (diffDays <= getSettings().getDays() || true) {
                 return makePresentation(date);
             }
             return null;
         }
 
+        //TODO: really refactor these stuff and merge
         private InlayPresentation makePresentation(Date d) {
-            var factory = new PresentationFactory(this.editor);
+            var factory = getFactory();
 
-            return getSettings().getFirstSymbol().createPresentation(factory, false);
-
-            // return factory.smallText(d.toString());
+            CESymbol mainSymbol = getSettings().getMainSymbol();
+            InlayPresentation present = mainSymbol.createPresentation(factory, false);
+            present = factory.withCursorOnHover(present, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            present = factory.roundWithBackground(present);
+            present = factory.withTooltip(d.toString(), present);
+            return present;
         }
 
 

@@ -6,6 +6,7 @@ import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class RecentlyModifiedConfigurable extends CEBaseConfigurable<RecentlyModifiedSettings> {
     public RecentlyModifiedConfigurable(RecentlyModifiedSettings settings) {
@@ -23,7 +24,7 @@ public class RecentlyModifiedConfigurable extends CEBaseConfigurable<RecentlyMod
             listener.settingsChanged();
         });
         var form = FormBuilder.createFormBuilder()
-                .addLabeledComponent("Number of letters", jSpinner)
+                .addLabeledComponent("Number of days", jSpinner)
                 .getPanel();
 
         panel.add(form);

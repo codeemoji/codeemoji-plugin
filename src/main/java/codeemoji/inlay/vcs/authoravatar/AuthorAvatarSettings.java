@@ -1,7 +1,8 @@
 package codeemoji.inlay.vcs.authoravatar;
 
+import codeemoji.core.base.CEBaseSettings;
 import codeemoji.core.util.CESymbol;
-import codeemoji.inlay.vcs.test.CESymbolHolder;
+import codeemoji.core.util.CESymbolHolder;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -12,39 +13,23 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 @State(name = "AuthorAvatarSettings", storages = @Storage("codeemoji-author-avatar-settings.xml"))
-public final class AuthorAvatarSettings implements PersistentStateComponent<AuthorAvatarSettings> {
+public final class AuthorAvatarSettings extends CEBaseSettings<AuthorAvatarSettings> {
 
-    private final List<CESymbolHolder> avatars = new ArrayList<>();
     @Transient
     private transient final Map<String, CESymbol> authorToSymbols = new HashMap<>();  // Map for author-to-emoji string
 
     public AuthorAvatarSettings() {
     }
 
-    public List<CESymbolHolder> getAvatars() {
-        return avatars;
-    }
-
-    public void setAvatars(List<CESymbolHolder> avatars) {
-        this.avatars.clear();
-        this.avatars.addAll(avatars);
-        updateDataStructure();
-    }
-
-    @Override
-    public AuthorAvatarSettings getState() {
-        return this;
-    }
-
     @Override
     public void loadState(@NotNull AuthorAvatarSettings state) {
-        XmlSerializerUtil.copyBean(state, this);
+        super.loadState(state);
         updateDataStructure();
     }
 
     private void updateDataStructure() {
         authorToSymbols.clear();
-        for (CESymbolHolder pair : avatars) {
+        for (CESymbolHolder pair : getSymbols()) {
             authorToSymbols.put(pair.getName(), pair.getSymbol());
         }
     }
