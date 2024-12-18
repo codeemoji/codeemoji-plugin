@@ -2,29 +2,28 @@ package codeemoji.inlay.vcs.lastcommit;
 
 import codeemoji.core.base.CEBaseConfigurable;
 import codeemoji.core.provider.CEProvider;
-import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSMethodCollector;
-import codeemoji.inlay.vcs.recentlymodified.RecentlyModifiedConfigurable;
-import codeemoji.inlay.vcs.recentlymodified.RecentlyModifiedSettings;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
+import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
+import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
 import java.util.Date;
 import java.util.Map;
-import java.util.Objects;
+import java.util.PrimitiveIterator;
 import java.util.stream.IntStream;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -36,7 +35,7 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
 
     @Override
     public @NotNull InlayHintsCollector buildCollector(@NotNull PsiFile file, @NotNull Editor editor) {
-        return new RecentlyModifiedCollector(file, editor);
+        return new RecentlyModifiedCollector(file, editor, getKey());
     }
 
     @Override
@@ -47,8 +46,8 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
     //screw anonymous classes. they are ugly
     private class RecentlyModifiedCollector extends VCSMethodCollector {
 
-        protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor) {
-            super(file, editor);
+        protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor, SettingsKey<?> key) {
+            super(file, editor, key);
         }
 
         @Override
@@ -58,51 +57,50 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
             //text range of this element without comments
             TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 
-            Date date = getEarliestModificationDate(element.getProject(), textRange, getEditor(), vcsBlame);
-
-            if (date == null) return null;
-
-            //check if date is within a week from now
-
-            long diff = System.currentTimeMillis() - date.getTime();
-            long diffDays = diff / (24 * 60 * 60 * 1000);
-
-            if (false) {
-                return makePresentation(date);
+            RevisionInfo lastRevision = getLastRevision(element.getProject(), textRange, getEditor(), vcsBlame);
+            if (lastRevision != null) {
+                return buildInlayWithEmoji(getSettings().getMainSymbol(),
+                        "inlay.lastcommit.tooltip", null);
             }
             return null;
         }
 
-        //TODO: really refactor these stuff and merge
-        private InlayPresentation makePresentation(Date d) {
-            var factory = getFactory();
-
-            CESymbol mainSymbol = getSettings().getMainSymbol();
-            InlayPresentation present = mainSymbol.createPresentation(factory, false);
-            present = factory.withCursorOnHover(present, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            present = factory.roundWithBackground(present);
-            present = factory.withTooltip(d.toString(), present);
-            return present;
-        }
-
-
+        //null if it's not from last revision
         @Nullable
-        private static Date getEarliestModificationDate(
+        private RevisionInfo getLastRevision(
                 Project project, TextRange range, Editor editor, FileAnnotation blame) {
-
+            VcsRevisionNumber lastRevision = blame.getCurrentRevision();
+            if (lastRevision == null) return null;
             Document document = editor.getDocument();
             int startLine = document.getLineNumber(range.getStartOffset());
             int endLine = document.getLineNumber(range.getEndOffset());
             UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);
 
-            return IntStream.rangeClosed(startLine, endLine)
-                    .mapToObj(provider::getLineNumber)
-                    .map(blame::getLineDate)  //gets the author name for line
-                    .filter(Objects::nonNull)
-                    .min(Date::compareTo)
-                    .orElse(null);
+            PrimitiveIterator.OfInt iterator = IntStream.rangeClosed(startLine, endLine)
+                    .map(provider::getLineNumber).iterator();
+            while (iterator.hasNext()) {
+                int line = iterator.nextInt();
+                var revision = blame.getLineRevisionNumber(line);
+                if (lastRevision.equals(revision)) {
+                    var authorProvider = getAspect(LineAnnotationAspect.AUTHOR);
+                    Date date = blame.getLineDate(line);
+                    if (authorProvider != null && date != null) {
+                        return new RevisionInfo(authorProvider.getValue(line), date, revision);
+                    }else {
+                        return null;
+                    }
+                }
+            }
+            return null;
         }
 
+
+    }
+
+    private record RevisionInfo(String author, Date date, VcsRevisionNumber number) {
+        public String tooltip() {
+            return author + " " + date+ " " + number;
+        }
     }
 }
 

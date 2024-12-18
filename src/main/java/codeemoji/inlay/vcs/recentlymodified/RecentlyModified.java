@@ -7,7 +7,10 @@ import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSMethodCollector;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.InlayHintsUtils;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
+import com.intellij.codeInsight.hints.presentation.MenuOnClickPresentation;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -34,7 +37,7 @@ public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
 
     @Override
     public @NotNull InlayHintsCollector buildCollector(@NotNull PsiFile file, @NotNull Editor editor) {
-        return new RecentlyModifiedCollector(file, editor);
+        return new RecentlyModifiedCollector(file, editor, getKey());
     }
 
     @Override
@@ -45,8 +48,8 @@ public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
     //screw anonymous classes. they are ugly
     private class RecentlyModifiedCollector extends VCSMethodCollector {
 
-        protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor) {
-            super(file, editor);
+        protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor, @NotNull SettingsKey<?> key) {
+            super(file, editor, key);
         }
 
         @Override
@@ -81,7 +84,20 @@ public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
             present = factory.withCursorOnHover(present, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             present = factory.roundWithBackground(present);
             present = factory.withTooltip(tooltip, present);
+            // Add right-click functionality to open configuration panel
+            present = addContextMenu(present, getEditor().getProject());
             return present;
+        }
+
+        //TODO: put this in a shared class
+        private InlayPresentation addContextMenu(InlayPresentation presentation, Project project) {
+            return new MenuOnClickPresentation(presentation, project,
+                    () -> InlayHintsUtils.INSTANCE.getDefaultInlayHintsProviderPopupActions(
+                            getKey(),
+                            RecentlyModified.this::getName
+                    )
+            );
+
         }
 
         // write a method that given a Data returns a string saying how many days ago it was. Should sya "today" for today, "yesterday", x days ago and such
@@ -94,9 +110,9 @@ public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
                 return CEBundle.getString("inlay.recentlymodified.tooltip.today");
             } else if (diffDays == 1) {
                 return CEBundle.getString("inlay.recentlymodified.tooltip.yesterday");
-            } else if (diffDays < 365){
+            } else if (diffDays < 365) {
                 return CEBundle.getString("inlay.recentlymodified.tooltip.days_ago", diffDays);
-            }else {
+            } else {
                 int years = (int) (diffDays / 365);
                 return CEBundle.getString("inlay.recentlymodified.tooltip.years_ago", years);
             }

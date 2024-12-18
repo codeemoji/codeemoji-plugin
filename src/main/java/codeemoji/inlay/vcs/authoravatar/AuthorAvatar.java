@@ -6,6 +6,7 @@ import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSMethodCollector;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.codeInsight.hints.presentation.PresentationFactory;
 import com.intellij.openapi.editor.Document;
@@ -38,7 +39,7 @@ public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
 
     @Override
     public @NotNull InlayHintsCollector buildCollector(@NotNull PsiFile file, @NotNull Editor editor) {
-        return new RecentlyModifiedCollector(file, editor);
+        return new RecentlyModifiedCollector(file, editor, getKey());
     }
 
     @Override
@@ -48,8 +49,8 @@ public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
 
     //screw anonymous classes. they are ugly
     private class RecentlyModifiedCollector extends VCSMethodCollector {
-        protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor) {
-            super(file, editor);
+        protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor, SettingsKey<?> key) {
+            super(file, editor, key);
         }
 
         @Override
@@ -80,12 +81,10 @@ public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
         }
 
         @Nullable
-        private static String getMostCommonAuthor(
+        private String getMostCommonAuthor(
                 Project project, TextRange range, Editor editor, FileAnnotation blame) {
 
-            LineAnnotationAspect aspect = Arrays.stream(blame.getAspects())
-                    .filter(a -> Objects.equals(a.getId(), LineAnnotationAspect.AUTHOR))
-                    .findFirst().orElse(null);
+            LineAnnotationAspect aspect = getAspect(LineAnnotationAspect.AUTHOR);
 
             if (aspect == null) return null;
 
@@ -105,6 +104,8 @@ public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
                     .map(Map.Entry::getKey) // get the most common author's name
                     .orElse(null); // return null if no author found
         }
+
+
     }
 
 
