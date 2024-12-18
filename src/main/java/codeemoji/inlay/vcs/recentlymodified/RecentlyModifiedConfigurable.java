@@ -1,6 +1,7 @@
 package codeemoji.inlay.vcs.recentlymodified;
 
 import codeemoji.core.base.CEBaseConfigurable;
+import codeemoji.core.util.CEBundle;
 import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -15,20 +16,27 @@ public class RecentlyModifiedConfigurable extends CEBaseConfigurable<RecentlyMod
 
     @Override
     public @NotNull JComponent createComponent(ChangeListener listener) {
-        var panel = super.createComponent(listener);
 
-        var jSpinner = new JSpinner();
-        jSpinner.setValue(settings.getDays());
-        jSpinner.addChangeListener(event -> {
-            settings.setDays((Integer) jSpinner.getValue());
+        var daySelector = new JSpinner();
+        daySelector.setValue(settings.getDays());
+        daySelector.addChangeListener(event -> {
+            settings.setDays((Integer) daySelector.getValue());
             listener.settingsChanged();
         });
-        var form = FormBuilder.createFormBuilder()
-                .addLabeledComponent("Number of days", jSpinner)
+
+        var showDaysButton = new JCheckBox();
+        showDaysButton.setSelected(settings.isShowDate());
+        showDaysButton.addChangeListener(event -> {
+            settings.setShowDate(showDaysButton.isSelected());
+            listener.settingsChanged();
+        });
+
+        return FormBuilder.createFormBuilder()
+                .addComponent(super.createComponent(listener))
+                .addLabeledComponent(CEBundle.getString("inlay.recentlymodified.settings.number_of_days"),
+                        daySelector)
+                .addLabeledComponent(CEBundle.getString("inlay.recentlymodified.settings.show_date"),
+                        showDaysButton)
                 .getPanel();
-
-        panel.add(form);
-
-        return panel;
     }
 }

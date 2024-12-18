@@ -27,6 +27,12 @@ public final class AuthorAvatarSettings extends CEBaseSettings<AuthorAvatarSetti
         updateDataStructure();
     }
 
+    @Override
+    public void setSymbols(ArrayList<CESymbolHolder> copy) {
+        super.setSymbols(copy);
+        updateDataStructure();
+    }
+
     private void updateDataStructure() {
         authorToSymbols.clear();
         for (CESymbolHolder pair : getSymbols()) {

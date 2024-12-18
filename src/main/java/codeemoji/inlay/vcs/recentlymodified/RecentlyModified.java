@@ -1,10 +1,10 @@
 package codeemoji.inlay.vcs.recentlymodified;
 
-import codeemoji.core.collector.CEDynamicInlayBuilder;
-import codeemoji.core.collector.simple.CEDynamicMethodCollector;
 import codeemoji.core.provider.CEProvider;
+import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
+import codeemoji.inlay.vcs.VCSMethodCollector;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
@@ -43,17 +43,10 @@ public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
     }
 
     //screw anonymous classes. they are ugly
-    private class RecentlyModifiedCollector extends CEDynamicMethodCollector {
-        @Nullable
-        private final FileAnnotation vcsBlame;
-        private final CEDynamicInlayBuilder presentationBuilder;
-        private final Editor editor;
+    private class RecentlyModifiedCollector extends VCSMethodCollector {
 
         protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor) {
-            super(editor);
-            this.vcsBlame = CEVcsUtils.getAnnotation(file, editor);
-            this.presentationBuilder = new CEDynamicInlayBuilder(editor);
-            this.editor = editor;
+            super(file, editor);
         }
 
         @Override
@@ -63,8 +56,7 @@ public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
             //text range of this element without comments
             TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 
-            Date date = getEarliestModificationDate(element.getProject(), textRange, editor, vcsBlame);
-
+            Date date = getEarliestModificationDate(element.getProject(), textRange, getEditor(), vcsBlame);
 
             if (date == null) return null;
 
@@ -73,24 +65,42 @@ public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
             long diff = System.currentTimeMillis() - date.getTime();
             long diffDays = diff / (24 * 60 * 60 * 1000);
 
-            if (diffDays <= getSettings().getDays() || true) {
+            if (diffDays <= getSettings().getDays()) {
                 return makePresentation(date);
             }
             return null;
         }
 
-        //TODO: really refactor these stuff and merge
-        private InlayPresentation makePresentation(Date d) {
+        //TODO: really refactor these stuff and merge, there are similar methods in the base ECBuilder class
+        private InlayPresentation makePresentation(Date date) {
             var factory = getFactory();
-
-            CESymbol mainSymbol = getSettings().getMainSymbol();
+            RecentlyModifiedSettings settings = getSettings();
+            String tooltip = settings.isShowDate() ? date.toString() : getDaysAgoTooltipString(date);
+            CESymbol mainSymbol = settings.getMainSymbol();
             InlayPresentation present = mainSymbol.createPresentation(factory, false);
             present = factory.withCursorOnHover(present, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             present = factory.roundWithBackground(present);
-            present = factory.withTooltip(d.toString(), present);
+            present = factory.withTooltip(tooltip, present);
             return present;
         }
 
+        // write a method that given a Data returns a string saying how many days ago it was. Should sya "today" for today, "yesterday", x days ago and such
+
+        private static String getDaysAgoTooltipString(Date date) {
+            // calculate how many days ago it was
+            long diff = System.currentTimeMillis() - date.getTime();
+            long diffDays = diff / (24 * 60 * 60 * 1000);
+            if (diffDays == 0) {
+                return CEBundle.getString("inlay.recentlymodified.tooltip.today");
+            } else if (diffDays == 1) {
+                return CEBundle.getString("inlay.recentlymodified.tooltip.yesterday");
+            } else if (diffDays < 365){
+                return CEBundle.getString("inlay.recentlymodified.tooltip.days_ago", diffDays);
+            }else {
+                int years = (int) (diffDays / 365);
+                return CEBundle.getString("inlay.recentlymodified.tooltip.years_ago", years);
+            }
+        }
 
         @Nullable
         private static Date getEarliestModificationDate(

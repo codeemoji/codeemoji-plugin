@@ -1,6 +1,7 @@
 package codeemoji.inlay.vcs.authoravatar;
 
 import codeemoji.core.base.CEBaseConfigurable;
+import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CESymbolHolder;
 import com.intellij.codeInsight.hints.ChangeListener;
@@ -36,10 +37,10 @@ public class AuthorAvatarConfigurable extends CEBaseConfigurable<AuthorAvatarSet
         }
 
         // Add the "Add" button at the end
-        JButton addButton = new JButton("Add Avatar");
+        JButton addButton = new JButton(CEBundle.getString("inlay.authoravatar.settings.add_avatar"));
         addButton.addActionListener(e -> {
             CESymbolHolder newPair = new CESymbolHolder(
-                    "Author " + (localSymbols.size() + 1),
+                    CEBundle.getString("inlay.authoravatar.settings.author", (localSymbols.size() + 1)),
                     CESymbol.of("\uD83D\uDC68\uFE0F")
             );
             localSymbols.add(newPair); // Add to the local list
@@ -100,12 +101,12 @@ public class AuthorAvatarConfigurable extends CEBaseConfigurable<AuthorAvatarSet
         });
 
         // Create the button to pick a new emoji
-        JButton pickEmojiButton = new JButton("Edit");
+        JButton pickEmojiButton = new JButton(CEBundle.getString("codeemoji.configurable.edit"));
         pickEmojiButton.addActionListener(e -> createPickEmojiMenu(
                 emojiLabel, holder, false, listener));
 
         // Create the delete button to remove the current row
-        JButton deleteButton = new JButton("Delete");
+        JButton deleteButton = new JButton(CEBundle.getString("codeemoji.configurable.delete"));
         deleteButton.addActionListener(e -> {
             panel.remove(rowPanel); // Remove the row from the panel
             panel.revalidate(); // Revalidate the panel to update the layout

@@ -1,5 +1,6 @@
 package codeemoji.inlay.vcs.recentlymodified;
 
+import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.base.CEBaseSettings;
 import codeemoji.core.util.CESymbolHolder;
@@ -14,8 +15,11 @@ import lombok.EqualsAndHashCode;
 public final class RecentlyModifiedSettings extends CEBaseSettings<RecentlyModifiedSettings> {
 
     private int days = 7;
+    private boolean showDate = false;
     public RecentlyModifiedSettings() {
-        super(new CESymbolHolder("Recently Modified", CESymbol.of(0x1F4C5)));
+        super(new CESymbolHolder(
+                CEBundle.getString("inlay.recentlymodified.name"),
+                CESymbol.of(0x2712)));
     }
 
 }
