@@ -4,7 +4,6 @@ import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsUtils;
 import com.intellij.codeInsight.hints.SettingsKey;
-import com.intellij.codeInsight.hints.presentation.DynamicInsetPresentation;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.codeInsight.hints.presentation.MenuOnClickPresentation;
 import com.intellij.codeInsight.hints.presentation.PresentationFactory;
@@ -22,7 +21,7 @@ import java.awt.*;
 @ToString
 @EqualsAndHashCode
 @SuppressWarnings("UnstableApiUsage")
-public abstract sealed class CEInlayBuilder permits CECollector, CEDynamicInlayBuilder {
+public abstract sealed class CEInlayBuilder permits CECollector {
 
     private final Editor editor;
     private final @NotNull PresentationFactory factory;

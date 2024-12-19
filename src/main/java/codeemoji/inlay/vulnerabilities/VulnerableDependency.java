@@ -1,6 +1,5 @@
 package codeemoji.inlay.vulnerabilities;
 
-import codeemoji.core.collector.CEDynamicInlayBuilder;
 import codeemoji.core.collector.simple.CEDynamicMethodCollector;
 import codeemoji.core.collector.simple.CEDynamicReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
@@ -8,6 +7,7 @@ import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -22,8 +22,6 @@ import static codeemoji.inlay.vulnerabilities.VulnerableDependencySymbols.*;
 
 public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySettings> {
 
-    private CEDynamicInlayBuilder inlayBuilder;
-
     @Nullable
     @Override
     public String getPreviewText() {
@@ -37,153 +35,162 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
     @Override
     protected List<InlayHintsCollector> buildCollectors(Editor editor) {
-        inlayBuilder = new CEDynamicInlayBuilder(editor, getKey());
+        var key = getKey();
         return Arrays.asList(
-                vulnerableMethodCollector(editor),
-                vulnerableDependencyCallCollector(editor),
-                vulnerableMethodReferenceCollector(editor),
-                indirectVulnerableMethodCollector(editor)
+                new VulnerableMethodCollector(editor, key),
+                new VulnerableMethodReferenceCollector(editor, key),
+                new IndirectVulnerableMethodCollector(editor, key),
+                new VulnerableDependencyCallCollector(editor, key)
         );
     }
 
-    private InlayHintsCollector vulnerableMethodCollector(Editor editor) {
-        return new CEDynamicMethodCollector(editor, getKey()) {
-            @Override
-            public InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                return isMethodUsingVulnerableDependencies(element, editor.getProject(), externalInfo);
-            }
-        };
-    }
+    private static class VulnerableMethodCollector extends CEDynamicMethodCollector {
+        protected VulnerableMethodCollector(@NotNull Editor editor, SettingsKey<?> settingsKey) {
+            super(editor, settingsKey);
+        }
 
-    private InlayHintsCollector vulnerableMethodReferenceCollector(Editor editor) {
-        return new CEDynamicReferenceMethodCollector(editor, getKey()) {
-            @Override
-            protected InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                InlayPresentation result = isMethodUsingVulnerableDependencies(element, editor.getProject(), externalInfo);
-                if (result != null && !CEUtils.checkMethodExternality(element, editor.getProject())) {
-                    return result;
-                }
+        @Override
+        public InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+            return isMethodUsingVulnerableDependencies(element, getEditor().getProject(), externalInfo);
+        }
+
+        protected InlayPresentation isMethodUsingVulnerableDependencies(PsiMethod method, Project project, Map<?, ?> externalInfo) {
+            return isMethodUsingVulnerableDependencies(method, project, externalInfo, new HashSet<>());
+        }
+
+        protected InlayPresentation isMethodUsingVulnerableDependencies(PsiMethod method, Project project, Map<?, ?> externalInfo, Set<PsiMethod> visitedMethods) {
+            if (visitedMethods.contains(method)) {
                 return null;
             }
-        };
-    }
+            PsiMethod[] externalMethods = CEUtils.collectExternalFunctionalityInvokingMethods(method);
+            Set<String> vulnerableDependencies = new HashSet<>();
 
-    private InlayHintsCollector vulnerableDependencyCallCollector(Editor editor) {
-        return new CEDynamicReferenceMethodCollector(editor, getKey()) {
-            @Override
-            protected InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                return isACallToVulnerableDependency(element, editor.getProject(), externalInfo);
-            }
-        };
-    }
-
-    private InlayHintsCollector indirectVulnerableMethodCollector(Editor editor) {
-        return new CEDynamicMethodCollector(editor, getKey()) {
-            @Override
-            public InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-                if (getSettings().isCheckVulnerableDependecyApplied()) {
-                    return isIndirectlyUsingVulnerableDependencies(element, editor.getProject(), externalInfo);
+            for (PsiMethod externalMethod : externalMethods) {
+                InlayInfo result = isVulnerable(externalMethod, project, externalInfo);
+                if (result != null) {
+                    vulnerableDependencies.add(result.dependencyName);
                 }
-                return null;
             }
-        };
-    }
 
-    private InlayPresentation isMethodUsingVulnerableDependencies(PsiMethod method, Project project, Map<?, ?> externalInfo) {
-        return isMethodUsingVulnerableDependencies(method, project, externalInfo, new HashSet<>());
-    }
-    private InlayPresentation isMethodUsingVulnerableDependencies(PsiMethod method, Project project, Map<?, ?> externalInfo, Set<PsiMethod> visitedMethods) {
-        if (visitedMethods.contains(method)) {
+            if (!vulnerableDependencies.isEmpty()) {
+                return vulnerableMethodInlay(vulnerableDependencies.size());
+            }
             return null;
         }
-        PsiMethod[] externalMethods = CEUtils.collectExternalFunctionalityInvokingMethods(method);
-        Set<String> vulnerableDependencies = new HashSet<>();
 
-        for (PsiMethod externalMethod : externalMethods) {
-            InlayInfo result = isVulnerable(externalMethod, project, externalInfo);
-            if (result != null) {
-                vulnerableDependencies.add(result.dependencyName);
-            }
+        // inlay parsers
+        protected InlayPresentation vulnerableMethodInlay(int vuln) {
+            String pt1 = CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.pt1.tooltip");
+            String pt2 = CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.pt2.tooltip");
+            String pt3_1 = CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.pt3singular.tooltip");
+            String pt3_2 = CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.pt3plural.tooltip");
+            String tooltip = pt1 + vuln + " " + pt2 + (vuln == 1 ? pt3_1 : pt3_2);
+            return this.buildInlayWithEmoji(VULNERABLE_METHOD, tooltip, null);
         }
 
-        if (!vulnerableDependencies.isEmpty()) {
-            return vulnerableMethodInlay(vulnerableDependencies.size());
+
+        protected InlayPresentation indirectVulnerableMethodInlay() {
+            String tooltip = CEBundle.getString("inlay.vulnerabledependency.indirectvulnerable.tooltip");
+            return this.buildInlayWithEmoji(INDIRECT_VULNERABLE_METHOD, tooltip, null);
         }
-        return null;
     }
 
-    public InlayPresentation isACallToVulnerableDependency(PsiMethod method, Project project, Map<?, ?> externalInfo) {
-        if (CEUtils.checkMethodExternality(method, project)) {
-            InlayInfo result = CEUtils.isVulnerable(method, project, externalInfo);
-            if (result != null) {
-                return vulnerableDependencyCallInlay(result);
-            }
+    private static class VulnerableMethodReferenceCollector extends VulnerableMethodCollector {
+        protected VulnerableMethodReferenceCollector(@NotNull Editor editor, SettingsKey<?> key) {
+            super(editor, key);
         }
 
-        return null;
+        @Override
+        public InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+            InlayPresentation result = this.isMethodUsingVulnerableDependencies(element, getEditor().getProject(), externalInfo);
+            if (result != null && !CEUtils.checkMethodExternality(element, getEditor().getProject())) {
+                return result;
+            }
+            return null;
+        }
     }
 
-    private InlayPresentation isIndirectlyUsingVulnerableDependencies(PsiMethod method, Project project, Map<?, ?> externalInfo) {
-        Set<PsiMethod> visitedMethods = new HashSet<>();
-        PsiMethod[] externalMethods = CEUtils.collectExternalFunctionalityInvokingMethods(method);
+    private class IndirectVulnerableMethodCollector extends VulnerableMethodCollector {
+        protected IndirectVulnerableMethodCollector(@NotNull Editor editor, SettingsKey<?> settingsKey) {
+            super(editor, settingsKey);
+        }
 
-        for (PsiMethod externalMethod : externalMethods) {
-            if (!visitedMethods.contains(externalMethod) && !CEUtils.checkMethodExternality(externalMethod, project)) {
-                InlayPresentation result = isMethodUsingVulnerableDependencies(externalMethod, project, externalInfo, visitedMethods);
+        @Override
+        public InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+            if (getSettings().isCheckVulnerableDependecyApplied()) {
+                return isIndirectlyUsingVulnerableDependencies(element, getEditor().getProject(), externalInfo);
+            }
+            return null;
+        }
+
+        private InlayPresentation isIndirectlyUsingVulnerableDependencies(PsiMethod method, Project project, Map<?, ?> externalInfo) {
+            Set<PsiMethod> visitedMethods = new HashSet<>();
+            PsiMethod[] externalMethods = CEUtils.collectExternalFunctionalityInvokingMethods(method);
+
+            for (PsiMethod externalMethod : externalMethods) {
+                if (!visitedMethods.contains(externalMethod) && !CEUtils.checkMethodExternality(externalMethod, project)) {
+                    InlayPresentation result = isMethodUsingVulnerableDependencies(externalMethod, project, externalInfo, visitedMethods);
+                    if (result != null) {
+                        return indirectVulnerableMethodInlay();
+                    }
+                }
+            }
+
+            return null;
+        }
+
+    }
+
+    private static class VulnerableDependencyCallCollector extends CEDynamicReferenceMethodCollector {
+        protected VulnerableDependencyCallCollector(@NotNull Editor editor, SettingsKey<?> key) {
+            super(editor, key);
+        }
+
+        @Override
+        protected InlayPresentation needsHint(@NotNull PsiMethod method, @NotNull Map<?, ?> externalInfo) {
+            Project project = getEditor().getProject();
+            if (CEUtils.checkMethodExternality(method, project)) {
+                InlayInfo result = CEUtils.isVulnerable(method, project, externalInfo);
                 if (result != null) {
-                    return indirectVulnerableMethodInlay();
+                    return makeVulnerableDependencyCallInlay(result);
                 }
             }
+
+            return null;
         }
 
-        return null;
-    }
+        private InlayPresentation makeVulnerableDependencyCallInlay(InlayInfo result) {
+            StringBuilder tooltipBuilder = new StringBuilder(result.dependencyName + " " +
+                    CEBundle.getString("inlay.vulnerabledependency.call.has") + " ");
 
-    // inlay parsers
-    private InlayPresentation vulnerableMethodInlay(int vuln) {
-        String pt1 = CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.pt1.tooltip");
-        String pt2 = CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.pt2.tooltip");
-        String pt3_1 = CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.pt3singular.tooltip");
-        String pt3_2 = CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.pt3plural.tooltip");
-        String tooltip = pt1 + vuln + " " + pt2 + (vuln == 1 ? pt3_1 : pt3_2);
-        return inlayBuilder.buildInlayWithEmoji(VULNERABLE_METHOD, tooltip, null);
-    }
+            String[] severities = {"CRITICAL", "HIGH", "MEDIUM", "LOW"};
+            boolean firstSeverity = true;
+            int totalVulnerabilities = 0;
 
-    private InlayPresentation vulnerableDependencyCallInlay(InlayInfo result) {
-        StringBuilder tooltipBuilder = new StringBuilder(result.dependencyName + " " +
-                CEBundle.getString("inlay.vulnerabledependency.call.has") + " ");
-
-        String[] severities = {"CRITICAL", "HIGH", "MEDIUM", "LOW"};
-        boolean firstSeverity = true;
-        int totalVulnerabilities = 0;
-
-        for (String severity : severities) {
-            int count = result.severityCounts.getOrDefault(severity, 0);
-            if (count > 0) {
-                if (!firstSeverity) {
-                    tooltipBuilder.append(", ");
+            for (String severity : severities) {
+                int count = result.severityCounts.getOrDefault(severity, 0);
+                if (count > 0) {
+                    if (!firstSeverity) {
+                        tooltipBuilder.append(", ");
+                    }
+                    tooltipBuilder.append(count).append(" ")
+                            .append(CEBundle.getString("inlay.vulnerabledependency.call.severity." + severity.toLowerCase()));
+                    firstSeverity = false;
+                    totalVulnerabilities += count;
                 }
-                tooltipBuilder.append(count).append(" ")
-                        .append(CEBundle.getString("inlay.vulnerabledependency.call.severity." + severity.toLowerCase()));
-                firstSeverity = false;
-                totalVulnerabilities += count;
             }
+
+            tooltipBuilder.append(" ")
+                    .append(CEBundle.getString(totalVulnerabilities == 1 ?
+                            "inlay.vulnerabledependency.call.vulnerability" :
+                            "inlay.vulnerabledependency.call.vulnerabilities"));
+
+            String tooltip = tooltipBuilder.toString();
+            String scannerPrefix = CEBundle.getString("inlay.vulnerabledependency.call.scanner");
+            return this.buildInlayWithEmoji(VULNERABLE_DEPENDENCY_CALL,
+                    result.scanner + scannerPrefix, tooltip);
         }
 
-        tooltipBuilder.append(" ")
-                .append(CEBundle.getString(totalVulnerabilities == 1 ?
-                        "inlay.vulnerabledependency.call.vulnerability" :
-                        "inlay.vulnerabledependency.call.vulnerabilities"));
-
-        String tooltip = tooltipBuilder.toString();
-        String scannerPrefix = CEBundle.getString("inlay.vulnerabledependency.call.scanner");
-        return inlayBuilder.buildInlayWithEmoji(VULNERABLE_DEPENDENCY_CALL,
-                result.scanner + scannerPrefix, tooltip);
-    }
-
-    private InlayPresentation indirectVulnerableMethodInlay() {
-        String tooltip = CEBundle.getString("inlay.vulnerabledependency.indirectvulnerable.tooltip");
-        return inlayBuilder.buildInlayWithEmoji(INDIRECT_VULNERABLE_METHOD, tooltip, null);
     }
 
 }
