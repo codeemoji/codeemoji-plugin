@@ -3,6 +3,7 @@ package codeemoji.core.collector.implicit.jpa;
 import codeemoji.core.collector.implicit.CEImplicit;
 import codeemoji.core.collector.implicit.CEImplicitCollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
@@ -19,10 +20,10 @@ public class CEJPAEntityCollector extends CEImplicitCollector {
     public final @NotNull String baseName;
     private final @NotNull String nameSpace;
 
-    public CEJPAEntityCollector(@NotNull Editor editor, @NotNull String keyId, int codePoint, @NotNull String nameSpace) {
-        super(editor, keyId, codePoint);
+    public CEJPAEntityCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, int codePoint, @NotNull String nameSpace) {
+        super(editor, key, codePoint);
         this.nameSpace = nameSpace;
-        baseName = nameSpace + ".Entity";
+        this.baseName = nameSpace + ".Entity";
     }
 
     @Override

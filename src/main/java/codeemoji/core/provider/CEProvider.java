@@ -30,15 +30,12 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
 
     private static final Logger LOG = Logger.getInstance(CEProvider.class);
 
+    private final SettingsKey<S> key;
     private S settings;
 
     protected CEProvider() {
         settings = createSettings();
-    }
-
-    @Override
-    public @NotNull SettingsKey<S> getKey() {
-        return new SettingsKey<>(getClass().getSimpleName().toLowerCase());
+        key = new SettingsKey<>(getClass().getSimpleName().toLowerCase());
     }
 
     @Nls(capitalization = Nls.Capitalization.Sentence)
@@ -88,11 +85,18 @@ public abstract class CEProvider<S> implements InlayHintsProvider<S> {
         return getKey().getId();
     }
 
-    protected abstract InlayHintsCollector buildCollector(Editor editor);
+    //TODO: deprecate and replace with the second one
+    protected InlayHintsCollector buildCollector(Editor editor){
+        throw new IllegalStateException("at least one build collection must be implemented");
+    };
+
+    protected InlayHintsCollector buildCollector(PsiFile psiFile, Editor editor){
+        return buildCollector(editor);
+    }
 
     @Override
     public final InlayHintsCollector getCollectorFor(@NotNull PsiFile psiFile, @NotNull Editor editor, @NotNull S settings, @NotNull InlayHintsSink inlayHintsSink) {
-        return buildCollector(editor);
+        return buildCollector(psiFile, editor);
     }
 
     @Override

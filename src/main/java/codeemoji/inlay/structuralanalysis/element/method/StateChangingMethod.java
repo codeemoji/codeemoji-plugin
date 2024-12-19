@@ -37,7 +37,7 @@ public class StateChangingMethod extends CEProviderMulti<StateChangingMethodSett
     protected List<InlayHintsCollector> buildCollectors(Editor editor) {
 
         return List.of(
-                new CEMethodCollector(editor, getKeyId(), STATE_CHANGING_METHOD) {
+                new CEMethodCollector(editor, getKey(), STATE_CHANGING_METHOD) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                         return isStateChangingMethod(element);
@@ -45,7 +45,7 @@ public class StateChangingMethod extends CEProviderMulti<StateChangingMethodSett
 
 
                 },
-                new CEReferenceMethodCollector(editor, getKeyId(), STATE_CHANGING_METHOD) {
+                new CEReferenceMethodCollector(editor, getKey(), STATE_CHANGING_METHOD) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                         return isStateChangingMethod(element);

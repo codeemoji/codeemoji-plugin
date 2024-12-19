@@ -3,23 +3,18 @@ package codeemoji.core.collector.simple;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.JavaRecursiveElementVisitor;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiClassType;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiJavaFile;
-import com.intellij.psi.PsiReferenceExpression;
-import com.intellij.psi.PsiReferenceList;
-import com.intellij.psi.PsiVariable;
+import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
 public abstract non-sealed class CEReferenceClassCollector extends CESimpleCollector<PsiClass, PsiElement> {
 
-    protected CEReferenceClassCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
-        super(editor, keyId, symbol);
+    protected CEReferenceClassCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key,
+                                        @NotNull String tooltipKey, @Nullable CESymbol symbol) {
+        super(editor, key, tooltipKey, symbol);
     }
 
     @Override

@@ -2,6 +2,7 @@ package codeemoji.core.collector.simple.modifier;
 
 import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.util.CESymbol;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
@@ -15,9 +16,9 @@ public final class CEModifierInterfaceMethodCollector extends CEReferenceMethodC
     private final boolean activated;
     private final String modifier;
 
-    public CEModifierInterfaceMethodCollector(@NotNull Editor editor, @NotNull String mainKeyId, @Nullable CESymbol symbol,
+    public CEModifierInterfaceMethodCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, @Nullable CESymbol symbol,
                                               String modifier, boolean activated) {
-        super(editor, mainKeyId + ".method." + modifier + "interface", symbol);
+        super(editor, key, key.getId() + ".method." + modifier + "interface", symbol);
         this.activated = activated;
         this.modifier = modifier;
     }

@@ -37,7 +37,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
     @Override
     protected List<InlayHintsCollector> buildCollectors(Editor editor) {
-        inlayBuilder = new CEDynamicInlayBuilder(editor);
+        inlayBuilder = new CEDynamicInlayBuilder(editor, getKey());
         return Arrays.asList(
                 vulnerableMethodCollector(editor),
                 vulnerableDependencyCallCollector(editor),
@@ -47,7 +47,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
     }
 
     private InlayHintsCollector vulnerableMethodCollector(Editor editor) {
-        return new CEDynamicMethodCollector(editor) {
+        return new CEDynamicMethodCollector(editor, getKey()) {
             @Override
             public InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                 return isMethodUsingVulnerableDependencies(element, editor.getProject(), externalInfo);
@@ -56,7 +56,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
     }
 
     private InlayHintsCollector vulnerableMethodReferenceCollector(Editor editor) {
-        return new CEDynamicReferenceMethodCollector(editor) {
+        return new CEDynamicReferenceMethodCollector(editor, getKey()) {
             @Override
             protected InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                 InlayPresentation result = isMethodUsingVulnerableDependencies(element, editor.getProject(), externalInfo);
@@ -69,7 +69,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
     }
 
     private InlayHintsCollector vulnerableDependencyCallCollector(Editor editor) {
-        return new CEDynamicReferenceMethodCollector(editor) {
+        return new CEDynamicReferenceMethodCollector(editor, getKey()) {
             @Override
             protected InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                 return isACallToVulnerableDependency(element, editor.getProject(), externalInfo);
@@ -78,7 +78,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
     }
 
     private InlayHintsCollector indirectVulnerableMethodCollector(Editor editor) {
-        return new CEDynamicMethodCollector(editor) {
+        return new CEDynamicMethodCollector(editor, getKey()) {
             @Override
             public InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                 if (getSettings().isCheckVulnerableDependecyApplied()) {

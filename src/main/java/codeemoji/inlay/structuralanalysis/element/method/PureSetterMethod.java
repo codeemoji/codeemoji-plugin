@@ -41,13 +41,13 @@ public class PureSetterMethod extends CEProviderMulti<PureSetterMethodSettings> 
     @Override
     protected List<InlayHintsCollector> buildCollectors(Editor editor) {
         return List.of(
-                new CEMethodCollector(editor, getKeyId(), PURE_SETTER_METHOD) {
+                new CEMethodCollector(editor, getKey(), PURE_SETTER_METHOD) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                         return isPureSetterMethod(element);
                     }
                 },
-                new CEReferenceMethodCollector(editor, getKeyId(), PURE_SETTER_METHOD) {
+                new CEReferenceMethodCollector(editor, getKey(), PURE_SETTER_METHOD) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                         return isPureSetterMethod(element);

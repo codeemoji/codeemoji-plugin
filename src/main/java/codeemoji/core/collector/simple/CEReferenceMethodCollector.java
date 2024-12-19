@@ -3,6 +3,7 @@ package codeemoji.core.collector.simple;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiCallExpression;
@@ -16,8 +17,13 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("UnstableApiUsage")
 public abstract non-sealed class CEReferenceMethodCollector extends CESimpleCollector<PsiMethod, PsiMethodCallExpression> {
 
-    protected CEReferenceMethodCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
-        super(editor, keyId, symbol);
+    protected CEReferenceMethodCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key,
+                                         @Nullable CESymbol symbol) {
+        this(editor, key, key.getId(), symbol);
+    }
+    protected CEReferenceMethodCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key,
+                                         @NotNull String mainKeyId, @Nullable CESymbol symbol) {
+        super(editor, key,mainKeyId, symbol);
     }
 
     @Override

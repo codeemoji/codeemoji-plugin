@@ -4,6 +4,7 @@ import codeemoji.core.collector.CECollector;
 import codeemoji.core.external.CEExternalAnalyzer;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
@@ -25,9 +26,14 @@ public sealed abstract class CESimpleCollector<H extends PsiElement, A extends P
 
     protected InlayPresentation inlay;
 
-    protected CESimpleCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
-        super(editor);
-        inlay = buildInlayWithEmoji(symbol, "inlay." + keyId + ".tooltip", null);
+    protected CESimpleCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key,
+                                @NotNull String tooltipKey, @Nullable CESymbol symbol) {
+        super(editor, key);
+        inlay = buildInlayWithEmoji(symbol, "inlay." + key.getId() + ".tooltip", null);
+    }
+
+    protected CESimpleCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, @Nullable CESymbol symbol) {
+        this(editor, key, key.getId(), symbol);
     }
 
     protected final void addInlay(@Nullable A element, InlayHintsSink sink) {

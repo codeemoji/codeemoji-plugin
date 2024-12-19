@@ -3,6 +3,7 @@ package codeemoji.core.collector.project;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
@@ -36,12 +37,12 @@ public final class CEProjectClassCollector extends CEProjectCollector<PsiClass, 
     private final @NotNull CESymbol extendsSymbol;
     private final @NotNull CESymbol implementsSymbol;
 
-    public CEProjectClassCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
-        super(editor, mainKeyId + ".class");
+    public CEProjectClassCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key) {
+        super(editor, key, key.getId() + ".class");
         extendsKey = getMainKeyId() + "." + EXTENDS.getValue() + ".tooltip";
         implementsKey = getMainKeyId() + "." + IMPLEMENTS.getValue() + ".tooltip";
-        extendsSymbol = new CESymbol();
-        implementsSymbol = new CESymbol();
+        extendsSymbol = CESymbol.empty();
+        implementsSymbol = CESymbol.empty();
     }
 
     @Override

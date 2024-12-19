@@ -30,7 +30,7 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings
 
     @Override
     public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
-        return new CEMethodCollector(editor, getKeyId(), MANY) {
+        return new CEMethodCollector(editor, getKey(), MANY) {
             @Override
             public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                 if ((element.getName().startsWith("get") || element.getName().startsWith("return")) &&

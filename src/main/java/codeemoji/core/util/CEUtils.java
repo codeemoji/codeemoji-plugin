@@ -571,7 +571,7 @@ public enum CEUtils {
                         List<VulnerabilityInfo> vulnerabilities = cveList.stream()
                                 .filter(VulnerabilityInfo.class::isInstance)
                                 .map(VulnerabilityInfo.class::cast)
-                                .collect(Collectors.toList());
+                                .toList();
 
                         if (!vulnerabilities.isEmpty()) {
                             String scanner = String.valueOf(vulnerabilities.get(0).getScanner());

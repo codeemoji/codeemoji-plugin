@@ -80,7 +80,7 @@ public record ShowingSpecificsConfigurable(
         var howToConfigure = CEBundle.getString("inlay.showingspecifics.options.title.noruleloaded.howtoconfigure");
         panel.add(new JLabel(noRuleLoaded + ":"));
         var button = new JButton();
-        button.setText(new CESymbol(0x1F575).getEmoji() + " " + howToConfigure);
+        button.setText(CESymbol.of(0x1F575).getEmoji() + " " + howToConfigure);
         button.addActionListener(event -> {
             try {
                 BrowserUtil.browse(new URI(settings().getHowToConfigureURL()));
@@ -140,7 +140,7 @@ public record ShowingSpecificsConfigurable(
             var feature = entry.getKey();
             var defaultSymbol = ProjectRuleSymbol.detectDefaultSymbol(feature);
             var symbol = readRuleEmoji(elementRule, feature, defaultSymbol);
-            var key = new JLabel(symbol.getEmoji() + " " + feature.getValue() + ": ");
+            var key = symbol.createLabel(feature.getValue() + ": ");
             var valuesStr = entry.getValue().toString();
             valuesStr = valuesStr.replace("[", "").replace("]", "");
             var value = new JTextField(valuesStr);

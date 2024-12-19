@@ -3,6 +3,7 @@ package codeemoji.core.collector.project;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import lombok.Getter;
@@ -26,13 +27,13 @@ public final class CEProjectMethodCollector extends CEProjectCollector<PsiMethod
     private final @NotNull CESymbol returnsSymbol;
     private final @NotNull CESymbol packagesSymbol;
 
-    public CEProjectMethodCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
-        super(editor, mainKeyId + ".method");
+    public CEProjectMethodCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key) {
+        super(editor, key, key.getId() + ".method");
         returnsKey = getMainKeyId() + "." + RETURNS.getValue() + ".tooltip";
-        returnsSymbol = new CESymbol();
+        returnsSymbol = CESymbol.empty();
 
         packagesKey = getMainKeyId() + "." + PACKAGES.getValue() + ".tooltip";
-        packagesSymbol = new CESymbol();
+        packagesSymbol = CESymbol.empty();
     }
 
     @Override

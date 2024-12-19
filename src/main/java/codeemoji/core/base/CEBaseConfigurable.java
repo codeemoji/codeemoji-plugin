@@ -2,6 +2,7 @@ package codeemoji.core.base;
 
 import codeemoji.core.ui.EmojiPickerPanel;
 import codeemoji.core.ui.EmojiRepository;
+import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CESymbolHolder;
 import com.intellij.codeInsight.hints.ChangeListener;
@@ -46,7 +47,7 @@ public class CEBaseConfigurable<S extends CEBaseSettings<S>> implements Immediat
         JLabel label = holder.getSymbol().createLabel(holder.getName());
 
         // Create button
-        JButton pickEmojiButton = new JButton("Edit");
+        JButton pickEmojiButton = new JButton(CEBundle.getString("codeemoji.configurable.edit"));
         pickEmojiButton.addActionListener(e -> createPickEmojiMenu(label, holder, true, listener));
 
         // Create a sub-panel for label and button with horizontal layout
@@ -97,7 +98,7 @@ public class CEBaseConfigurable<S extends CEBaseSettings<S>> implements Immediat
         );
 
         // Display the dialog and block until closed
-        JDialog dialog = optionPane.createDialog("Select an Emoji");
+        JDialog dialog = optionPane.createDialog(CEBundle.getString("codeemoji.configurable.select_emoji"));
         thisDialog.set(dialog);
 
         dialog.setVisible(true);

@@ -2,6 +2,7 @@ package codeemoji.core.collector.simple;
 
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiElement;
@@ -14,8 +15,8 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("UnstableApiUsage")
 public abstract non-sealed class CEMethodCollector extends CESimpleCollector<PsiMethod, PsiIdentifier> {
 
-    protected CEMethodCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
-        super(editor, keyId, symbol);
+    protected CEMethodCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, @Nullable CESymbol symbol) {
+        super(editor, key, symbol);
     }
 
     @Override

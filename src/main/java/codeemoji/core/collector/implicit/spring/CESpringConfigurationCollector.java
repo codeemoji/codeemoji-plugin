@@ -3,6 +3,7 @@ package codeemoji.core.collector.implicit.spring;
 import codeemoji.core.collector.implicit.CEImplicit;
 import codeemoji.core.collector.implicit.CEImplicitCollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMember;
@@ -18,8 +19,8 @@ public class CESpringConfigurationCollector extends CEImplicitCollector {
 
     public final @NotNull String baseName;
 
-    public CESpringConfigurationCollector(@NotNull Editor editor, @NotNull String keyId, int codePoint) {
-        super(editor, keyId, codePoint);
+    public CESpringConfigurationCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, int codePoint) {
+        super(editor, key, codePoint);
         baseName = "org.springframework.context.annotation.Configuration";
     }
 

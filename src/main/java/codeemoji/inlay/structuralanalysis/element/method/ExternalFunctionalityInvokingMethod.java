@@ -31,14 +31,14 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
     protected List<InlayHintsCollector> buildCollectors(Editor editor) {
 
         return List.of(
-                new CEMethodCollector(editor, getKeyId(), EXTERNAL_FUNCTIONALITY_INVOKING_METHOD) {
+                new CEMethodCollector(editor, getKey(), EXTERNAL_FUNCTIONALITY_INVOKING_METHOD) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                         return isExternalFunctionalityInvokingMethod(element, editor.getProject());
                     }
                 },
 
-                new CEReferenceMethodCollector(editor, getKeyId(), EXTERNAL_FUNCTIONALITY_INVOKING_METHOD) {
+                new CEReferenceMethodCollector(editor, getKey(), EXTERNAL_FUNCTIONALITY_INVOKING_METHOD) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                         return isExternalFunctionalityInvokingMethod(element, editor.getProject());

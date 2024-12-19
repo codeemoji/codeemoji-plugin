@@ -3,6 +3,7 @@ package codeemoji.core.collector.implicit;
 import codeemoji.core.collector.CECollector;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.lang.jvm.JvmAnnotatedElement;
 import com.intellij.lang.jvm.JvmAnnotation;
@@ -21,13 +22,13 @@ import java.util.Objects;
 @SuppressWarnings("UnstableApiUsage")
 public abstract class CEImplicitCollector extends CECollector {
 
-    public final @NotNull String keyId;
     public final int codePoint;
+    private final String keyId;
 
-    protected CEImplicitCollector(@NotNull Editor editor, @NotNull String keyId, int codePoint) {
-        super(editor);
-        this.keyId = keyId;
+    protected CEImplicitCollector(@NotNull Editor editor, SettingsKey<?> settingsKey, int codePoint) {
+        super(editor, settingsKey);
         this.codePoint = codePoint;
+        this.keyId = settingsKey.getId(); //TODO:t his could be done better
     }
 
     @Override
@@ -142,7 +143,7 @@ public abstract class CEImplicitCollector extends CECollector {
 
     private void addImplicitInlay(PsiElement element, @Nullable String fullText, @NotNull InlayHintsSink sink) {
         if (null != fullText) {
-            var symbol = new CESymbol(codePoint, fullText);
+            var symbol = CESymbol.of(codePoint, fullText);
             var inlay = buildInlayWithEmoji(symbol, "inlay." + keyId + ".annotations.tooltip", null);
             addInlayBlock(element, sink, inlay);
         }

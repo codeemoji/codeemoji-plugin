@@ -39,14 +39,14 @@ public class StateIndependentMethod extends CEProviderMulti<StateIndependentMeth
     @Override
     protected List<InlayHintsCollector> buildCollectors(Editor editor) {
         return List.of(
-                new CEMethodCollector(editor, getKeyId(), STATE_INDEPENDENT_METHOD) {
+                new CEMethodCollector(editor, getKey(), STATE_INDEPENDENT_METHOD) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                         return isStateIndependentMethod(element);
                     }
                 },
 
-                new CEReferenceMethodCollector(editor, getKeyId(), STATE_INDEPENDENT_METHOD) {
+                new CEReferenceMethodCollector(editor, getKey(), STATE_INDEPENDENT_METHOD) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                         return isStateIndependentMethod(element);

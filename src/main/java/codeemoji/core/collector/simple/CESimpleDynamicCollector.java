@@ -4,6 +4,7 @@ import codeemoji.core.collector.CECollector;
 import codeemoji.core.external.CEExternalAnalyzer;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
@@ -16,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
+//TODO: merge this class with the CECollector one
+
 @Getter
 @Setter
 @ToString
@@ -25,8 +28,8 @@ public sealed abstract class CESimpleDynamicCollector<H extends PsiElement, A ex
 
     protected InlayPresentation inlay;
 
-    protected CESimpleDynamicCollector(@NotNull Editor editor) {
-        super(editor);
+    protected CESimpleDynamicCollector(@NotNull Editor editor, SettingsKey<?> settingsKey) {
+        super(editor, settingsKey);
     }
 
     protected final void addInlay(@Nullable A element, InlayHintsSink sink) {
@@ -41,5 +44,6 @@ public sealed abstract class CESimpleDynamicCollector<H extends PsiElement, A ex
         return result;
     }
 
+    @Nullable
     protected abstract InlayPresentation needsHint(@NotNull H element, @NotNull Map<?, ?> externalInfo);
 }

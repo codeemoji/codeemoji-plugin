@@ -40,7 +40,7 @@ public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticCom
 
     @Override
     protected InlayHintsCollector buildCollector(Editor editor) {
-        return new CEMethodCollector(editor, getKeyId(), HIGH_CYCLOMATIC_COMPLEXITY_METHOD) {
+        return new CEMethodCollector(editor, getKey(), HIGH_CYCLOMATIC_COMPLEXITY_METHOD) {
             @Override
             protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                 if(isHighCyclomaticComplexityMethod(element)) System.out.println("Found HIGH_CYCLOMATIC_COMPLEXITY_METHOD in " + element.getName());

@@ -24,7 +24,7 @@ public class LargeLineCountMethod extends CEProvider<LargeLineCountMethodSetting
 
     @Override
     protected InlayHintsCollector buildCollector(Editor editor) {
-        return new CEMethodCollector(editor, getKeyId(), LARGE_LINE_COUNT_METHOD) {
+        return new CEMethodCollector(editor, getKey(), LARGE_LINE_COUNT_METHOD) {
             @Override
             protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                 return isLargeLineCountMethod(element);

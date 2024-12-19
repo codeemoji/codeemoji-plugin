@@ -2,6 +2,7 @@ package codeemoji.core.collector.simple;
 
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
@@ -11,8 +12,8 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("UnstableApiUsage")
 public abstract non-sealed class CEDynamicReferenceMethodCollector extends CESimpleDynamicCollector<PsiMethod, PsiMethodCallExpression> {
 
-    protected CEDynamicReferenceMethodCollector(@NotNull Editor editor) {
-        super(editor);
+    protected CEDynamicReferenceMethodCollector(@NotNull Editor editor, SettingsKey<?> key) {
+        super(editor, key);
     }
 
     @Override

@@ -4,6 +4,7 @@ import codeemoji.core.collector.CECollector;
 import codeemoji.core.config.CEConfigFile;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiModifierListOwner;
@@ -25,8 +26,8 @@ public abstract class CEProjectCollector<H extends PsiModifierListOwner, A exten
     private final @NotNull String annotationsKey;
     private final @NotNull CESymbol annotationsSymbol;
 
-    CEProjectCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
-        super(editor);
+    CEProjectCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, @NotNull String mainKeyId) {
+        super(editor, key);
         configFile = new CEConfigFile(editor.getProject());
         this.mainKeyId = "inlay." + mainKeyId;
         annotationsKey = getMainKeyId() + "." + ANNOTATIONS.getValue() + ".tooltip";

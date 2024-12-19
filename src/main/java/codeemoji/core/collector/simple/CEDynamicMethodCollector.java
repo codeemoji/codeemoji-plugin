@@ -1,15 +1,17 @@
 package codeemoji.core.collector.simple;
 
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
+//can i merge this with superclass?
 public abstract non-sealed class CEDynamicMethodCollector extends CESimpleDynamicCollector<PsiMethod, PsiIdentifier> {
 
-    protected CEDynamicMethodCollector(@NotNull Editor editor) {
-        super(editor);
+    protected CEDynamicMethodCollector(@NotNull Editor editor, SettingsKey<?> settingsKey) {
+        super(editor, settingsKey);
     }
 
     @Override

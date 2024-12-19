@@ -3,6 +3,7 @@ package codeemoji.core.collector.simple;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiElement;
@@ -32,8 +33,8 @@ public abstract non-sealed class CEVariableCollector extends CESimpleCollector<P
     private boolean enabledForParam;
     private boolean enabledForLocalVariable;
 
-    protected CEVariableCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
-        super(editor, keyId, symbol);
+    protected CEVariableCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, @Nullable CESymbol symbol) {
+        super(editor, key, symbol);
         enabledForField = true;
         enabledForParam = true;
         enabledForLocalVariable = true;

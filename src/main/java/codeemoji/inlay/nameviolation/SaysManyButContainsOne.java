@@ -39,7 +39,7 @@ public class SaysManyButContainsOne extends CEProvider<NoSettings> {
 
     @Override
     public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
-        return new CEVariableCollector(editor, getKeyId(), ONE) {
+        return new CEVariableCollector(editor, getKey(), ONE) {
             @Override
             public boolean needsHint(@NotNull PsiVariable element, @NotNull Map<?, ?> externalInfo) {
                 var typeElement = element.getTypeElement();

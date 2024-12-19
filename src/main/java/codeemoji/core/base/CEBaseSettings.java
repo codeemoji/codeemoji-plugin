@@ -25,7 +25,6 @@ public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements Per
 
     // bad
     @Transient
-    @Deprecated
     public CESymbol getMainSymbol() {
         return symbols.get(0).getSymbol();
     }

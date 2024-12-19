@@ -7,6 +7,7 @@ import codeemoji.core.collector.simple.modifier.CEModifierMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,43 +52,44 @@ public class ShowingModifiers extends CEProviderMulti<ShowingModifiersSettings> 
     @Override
     public @NotNull List<InlayHintsCollector> buildCollectors(@NotNull Editor editor) {
         List<InlayHintsCollector> list = new ArrayList<>();
+        SettingsKey<?> key = getKey();
         //class
         list.addAll(
                 Arrays.asList(
-                        new CEModifierClassCollector(editor, getKeyId(), PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_CLASS)),
-                        new CEModifierClassCollector(editor, getKeyId(), DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_CLASS)),
-                        new CEModifierClassCollector(editor, getKeyId(), FINAL_SYMBOL, FINAL, getSettings().query(FINAL_CLASS)),
-                        new CEModifierClassCollector(editor, getKeyId(), ABSTRACT_SYMBOL, ABSTRACT, getSettings().query(ABSTRACT_CLASS))
+                        new CEModifierClassCollector(editor, key, PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_CLASS)),
+                        new CEModifierClassCollector(editor, key, DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_CLASS)),
+                        new CEModifierClassCollector(editor, key, FINAL_SYMBOL, FINAL, getSettings().query(FINAL_CLASS)),
+                        new CEModifierClassCollector(editor, key, ABSTRACT_SYMBOL, ABSTRACT, getSettings().query(ABSTRACT_CLASS))
                 )
         );
         //fields
         list.addAll(
                 Arrays.asList(
-                        new CEModifierFieldCollector(editor, getKeyId(), PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_FIELD)),
-                        new CEModifierFieldCollector(editor, getKeyId(), DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_FIELD)),
-                        new CEModifierFieldCollector(editor, getKeyId(), FINAL_VAR_SYMBOL, FINAL, getSettings().query(FINAL_FIELD)),
-                        new CEModifierFieldCollector(editor, getKeyId(), PROTECTED_SYMBOL, PROTECTED, getSettings().query(PROTECTED_FIELD)),
-                        new CEModifierFieldCollector(editor, getKeyId(), PRIVATE_SYMBOL, PRIVATE, getSettings().query(PRIVATE_FIELD)),
-                        new CEModifierFieldCollector(editor, getKeyId(), STATIC_SYMBOL, STATIC, getSettings().query(STATIC_FIELD)),
-                        new CEModifierFieldCollector(editor, getKeyId(), VOLATILE_SYMBOL, VOLATILE, getSettings().query(VOLATILE_FIELD)),
-                        new CEModifierFieldCollector(editor, getKeyId(), TRANSIENT_SYMBOL, TRANSIENT, getSettings().query(TRANSIENT_FIELD))
+                        new CEModifierFieldCollector(editor, key, PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_FIELD)),
+                        new CEModifierFieldCollector(editor, key, DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_FIELD)),
+                        new CEModifierFieldCollector(editor, key, FINAL_VAR_SYMBOL, FINAL, getSettings().query(FINAL_FIELD)),
+                        new CEModifierFieldCollector(editor, key, PROTECTED_SYMBOL, PROTECTED, getSettings().query(PROTECTED_FIELD)),
+                        new CEModifierFieldCollector(editor, key, PRIVATE_SYMBOL, PRIVATE, getSettings().query(PRIVATE_FIELD)),
+                        new CEModifierFieldCollector(editor, key, STATIC_SYMBOL, STATIC, getSettings().query(STATIC_FIELD)),
+                        new CEModifierFieldCollector(editor, key, VOLATILE_SYMBOL, VOLATILE, getSettings().query(VOLATILE_FIELD)),
+                        new CEModifierFieldCollector(editor, key, TRANSIENT_SYMBOL, TRANSIENT, getSettings().query(TRANSIENT_FIELD))
                 )
         );
         //methods
         list.addAll(
                 Arrays.asList(
-                        new CEModifierMethodCollector(editor, getKeyId(), PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_METHOD)),
-                        new CEModifierMethodCollector(editor, getKeyId(), DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_METHOD)),
-                        new CEModifierMethodCollector(editor, getKeyId(), FINAL_SYMBOL, FINAL, getSettings().query(FINAL_METHOD)),
-                        new CEModifierMethodCollector(editor, getKeyId(), PROTECTED_SYMBOL, PROTECTED, getSettings().query(PROTECTED_METHOD)),
-                        new CEModifierMethodCollector(editor, getKeyId(), PRIVATE_SYMBOL, PRIVATE, getSettings().query(PRIVATE_METHOD)),
-                        new CEModifierMethodCollector(editor, getKeyId(), STATIC_SYMBOL, STATIC, getSettings().query(STATIC_METHOD)),
-                        new CEModifierMethodCollector(editor, getKeyId(), ABSTRACT_SYMBOL, ABSTRACT, getSettings().query(ABSTRACT_METHOD)),
-                        new CEModifierMethodCollector(editor, getKeyId(), SYNCHRONIZED_SYMBOL, SYNCHRONIZED, getSettings().query(SYNCHRONIZED_METHOD)),
-                        new CEModifierMethodCollector(editor, getKeyId(), NATIVE_SYMBOL, NATIVE, getSettings().query(NATIVE_METHOD))
+                        new CEModifierMethodCollector(editor, key, PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_METHOD)),
+                        new CEModifierMethodCollector(editor, key, DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_METHOD)),
+                        new CEModifierMethodCollector(editor, key, FINAL_SYMBOL, FINAL, getSettings().query(FINAL_METHOD)),
+                        new CEModifierMethodCollector(editor, key, PROTECTED_SYMBOL, PROTECTED, getSettings().query(PROTECTED_METHOD)),
+                        new CEModifierMethodCollector(editor, key, PRIVATE_SYMBOL, PRIVATE, getSettings().query(PRIVATE_METHOD)),
+                        new CEModifierMethodCollector(editor, key, STATIC_SYMBOL, STATIC, getSettings().query(STATIC_METHOD)),
+                        new CEModifierMethodCollector(editor, key, ABSTRACT_SYMBOL, ABSTRACT, getSettings().query(ABSTRACT_METHOD)),
+                        new CEModifierMethodCollector(editor, key, SYNCHRONIZED_SYMBOL, SYNCHRONIZED, getSettings().query(SYNCHRONIZED_METHOD)),
+                        new CEModifierMethodCollector(editor, key, NATIVE_SYMBOL, NATIVE, getSettings().query(NATIVE_METHOD))
                 )
         );
-        list.add(new CEModifierInterfaceMethodCollector(editor, getKeyId(), DEFAULT_INTERFACE_SYMBOL, DEFAULT, getSettings().query(DEFAULT_INTERFACE_METHOD)));
+        list.add(new CEModifierInterfaceMethodCollector(editor, key, DEFAULT_INTERFACE_SYMBOL, DEFAULT, getSettings().query(DEFAULT_INTERFACE_METHOD)));
 
         return list;
     }

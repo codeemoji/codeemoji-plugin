@@ -2,6 +2,7 @@ package codeemoji.core.collector;
 
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
@@ -14,8 +15,8 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("UnstableApiUsage")
 public abstract non-sealed class CECollector<A extends PsiElement> extends CEInlayBuilder implements InlayHintsCollector {
 
-    protected CECollector(Editor editor) {
-        super(editor);
+    protected CECollector(Editor editor, SettingsKey<?> settingsKey) {
+        super(editor, settingsKey);
     }
 
     @SuppressWarnings("SameReturnValue")

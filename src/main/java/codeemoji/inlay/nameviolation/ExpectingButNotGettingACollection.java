@@ -30,7 +30,7 @@ public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
 
     @Override
     public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
-        return new CEMethodCollector(editor, getKeyId(), ONE) {
+        return new CEMethodCollector(editor, getKey(), ONE) {
             @Override
             public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
                 if ((element.getName().startsWith("get") || element.getName().startsWith("return"))

@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
 
 @Getter
 public final class CEBundle {
@@ -19,8 +20,11 @@ public final class CEBundle {
         return CEBundleHolder.INSTANCE;
     }
 
-    public static @NotNull String getString(@NotNull String key) {
-        return getInstance().getBundle().getString(key);
+    public static @NotNull String getString(@NotNull String key, @NotNull Object... args) {
+        return String.format(getInstance().getBundle().getString(key), args);
+    }
+    public static Supplier<String> getLazyString(@NotNull String key, @NotNull Object... args) {
+        return () -> getString(key, args);
     }
 
     private static final class CEBundleHolder {

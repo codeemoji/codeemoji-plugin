@@ -4,6 +4,7 @@ import codeemoji.core.config.CERuleElement;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import lombok.Getter;
@@ -26,11 +27,11 @@ public final class CEProjectVariableCollector extends CEProjectCollector<PsiVari
     private final @NotNull String typesKey;
     private final @NotNull CESymbol typesSymbol;
 
-    public CEProjectVariableCollector(@NotNull Editor editor, @NotNull CERuleElement elementRule, @NotNull String mainKeyId) {
-        super(editor, mainKeyId + "." + elementRule.getValue());
+    public CEProjectVariableCollector(@NotNull Editor editor, SettingsKey<?> key, @NotNull CERuleElement elementRule) {
+        super(editor, key, key.getId() + "." + elementRule.getValue());
         this.elementRule = elementRule;
         typesKey = getMainKeyId() + "." + TYPES.getValue() + ".tooltip";
-        typesSymbol = new CESymbol();
+        typesSymbol = CESymbol.empty();
     }
 
     @Override

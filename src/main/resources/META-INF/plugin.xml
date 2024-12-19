@@ -48,9 +48,17 @@
 
         <applicationService
                 serviceImplementation="codeemoji.inlay.vcs.authoravatar.AuthorAvatarSettings"/>
+        <applicationService
+                serviceImplementation="codeemoji.inlay.vcs.recentlymodified.RecentlyModifiedSettings"/>
+        <applicationService
+                serviceImplementation="codeemoji.inlay.vcs.lastcommit.LastCommitSettings"/>
 
-        <projectService  serviceImplementation="codeemoji.inlay.external.services.OSSExternalServiceExternalService"/>
-        <projectService  serviceImplementation="codeemoji.inlay.external.services.OSVExternalServiceExternalService"/>
+        <applicationService
+                serviceInterface="codeemoji.core.util.CESymbol"
+                serviceImplementation="codeemoji.core.util.CESymbol$Serializer"/>
+
+        <projectService serviceImplementation="codeemoji.inlay.external.services.OSSExternalServiceExternalService"/>
+        <projectService serviceImplementation="codeemoji.inlay.external.services.OSVExternalServiceExternalService"/>
 
 
         <!--END OF CONFIGURABLE & SERVICES SECTION-->
@@ -114,7 +122,9 @@
         <codeInsight.inlayProvider language="JAVA"
                                    implementationClass="codeemoji.inlay.vcs.GitTest"/>
         <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="codeemoji.inlay.vcs.RecentlyModified"/>
+                                   implementationClass="codeemoji.inlay.vcs.recentlymodified.RecentlyModified"/>
+        <codeInsight.inlayProvider language="JAVA"
+                                   implementationClass="codeemoji.inlay.vcs.lastcommit.LastCommit"/>
         <codeInsight.inlayProvider language="JAVA"
                                    implementationClass="codeemoji.inlay.vcs.authoravatar.AuthorAvatar"/>
 

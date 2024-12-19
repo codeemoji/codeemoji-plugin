@@ -3,6 +3,7 @@ package codeemoji.core.collector.simple.modifier;
 import codeemoji.core.collector.simple.CEReferenceFieldCollector;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiField;
 import org.jetbrains.annotations.NotNull;
@@ -17,9 +18,9 @@ public final class CEModifierFieldCollector extends CEReferenceFieldCollector {
     private final boolean activated;
     private final String modifier;
 
-    public CEModifierFieldCollector(@NotNull Editor editor, @NotNull String mainKeyId, @Nullable CESymbol symbol,
+    public CEModifierFieldCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, @Nullable CESymbol symbol,
                                     String modifier, boolean activated) {
-        super(editor, mainKeyId + ".field." + modifier, symbol);
+        super(editor, key, key.getId() + ".field." + modifier, symbol);
         this.activated = activated;
         this.modifier = modifier;
     }

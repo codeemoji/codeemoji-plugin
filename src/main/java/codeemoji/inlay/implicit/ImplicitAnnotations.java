@@ -8,6 +8,7 @@ import codeemoji.core.collector.implicit.spring.CESpringRestControllerCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -28,16 +29,16 @@ public class ImplicitAnnotations extends CEProviderMulti<ImplicitAnnotationsSett
     @Override
     public @NotNull List<InlayHintsCollector> buildCollectors(@NotNull Editor editor) {
         final int codePoint = 0x1F4AD;
-        String keyId = getKeyId();
+        SettingsKey<?> key = getKey();
         return new ArrayList<>(
                 Arrays.asList(
-                        new CEJPAEntityCollector(editor, keyId, codePoint, "javax.persistence"),
-                        new CEJPAEntityCollector(editor, keyId, codePoint, "jakarta.persistence"),
-                        new CEJPAEmbeddableCollector(editor, keyId, codePoint, "javax.persistence"),
-                        new CEJPAEmbeddableCollector(editor, keyId, codePoint, "jakarta.persistence"),
-                        new CESpringConfigurationCollector(editor, keyId, codePoint),
-                        new CESpringControllerCollector(editor, keyId, codePoint),
-                        new CESpringRestControllerCollector(editor, keyId, codePoint)
+                        new CEJPAEntityCollector(editor, key, codePoint, "javax.persistence"),
+                        new CEJPAEntityCollector(editor, key, codePoint, "jakarta.persistence"),
+                        new CEJPAEmbeddableCollector(editor, key, codePoint, "javax.persistence"),
+                        new CEJPAEmbeddableCollector(editor, key, codePoint, "jakarta.persistence"),
+                        new CESpringConfigurationCollector(editor, key, codePoint),
+                        new CESpringControllerCollector(editor, key, codePoint),
+                        new CESpringRestControllerCollector(editor, key, codePoint)
                 ));
     }
 
