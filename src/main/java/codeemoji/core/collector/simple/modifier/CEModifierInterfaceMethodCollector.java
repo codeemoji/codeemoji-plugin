@@ -29,7 +29,7 @@ public final class CEModifierInterfaceMethodCollector extends CEReferenceMethodC
     }
 
     @Override
-    public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+    public boolean needsHint(@NotNull PsiMethod element){
         var parent = element.getParent();
         if (parent instanceof PsiClass clazz && (clazz.isInterface())) {
             var psiModifierList = element.getModifierList();

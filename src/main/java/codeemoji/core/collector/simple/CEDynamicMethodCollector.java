@@ -1,35 +1,33 @@
 package codeemoji.core.collector.simple;
 
+import codeemoji.core.collector.CECollector;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.SettingsKey;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
 //can i merge this with superclass?
-public abstract non-sealed class CEDynamicMethodCollector extends CESimpleDynamicCollector<PsiMethod, PsiIdentifier> {
+public abstract class CEDynamicMethodCollector extends CECollector<PsiMethod, PsiIdentifier> {
 
     protected CEDynamicMethodCollector(@NotNull Editor editor, SettingsKey<?> settingsKey) {
         super(editor, settingsKey);
     }
 
     @Override
-    public final boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
-        if (psiElement instanceof PsiJavaFile) {
-            psiElement.accept(new JavaRecursiveElementVisitor() {
-                @Override
-                public void visitMethod(@NotNull PsiMethod method) {
-                    InlayPresentation dynamicInlay = needsHint(method, processExternalInfo(method));
-                    if (dynamicInlay != null) {
-                        inlay = dynamicInlay;
-                        addInlay(method.getNameIdentifier(), inlayHintsSink);
-                    }
-                    super.visitMethod(method);
+    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+        return new JavaRecursiveElementVisitor() {
+            @Override
+            public void visitMethod(@NotNull PsiMethod method) {
+                var inlay = createInlayFor(method);
+                if (inlay != null) {
+                    addInlayInline(method.getNameIdentifier(), inlayHintsSink, inlay);
                 }
-            });
-        }
-        return false;
+                super.visitMethod(method);
+            }
+        };
     }
+
+
 }
 

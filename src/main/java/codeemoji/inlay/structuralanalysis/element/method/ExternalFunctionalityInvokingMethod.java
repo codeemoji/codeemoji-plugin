@@ -1,6 +1,6 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
-import codeemoji.core.collector.simple.CEMethodCollector;
+import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.util.CEUtils;
@@ -31,16 +31,16 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
     protected List<InlayHintsCollector> buildCollectors(Editor editor) {
 
         return List.of(
-                new CEMethodCollector(editor, getKey(), EXTERNAL_FUNCTIONALITY_INVOKING_METHOD) {
+                new CESimpleMethodCollector(editor, getKey(), EXTERNAL_FUNCTIONALITY_INVOKING_METHOD) {
                     @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                    protected boolean needsHint(@NotNull PsiMethod element){
                         return isExternalFunctionalityInvokingMethod(element, editor.getProject());
                     }
                 },
 
                 new CEReferenceMethodCollector(editor, getKey(), EXTERNAL_FUNCTIONALITY_INVOKING_METHOD) {
                     @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                    protected boolean needsHint(@NotNull PsiMethod element){
                         return isExternalFunctionalityInvokingMethod(element, editor.getProject());
                     }
                 }

@@ -38,7 +38,7 @@ public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSetting
     public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
         return new CEVariableCollector(editor, getKey(), SMALL_NAME) {
             @Override
-            public boolean needsHint(@NotNull PsiVariable element, @NotNull Map<?, ?> externalInfo) {
+            public boolean needsHint(@NotNull PsiVariable element){
                 if (null != element.getNameIdentifier()) {
                     return getSettings().getNumberOfLetters() >= element.getNameIdentifier().getTextLength();
                 }

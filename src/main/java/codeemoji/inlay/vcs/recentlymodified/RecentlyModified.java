@@ -45,7 +45,6 @@ public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
         return new RecentlyModifiedConfigurable(settings);
     }
 
-    //screw anonymous classes. they are ugly
     private class RecentlyModifiedCollector extends VCSMethodCollector {
 
         protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor, @NotNull SettingsKey<?> key) {
@@ -53,7 +52,7 @@ public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
         }
 
         @Override
-        public InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+        protected @Nullable InlayPresentation createInlayFor(@NotNull PsiMethod element) {
             if (vcsBlame == null) return null;
 
             //text range of this element without comments

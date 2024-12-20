@@ -31,7 +31,7 @@ public final class CEModifierFieldCollector extends CEReferenceFieldCollector {
     }
 
     @Override
-    public boolean needsHint(@NotNull PsiField element, @NotNull Map<?, ?> externalInfo) {
+    public boolean needsHint(@NotNull PsiField element){
         var psiModifierList = element.getModifierList();
         if (null != psiModifierList) {
             if (modifier.equalsIgnoreCase(DEFAULT)) {

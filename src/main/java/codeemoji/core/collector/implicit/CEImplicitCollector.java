@@ -31,43 +31,46 @@ public abstract class CEImplicitCollector extends CECollector {
         this.keyId = settingsKey.getId(); //TODO:t his could be done better
     }
 
+    // No-op
     @Override
-    public final boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
-        if (psiElement instanceof PsiJavaFile) {
-            psiElement.accept(new JavaRecursiveElementVisitor() {
-                @Override
-                public void visitClass(@NotNull PsiClass aClass) {
-                    if (hasImplicitBase(aClass)) {
-                        processImplicitsFor(aClass, inlayHintsSink);
-                    }
-                    super.visitClass(aClass);
-                }
+    protected @Nullable InlayPresentation createInlayFor(@NotNull PsiElement element) {
+        return null;
+    }
 
-                @Override
-                public void visitField(@NotNull PsiField field) {
-                    if (hasImplicitBase(field.getContainingClass())) {
-                        processImplicitsFor(field, inlayHintsSink);
-                    }
-                    super.visitField(field);
+    @Override
+    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+        return new JavaRecursiveElementVisitor() {
+            @Override
+            public void visitClass(@NotNull PsiClass aClass) {
+                if (hasImplicitBase(aClass)) {
+                    processImplicitsFor(aClass, inlayHintsSink);
                 }
+                super.visitClass(aClass);
+            }
 
-                @Override
-                public void visitMethod(@NotNull PsiMethod method) {
-                    if (hasImplicitBase(method.getContainingClass())) {
-                        processImplicitsFor(method, inlayHintsSink);
-                    }
-                    super.visitMethod(method);
+            @Override
+            public void visitField(@NotNull PsiField field) {
+                if (hasImplicitBase(field.getContainingClass())) {
+                    processImplicitsFor(field, inlayHintsSink);
                 }
+                super.visitField(field);
+            }
 
-                private boolean hasImplicitBase(@Nullable JvmAnnotatedElement clazz) {
-                    if (null != clazz) {
-                        return null != clazz.getAnnotation(getBaseName()) && !isDeactivatedFor(clazz);
-                    }
-                    return false;
+            @Override
+            public void visitMethod(@NotNull PsiMethod method) {
+                if (hasImplicitBase(method.getContainingClass())) {
+                    processImplicitsFor(method, inlayHintsSink);
                 }
-            });
-        }
-        return false;
+                super.visitMethod(method);
+            }
+
+            private boolean hasImplicitBase(@Nullable JvmAnnotatedElement clazz) {
+                if (null != clazz) {
+                    return null != clazz.getAnnotation(getBaseName()) && !isDeactivatedFor(clazz);
+                }
+                return false;
+            }
+        };
     }
 
     protected final void addInlayInAnnotation(@Nullable PsiAnnotation annotation, @NotNull InlayHintsSink sink, @NotNull InlayPresentation inlay) {

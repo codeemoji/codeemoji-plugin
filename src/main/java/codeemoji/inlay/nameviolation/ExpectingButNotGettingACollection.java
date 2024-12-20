@@ -1,6 +1,6 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CEMethodCollector;
+import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
@@ -30,9 +30,9 @@ public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
 
     @Override
     public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
-        return new CEMethodCollector(editor, getKey(), ONE) {
+        return new CESimpleMethodCollector(editor, getKey(), ONE) {
             @Override
-            public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+            public boolean needsHint(@NotNull PsiMethod element){
                 if ((element.getName().startsWith("get") || element.getName().startsWith("return"))
                         && CEUtils.isPluralForm(element.getName())) {
                     var typeElement = element.getReturnTypeElement();

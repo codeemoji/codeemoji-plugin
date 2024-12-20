@@ -5,12 +5,7 @@ import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.JavaRecursiveElementVisitor;
-import com.intellij.psi.PsiCallExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiJavaFile;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,26 +22,24 @@ public abstract non-sealed class CEReferenceMethodCollector extends CESimpleColl
     }
 
     @Override
-    public final boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
-        if (psiElement instanceof PsiJavaFile) {
-            psiElement.accept(new JavaRecursiveElementVisitor() {
-                @Override
-                public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
-                    if (CEUtils.isNotPreviewEditor(editor) &&
-                            (callExpression instanceof PsiMethodCallExpression mexp)) {
-                        var method = mexp.resolveMethod();
-                        if (null != method && (needsHint(method, processExternalInfo(method)))) {
-                            addInlay(mexp, inlayHintsSink);
-
+    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+        return new JavaRecursiveElementVisitor() {
+            @Override
+            public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
+                if (CEUtils.isNotPreviewEditor(editor) &&
+                        (callExpression instanceof PsiMethodCallExpression mexp)) {
+                    var method = mexp.resolveMethod();
+                    if (null != method) {
+                        var inlay = createInlayFor(method);
+                        if (inlay != null) {
+                            addInlayInline(mexp, inlayHintsSink, inlay);
                         }
-
                     }
-                    super.visitCallExpression(callExpression);
-                }
 
-            });
-        }
-        return false;
+                }
+                super.visitCallExpression(callExpression);
+            }
+        };
     }
 
     @Override

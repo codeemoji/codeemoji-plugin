@@ -37,24 +37,20 @@ public final class CEProjectMethodCollector extends CEProjectCollector<PsiMethod
     }
 
     @Override
-    public boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
-        if (psiElement instanceof PsiJavaFile) {
-            psiElement.accept(new JavaRecursiveElementVisitor() {
-                @Override
-                public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
-                    if (CEUtils.isNotPreviewEditor(editor) &&
-                            (callExpression instanceof PsiMethodCallExpression mexp)) {
-                        var method = mexp.resolveMethod();
-                        if (null != method) {
-                            processHint(mexp, method, inlayHintsSink);
-                        }
+    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+        return new JavaRecursiveElementVisitor() {
+            @Override
+            public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
+                if (CEUtils.isNotPreviewEditor(editor) &&
+                        (callExpression instanceof PsiMethodCallExpression mexp)) {
+                    var method = mexp.resolveMethod();
+                    if (null != method) {
+                        processHint(mexp, method, inlayHintsSink);
                     }
-                    super.visitCallExpression(callExpression);
                 }
-
-            });
-        }
-        return false;
+                super.visitCallExpression(callExpression);
+            }
+        };
     }
 
     @Override
@@ -64,7 +60,7 @@ public final class CEProjectMethodCollector extends CEProjectCollector<PsiMethod
         if (!evaluationElement.isConstructor() && null != type) {
             processTypesFR(METHOD, RETURNS, type, addHintElement, sink, getReturnsSymbol(), returnsKey);
         }
-        if(evaluationElement.getContainingFile() instanceof PsiJavaFile javaFile && javaFile.getPackageStatement() != null) {
+        if (evaluationElement.getContainingFile() instanceof PsiJavaFile javaFile && javaFile.getPackageStatement() != null) {
             processStructuralAnalysisFR(METHOD, PACKAGES, javaFile.getPackageStatement(), addHintElement, sink, getPackagesSymbol(), packagesKey);
         }
     }
@@ -105,7 +101,7 @@ public final class CEProjectMethodCollector extends CEProjectCollector<PsiMethod
         return readRuleEmoji(METHOD, RETURNS, RETURNS_SYMBOL);
     }
 
-    private CESymbol getPackagesSymbol(){
+    private CESymbol getPackagesSymbol() {
         return readRuleEmoji(METHOD, PACKAGES, PACKAGES_SYMBOL);
     }
 }

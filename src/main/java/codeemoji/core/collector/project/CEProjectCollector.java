@@ -5,11 +5,13 @@ import codeemoji.core.config.CEConfigFile;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.SettingsKey;
+import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiModifierListOwner;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -18,7 +20,7 @@ import static codeemoji.core.config.CERuleFeature.ANNOTATIONS;
 
 @Getter
 @SuppressWarnings("UnstableApiUsage")
-public abstract class CEProjectCollector<H extends PsiModifierListOwner, A extends PsiElement> extends CECollector<A>
+public abstract class CEProjectCollector<H extends PsiModifierListOwner, A extends PsiElement> extends CECollector<H, A>
         implements CEProject<H, A> {
 
     protected final @NotNull CEConfigFile configFile;
@@ -28,10 +30,16 @@ public abstract class CEProjectCollector<H extends PsiModifierListOwner, A exten
 
     CEProjectCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, @NotNull String mainKeyId) {
         super(editor, key);
-        configFile = new CEConfigFile(editor.getProject());
+      this.  configFile = new CEConfigFile(editor.getProject());
         this.mainKeyId = "inlay." + mainKeyId;
         annotationsKey = getMainKeyId() + "." + ANNOTATIONS.getValue() + ".tooltip";
         annotationsSymbol = ANNOTATIONS_SYMBOL;
+    }
+
+    //No-op
+    @Override
+    protected @Nullable InlayPresentation createInlayFor(@NotNull H element) {
+        return null;
     }
 
     @SuppressWarnings("unused")

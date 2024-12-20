@@ -18,62 +18,67 @@ public abstract non-sealed class CEReferenceClassCollector extends CESimpleColle
     }
 
     @Override
-    public final boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
-        if (psiElement instanceof PsiJavaFile) {
-            psiElement.accept(new JavaRecursiveElementVisitor() {
-                @Override
-                public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
-                    if (CEUtils.isNotPreviewEditor(editor)) {
-                        var reference = expression.getReference();
-                        if (null != reference) {
-                            var resolveElement = reference.resolve();
-                            if (resolveElement instanceof PsiClass clazz && needsHint(clazz, processExternalInfo(clazz))) {
-                                addInlay(expression, inlayHintsSink);
-                            }
-                        }
-                    }
-                    super.visitReferenceExpression(expression);
-                }
-
-                @Override
-                public void visitVariable(@NotNull PsiVariable variable) {
-                    if (CEUtils.isNotPreviewEditor(editor)) {
-                        var typeElement = variable.getTypeElement();
-                        if (null != typeElement && !typeElement.isInferredType()
-                                && typeElement.getType() instanceof PsiClassType classType) {
-                            var clazz = classType.resolve();
-                            if (null != clazz && (needsHint(clazz, processExternalInfo(clazz)))) {
-                                addInlay(variable, inlayHintsSink);
-                            }
-
-                        }
-                    }
-                    super.visitVariable(variable);
-                }
-
-                @Override
-                public void visitClass(@NotNull PsiClass aClass) {
-                    if (CEUtils.isNotPreviewEditor(editor)) {
-                        visitClassForRefs(aClass.getExtendsList());
-                        visitClassForRefs(aClass.getImplementsList());
-                    }
-                    super.visitClass(aClass);
-                }
-
-                private void visitClassForRefs(@Nullable PsiReferenceList list) {
-                    if (null != list) {
-                        for (var ref : list.getReferenceElements()) {
-                            var resolveElement = ref.resolve();
-                            if (resolveElement instanceof PsiClass clazz && (needsHint(clazz, processExternalInfo(clazz)))) {
-                                addInlay(ref, inlayHintsSink);
-
+    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+        return new JavaRecursiveElementVisitor() {
+            @Override
+            public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
+                if (CEUtils.isNotPreviewEditor(editor)) {
+                    var reference = expression.getReference();
+                    if (null != reference) {
+                        var resolveElement = reference.resolve();
+                        if (resolveElement instanceof PsiClass clazz) {
+                            var inlay = createInlayFor(clazz);
+                            if (inlay != null) {
+                                addInlayInline(expression, inlayHintsSink, inlay);
                             }
                         }
                     }
                 }
-            });
-        }
-        return false;
+                super.visitReferenceExpression(expression);
+            }
+
+            @Override
+            public void visitVariable(@NotNull PsiVariable variable) {
+                if (CEUtils.isNotPreviewEditor(editor)) {
+                    var typeElement = variable.getTypeElement();
+                    if (null != typeElement && !typeElement.isInferredType()
+                            && typeElement.getType() instanceof PsiClassType classType) {
+                        var clazz = classType.resolve();
+                        if (null != clazz) {
+                            var inlay = createInlayFor(clazz);
+                            if (inlay != null) {
+                                addInlayInline(variable, inlayHintsSink, inlay);
+                            }
+                        }
+
+                    }
+                }
+                super.visitVariable(variable);
+            }
+
+            @Override
+            public void visitClass(@NotNull PsiClass aClass) {
+                if (CEUtils.isNotPreviewEditor(editor)) {
+                    visitClassForRefs(aClass.getExtendsList());
+                    visitClassForRefs(aClass.getImplementsList());
+                }
+                super.visitClass(aClass);
+            }
+
+            private void visitClassForRefs(@Nullable PsiReferenceList list) {
+                if (null != list) {
+                    for (var ref : list.getReferenceElements()) {
+                        var resolveElement = ref.resolve();
+                        if (resolveElement instanceof PsiClass clazz) {
+                            var inlay = createInlayFor(clazz);
+                            if (inlay != null) {
+                                addInlayInline(ref, inlayHintsSink, inlay);
+                            }
+                        }
+                    }
+                }
+            }
+        };
     }
 
     @Override

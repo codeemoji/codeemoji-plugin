@@ -9,10 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-public abstract non-sealed class CEClassCollector extends CESimpleCollector<PsiClass, PsiIdentifier> {
+public abstract non-sealed class CESimpleMethodCollector extends CESimpleCollector<PsiMethod, PsiIdentifier> {
 
-    @SuppressWarnings("unused")
-    protected CEClassCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, @Nullable CESymbol symbol) {
+    protected CESimpleMethodCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, @Nullable CESymbol symbol) {
         super(editor, key, symbol);
     }
 
@@ -20,12 +19,12 @@ public abstract non-sealed class CEClassCollector extends CESimpleCollector<PsiC
     public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
         return new JavaRecursiveElementVisitor() {
             @Override
-            public void visitClass(@NotNull PsiClass aClass) {
-                var inlay = createInlayFor(aClass);
+            public void visitMethod(@NotNull PsiMethod method) {
+                var inlay = createInlayFor(method);
                 if (inlay != null) {
-                    addInlayInline(aClass.getNameIdentifier(), inlayHintsSink, inlay);
+                    addInlayInline(method.getNameIdentifier(), inlayHintsSink, inlay);
                 }
-                super.visitClass(aClass);
+                super.visitMethod(method);
             }
         };
     }

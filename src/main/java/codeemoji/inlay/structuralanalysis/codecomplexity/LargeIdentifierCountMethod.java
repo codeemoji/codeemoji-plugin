@@ -1,6 +1,6 @@
 package codeemoji.inlay.structuralanalysis.codecomplexity;
 
-import codeemoji.core.collector.simple.CEMethodCollector;
+import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
@@ -25,9 +25,9 @@ public class LargeIdentifierCountMethod extends CEProvider<LargeIdentifierCountM
 
     @Override
     protected InlayHintsCollector buildCollector(Editor editor) {
-        return new CEMethodCollector(editor, getKey(), LARGE_IDENTIFIER_COUNT_METHOD) {
+        return new CESimpleMethodCollector(editor, getKey(), LARGE_IDENTIFIER_COUNT_METHOD) {
             @Override
-            protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+            protected boolean needsHint(@NotNull PsiMethod element){
                 return isLargeIdentifierCountMethod(element);
             }
         };

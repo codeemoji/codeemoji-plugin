@@ -54,7 +54,7 @@ public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
         }
 
         @Override
-        public InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+        protected @Nullable InlayPresentation createInlayFor(@NotNull PsiMethod element) {
             if (vcsBlame == null) return null;
 
             //text range of this element without comments

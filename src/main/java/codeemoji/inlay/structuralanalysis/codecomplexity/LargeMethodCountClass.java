@@ -25,7 +25,7 @@ public class LargeMethodCountClass extends CEProvider<LargeMethodCountClassSetti
     protected InlayHintsCollector buildCollector(Editor editor) {
         return new CEClassCollector(editor, getKey(), LARGE_METHOD_COUNT_CLASS) {
             @Override
-            protected boolean needsHint(@NotNull PsiClass element, @NotNull Map<?, ?> externalInfo) {
+            protected boolean needsHint(@NotNull PsiClass element){
                 return isLargeMethodCountClass(element);
             }
         };

@@ -1,6 +1,6 @@
 package codeemoji.inlay.vcs;
 
-import codeemoji.core.collector.simple.CEMethodCollector;
+import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
@@ -46,7 +46,7 @@ public class GitTest extends CEProvider<NoSettings> {
     @Override
     public @NotNull InlayHintsCollector buildCollector(@NotNull PsiFile file, @NotNull Editor editor) {
 
-        return new CEMethodCollector(editor, getKey(),
+        return new CESimpleMethodCollector(editor, getKey(),
                 CESymbol.of("\uD83D\uDC68\uFE0F\u200D\uD83D\uDCBC\uFE0F")) {
 
             //so i thin this is an object that returns the author name for each line
@@ -60,7 +60,7 @@ public class GitTest extends CEProvider<NoSettings> {
 
             //extends InlayHintsCollector
             @Override
-            public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+            public boolean needsHint(@NotNull PsiMethod element){
                 if(true)return false;
                 if (vcsBlame == null) return false;
                 // Get the current project and file

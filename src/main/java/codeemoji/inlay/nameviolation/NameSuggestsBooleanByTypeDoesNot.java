@@ -39,7 +39,7 @@ public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NoSettings> {
     public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
         return new CEVariableCollector(editor, getKey(), CONFUSED) {
             @Override
-            public boolean needsHint(@NotNull PsiVariable element, @NotNull Map<?, ?> externalInfo) {
+            public boolean needsHint(@NotNull PsiVariable element){
                 if (null != element.getName()) {
                     return 2 < element.getName().length() &&
                             element.getName().startsWith("is") && !element.getType().equals(PsiTypes.booleanType());

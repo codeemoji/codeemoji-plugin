@@ -15,7 +15,10 @@ import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static codeemoji.core.util.CEUtils.isVulnerable;
 import static codeemoji.inlay.vulnerabilities.VulnerableDependencySymbols.*;
@@ -36,7 +39,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
     @Override
     protected List<InlayHintsCollector> buildCollectors(Editor editor) {
         var key = getKey();
-        return Arrays.asList(
+        return List.of(
                 new VulnerableMethodCollector(editor, key),
                 new VulnerableMethodReferenceCollector(editor, key),
                 new IndirectVulnerableMethodCollector(editor, key),
@@ -50,8 +53,10 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         }
 
         @Override
-        public InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-            return isMethodUsingVulnerableDependencies(element, getEditor().getProject(), externalInfo);
+        public InlayPresentation createInlayFor(@NotNull PsiMethod element) {
+            return isMethodUsingVulnerableDependencies(element,
+                    getEditor().getProject(),
+                    getExternalInfo(element));
         }
 
         protected InlayPresentation isMethodUsingVulnerableDependencies(PsiMethod method, Project project, Map<?, ?> externalInfo) {
@@ -101,8 +106,10 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         }
 
         @Override
-        public InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
-            InlayPresentation result = this.isMethodUsingVulnerableDependencies(element, getEditor().getProject(), externalInfo);
+        public InlayPresentation createInlayFor(@NotNull PsiMethod element) {
+            InlayPresentation result = this.isMethodUsingVulnerableDependencies(element,
+                    getEditor().getProject(),
+                    getExternalInfo(element));
             if (result != null && !CEUtils.checkMethodExternality(element, getEditor().getProject())) {
                 return result;
             }
@@ -116,9 +123,11 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         }
 
         @Override
-        public InlayPresentation needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+        public InlayPresentation createInlayFor(@NotNull PsiMethod element) {
             if (getSettings().isCheckVulnerableDependecyApplied()) {
-                return isIndirectlyUsingVulnerableDependencies(element, getEditor().getProject(), externalInfo);
+                return isIndirectlyUsingVulnerableDependencies(element,
+                        getEditor().getProject(),
+                        getExternalInfo(element));
             }
             return null;
         }
@@ -147,10 +156,10 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         }
 
         @Override
-        protected InlayPresentation needsHint(@NotNull PsiMethod method, @NotNull Map<?, ?> externalInfo) {
+        protected InlayPresentation createInlayFor(@NotNull PsiMethod method) {
             Project project = getEditor().getProject();
             if (CEUtils.checkMethodExternality(method, project)) {
-                InlayInfo result = CEUtils.isVulnerable(method, project, externalInfo);
+                InlayInfo result = CEUtils.isVulnerable(method, project, getExternalInfo(method));
                 if (result != null) {
                     return makeVulnerableDependencyCallInlay(result);
                 }

@@ -39,7 +39,7 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NoSettings> {
     public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
         return new CEVariableCollector(editor, getKey(), CONFUSED) {
             @Override
-            public boolean needsHint(@NotNull PsiVariable element, @NotNull Map<?, ?> externalInfo) {
+            public boolean needsHint(@NotNull PsiVariable element){
                 return CEUtils.containsOnlySpecialCharacters(Objects.requireNonNull(element.getName()));
             }
         };

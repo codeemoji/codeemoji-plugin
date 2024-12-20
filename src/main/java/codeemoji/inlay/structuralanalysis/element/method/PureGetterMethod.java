@@ -1,6 +1,6 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
-import codeemoji.core.collector.simple.CEMethodCollector;
+import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
@@ -42,9 +42,9 @@ public class PureGetterMethod extends CEProviderMulti<PureGetterMethodSettings> 
     @Override
     protected List<InlayHintsCollector> buildCollectors(Editor editor) {
         return List.of(
-                new CEMethodCollector(editor, getKey(), PURE_GETTER_METHOD) {
+                new CESimpleMethodCollector(editor, getKey(), PURE_GETTER_METHOD) {
                     @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                    protected boolean needsHint(@NotNull PsiMethod element){
                         return isPureGetterMethod(element);
                     }
 
@@ -52,7 +52,7 @@ public class PureGetterMethod extends CEProviderMulti<PureGetterMethodSettings> 
                 },
                 new CEReferenceMethodCollector(editor, getKey(), PURE_GETTER_METHOD) {
                     @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                    protected boolean needsHint(@NotNull PsiMethod element){
                         return isPureGetterMethod(element);
                     }
                 }

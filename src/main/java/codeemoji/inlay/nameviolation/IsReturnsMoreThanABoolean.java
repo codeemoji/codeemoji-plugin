@@ -1,6 +1,6 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CEMethodCollector;
+import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
@@ -29,9 +29,9 @@ public class IsReturnsMoreThanABoolean extends CEProvider<NoSettings> {
 
     @Override
     public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
-        return new CEMethodCollector(editor, getKey(), CONFUSED) {
+        return new CESimpleMethodCollector(editor, getKey(), CONFUSED) {
             @Override
-            public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+            public boolean needsHint(@NotNull PsiMethod element){
                 return element.getName().startsWith("is") &&
                         !(Objects.equals(element.getReturnType(), PsiTypes.booleanType())
                                 || Objects.equals(element.getReturnType(), PsiTypes.voidType()));

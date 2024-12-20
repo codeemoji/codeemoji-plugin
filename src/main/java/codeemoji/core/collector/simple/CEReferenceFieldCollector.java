@@ -5,7 +5,10 @@ import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiReferenceExpression;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,25 +22,25 @@ public abstract non-sealed class CEReferenceFieldCollector extends CESimpleColle
     }
 
     @Override
-    public final boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
-        if (psiElement instanceof PsiJavaFile) {
-            psiElement.accept(new JavaRecursiveElementVisitor() {
-                @Override
-                public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
-                    if (CEUtils.isNotPreviewEditor(editor)) {
-                        var reference = expression.getReference();
-                        if (null != reference) {
-                            var resolveElement = reference.resolve();
-                            if (resolveElement instanceof PsiField field && needsHint(field, processExternalInfo(field))) {
-                                addInlay(expression, inlayHintsSink);
+    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+        return new JavaRecursiveElementVisitor() {
+            @Override
+            public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
+                if (CEUtils.isNotPreviewEditor(editor)) {
+                    var reference = expression.getReference();
+                    if (null != reference) {
+                        var resolveElement = reference.resolve();
+                        if (resolveElement instanceof PsiField field) {
+                            var inlay = createInlayFor(field);
+                            if (inlay != null) {
+                                addInlayInline(expression, inlayHintsSink, inlay);
                             }
                         }
                     }
-                    super.visitReferenceExpression(expression);
                 }
-            });
-        }
-        return false;
+                super.visitReferenceExpression(expression);
+            }
+        };
     }
 
     @Override

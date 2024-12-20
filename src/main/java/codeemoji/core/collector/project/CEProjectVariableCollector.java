@@ -35,43 +35,40 @@ public final class CEProjectVariableCollector extends CEProjectCollector<PsiVari
     }
 
     @Override
-    public boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
-        if (psiElement instanceof PsiJavaFile) {
-            psiElement.accept(new JavaRecursiveElementVisitor() {
-                @Override
-                public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
-                    if (CEUtils.isNotPreviewEditor(editor)) {
-                        var reference = expression.getReference();
-                        if (null != reference) {
-                            var resolveElement = reference.resolve();
-                            var elementRuleType = getClassByElementRule();
-                            if (null != elementRuleType && (elementRuleType.isInstance(resolveElement))) {
-                                processHint(expression, (PsiVariable) resolveElement, inlayHintsSink);
-                            }
+    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+        return new JavaRecursiveElementVisitor() {
+            @Override
+            public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
+                if (CEUtils.isNotPreviewEditor(editor)) {
+                    var reference = expression.getReference();
+                    if (null != reference) {
+                        var resolveElement = reference.resolve();
+                        var elementRuleType = getClassByElementRule();
+                        if (null != elementRuleType && (elementRuleType.isInstance(resolveElement))) {
+                            processHint(expression, (PsiVariable) resolveElement, inlayHintsSink);
                         }
                     }
-                    super.visitReferenceExpression(expression);
                 }
+                super.visitReferenceExpression(expression);
+            }
 
-                private @Nullable Class<? extends PsiVariable> getClassByElementRule() {
-                    switch (elementRule) {
-                        case FIELD -> {
-                            return PsiField.class;
-                        }
-                        case LOCALVARIABLE -> {
-                            return PsiLocalVariable.class;
-                        }
-                        case PARAMETER -> {
-                            return PsiParameter.class;
-                        }
-                        default -> {
-                            return null;
-                        }
+            private @Nullable Class<? extends PsiVariable> getClassByElementRule() {
+                switch (elementRule) {
+                    case FIELD -> {
+                        return PsiField.class;
+                    }
+                    case LOCALVARIABLE -> {
+                        return PsiLocalVariable.class;
+                    }
+                    case PARAMETER -> {
+                        return PsiParameter.class;
+                    }
+                    default -> {
+                        return null;
                     }
                 }
-            });
-        }
-        return false;
+            }
+        };
     }
 
     @Override

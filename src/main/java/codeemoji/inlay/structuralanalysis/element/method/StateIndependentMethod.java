@@ -1,6 +1,6 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
-import codeemoji.core.collector.simple.CEMethodCollector;
+import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
@@ -39,16 +39,16 @@ public class StateIndependentMethod extends CEProviderMulti<StateIndependentMeth
     @Override
     protected List<InlayHintsCollector> buildCollectors(Editor editor) {
         return List.of(
-                new CEMethodCollector(editor, getKey(), STATE_INDEPENDENT_METHOD) {
+                new CESimpleMethodCollector(editor, getKey(), STATE_INDEPENDENT_METHOD) {
                     @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                    protected boolean needsHint(@NotNull PsiMethod element){
                         return isStateIndependentMethod(element);
                     }
                 },
 
                 new CEReferenceMethodCollector(editor, getKey(), STATE_INDEPENDENT_METHOD) {
                     @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                    protected boolean needsHint(@NotNull PsiMethod element){
                         return isStateIndependentMethod(element);
                     }
                 }

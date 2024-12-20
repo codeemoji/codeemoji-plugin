@@ -31,7 +31,7 @@ public final class CEModifierMethodCollector extends CEReferenceMethodCollector 
     }
 
     @Override
-    public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+    public boolean needsHint(@NotNull PsiMethod element){
         var psiModifierList = element.getModifierList();
         if (modifier.equalsIgnoreCase(DEFAULT)) {
             return CEUtils.checkDefaultModifier(psiModifierList);
