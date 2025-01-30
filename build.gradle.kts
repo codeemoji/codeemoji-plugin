@@ -7,9 +7,10 @@ fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.9.10"
-    id("org.jetbrains.intellij") version "1.15.0"
-    id("org.jetbrains.changelog") version "2.1.2"
+    id("org.jetbrains.kotlin.jvm") version "2.1.0"
+    //id("org.jetbrains.intellij") version "1.17.4"
+    id("org.jetbrains.intellij.platform") version "2.2.1"
+    id("org.jetbrains.changelog") version "2.2.1"
 }
 
 group = properties("pluginGroup")
@@ -23,14 +24,11 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.28")
-    annotationProcessor("org.projectlombok:lombok:1.18.28")
+    compileOnly("org.projectlombok:lombok:1.18.36")
+    annotationProcessor("org.projectlombok:lombok:1.18.36")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.json:json:20240303")
 }
-
-
-
 
 intellij {
     version.set(properties("platformVersion"))
@@ -39,10 +37,10 @@ intellij {
     updateSinceUntilBuild.set(true)
     val platformPlugins = properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty)
     plugins.set(
-            platformPlugins + listOf(
-                    "com.intellij.java",
-                    "Git4Idea"
-            )
+        platformPlugins + listOf(
+            "com.intellij.java",
+            "Git4Idea"
+        )
     )
 }
 
@@ -58,12 +56,12 @@ tasks {
     }
 
     withType<JavaCompile> {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
+        sourceCompatibility = "21"
+        targetCompatibility = "21"
     }
 
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+        kotlinOptions.jvmTarget = "21"
     }
 
     withType<RunIdeTask> {
@@ -75,27 +73,26 @@ tasks {
         sinceBuild.set(properties("pluginSinceBuild"))
         untilBuild.set(properties("pluginUntilBuild"))
         pluginDescription.set(
-                projectDir.resolve("README.md").readText().lines().run {
-                    val start = "<!-- DESCRIPTION HEADER BEGIN -->"
-                    val end = "<!-- DESCRIPTION HEADER END -->"
+            projectDir.resolve("README.md").readText().lines().run {
+                val start = "<!-- DESCRIPTION HEADER BEGIN -->"
+                val end = "<!-- DESCRIPTION HEADER END -->"
+                if (!containsAll(listOf(start, end))) {
+                    throw GradleException("DESCRIPTION HEADER section not found in README.md:\n$start ... $end")
+                }
+                subList(indexOf(start) + 1, indexOf(end))
+            }.joinToString("\n").run {
+                val header = markdownToHTML(this)
+                projectDir.resolve("docs/FOOTER.md").readText().lines().run {
+                    val start = "<!-- DESCRIPTION FOOTER BEGIN -->"
+                    val end = "<!-- DESCRIPTION FOOTER END -->"
                     if (!containsAll(listOf(start, end))) {
-                        throw GradleException("DESCRIPTION HEADER section not found in README.md:\n$start ... $end")
+                        throw GradleException("DESCRIPTION FOOTER section not found in FOOTER.md:\n$start ... $end")
                     }
                     subList(indexOf(start) + 1, indexOf(end))
                 }.joinToString("\n").run {
-                    val header = markdownToHTML(this)
-                    projectDir.resolve("docs/FOOTER.md").readText().lines().run {
-                        val start = "<!-- DESCRIPTION FOOTER BEGIN -->"
-                        val end = "<!-- DESCRIPTION FOOTER END -->"
-                        if (!containsAll(listOf(start, end))) {
-                            throw GradleException("DESCRIPTION FOOTER section not found in FOOTER.md:\n$start ... $end")
-                        }
-                        subList(indexOf(start) + 1, indexOf(end))
-                    }.joinToString("\n").run {
-                        header + markdownToHTML(this)
-
-                    }
+                    header + markdownToHTML(this)
                 }
+            }
         )
         changeNotes.set(changelog.renderItem(changelog.getLatest(), Changelog.OutputType.HTML))
     }
