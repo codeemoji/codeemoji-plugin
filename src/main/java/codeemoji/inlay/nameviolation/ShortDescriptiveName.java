@@ -3,8 +3,9 @@ package codeemoji.inlay.nameviolation;
 import codeemoji.core.collector.simple.CEVariableCollector;
 import codeemoji.core.provider.CEProvider;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +36,7 @@ public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSetting
     }
 
     @Override
-    public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
+    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CEVariableCollector(editor, getKey(), SMALL_NAME) {
             @Override
             public boolean needsHint(@NotNull PsiVariable element){

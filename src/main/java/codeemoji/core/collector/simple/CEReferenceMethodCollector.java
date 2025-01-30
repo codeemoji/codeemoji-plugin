@@ -2,7 +2,7 @@ package codeemoji.core.collector.simple;
 
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
@@ -17,12 +17,12 @@ public abstract non-sealed class CEReferenceMethodCollector extends CESimpleColl
         this(editor, key, key.getId(), symbol);
     }
     protected CEReferenceMethodCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key,
-                                         @NotNull String mainKeyId, @Nullable CESymbol symbol) {
-        super(editor, key,mainKeyId, symbol);
+                                         @NotNull String tooltipId, @Nullable CESymbol symbol) {
+        super(editor, key, tooltipId, symbol);
     }
 
     @Override
-    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayTreeSink InlayTreeSink) {
         return new JavaRecursiveElementVisitor() {
             @Override
             public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
@@ -32,7 +32,7 @@ public abstract non-sealed class CEReferenceMethodCollector extends CESimpleColl
                     if (null != method) {
                         var inlay = createInlayFor(method);
                         if (inlay != null) {
-                            addInlayInline(mexp, inlayHintsSink, inlay);
+                            addInlayInline(mexp, InlayTreeSink, inlay);
                         }
                     }
 

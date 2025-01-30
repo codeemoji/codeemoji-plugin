@@ -4,12 +4,10 @@ import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiReferenceExpression;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +35,7 @@ public class StateIndependentMethod extends CEProviderMulti<StateIndependentMeth
     }
 
     @Override
-    protected List<InlayHintsCollector> buildCollectors(Editor editor) {
+    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
         return List.of(
                 new CESimpleMethodCollector(editor, getKey(), STATE_INDEPENDENT_METHOD) {
                     @Override

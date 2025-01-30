@@ -3,7 +3,7 @@ package codeemoji.core.collector.project;
 import codeemoji.core.config.CERuleElement;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
@@ -35,7 +35,7 @@ public final class CEProjectVariableCollector extends CEProjectCollector<PsiVari
     }
 
     @Override
-    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayTreeSink InlayTreeSink) {
         return new JavaRecursiveElementVisitor() {
             @Override
             public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
@@ -45,7 +45,7 @@ public final class CEProjectVariableCollector extends CEProjectCollector<PsiVari
                         var resolveElement = reference.resolve();
                         var elementRuleType = getClassByElementRule();
                         if (null != elementRuleType && (elementRuleType.isInstance(resolveElement))) {
-                            processHint(expression, (PsiVariable) resolveElement, inlayHintsSink);
+                            processHint(expression, (PsiVariable) resolveElement, InlayTreeSink);
                         }
                     }
                 }
@@ -72,14 +72,14 @@ public final class CEProjectVariableCollector extends CEProjectCollector<PsiVari
     }
 
     @Override
-    protected void processHint(@NotNull PsiReferenceExpression addHintElement, @NotNull PsiVariable evaluationElement, @NotNull InlayHintsSink sink) {
+    protected void processHint(@NotNull PsiReferenceExpression addHintElement, @NotNull PsiVariable evaluationElement, @NotNull InlayTreeSink sink) {
         processAnnotationsFR(elementRule, evaluationElement, addHintElement, sink);
         processTypesFR(elementRule, TYPES, evaluationElement.getType(), addHintElement, sink, getTypesSymbol(), typesKey);
     }
 
     @Override
     public void addInlayTypesFR(@NotNull PsiReferenceExpression addHintElement, @NotNull List<String> hintValues,
-                                @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
+                                @NotNull InlayTreeSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
             var inlay = buildInlayWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
             addInlayInline(addHintElement, sink, inlay);

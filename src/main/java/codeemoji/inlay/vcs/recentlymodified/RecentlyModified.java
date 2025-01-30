@@ -6,7 +6,7 @@ import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSMethodCollector;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.InlayHintsUtils;
 import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
@@ -36,8 +36,8 @@ public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
     }
 
     @Override
-    public @NotNull InlayHintsCollector buildCollector(@NotNull PsiFile file, @NotNull Editor editor) {
-        return new RecentlyModifiedCollector(file, editor, getKey());
+    public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
+        return new RecentlyModifiedCollector(psiFile, editor, getKey());
     }
 
     @Override

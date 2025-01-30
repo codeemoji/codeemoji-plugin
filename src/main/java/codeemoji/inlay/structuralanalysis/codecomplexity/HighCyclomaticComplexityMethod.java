@@ -4,7 +4,7 @@ import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.java.*;
@@ -39,7 +39,7 @@ public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticCom
     }
 
     @Override
-    protected InlayHintsCollector buildCollector(Editor editor) {
+    public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CESimpleMethodCollector(editor, getKey(), HIGH_CYCLOMATIC_COMPLEXITY_METHOD) {
             @Override
             protected boolean needsHint(@NotNull PsiMethod element){

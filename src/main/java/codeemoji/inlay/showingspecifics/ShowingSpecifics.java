@@ -5,9 +5,11 @@ import codeemoji.core.collector.project.CEProjectMethodCollector;
 import codeemoji.core.collector.project.CEProjectVariableCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.SettingsKey;
+import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,8 +28,8 @@ public class ShowingSpecifics extends CEProviderMulti<ShowingSpecificsSettings> 
     }
 
     @Override
-    public @NotNull List<InlayHintsCollector> buildCollectors(@NotNull Editor editor) {
-        List<InlayHintsCollector> list = new ArrayList<>();
+    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
+        List<SharedBypassCollector> list = new ArrayList<>();
 
         SettingsKey<?> key = getKey();
         list.add(new CEProjectClassCollector(editor, key));

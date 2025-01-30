@@ -19,7 +19,7 @@ public class EmojiRepository {
     public static List<Emoji> getLocalEmojis(boolean colored) {
         cache.invalidateAll();
         //get local path
-        return getOrComputeCache("emoji-test.txt", colored);
+        return getOrComputeCache("emoji-repository.txt", colored);
     }
 
     public static List<Emoji> fetchDefaultEmojis(boolean colored) {

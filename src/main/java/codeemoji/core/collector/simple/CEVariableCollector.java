@@ -2,7 +2,7 @@ package codeemoji.core.collector.simple;
 
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
@@ -32,12 +32,12 @@ public abstract non-sealed class CEVariableCollector extends CESimpleCollector<P
     }
 
     @Override
-    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayTreeSink InlayTreeSink) {
         return new JavaRecursiveElementVisitor() {
             @Override
             public void visitField(@NotNull PsiField field) {
                 if (isEnabledForField()) {
-                    process(field, editor, inlayHintsSink);
+                    process(field, editor, InlayTreeSink);
                 }
                 super.visitField(field);
             }
@@ -45,7 +45,7 @@ public abstract non-sealed class CEVariableCollector extends CESimpleCollector<P
             @Override
             public void visitParameter(@NotNull PsiParameter parameter) {
                 if (isEnabledForParam()) {
-                    process(parameter, editor, inlayHintsSink);
+                    process(parameter, editor, InlayTreeSink);
                 }
                 super.visitParameter(parameter);
             }
@@ -53,12 +53,12 @@ public abstract non-sealed class CEVariableCollector extends CESimpleCollector<P
             @Override
             public void visitLocalVariable(@NotNull PsiLocalVariable variable) {
                 if (isEnabledForLocalVariable()) {
-                    process(variable, editor, inlayHintsSink);
+                    process(variable, editor, InlayTreeSink);
                 }
                 super.visitLocalVariable(variable);
             }
 
-            private void process(@NotNull PsiVariable variable, @NotNull Editor editor, @NotNull InlayHintsSink sink) {
+            private void process(@NotNull PsiVariable variable, @NotNull Editor editor, @NotNull InlayTreeSink sink) {
                 var inlay = createInlayFor(variable);
                 if (inlay != null) {
                     addInlayInline(variable.getNameIdentifier(), sink, inlay);
@@ -74,7 +74,7 @@ public abstract non-sealed class CEVariableCollector extends CESimpleCollector<P
                 }
             }
 
-            private void processReferencesInPreviewEditor(@NotNull PsiNamedElement variable, @NotNull InlayHintsSink inlayHintsSink) {
+            private void processReferencesInPreviewEditor(@NotNull PsiNamedElement variable, @NotNull InlayTreeSink InlayTreeSink) {
                 variable.getContainingFile().accept(new JavaRecursiveElementVisitor() {
                     @Override
                     public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
@@ -82,7 +82,7 @@ public abstract non-sealed class CEVariableCollector extends CESimpleCollector<P
                                 && Objects.equals(expression.getText(), variable.getName())) {
                             var inlay = createInlayFor(null); //TODO: wrong! this is a hack
                             if (inlay != null) {
-                                addInlayInline(expression, inlayHintsSink, inlay);
+                                addInlayInline(expression, InlayTreeSink, inlay);
                             }
                         }
                         super.visitReferenceExpression(expression);

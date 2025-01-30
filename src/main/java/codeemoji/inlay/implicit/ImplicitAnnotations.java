@@ -7,9 +7,10 @@ import codeemoji.core.collector.implicit.spring.CESpringControllerCollector;
 import codeemoji.core.collector.implicit.spring.CESpringRestControllerCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
 import com.intellij.codeInsight.hints.SettingsKey;
+import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiFile;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +28,7 @@ public class ImplicitAnnotations extends CEProviderMulti<ImplicitAnnotationsSett
     }
 
     @Override
-    public @NotNull List<InlayHintsCollector> buildCollectors(@NotNull Editor editor) {
+    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
         final int codePoint = 0x1F4AD;
         SettingsKey<?> key = getKey();
         return new ArrayList<>(

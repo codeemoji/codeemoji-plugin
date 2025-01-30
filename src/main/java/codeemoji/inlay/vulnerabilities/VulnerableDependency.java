@@ -6,11 +6,13 @@ import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.SettingsKey;
+import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +39,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
     }
 
     @Override
-    protected List<InlayHintsCollector> buildCollectors(Editor editor) {
+    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
         var key = getKey();
         return List.of(
                 new VulnerableMethodCollector(editor, key),

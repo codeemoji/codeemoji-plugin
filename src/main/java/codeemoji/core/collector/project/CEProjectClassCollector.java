@@ -2,7 +2,7 @@ package codeemoji.core.collector.project;
 
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
@@ -35,7 +35,7 @@ public final class CEProjectClassCollector extends CEProjectCollector<PsiClass, 
     }
 
     @Override
-    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayTreeSink InlayTreeSink) {
         return new JavaRecursiveElementVisitor() {
             @Override
             public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
@@ -44,7 +44,7 @@ public final class CEProjectClassCollector extends CEProjectCollector<PsiClass, 
                     if (null != reference) {
                         var resolveElement = reference.resolve();
                         if (resolveElement instanceof PsiClass clazz) {
-                            processHint(expression, clazz, inlayHintsSink);
+                            processHint(expression, clazz, InlayTreeSink);
                         }
                     }
                 }
@@ -59,7 +59,7 @@ public final class CEProjectClassCollector extends CEProjectCollector<PsiClass, 
                         typeElement.getType() instanceof PsiClassType classType) {
                     var clazz = classType.resolve();
                     if (null != clazz) {
-                        processHint(variable, clazz, inlayHintsSink);
+                        processHint(variable, clazz, InlayTreeSink);
                     }
 
                 }
@@ -80,7 +80,7 @@ public final class CEProjectClassCollector extends CEProjectCollector<PsiClass, 
                     for (var ref : list.getReferenceElements()) {
                         var resolveElement = ref.resolve();
                         if (resolveElement instanceof PsiClass clazz) {
-                            processHint(ref, clazz, inlayHintsSink);
+                            processHint(ref, clazz, InlayTreeSink);
                         }
                     }
                 }
@@ -89,7 +89,7 @@ public final class CEProjectClassCollector extends CEProjectCollector<PsiClass, 
     }
 
     @Override
-    protected void processHint(@NotNull PsiElement addHintElement, @NotNull PsiClass evaluationElement, @NotNull InlayHintsSink sink) {
+    protected void processHint(@NotNull PsiElement addHintElement, @NotNull PsiClass evaluationElement, @NotNull InlayTreeSink sink) {
         processAnnotationsFR(CLASS, evaluationElement, addHintElement, sink);
         processReferenceListFR(EXTENDS, evaluationElement.getExtendsList(), addHintElement, sink, getExtendsSymbol(), extendsKey);
         processReferenceListFR(IMPLEMENTS, evaluationElement.getImplementsList(), addHintElement, sink, getImplementsSymbol(), implementsKey);
@@ -97,7 +97,7 @@ public final class CEProjectClassCollector extends CEProjectCollector<PsiClass, 
 
     @Override
     public void addInlayReferenceListFR(@NotNull PsiElement addHintElement, @NotNull List<String> hintValues,
-                                        @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
+                                        @NotNull InlayTreeSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
             var inlay = buildInlayWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
             addInlayInline(addHintElement, sink, inlay);

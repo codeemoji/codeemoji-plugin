@@ -3,8 +3,10 @@ package codeemoji.core.collector.project;
 import codeemoji.core.collector.CECollector;
 import codeemoji.core.config.CEConfigFile;
 import codeemoji.core.util.CESymbol;
-import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.codeInsight.hints.SettingsKey;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
@@ -49,10 +51,10 @@ public abstract class CEProjectCollector<H extends PsiModifierListOwner, A exten
     }
 
     @SuppressWarnings("unused")
-    protected abstract void processHint(@NotNull A addHintElement, @NotNull H evaluationElement, @NotNull InlayHintsSink sink);
+    protected abstract void processHint(@NotNull A addHintElement, @NotNull H evaluationElement, @NotNull InlayTreeSink sink);
 
     @Override
-    public void addInlayAnnotationsFR(@NotNull A addHintElement, @NotNull List<String> hintValues, @NotNull InlayHintsSink sink) {
+    public void addInlayAnnotationsFR(@NotNull A addHintElement, @NotNull List<String> hintValues, @NotNull InlayTreeSink sink) {
         if (!hintValues.isEmpty()) {
             var inlay = buildInlayWithEmoji(getAnnotationsSymbol(), getAnnotationsKey(), String.valueOf(hintValues));
             addInlayInline(addHintElement, sink, inlay);

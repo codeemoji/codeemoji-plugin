@@ -3,9 +3,10 @@ package codeemoji.inlay.nameviolation;
 import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiTypes;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +30,7 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<NoSettings
     }
 
     @Override
-    public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
+    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CESimpleMethodCollector(editor, getKey(), MANY) {
             @Override
             public boolean needsHint(@NotNull PsiMethod element){

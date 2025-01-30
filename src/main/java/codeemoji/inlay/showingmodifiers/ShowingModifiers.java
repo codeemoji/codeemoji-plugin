@@ -6,9 +6,11 @@ import codeemoji.core.collector.simple.modifier.CEModifierInterfaceMethodCollect
 import codeemoji.core.collector.simple.modifier.CEModifierMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.SettingsKey;
+import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -50,8 +52,8 @@ public class ShowingModifiers extends CEProviderMulti<ShowingModifiersSettings> 
     }
 
     @Override
-    public @NotNull List<InlayHintsCollector> buildCollectors(@NotNull Editor editor) {
-        List<InlayHintsCollector> list = new ArrayList<>();
+    public @NotNull List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, @NotNull Editor editor) {
+        List<SharedBypassCollector> list = new ArrayList<>();
         SettingsKey<?> key = getKey();
         //class
         list.addAll(

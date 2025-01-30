@@ -4,7 +4,7 @@ import codeemoji.core.config.CERuleElement;
 import codeemoji.core.config.CERuleFeature;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiType;
@@ -18,7 +18,7 @@ sealed interface CEProjectTypes<A extends PsiElement> extends CEProjectConfig
         permits CEProjectMethodCollector, CEProjectVariableCollector {
 
     default void processTypesFR(@NotNull CERuleElement elementRule, @NotNull CERuleFeature featureRule, @NotNull PsiType type,
-                                @NotNull A addHintElement, @NotNull InlayHintsSink sink,
+                                @NotNull A addHintElement, @NotNull InlayTreeSink sink,
                                 @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         addInlayTypesFR(addHintElement, needsHintTypesFR(elementRule, featureRule, type), sink,
                 symbol, keyTooltip);
@@ -45,6 +45,6 @@ sealed interface CEProjectTypes<A extends PsiElement> extends CEProjectConfig
     }
 
     void addInlayTypesFR(@NotNull A addHintElement, @NotNull List<String> hintValues,
-                         @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip);
+                         @NotNull InlayTreeSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip);
 
 }

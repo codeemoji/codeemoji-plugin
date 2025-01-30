@@ -2,7 +2,7 @@ package codeemoji.core.collector.simple;
 
 import codeemoji.core.collector.CECollector;
 import codeemoji.core.util.CESymbol;
-import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
@@ -27,7 +27,7 @@ public sealed abstract class CESimpleCollector<H extends PsiElement, A extends P
     protected CESimpleCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key,
                                 @NotNull String tooltipKey, @Nullable CESymbol symbol) {
         super(editor, key);
-        this.inlay = buildInlayWithEmoji(symbol, "inlay." + key.getId() + ".tooltip", null);
+        this.inlay = buildInlayWithEmoji(symbol, "inlay." + tooltipKey + ".tooltip", null);
     }
 
     protected CESimpleCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, @Nullable CESymbol symbol) {
@@ -45,10 +45,10 @@ public sealed abstract class CESimpleCollector<H extends PsiElement, A extends P
 
     //TODO: finish so we dont have to call create and add inaly all the time
     /*
-    protected final <H2 extends PsiNamedElement> boolean maybeAddInlay(@NotNull H2 element, @NotNull InlayHintsSink inlayHintsSink) {
+    protected final <H2 extends PsiNamedElement> boolean maybeAddInlay(@NotNull H2 element, @NotNull InlayTreeSink InlayTreeSink) {
         var inlay = createInlay(element);
         if (null != inlay) {
-            addInlayInline(element.getNameIdentifier(), inlayHintsSink, inlay);
+            addInlayInline(element.getNameIdentifier(), InlayTreeSink, inlay);
             return true;
         }
         return false;

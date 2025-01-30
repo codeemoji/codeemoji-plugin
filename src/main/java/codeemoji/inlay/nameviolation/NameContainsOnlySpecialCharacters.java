@@ -3,9 +3,10 @@ package codeemoji.inlay.nameviolation;
 import codeemoji.core.collector.simple.CEVariableCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +37,7 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NoSettings> {
     }
 
     @Override
-    public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
+    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CEVariableCollector(editor, getKey(), CONFUSED) {
             @Override
             public boolean needsHint(@NotNull PsiVariable element){

@@ -3,7 +3,7 @@ package codeemoji.inlay.vcs;
 import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.util.CESymbol;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -43,15 +43,16 @@ public class GitTest extends CEProvider<NoSettings> {
     //TODO: EditorGutterAction seems to be an interfeace to impl to be able to click on the annotations. useful
 
     // I believe this is called once per FILE in your project, when opened
+
     @Override
-    public @NotNull InlayHintsCollector buildCollector(@NotNull PsiFile file, @NotNull Editor editor) {
+    public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
 
         return new CESimpleMethodCollector(editor, getKey(),
                 CESymbol.of("\uD83D\uDC68\uFE0F\u200D\uD83D\uDCBC\uFE0F")) {
 
             //so i thin this is an object that returns the author name for each line
             @Nullable
-            private final FileAnnotation vcsBlame = CEVcsUtils.getAnnotation(file, editor);
+            private final FileAnnotation vcsBlame = CEVcsUtils.getAnnotation(psiFile, editor);
 
 
             //key for stuff stored in the editor. Probably used to cache stuff

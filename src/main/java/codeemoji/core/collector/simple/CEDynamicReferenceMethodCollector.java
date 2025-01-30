@@ -2,7 +2,7 @@ package codeemoji.core.collector.simple;
 
 import codeemoji.core.collector.CECollector;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
@@ -17,7 +17,7 @@ public abstract class CEDynamicReferenceMethodCollector extends CECollector<PsiM
     }
 
     @Override
-    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayTreeSink InlayTreeSink) {
         return new JavaRecursiveElementVisitor() {
             @Override
             public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
@@ -27,7 +27,7 @@ public abstract class CEDynamicReferenceMethodCollector extends CECollector<PsiM
                     if (null != method) {
                         var inlay = createInlayFor(method);
                         if (inlay != null) {
-                            addInlayInline(mexp, inlayHintsSink, inlay);
+                            addInlayInline(mexp, InlayTreeSink, inlay);
                         }
                     }
                 }

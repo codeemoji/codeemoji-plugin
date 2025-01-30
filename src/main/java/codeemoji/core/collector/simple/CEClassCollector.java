@@ -1,7 +1,7 @@
 package codeemoji.core.collector.simple;
 
 import codeemoji.core.util.CESymbol;
-import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
@@ -17,13 +17,13 @@ public abstract non-sealed class CEClassCollector extends CESimpleCollector<PsiC
     }
 
     @Override
-    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayTreeSink InlayTreeSink) {
         return new JavaRecursiveElementVisitor() {
             @Override
             public void visitClass(@NotNull PsiClass aClass) {
                 var inlay = createInlayFor(aClass);
                 if (inlay != null) {
-                    addInlayInline(aClass.getNameIdentifier(), inlayHintsSink, inlay);
+                    addInlayInline(aClass.getNameIdentifier(), InlayTreeSink, inlay);
                 }
                 super.visitClass(aClass);
             }

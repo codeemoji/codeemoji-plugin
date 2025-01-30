@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 import static com.intellij.psi.PsiModifier.DEFAULT;
+import static com.intellij.psi.PsiModifier.NATIVE;
 
 public final class CEModifierMethodCollector extends CEReferenceMethodCollector {
 

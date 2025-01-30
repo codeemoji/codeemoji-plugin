@@ -1,7 +1,9 @@
 package codeemoji.core.collector;
 
-import com.intellij.codeInsight.hints.InlayHintsCollector;
-import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
+import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
@@ -9,15 +11,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-public record CECollectorMulti(List<InlayHintsCollector> collectors) implements InlayHintsCollector {
+public record CECollectorMulti(List<SharedBypassCollector> collectors) implements SharedBypassCollector {
 
     @Override
-    public boolean collect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+    public void collectFromElement(@NotNull PsiElement psiElement, @NotNull InlayTreeSink inlayTreeSink) {
         if (null != collectors()) {
             for (var collector : collectors()) {
-                collector.collect(psiElement, editor, inlayHintsSink);
+                collector.collectFromElement(psiElement, inlayTreeSink);
             }
         }
-        return false;
     }
 }

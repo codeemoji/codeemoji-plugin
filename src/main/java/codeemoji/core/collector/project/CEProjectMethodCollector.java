@@ -2,8 +2,9 @@ package codeemoji.core.collector.project;
 
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.codeInsight.hints.SettingsKey;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import lombok.Getter;
@@ -37,7 +38,7 @@ public final class CEProjectMethodCollector extends CEProjectCollector<PsiMethod
     }
 
     @Override
-    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayTreeSink InlayTreeSink) {
         return new JavaRecursiveElementVisitor() {
             @Override
             public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
@@ -45,7 +46,7 @@ public final class CEProjectMethodCollector extends CEProjectCollector<PsiMethod
                         (callExpression instanceof PsiMethodCallExpression mexp)) {
                     var method = mexp.resolveMethod();
                     if (null != method) {
-                        processHint(mexp, method, inlayHintsSink);
+                        processHint(mexp, method, InlayTreeSink);
                     }
                 }
                 super.visitCallExpression(callExpression);
@@ -54,7 +55,7 @@ public final class CEProjectMethodCollector extends CEProjectCollector<PsiMethod
     }
 
     @Override
-    protected void processHint(@NotNull PsiMethodCallExpression addHintElement, @NotNull PsiMethod evaluationElement, @NotNull InlayHintsSink sink) {
+    protected void processHint(@NotNull PsiMethodCallExpression addHintElement, @NotNull PsiMethod evaluationElement, @NotNull InlayTreeSink sink) {
         processAnnotationsFR(METHOD, evaluationElement, addHintElement, sink);
         var type = evaluationElement.getReturnType();
         if (!evaluationElement.isConstructor() && null != type) {
@@ -67,7 +68,7 @@ public final class CEProjectMethodCollector extends CEProjectCollector<PsiMethod
 
     @Override
     public void addInlayTypesFR(@NotNull PsiMethodCallExpression addHintElement, @NotNull List<String> hintValues,
-                                @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
+                                @NotNull InlayTreeSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
             var inlay = buildInlayWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
             addInlayInline(addHintElement, sink, inlay);
@@ -75,7 +76,7 @@ public final class CEProjectMethodCollector extends CEProjectCollector<PsiMethod
     }
 
     @Override
-    public void addInlayStructuralAnalysisFR(@NotNull PsiMethodCallExpression addHintElement, @NotNull List<String> hintValues, @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
+    public void addInlayStructuralAnalysisFR(@NotNull PsiMethodCallExpression addHintElement, @NotNull List<String> hintValues, @NotNull InlayTreeSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
             var inlay = buildInlayWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
             addInlayInline(addHintElement, sink, inlay);

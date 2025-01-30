@@ -4,7 +4,8 @@ import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import org.codehaus.plexus.util.StringUtils;
@@ -40,7 +41,7 @@ public class PureGetterMethod extends CEProviderMulti<PureGetterMethodSettings> 
     }
 
     @Override
-    protected List<InlayHintsCollector> buildCollectors(Editor editor) {
+    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
         return List.of(
                 new CESimpleMethodCollector(editor, getKey(), PURE_GETTER_METHOD) {
                     @Override
