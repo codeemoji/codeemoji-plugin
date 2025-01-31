@@ -16,7 +16,6 @@ import java.util.Map;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.LARGE_LINE_COUNT_METHOD;
 
-@SuppressWarnings("UnstableApiUsage")
 public class LargeLineCountMethod extends CEProvider<LargeLineCountMethodSettings> {
     @Nullable
     @Override
@@ -26,7 +25,7 @@ public class LargeLineCountMethod extends CEProvider<LargeLineCountMethodSetting
 
     @Override
     public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), LARGE_LINE_COUNT_METHOD) {
+        return new CESimpleMethodCollector(editor, getKey(), this::getSettings) {
             @Override
             protected boolean needsHint(@NotNull PsiMethod element) {
                 return isLargeLineCountMethod(element);

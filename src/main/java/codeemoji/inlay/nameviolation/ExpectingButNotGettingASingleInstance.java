@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.MANY;
+import static codeemoji.inlay.nameviolation.NameViolationSymbols.ONE;
 
 public class ExpectingButNotGettingASingleInstance extends CEProvider<ExpectingButNotGettingASingleInstance.Settings> {
 
@@ -26,7 +27,11 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<ExpectingB
     @ToString
     @Data
     @State(name = "ExpectingButNotGettingASingleInstanceSettings", storages = @Storage("codeemoji-expecting-but-not-getting-a-single-instance-settings.xml"))
-    public static class Settings extends CEBaseSettings<Settings> {}
+    public static class Settings extends CEBaseSettings<Settings> {
+        public Settings() {
+            super(ExpectingButNotGettingASingleInstance.class, MANY);
+        }
+    }
 
     @Override
     public String getPreviewText() {
@@ -40,9 +45,9 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<ExpectingB
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), MANY) {
+        return new CESimpleMethodCollector(editor, getKey(), this::getSettings) {
             @Override
-            public boolean needsHint(@NotNull PsiMethod element){
+            public boolean needsHint(@NotNull PsiMethod element) {
                 if ((element.getName().startsWith("get") || element.getName().startsWith("return")) &&
                         !Objects.equals(element.getReturnType(), PsiTypes.voidType()) &&
                         !CEUtils.isPluralForm(element.getName())) {

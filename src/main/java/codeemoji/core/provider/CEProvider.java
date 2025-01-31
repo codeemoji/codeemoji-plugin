@@ -60,6 +60,7 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
     @Override
     public void persistSettings(@NotNull Project project, S settings, @NotNull Language language) {
         int aa = 1;
+        //TODO: figure these out. also what about the setting own save method?
         //   settings.save(project);
     }
 
@@ -91,10 +92,6 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
     }
 
 
-    //TODO: remove
-    public String getName() {
-        return "NAME";
-    }
     /*
 
 

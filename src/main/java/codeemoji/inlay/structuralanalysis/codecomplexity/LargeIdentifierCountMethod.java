@@ -17,7 +17,6 @@ import java.util.Map;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.LARGE_IDENTIFIER_COUNT_METHOD;
 
-@SuppressWarnings("UnstableApiUsage")
 public class LargeIdentifierCountMethod extends CEProvider<LargeIdentifierCountMethodSettings> {
     @Nullable
     @Override
@@ -27,7 +26,7 @@ public class LargeIdentifierCountMethod extends CEProvider<LargeIdentifierCountM
 
     @Override
     public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), LARGE_IDENTIFIER_COUNT_METHOD) {
+        return new CESimpleMethodCollector(editor, getKey(), this::getSettings) {
             @Override
             protected boolean needsHint(@NotNull PsiMethod element){
                 return isLargeIdentifierCountMethod(element);

@@ -21,7 +21,6 @@ import java.util.Map;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.EXTERNAL_FUNCTIONALITY_INVOKING_METHOD;
 
-@SuppressWarnings("UnstableApiUsage")
 public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<ExternalFunctionalityInvokingMethodSettings> {
 
     @Nullable
@@ -34,14 +33,14 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
 
         return List.of(
-                new CESimpleMethodCollector(editor, getKey(), EXTERNAL_FUNCTIONALITY_INVOKING_METHOD) {
+                new CESimpleMethodCollector(editor, getKey(), this::getSettings) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element){
                         return isExternalFunctionalityInvokingMethod(element, editor.getProject());
                     }
                 },
 
-                new CEReferenceMethodCollector(editor, getKey(), EXTERNAL_FUNCTIONALITY_INVOKING_METHOD) {
+                new CEReferenceMethodCollector(editor, getKey(), this::getSettings) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element){
                         return isExternalFunctionalityInvokingMethod(element, editor.getProject());

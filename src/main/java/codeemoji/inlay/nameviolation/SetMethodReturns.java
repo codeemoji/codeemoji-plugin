@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
+import static codeemoji.inlay.nameviolation.NameViolationSymbols.MANY;
 
 public class SetMethodReturns extends CEProvider<SetMethodReturns.Settings> {
 
@@ -25,7 +26,11 @@ public class SetMethodReturns extends CEProvider<SetMethodReturns.Settings> {
     @ToString
     @Data
     @State(name = "SetMethodReturns", storages = @Storage("codeemoji-set-method-returns-settings.xml"))
-    public static class Settings extends CEBaseSettings<Settings> {}
+    public static class Settings extends CEBaseSettings<Settings> {
+        public Settings(){
+            super(SetMethodReturns.class, CONFUSED);
+        }
+    }
 
     @Override
     public String getPreviewText() {
@@ -40,7 +45,7 @@ public class SetMethodReturns extends CEProvider<SetMethodReturns.Settings> {
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), CONFUSED) {
+        return new CESimpleMethodCollector(editor, getKey(), this::getSettings) {
             @Override
             public boolean needsHint(@NotNull PsiMethod element){
                 return element.getName().startsWith("set") && !Objects.equals(element.getReturnType(), PsiTypes.voidType());

@@ -2,7 +2,7 @@ package codeemoji.core.collector.simple;
 
 import codeemoji.core.collector.CECollector;
 import codeemoji.core.collector.InlayVisuals;
-import codeemoji.core.util.CESymbol;
+import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import lombok.Getter;
@@ -10,31 +10,35 @@ import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 // collector with static presentation
 @Getter
 @ToString
-@SuppressWarnings("UnstableApiUsage")
 public sealed abstract class CESimpleCollector<H extends PsiElement, A extends PsiElement> extends CECollector<H, A>
         permits CEClassCollector, CESimpleMethodCollector, CEReferenceClassCollector, CEReferenceFieldCollector, CEReferenceMethodCollector, CEVariableCollector {
 
 
-    private final InlayVisuals inlay;
+    private final String tooltipKey;
+    protected final Supplier<CEBaseSettings<?>> settingGetter;
 
     //collector with a static presentation. Soon this wil be changed to accept a standard configuration instead
     protected CESimpleCollector(@NotNull Editor editor, String key,
-                                @NotNull String tooltipKey, @Nullable CESymbol symbol) {
+                                @NotNull String tooltipKey, Supplier<CEBaseSettings<?>> settingsSupplier) {
         super(editor, key);
-        this.inlay = buildInlayWithEmoji(symbol, "text." + tooltipKey + ".tooltip", null);
+        this.tooltipKey = "text." + tooltipKey + ".tooltip";
+        this.settingGetter = settingsSupplier; //needed since it's not an inner class
     }
 
-    protected CESimpleCollector(@NotNull Editor editor, String key, @Nullable CESymbol symbol) {
-        this(editor, key, key, symbol);
+    protected CESimpleCollector(@NotNull Editor editor, String key, Supplier<CEBaseSettings<?>> settings) {
+        this(editor, key, key, settings);
     }
 
     @Nullable
     @Override
     protected final InlayVisuals createInlayFor(@NotNull H element) {
-        return needsHint(element) ? inlay : null;
+        return needsHint(element) ? buildInlayWithEmoji(
+                settingGetter.get().getMainSymbol(), tooltipKey, null) : null;
     }
 
     protected abstract boolean needsHint(@NotNull H element);

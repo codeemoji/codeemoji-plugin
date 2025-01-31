@@ -1,5 +1,6 @@
 package codeemoji.core.collector.simple;
 
+import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.codeInsight.hints.SettingsKey;
@@ -8,10 +9,12 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 public abstract non-sealed class CESimpleMethodCollector extends CESimpleCollector<PsiMethod, PsiIdentifier> {
 
-    protected CESimpleMethodCollector(@NotNull Editor editor, String key, @Nullable CESymbol symbol) {
-        super(editor, key, symbol);
+    protected CESimpleMethodCollector(@NotNull Editor editor, String key, Supplier<CEBaseSettings<?>> settings) {
+        super(editor, key, settings);
     }
 
     @Override

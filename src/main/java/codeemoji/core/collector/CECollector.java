@@ -67,7 +67,7 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
                     new EndOfLinePosition(lineNumber),
                     List.of(new InlayPayload("variablePayload", new StringInlayActionPayload("Go to Settings"))),
 
-                    CEBundle.getString(inlay.tooltip()),  // Tooltip
+               "todo",//     CEBundle.getString(inlay.tooltip()),  // Tooltip
                     true,  // Has background
                     builder -> {
                         builder.text("a" + inlay.text(),

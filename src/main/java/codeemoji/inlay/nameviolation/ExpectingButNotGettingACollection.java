@@ -26,7 +26,11 @@ public class ExpectingButNotGettingACollection extends CEProvider<ExpectingButNo
     @ToString
     @Data
     @State(name = "ExpectingButNotGettingACollectionSettings", storages = @Storage("codeemoji-expecting-but-not-getting-a-collection-settings.xml"))
-    public static class Settings extends CEBaseSettings<Settings>{}
+    public static class Settings extends CEBaseSettings<Settings>{
+        public Settings(){
+            super(ExpectingButNotGettingACollection.class, ONE);
+        }
+    }
 
     @Override
     public String getPreviewText() {
@@ -40,7 +44,7 @@ public class ExpectingButNotGettingACollection extends CEProvider<ExpectingButNo
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), ONE) {
+        return new CESimpleMethodCollector(editor, getKey(), this::getSettings) {
             @Override
             public boolean needsHint(@NotNull PsiMethod element){
                 if ((element.getName().startsWith("get") || element.getName().startsWith("return"))

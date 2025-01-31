@@ -2,6 +2,7 @@ package codeemoji.inlay.vcs.authoravatar;
 
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
+import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSMethodCollector;
@@ -36,6 +37,11 @@ public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
     @Override
     public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new RecentlyModifiedCollector(psiFile, editor, getKey());
+    }
+
+    @Override
+    public @NotNull CEConfigurableWindow<AuthorAvatarSettings> createConfigurable() {
+        return new AuthorAvatarConfigurable();
     }
 
     //screw anonymous classes. they are ugly

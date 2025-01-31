@@ -1,5 +1,6 @@
 package codeemoji.core.collector.simple;
 
+import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
@@ -9,16 +10,17 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("UnstableApiUsage")
+import java.util.function.Supplier;
+
 public abstract non-sealed class CEReferenceMethodCollector extends CESimpleCollector<PsiMethod, PsiMethodCallExpression> {
 
     protected CEReferenceMethodCollector(@NotNull Editor editor, String key,
-                                         @Nullable CESymbol symbol) {
-        this(editor, key, key, symbol);
+                                         Supplier<CEBaseSettings<?>> settings) {
+        this(editor, key, key, settings);
     }
     protected CEReferenceMethodCollector(@NotNull Editor editor, String key,
-                                         @NotNull String tooltipId, @Nullable CESymbol symbol) {
-        super(editor, key, tooltipId, symbol);
+                                         @NotNull String tooltipId, Supplier<CEBaseSettings<?>> settings) {
+        super(editor, key, tooltipId, settings);
     }
 
     @Override

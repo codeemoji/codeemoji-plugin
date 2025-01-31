@@ -44,7 +44,6 @@ import static com.intellij.psi.PsiModifier.SYNCHRONIZED;
 import static com.intellij.psi.PsiModifier.TRANSIENT;
 import static com.intellij.psi.PsiModifier.VOLATILE;
 
-@SuppressWarnings("UnstableApiUsage")
 public class ShowingModifiers extends CEProviderMulti<ShowingModifiersSettings> {
 
     @Override
@@ -59,7 +58,7 @@ public class ShowingModifiers extends CEProviderMulti<ShowingModifiersSettings> 
         //class
         list.addAll(
                 Arrays.asList(
-                        new CEModifierClassCollector(editor, key, PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_CLASS)),
+                        new CEModifierClassCollector(editor, key,   PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_CLASS)),
                         new CEModifierClassCollector(editor, key, DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_CLASS)),
                         new CEModifierClassCollector(editor, key, FINAL_SYMBOL, FINAL, getSettings().query(FINAL_CLASS)),
                         new CEModifierClassCollector(editor, key, ABSTRACT_SYMBOL, ABSTRACT, getSettings().query(ABSTRACT_CLASS))

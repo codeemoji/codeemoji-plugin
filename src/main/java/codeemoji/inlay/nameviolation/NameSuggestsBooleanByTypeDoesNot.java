@@ -23,7 +23,11 @@ public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NameSuggestsBoo
     @ToString
     @Data
     @State(name = "NameSuggestsBooleanByTypeDoesNotSettings", storages = @Storage("codeemoji-name-suggests-boolean-but-type-does-not-settings.xml"))
-    public static class Settings extends CEBaseSettings<Settings> {}
+    public static class Settings extends CEBaseSettings<Settings> {
+        public Settings(){
+            super(NameSuggestsBooleanByTypeDoesNot.class, CONFUSED);
+        }
+    }
 
     @Override
     public String getPreviewText() {
@@ -46,7 +50,7 @@ public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NameSuggestsBoo
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CEVariableCollector(editor, getKey(), CONFUSED) {
+        return new CEVariableCollector(editor, getKey(), this::getSettings) {
             @Override
             public boolean needsHint(@NotNull PsiVariable element){
                 if (null != element.getName()) {

@@ -3,7 +3,10 @@ package codeemoji.inlay.nameviolation;
 import codeemoji.core.collector.simple.CEVariableCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
+import codeemoji.core.util.CEBundle;
+import codeemoji.core.util.CESymbolHolder;
 import codeemoji.core.util.CEUtils;
+import codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -25,7 +28,11 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NameContainsOn
     @ToString
     @Data
     @State(name = "NameContainsOnlySpecialCharactersSettings", storages = @Storage("codeemoji-name-contains-only-special-characters-settings.xml"))
-    public static class Settings extends CEBaseSettings<Settings> {}
+    public static class Settings extends CEBaseSettings<Settings> {
+        public Settings(){
+            super(NameContainsOnlySpecialCharacters.class, NameViolationSymbols.CONFUSED);
+        }
+    }
 
     @Override
     public String getPreviewText() {
@@ -47,7 +54,7 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NameContainsOn
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CEVariableCollector(editor, getKey(), CONFUSED) {
+        return new CEVariableCollector(editor, getKey(), this::getSettings) {
             @Override
             public boolean needsHint(@NotNull PsiVariable element){
                 return CEUtils.containsOnlySpecialCharacters(Objects.requireNonNull(element.getName()));

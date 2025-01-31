@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 
+import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.STATE_CHANGING_METHOD;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @State(name = "StateChangingMethodSettings", storages = @Storage("codeemoji-state-changing-method-settings.xml"))
@@ -16,6 +18,9 @@ public class StateChangingMethodSettings extends CEBaseSettings<StateChangingMet
 
     private boolean checkMethodCallsForStateChangeApplied = false;
 
+    public StateChangingMethodSettings(){
+        super(StateChangingMethod.class, STATE_CHANGING_METHOD);
+    }
     @Override
     public StateChangingMethodSettings getState() {
         return this;

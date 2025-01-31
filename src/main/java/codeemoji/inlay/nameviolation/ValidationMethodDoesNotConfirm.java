@@ -25,7 +25,11 @@ public class ValidationMethodDoesNotConfirm extends CEProvider<ValidationMethodD
     @ToString
     @Data
     @State(name = "ValidationMethodDoesNotConfirm", storages = @Storage("codeemoji-validation-method-does-not-confirm-settings.xml"))
-    public static class Settings extends CEBaseSettings<Settings> {}
+    public static class Settings extends CEBaseSettings<Settings> {
+        public Settings(){
+            super(ValidationMethodDoesNotConfirm.class, CONFUSED);
+        }
+    }
 
     @Override
     public String getPreviewText() {
@@ -41,7 +45,7 @@ public class ValidationMethodDoesNotConfirm extends CEProvider<ValidationMethodD
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), CONFUSED) {
+        return new CESimpleMethodCollector(editor, getKey(), this::getSettings) {
             @Override
             public boolean needsHint(@NotNull PsiMethod element){
                 return (element.getName().startsWith("validate") || element.getName().startsWith("check") || element.getName().startsWith("ensure")) && !Objects.equals(element.getReturnType(), PsiTypes.booleanType());

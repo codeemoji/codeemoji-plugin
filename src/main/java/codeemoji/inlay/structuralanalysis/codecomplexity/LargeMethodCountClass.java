@@ -15,7 +15,6 @@ import java.util.Map;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.LARGE_METHOD_COUNT_CLASS;
 
-@SuppressWarnings("UnstableApiUsage")
 public class LargeMethodCountClass extends CEProvider<LargeMethodCountClassSettings> {
     @Nullable
     @Override
@@ -25,7 +24,7 @@ public class LargeMethodCountClass extends CEProvider<LargeMethodCountClassSetti
 
     @Override
     public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CEClassCollector(editor, getKey(), LARGE_METHOD_COUNT_CLASS) {
+        return new CEClassCollector(editor, getKey(), this::getSettings) {
             @Override
             protected boolean needsHint(@NotNull PsiClass element){
                 return isLargeMethodCountClass(element);

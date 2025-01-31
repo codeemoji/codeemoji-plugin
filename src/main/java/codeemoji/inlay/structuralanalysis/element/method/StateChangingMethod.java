@@ -19,7 +19,6 @@ import java.util.Map;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.STATE_CHANGING_METHOD;
 
-@SuppressWarnings("UnstableApiUsage")
 public class StateChangingMethod extends CEProviderMulti<StateChangingMethodSettings> {
     @Nullable
     @Override
@@ -38,7 +37,7 @@ public class StateChangingMethod extends CEProviderMulti<StateChangingMethodSett
     @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
         return List.of(
-                new CESimpleMethodCollector(editor, getKey(), STATE_CHANGING_METHOD) {
+                new CESimpleMethodCollector(editor, getKey(), this::getSettings) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element){
                         return isStateChangingMethod(element);
@@ -46,7 +45,7 @@ public class StateChangingMethod extends CEProviderMulti<StateChangingMethodSett
 
 
                 },
-                new CEReferenceMethodCollector(editor, getKey(), STATE_CHANGING_METHOD) {
+                new CEReferenceMethodCollector(editor, getKey(), this::getSettings) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element){
                         return isStateChangingMethod(element);

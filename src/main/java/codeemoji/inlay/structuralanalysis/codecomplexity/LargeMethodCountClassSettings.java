@@ -1,6 +1,10 @@
 package codeemoji.inlay.structuralanalysis.codecomplexity;
 
 import codeemoji.core.settings.CEBaseSettings;
+import codeemoji.core.util.CEBundle;
+import codeemoji.core.util.CESymbol;
+import codeemoji.core.util.CESymbolHolder;
+import codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -16,6 +20,10 @@ import org.jetbrains.annotations.Nullable;
 public class LargeMethodCountClassSettings extends CEBaseSettings<LargeMethodCountClassSettings> {
 
     private int methodCount = 15;
+    public LargeMethodCountClassSettings() {
+        super(new CESymbolHolder(CEBundle.getString("inlay.largemethodcountclass.name"),
+                StructuralAnalysisSymbols.LARGE_METHOD_COUNT_CLASS));
+    }
 
     @Override
     public @Nullable LargeMethodCountClassSettings getState() {

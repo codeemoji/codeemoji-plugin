@@ -25,7 +25,11 @@ public class GetMoreThanAccessor extends CEProvider<GetMoreThanAccessor.Settings
     @ToString
     @Data
     @State(name = "GetMoreThanAccessorSettings", storages = @Storage("codeemoji-get-more-than-accessor-settings.xml"))
-    public static class Settings extends CEBaseSettings<Settings> {}
+    public static class Settings extends CEBaseSettings<Settings> {
+        public Settings() {
+            super(GetMoreThanAccessor.class, CONFUSED);
+        }
+    }
 
     @Override
     public String getPreviewText() {
@@ -49,7 +53,7 @@ public class GetMoreThanAccessor extends CEProvider<GetMoreThanAccessor.Settings
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), CONFUSED) {
+        return new CESimpleMethodCollector(editor, getKey(), this::getSettings) {
             @Override
             public boolean needsHint(@NotNull PsiMethod element){
                 if (element.getName().startsWith("get") && !Objects.equals(element.getReturnType(), PsiTypes.voidType()) && null != element.getBody()) {

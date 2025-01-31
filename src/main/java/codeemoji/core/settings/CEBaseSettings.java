@@ -1,5 +1,6 @@
 package codeemoji.core.settings;
 
+import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CESymbolHolder;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -12,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 @Data
 public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements PersistentStateComponent<S> {
@@ -21,6 +23,16 @@ public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements Per
 
     public CEBaseSettings(CESymbolHolder... symbols) {
         this.symbols.addAll(Arrays.stream(symbols).toList());
+    }
+
+    //helper that auto makes the string
+    public CEBaseSettings(Class<?> providerClass, CESymbol symbol) {
+        this("inlay." + providerClass.getSimpleName().toLowerCase(Locale.ROOT)
+                + ".name", symbol);
+    }
+
+    public CEBaseSettings(String symbolTranslationKey, CESymbol symbol) {
+        this(new CESymbolHolder(CEBundle.getString(symbolTranslationKey), symbol));
     }
 
     // bad

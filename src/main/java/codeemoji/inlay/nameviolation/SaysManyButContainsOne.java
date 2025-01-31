@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
+import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.ONE;
 
 public class SaysManyButContainsOne extends CEProvider<SaysManyButContainsOne.Settings> {
@@ -24,7 +25,11 @@ public class SaysManyButContainsOne extends CEProvider<SaysManyButContainsOne.Se
     @ToString
     @Data
     @State(name = "SaysManyButContainsOne", storages = @Storage("codeemoji-says-many-but-contains-one-settings.xml"))
-    public static class Settings extends CEBaseSettings<Settings> {}
+    public static class Settings extends CEBaseSettings<Settings> {
+        public Settings(){
+            super(SaysManyButContainsOne.class, ONE);
+        }
+    }
 
     @Override
     public String getPreviewText() {
@@ -48,7 +53,7 @@ public class SaysManyButContainsOne extends CEProvider<SaysManyButContainsOne.Se
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CEVariableCollector(editor, getKey(), ONE) {
+        return new CEVariableCollector(editor, getKey(), this::getSettings) {
             @Override
             public boolean needsHint(@NotNull PsiVariable element){
                 var typeElement = element.getTypeElement();

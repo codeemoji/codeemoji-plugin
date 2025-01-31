@@ -10,6 +10,8 @@ import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.HIGH_CYCLOMATIC_COMPLEXITY_METHOD;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @State(name = "HighCyclomaticComplexityMethodSettings", storages = @Storage("codeemoji-high-cyclomatic-complexity-method-settings.xml"))
@@ -18,6 +20,10 @@ public class HighCyclomaticComplexityMethodSettings extends CEBaseSettings<HighC
     private int cyclomaticComplexityThreshold = 1;
     private int lineCountStartThreshold = 1;
     private double cyclomaticComplexityPerLine = 0.36;
+
+    public HighCyclomaticComplexityMethodSettings(){
+        super(HighCyclomaticComplexityMethod.class, HIGH_CYCLOMATIC_COMPLEXITY_METHOD);
+    }
 
     @Override
     public @Nullable HighCyclomaticComplexityMethodSettings getState() {

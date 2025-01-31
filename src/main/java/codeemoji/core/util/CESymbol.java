@@ -24,6 +24,8 @@ public final class CESymbol {
         this.withBackground = hasBackground;
     }
 
+    private CESymbol(){}
+
     //doesnt work
     static class Serializer implements Externalizer<CESymbol> {
 

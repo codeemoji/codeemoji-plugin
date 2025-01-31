@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 
+import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.EXTERNAL_FUNCTIONALITY_INVOKING_METHOD;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @State(name = "ExternalFunctionalityInvokingMethodSettings", storages = @Storage("codeemoji-external-functionality-invoking-method-settings.xml"))
@@ -16,6 +18,9 @@ public class ExternalFunctionalityInvokingMethodSettings extends CEBaseSettings<
 
     private boolean checkMethodCallsForExternalityApplied = false;
 
+    private ExternalFunctionalityInvokingMethodSettings(){
+        super(ExternalFunctionalityInvokingMethod.class, EXTERNAL_FUNCTIONALITY_INVOKING_METHOD);
+    }
     @Override
     public ExternalFunctionalityInvokingMethodSettings getState() {
         return this;

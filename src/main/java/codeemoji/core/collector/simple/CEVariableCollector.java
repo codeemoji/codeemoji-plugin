@@ -1,5 +1,6 @@
 package codeemoji.core.collector.simple;
 
+import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
@@ -14,18 +15,19 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 @Getter
 @Setter
-@SuppressWarnings("UnstableApiUsage")
 public abstract non-sealed class CEVariableCollector extends CESimpleCollector<PsiVariable, PsiElement> {
 
     private boolean enabledForField;
     private boolean enabledForParam;
     private boolean enabledForLocalVariable;
 
-    protected CEVariableCollector(@NotNull Editor editor,  String key, @Nullable CESymbol symbol) {
-        super(editor, key, symbol);
+    protected CEVariableCollector(@NotNull Editor editor, String key,
+                                  Supplier<CEBaseSettings<?>> settings) {
+        super(editor, key, settings);
         enabledForField = true;
         enabledForParam = true;
         enabledForLocalVariable = true;

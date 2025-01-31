@@ -19,7 +19,6 @@ import java.util.Objects;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.PURE_SETTER_METHOD;
 
-@SuppressWarnings("UnstableApiUsage")
 public class PureSetterMethod extends CEProviderMulti<PureSetterMethodSettings> {
     @Nullable
     @Override
@@ -43,13 +42,13 @@ public class PureSetterMethod extends CEProviderMulti<PureSetterMethodSettings> 
     @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
         return List.of(
-                new CESimpleMethodCollector(editor, getKey(), PURE_SETTER_METHOD) {
+                new CESimpleMethodCollector(editor, getKey(), this::getSettings) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element) {
                         return isPureSetterMethod(element);
                     }
                 },
-                new CEReferenceMethodCollector(editor, getKey(), PURE_SETTER_METHOD) {
+                new CEReferenceMethodCollector(editor, getKey(), this::getSettings) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element) {
                         return isPureSetterMethod(element);

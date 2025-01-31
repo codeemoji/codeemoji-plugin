@@ -25,7 +25,11 @@ public class IsReturnsMoreThanABoolean extends CEProvider<IsReturnsMoreThanABool
     @ToString
     @Data
     @State(name = "IsReturnsMoreThanABooleanSettings", storages = @Storage("codeemoji-is-returns-more-than-a-boolean-settings.xml"))
-    public static class Settings extends CEBaseSettings<Settings> {}
+    public static class Settings extends CEBaseSettings<Settings> {
+        public Settings() {
+            super(IsReturnsMoreThanABoolean.class, CONFUSED);
+        }
+    }
 
     @Override
     public String getPreviewText() {
@@ -39,7 +43,7 @@ public class IsReturnsMoreThanABoolean extends CEProvider<IsReturnsMoreThanABool
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), CONFUSED) {
+        return new CESimpleMethodCollector(editor, getKey(), this::getSettings) {
             @Override
             public boolean needsHint(@NotNull PsiMethod element){
                 return element.getName().startsWith("is") &&

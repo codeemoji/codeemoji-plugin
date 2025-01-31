@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
+import static codeemoji.inlay.nameviolation.NameViolationSymbols.SMALL_NAME;
 
 public class TransformMethodDoesNotReturn extends CEProvider<TransformMethodDoesNotReturn.Settings> {
 
@@ -25,7 +26,11 @@ public class TransformMethodDoesNotReturn extends CEProvider<TransformMethodDoes
     @ToString
     @Data
     @State(name = "TransformMethodDoesNotReturn", storages = @Storage("codeemoji-transform-method-does-not-return-settings.xml"))
-    public static class Settings extends CEBaseSettings<Settings> {}
+    public static class Settings extends CEBaseSettings<Settings> {
+        public Settings(){
+            super(TransformMethodDoesNotReturn.class, CONFUSED);
+        }
+    }
 
     @Override
     public String getPreviewText() {
@@ -39,7 +44,7 @@ public class TransformMethodDoesNotReturn extends CEProvider<TransformMethodDoes
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), CONFUSED) {
+        return new CESimpleMethodCollector(editor, getKey(), this::getSettings) {
             @Override
             public boolean needsHint(@NotNull PsiMethod element){
                 return (element.getName().startsWith("translate") || element.getName().startsWith("transform") || element.getName().startsWith("convert")) && Objects.equals(element.getReturnType(), PsiTypes.voidType());

@@ -25,7 +25,11 @@ public class NotAnsweredQuestion extends CEProvider<NotAnsweredQuestion.Settings
     @ToString
     @Data
     @State(name = "NotAnsweredQuestionSettings", storages = @Storage("codeemoji-not-answered-question-settings.xml"))
-    public static class Settings extends CEBaseSettings<Settings> {}
+    public static class Settings extends CEBaseSettings<Settings> {
+        public Settings(){
+            super(NotAnsweredQuestion.class, CONFUSED);
+        }
+    }
 
     @Override
     public String getPreviewText() {
@@ -39,7 +43,7 @@ public class NotAnsweredQuestion extends CEProvider<NotAnsweredQuestion.Settings
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), CONFUSED) {
+        return new CESimpleMethodCollector(editor, getKey(), this::getSettings) {
             @Override
             public boolean needsHint(@NotNull PsiMethod element){
                 return element.getName().startsWith("is") && Objects.equals(element.getReturnType(), PsiTypes.voidType());
