@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract non-sealed class CEClassCollector extends CESimpleCollector<PsiClass, PsiIdentifier> {
 
     @SuppressWarnings("unused")
-    protected CEClassCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, @Nullable CESymbol symbol) {
+    protected CEClassCollector(@NotNull Editor editor, String key, @Nullable CESymbol symbol) {
         super(editor, key, symbol);
     }
 

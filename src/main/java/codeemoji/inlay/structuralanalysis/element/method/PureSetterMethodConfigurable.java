@@ -1,21 +1,24 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
+import codeemoji.core.settings.CEConfigurableWindow;
 import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
+import com.intellij.lang.Language;
+import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 @SuppressWarnings("UnstableApiUsage")
-record PureSetterMethodConfigurable(PureSetterMethodSettings settings) implements ImmediateConfigurable {
-    @NotNull
+class PureSetterMethodConfigurable extends CEConfigurableWindow<PureSetterMethodSettings>  {
+
     @Override
-    public JComponent createComponent(@NotNull ChangeListener changeListener) {
+    public @NotNull JComponent createComponent(PureSetterMethodSettings settings, Project project, Language language, ChangeListener changeListener) {
         var checkBox = new JCheckBox();
-        checkBox.setSelected(settings().isJavaBeansNamingConventionApplied());
+        checkBox.setSelected(settings.isJavaBeansNamingConventionApplied());
         checkBox.addChangeListener(event -> {
-            settings().setJavaBeansNamingConventionApplied(checkBox.isSelected());
+            settings.setJavaBeansNamingConventionApplied(checkBox.isSelected());
             changeListener.settingsChanged();
         });
         return FormBuilder.createFormBuilder()

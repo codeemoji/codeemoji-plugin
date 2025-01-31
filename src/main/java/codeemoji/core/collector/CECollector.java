@@ -1,16 +1,12 @@
 package codeemoji.core.collector;
 
 import codeemoji.core.external.CEExternalAnalyzer;
-import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
-import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
-import com.intellij.codeInsight.hints.SettingsKey;
-import com.intellij.codeInsight.hints.declarative.EndOfLinePosition;
-import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
-import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
+import codeemoji.core.util.CEBundle;
+import codeemoji.core.util.CESymbol;
+import com.intellij.codeInsight.hints.declarative.*;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiJavaFile;
@@ -19,30 +15,33 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
-@SuppressWarnings("UnstableApiUsage")
-public abstract non-sealed class CECollector<H extends PsiElement, A extends PsiElement> extends CEInlayBuilder implements SharedBypassCollector {
+public abstract class CECollector<H extends PsiElement, A extends PsiElement> implements SharedBypassCollector {
 
-    protected CECollector(Editor editor, SettingsKey<?> settingsKey) {
-        super(editor, settingsKey);
+    private final Editor editor;
+    private final String key;
+
+    protected CECollector(Editor editor, String key) {
+        this.editor = editor;
+        this.key = key;
     }
 
     public abstract PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayTreeSink InlayTreeSink);
 
-    //TODO: ideally just this second one should be abstract. obe above should be split into a method that gathers stuff fed to create inlay
     @Nullable
-    protected abstract InlayPresentation createInlayFor(@NotNull H element);
+    protected abstract InlayVisuals createInlayFor(@NotNull H element);
 
     @Override
     public void collectFromElement(@NotNull PsiElement psiElement, @NotNull InlayTreeSink inlayTreeSink) {
-        Editor editor = FileEditorManager.getInstance(psiElement.getProject()).getSelectedTextEditor();
         //TODO: review and see if passing editor is needed. also check for null
         if (isEnabled()) {
             if (psiElement instanceof PsiJavaFile) {
-                psiElement.accept(createElementVisitor(editor, inlayTreeSink));
+                psiElement.accept(createElementVisitor(getEditor(), inlayTreeSink));
             }
         }
     }
@@ -58,29 +57,35 @@ public abstract non-sealed class CECollector<H extends PsiElement, A extends Psi
         return true;
     }
 
-    public final void addInlayInline(@Nullable A element, @NotNull InlayTreeSink sink, @NotNull InlayPresentation inlay) {
+    public final void addInlayInline(@Nullable A element, @NotNull InlayTreeSink sink, @NotNull InlayVisuals inlay) {
         if (null != element) {
+            int lineNumber = getEditor().getDocument().getLineNumber(element.getTextRange().getEndOffset());
+            var localVariable = element.getParent();
+
             //TODO: implement
             sink.addPresentation(
-                    new EndOfLinePosition(0),
-                    null,  // No payloads
-                    "Parameter: " + inlay.toString(),  // Tooltip
+                    new EndOfLinePosition(lineNumber),
+                    List.of(new InlayPayload("variablePayload", new StringInlayActionPayload("Go to Settings"))),
+
+                    CEBundle.getString(inlay.tooltip()),  // Tooltip
                     true,  // Has background
                     builder -> {
-                        builder.text("a" + inlay.toString(),
+                        builder.text("a" + inlay.text(),
                                 null);
                         return Unit.INSTANCE;
                     } // Presentation content
             );
-            //sink.addInlineElement(calcOffset(element), false, inlay, false);
+            //sink.addInlineElement(calcOffset(element), false, text, false);
         }
     }
 
-    public final void addInlayBlock(@Nullable A element, @NotNull InlayTreeSink sink, InlayPresentation inlay) {
+
+
+    public final void addInlayBlock(@Nullable A element, @NotNull InlayTreeSink sink, InlayVisuals inlay) {
         if (null != element) {
             var indentFactor = EditorUtil.getPlainSpaceWidth(getEditor());
             var indent = EditorUtil.getTabSize(getEditor()) * indentFactor;
-            inlay = getFactory().inset(inlay, indent, 0, 0, 0);
+           // inlay = getFactory().inset(inlay, indent, 0, 0, 0);
 
             //TODO: implement
             //sink.addBlockElement(element.getTextOffset(), true, true, 0, inlay);
@@ -94,6 +99,34 @@ public abstract non-sealed class CECollector<H extends PsiElement, A extends Psi
             CEExternalAnalyzer.getInstance().buildExternalInfo(result, element);
         }
         return result;
+    }
+
+    //TODO: merge and refactor these
+
+    public InlayVisuals buildInlayWithEmoji(@NotNull CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+        return formatInlay(symbol.getEmoji(), symbol.isWithBackground(), keyTooltip, suffixTooltip);
+    }
+
+    protected @NotNull InlayVisuals buildInlayWithText(@NotNull String fullText, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+        return formatInlay(fullText, true, keyTooltip, suffixTooltip);
+    }
+
+    // is tooltip suffix needed?
+    private @NotNull InlayVisuals formatInlay(@NotNull String symbol, boolean background,
+                                              @NotNull String keyTooltip, @Nullable String suffixTooltip) {
+        var tooltip = getTooltip(keyTooltip);
+        if (null != suffixTooltip) {
+            tooltip += " " + suffixTooltip;
+        }
+        return InlayVisuals.of(symbol, tooltip, background);
+    }
+
+    private static String getTooltip(@NotNull String key) {
+        try {
+            return CEBundle.getString(key);
+        } catch (RuntimeException ex) {
+            return key;
+        }
     }
 
 }

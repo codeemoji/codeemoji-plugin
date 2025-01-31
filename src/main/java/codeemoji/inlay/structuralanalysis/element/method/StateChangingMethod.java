@@ -3,6 +3,7 @@ package codeemoji.inlay.structuralanalysis.element.method;
 import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.settings.CEConfigurableWindow;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
@@ -55,8 +56,8 @@ public class StateChangingMethod extends CEProviderMulti<StateChangingMethodSett
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull StateChangingMethodSettings settings) {
-        return new StateChangingMethodConfigurable(settings);
+    public @NotNull CEConfigurableWindow<StateChangingMethodSettings> createConfigurable() {
+        return new StateChangingMethodConfigurable();
     }
 
     private PsiElement[] collectStateChangingElements(PsiMethod method){

@@ -16,9 +16,9 @@ public final class CEModifierInterfaceMethodCollector extends CEReferenceMethodC
     private final boolean activated;
     private final String modifier;
 
-    public CEModifierInterfaceMethodCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, @Nullable CESymbol symbol,
+    public CEModifierInterfaceMethodCollector(@NotNull Editor editor, String key, @Nullable CESymbol symbol,
                                               String modifier, boolean activated) {
-        super(editor, key, key.getId() + ".method." + modifier + "interface", symbol);
+        super(editor, key, key + ".method." + modifier + "interface", symbol);
         this.activated = activated;
         this.modifier = modifier;
     }

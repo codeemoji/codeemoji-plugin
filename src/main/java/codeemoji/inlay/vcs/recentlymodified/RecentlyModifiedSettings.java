@@ -2,7 +2,7 @@ package codeemoji.inlay.vcs.recentlymodified;
 
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
-import codeemoji.core.base.CEBaseSettings;
+import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CESymbolHolder;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;

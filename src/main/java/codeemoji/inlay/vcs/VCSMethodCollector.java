@@ -27,7 +27,7 @@ public abstract class VCSMethodCollector extends CEDynamicMethodCollector {
 
     @Nullable
     protected final FileAnnotation vcsBlame;
-    protected VCSMethodCollector(@NotNull PsiFile file, @NotNull Editor editor, SettingsKey<?> key) {
+    protected VCSMethodCollector(@NotNull PsiFile file, @NotNull Editor editor, String key) {
         super(editor, key);
         this.vcsBlame = CEVcsUtils.getAnnotation(file, editor);
     }

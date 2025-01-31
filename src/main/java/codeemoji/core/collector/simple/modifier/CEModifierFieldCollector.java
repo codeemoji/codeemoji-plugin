@@ -18,9 +18,9 @@ public final class CEModifierFieldCollector extends CEReferenceFieldCollector {
     private final boolean activated;
     private final String modifier;
 
-    public CEModifierFieldCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, @Nullable CESymbol symbol,
+    public CEModifierFieldCollector(@NotNull Editor editor, String key, @Nullable CESymbol symbol,
                                     String modifier, boolean activated) {
-        super(editor, key, key.getId() + ".field." + modifier, symbol);
+        super(editor, key, key + ".field." + modifier, symbol);
         this.activated = activated;
         this.modifier = modifier;
     }

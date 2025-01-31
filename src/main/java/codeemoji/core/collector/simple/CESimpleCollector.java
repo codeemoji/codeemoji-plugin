@@ -1,13 +1,10 @@
 package codeemoji.core.collector.simple;
 
 import codeemoji.core.collector.CECollector;
+import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.util.CESymbol;
-import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
-import com.intellij.codeInsight.hints.SettingsKey;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
 import lombok.Getter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
@@ -21,22 +18,22 @@ public sealed abstract class CESimpleCollector<H extends PsiElement, A extends P
         permits CEClassCollector, CESimpleMethodCollector, CEReferenceClassCollector, CEReferenceFieldCollector, CEReferenceMethodCollector, CEVariableCollector {
 
 
-    private final InlayPresentation inlay;
+    private final InlayVisuals inlay;
 
     //collector with a static presentation. Soon this wil be changed to accept a standard configuration instead
-    protected CESimpleCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key,
+    protected CESimpleCollector(@NotNull Editor editor, String key,
                                 @NotNull String tooltipKey, @Nullable CESymbol symbol) {
         super(editor, key);
-        this.inlay = buildInlayWithEmoji(symbol, "inlay." + tooltipKey + ".tooltip", null);
+        this.inlay = buildInlayWithEmoji(symbol, "text." + tooltipKey + ".tooltip", null);
     }
 
-    protected CESimpleCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, @Nullable CESymbol symbol) {
-        this(editor, key, key.getId(), symbol);
+    protected CESimpleCollector(@NotNull Editor editor, String key, @Nullable CESymbol symbol) {
+        this(editor, key, key, symbol);
     }
 
     @Nullable
     @Override
-    protected final InlayPresentation createInlayFor(@NotNull H element) {
+    protected final InlayVisuals createInlayFor(@NotNull H element) {
         return needsHint(element) ? inlay : null;
     }
 
@@ -46,9 +43,9 @@ public sealed abstract class CESimpleCollector<H extends PsiElement, A extends P
     //TODO: finish so we dont have to call create and add inaly all the time
     /*
     protected final <H2 extends PsiNamedElement> boolean maybeAddInlay(@NotNull H2 element, @NotNull InlayTreeSink InlayTreeSink) {
-        var inlay = createInlay(element);
-        if (null != inlay) {
-            addInlayInline(element.getNameIdentifier(), InlayTreeSink, inlay);
+        var text = createInlay(element);
+        if (null != text) {
+            addInlayInline(element.getNameIdentifier(), InlayTreeSink, text);
             return true;
         }
         return false;

@@ -1,12 +1,10 @@
 package codeemoji.inlay.vcs.authoravatar;
 
-import codeemoji.core.base.CEBaseSettings;
+import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CESymbolHolder;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Transient;
 import org.jetbrains.annotations.NotNull;
 

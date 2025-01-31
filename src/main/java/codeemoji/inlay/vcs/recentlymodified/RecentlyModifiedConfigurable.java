@@ -1,38 +1,36 @@
 package codeemoji.inlay.vcs.recentlymodified;
 
-import codeemoji.core.base.CEBaseConfigurable;
+import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEBundle;
 import com.intellij.codeInsight.hints.ChangeListener;
+import com.intellij.lang.Language;
+import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.*;
 
-public class RecentlyModifiedConfigurable extends CEBaseConfigurable<RecentlyModifiedSettings> {
-    public RecentlyModifiedConfigurable(RecentlyModifiedSettings settings) {
-        super(settings);
-    }
+public class RecentlyModifiedConfigurable extends CEConfigurableWindow<RecentlyModifiedSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(ChangeListener listener) {
-
+    public @NotNull JComponent createComponent(RecentlyModifiedSettings settings, Project project,
+                                               Language language, ChangeListener changeListener) {
         var daySelector = new JSpinner();
         daySelector.setValue(settings.getDays());
         daySelector.addChangeListener(event -> {
             settings.setDays((Integer) daySelector.getValue());
-            listener.settingsChanged();
+            changeListener.settingsChanged();
         });
 
         var showDaysButton = new JCheckBox();
         showDaysButton.setSelected(settings.isShowDate());
         showDaysButton.addChangeListener(event -> {
             settings.setShowDate(showDaysButton.isSelected());
-            listener.settingsChanged();
+            changeListener.settingsChanged();
         });
 
         return FormBuilder.createFormBuilder()
-                .addComponent(super.createComponent(listener))
+                .addComponent(super.createComponent(settings, project, language, changeListener))
                 .addLabeledComponent(CEBundle.getString("inlay.recentlymodified.settings.number_of_days"),
                         daySelector)
                 .addLabeledComponent(CEBundle.getString("inlay.recentlymodified.settings.show_date"),

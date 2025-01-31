@@ -2,23 +2,22 @@ package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
+import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
-import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiTypes;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
 import java.util.Objects;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.ONE;
 
-@SuppressWarnings("UnstableApiUsage")
-public class ExpectingButNotGettingACollection extends CEProvider<NoSettings> {
+public class ExpectingButNotGettingACollection extends CEProvider<ExpectingButNotGettingACollection.Settings> {
+
+    public static class Settings extends CEBaseSettings<Settings>{}
 
     @Override
     public String getPreviewText() {

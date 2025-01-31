@@ -1,20 +1,23 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
+import codeemoji.core.settings.CEConfigurableWindow;
 import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
+import com.intellij.lang.Language;
+import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public record StateIndependentMethodConfigurable(StateIndependentMethodSettings settings) implements ImmediateConfigurable {
-    @NotNull
+public class StateIndependentMethodConfigurable extends CEConfigurableWindow<StateIndependentMethodSettings>  {
+
     @Override
-    public JComponent createComponent(@NotNull ChangeListener changeListener) {
+    public @NotNull JComponent createComponent(StateIndependentMethodSettings settings, Project project, Language language, ChangeListener changeListener) {
         var checkBox = new JCheckBox();
-        checkBox.setSelected(settings().isCheckMethodCallsForStateIndependenceApplied());
+        checkBox.setSelected(settings.isCheckMethodCallsForStateIndependenceApplied());
         checkBox.addChangeListener(event -> {
-            settings().setCheckMethodCallsForStateIndependenceApplied(checkBox.isSelected());
+            settings.setCheckMethodCallsForStateIndependenceApplied(checkBox.isSelected());
             changeListener.settingsChanged();
         });
         return FormBuilder.createFormBuilder()

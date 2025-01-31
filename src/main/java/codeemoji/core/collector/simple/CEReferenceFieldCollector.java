@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("UnstableApiUsage")
 public abstract non-sealed class CEReferenceFieldCollector extends CESimpleCollector<PsiField, PsiReferenceExpression> {
 
-    protected CEReferenceFieldCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key,
+    protected CEReferenceFieldCollector(@NotNull Editor editor, String key,
                                         @NotNull String tooltipKey,
                                         @Nullable CESymbol symbol) {
         super(editor, key, tooltipKey, symbol);

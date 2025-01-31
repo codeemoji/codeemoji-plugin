@@ -1,13 +1,10 @@
 package codeemoji.core.collector.project;
 
 import codeemoji.core.collector.CECollector;
+import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.config.CEConfigFile;
 import codeemoji.core.util.CESymbol;
-import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
-import com.intellij.codeInsight.hints.SettingsKey;
-import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiModifierListOwner;
@@ -21,7 +18,6 @@ import static codeemoji.core.collector.project.ProjectRuleSymbol.ANNOTATIONS_SYM
 import static codeemoji.core.config.CERuleFeature.ANNOTATIONS;
 
 @Getter
-@SuppressWarnings("UnstableApiUsage")
 public abstract class CEProjectCollector<H extends PsiModifierListOwner, A extends PsiElement> extends CECollector<H, A>
         implements CEProject<H, A> {
 
@@ -30,7 +26,7 @@ public abstract class CEProjectCollector<H extends PsiModifierListOwner, A exten
     private final @NotNull String annotationsKey;
     private final @NotNull CESymbol annotationsSymbol;
 
-    CEProjectCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, @NotNull String mainKeyId) {
+    CEProjectCollector(@NotNull Editor editor, @NotNull String key, @NotNull String mainKeyId) {
         super(editor, key);
       this.  configFile = new CEConfigFile(editor.getProject());
         this.mainKeyId = "inlay." + mainKeyId;
@@ -40,7 +36,7 @@ public abstract class CEProjectCollector<H extends PsiModifierListOwner, A exten
 
     //No-op
     @Override
-    protected @Nullable InlayPresentation createInlayFor(@NotNull H element) {
+    protected @Nullable InlayVisuals createInlayFor(@NotNull H element) {
         return null;
     }
 

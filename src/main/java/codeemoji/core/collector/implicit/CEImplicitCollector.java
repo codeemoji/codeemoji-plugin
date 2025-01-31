@@ -1,9 +1,8 @@
 package codeemoji.core.collector.implicit;
 
 import codeemoji.core.collector.CECollector;
+import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.util.CESymbol;
-import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
-import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.lang.jvm.JvmAnnotatedElement;
@@ -25,17 +24,15 @@ import java.util.Objects;
 public abstract class CEImplicitCollector extends CECollector {
 
     public final int codePoint;
-    private final String keyId;
 
-    protected CEImplicitCollector(@NotNull Editor editor, SettingsKey<?> settingsKey, int codePoint) {
-        super(editor, settingsKey);
+    protected CEImplicitCollector(@NotNull Editor editor, String key, int codePoint) {
+        super(editor, key);
         this.codePoint = codePoint;
-        this.keyId = settingsKey.getId(); //TODO:this could be done better
     }
 
     // No-op
     @Override
-    protected @Nullable InlayPresentation createInlayFor(@NotNull PsiElement element) {
+    protected @Nullable InlayVisuals createInlayFor(@NotNull PsiElement element) {
         return null;
     }
 
@@ -75,18 +72,18 @@ public abstract class CEImplicitCollector extends CECollector {
         };
     }
 
-    protected final void addInlayInAnnotation(@Nullable PsiAnnotation annotation, @NotNull InlayTreeSink sink, @NotNull InlayPresentation inlay) {
+    protected final void addInlayInAnnotation(@Nullable PsiAnnotation annotation, @NotNull InlayTreeSink sink, @NotNull InlayVisuals inlay) {
         if (null != annotation) {
             //TODO: add back
-            //sink.addInlineElement(calcOffsetForAnnotation(annotation), false, inlay, false);
+            //sink.addInlineElement(calcOffsetForAnnotation(annotation), false, text, false);
         }
     }
 
     protected final void addInlayInAttribute(@Nullable PsiAnnotation annotation, @Nullable String attributeName,
-                                             @NotNull InlayTreeSink sink, @NotNull InlayPresentation inlay, int shiftOffset) {
+                                             @NotNull InlayTreeSink sink, @NotNull InlayVisuals inlay, int shiftOffset) {
         if (null != annotation && null != attributeName) {
             //TODO: add back
-            //sink.addInlineElement(calcOffsetForAttribute(annotation, attributeName, shiftOffset), false, inlay, false);
+            //sink.addInlineElement(calcOffsetForAttribute(annotation, attributeName, shiftOffset), false, text, false);
         }
     }
 
@@ -136,14 +133,14 @@ public abstract class CEImplicitCollector extends CECollector {
     private void addImplicitInlayForAttributeValue(PsiAnnotation annotation, @Nullable String attributeName,
                                                    @Nullable CEImplicitAttributeInsetValue attributeValueInset, InlayTreeSink sink) {
         if (null != attributeValueInset && null != attributeValueInset.getValue()) {
-            var inlay = buildInlayWithText(attributeValueInset.getValue().toString(), "inlay." + keyId + ".attributes.tooltip", null);
+            var inlay = buildInlayWithText(attributeValueInset.getValue().toString(), "text." + getKey() + ".attributes.tooltip", null);
             addInlayInAttribute(annotation, attributeName, sink, inlay, attributeValueInset.getShiftOffset());
         }
     }
 
     private void addImplicitInlayForAnnotation(PsiAnnotation annotation, @Nullable String newAttributesList, @NotNull InlayTreeSink sink) {
         if (null != newAttributesList) {
-            var inlay = buildInlayWithText(newAttributesList, "inlay." + keyId + ".attributes.tooltip", null);
+            var inlay = buildInlayWithText(newAttributesList, "text." + getKey() + ".attributes.tooltip", null);
             addInlayInAnnotation(annotation, sink, inlay);
         }
     }
@@ -151,7 +148,7 @@ public abstract class CEImplicitCollector extends CECollector {
     private void addImplicitInlay(PsiElement element, @Nullable String fullText, @NotNull InlayTreeSink sink) {
         if (null != fullText) {
             var symbol = CESymbol.of(codePoint, fullText);
-            var inlay = buildInlayWithEmoji(symbol, "inlay." + keyId + ".annotations.tooltip", null);
+            var inlay = buildInlayWithEmoji(symbol, "text." + getKey() + ".annotations.tooltip", null);
             addInlayBlock(element, sink, inlay);
         }
     }

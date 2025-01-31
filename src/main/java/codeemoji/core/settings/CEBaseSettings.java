@@ -1,4 +1,4 @@
-package codeemoji.core.base;
+package codeemoji.core.settings;
 
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CESymbolHolder;

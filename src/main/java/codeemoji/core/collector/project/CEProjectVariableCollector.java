@@ -27,8 +27,8 @@ public final class CEProjectVariableCollector extends CEProjectCollector<PsiVari
     private final @NotNull String typesKey;
     private final @NotNull CESymbol typesSymbol;
 
-    public CEProjectVariableCollector(@NotNull Editor editor, SettingsKey<?> key, @NotNull CERuleElement elementRule) {
-        super(editor, key, key.getId() + "." + elementRule.getValue());
+    public CEProjectVariableCollector(@NotNull Editor editor, String key, @NotNull CERuleElement elementRule) {
+        super(editor, key, key + "." + elementRule.getValue());
         this.elementRule = elementRule;
         typesKey = getMainKeyId() + "." + TYPES.getValue() + ".tooltip";
         typesSymbol = CESymbol.empty();

@@ -2,6 +2,7 @@ package codeemoji.inlay.structuralanalysis.codecomplexity;
 
 import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
+import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -19,7 +20,6 @@ import java.util.Map;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.HIGH_CYCLOMATIC_COMPLEXITY_METHOD;
 
-@SuppressWarnings("UnstableApiUsage")
 public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticComplexityMethodSettings> {
 
     private static final Collection<String> booleanOperators = List.of("&&", "||");
@@ -50,8 +50,8 @@ public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticCom
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull HighCyclomaticComplexityMethodSettings settings) {
-        return new HighCyclomaticComplexityMethodConfigurable(settings);
+    public @NotNull CEConfigurableWindow<HighCyclomaticComplexityMethodSettings> createConfigurable() {
+        return new HighCyclomaticComplexityMethodConfigurable();
     }
 
     private boolean isHighCyclomaticComplexityMethod(PsiMethod method){

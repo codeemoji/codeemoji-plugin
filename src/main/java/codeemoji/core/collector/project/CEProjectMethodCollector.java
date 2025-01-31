@@ -28,8 +28,8 @@ public final class CEProjectMethodCollector extends CEProjectCollector<PsiMethod
     private final @NotNull CESymbol returnsSymbol;
     private final @NotNull CESymbol packagesSymbol;
 
-    public CEProjectMethodCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key) {
-        super(editor, key, key.getId() + ".method");
+    public CEProjectMethodCollector(@NotNull Editor editor, @NotNull String key) {
+        super(editor, key, key + ".method");
         returnsKey = getMainKeyId() + "." + RETURNS.getValue() + ".tooltip";
         returnsSymbol = CESymbol.empty();
 

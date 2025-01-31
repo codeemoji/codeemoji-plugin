@@ -2,16 +2,16 @@ package codeemoji.core.collector.simple;
 
 import codeemoji.core.collector.CECollector;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
-import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
+//TODO: merge with superclass
 //can i merge this with superclass?
 public abstract class CEDynamicMethodCollector extends CECollector<PsiMethod, PsiIdentifier> {
 
-    protected CEDynamicMethodCollector(@NotNull Editor editor, SettingsKey<?> settingsKey) {
-        super(editor, settingsKey);
+    protected CEDynamicMethodCollector(@NotNull Editor editor, String key) {
+        super(editor, key);
     }
 
     @Override

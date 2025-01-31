@@ -3,6 +3,7 @@ package codeemoji.inlay.structuralanalysis.element.method;
 import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -50,10 +51,9 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull ExternalFunctionalityInvokingMethodSettings settings) {
-        return new ExternalFunctionalityInvokingMethodConfigurable(settings);
+    public @NotNull CEConfigurableWindow<ExternalFunctionalityInvokingMethodSettings> createConfigurable() {
+   return new ExternalFunctionalityInvokingMethodConfigurable();
     }
-
 
 
     private boolean isExternalFunctionalityInvokingMethod(PsiMethod method, Project project) {

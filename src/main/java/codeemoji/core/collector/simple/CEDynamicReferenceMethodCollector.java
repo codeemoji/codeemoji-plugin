@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("UnstableApiUsage")
 public abstract class CEDynamicReferenceMethodCollector extends CECollector<PsiMethod, PsiMethodCallExpression> {
 
-    protected CEDynamicReferenceMethodCollector(@NotNull Editor editor, SettingsKey<?> key) {
+    protected CEDynamicReferenceMethodCollector(@NotNull Editor editor, String key) {
         super(editor, key);
     }
 

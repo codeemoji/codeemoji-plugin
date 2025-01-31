@@ -932,7 +932,7 @@ referenced in the source code: _Reference Class_, _Reference Field_ and _Referen
 Example of use:
 
 ````java
-public class GetMethodDoesNotReturn extends CEProvider<NoSettings> {
+public class GetMethodDoesNotReturn extends CEProvider<CEDefaultSettings> {
 
     @Override
     public String getPreviewText() {

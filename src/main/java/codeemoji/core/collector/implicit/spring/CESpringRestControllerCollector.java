@@ -14,7 +14,7 @@ public class CESpringRestControllerCollector extends CESpringControllerCollector
     public final @NotNull String baseName;
     private final List<String> deactivatedCases = new ArrayList<>();
 
-    public CESpringRestControllerCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, int codePoint) {
+    public CESpringRestControllerCollector(@NotNull Editor editor, String key, int codePoint) {
         super(editor, key, codePoint);
         deactivatedCases.add("org.springframework.stereotype.Controller");
         baseName = "org.springframework.web.bind.annotation.RestController";

@@ -1,6 +1,6 @@
 package codeemoji.inlay.vcs.lastcommit;
 
-import codeemoji.core.base.CEBaseSettings;
+import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CESymbolHolder;

@@ -22,7 +22,7 @@ public class CESpringControllerCollector extends CEImplicitCollector {
 
     public @NotNull String baseName;
 
-    public CESpringControllerCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, int codePoint) {
+    public CESpringControllerCollector(@NotNull Editor editor, String key, int codePoint) {
         super(editor, key, codePoint);
         baseName = "org.springframework.stereotype.Controller";
     }

@@ -2,21 +2,20 @@ package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.collector.simple.CEVariableCollector;
 import codeemoji.core.provider.CEProvider;
+import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
-import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiEllipsisType;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.ONE;
 
-@SuppressWarnings("UnstableApiUsage")
-public class SaysManyButContainsOne extends CEProvider<NoSettings> {
+public class SaysManyButContainsOne extends CEProvider<SaysManyButContainsOne.Settings> {
+
+    public static class Settings extends CEBaseSettings<Settings> {}
 
     @Override
     public String getPreviewText() {

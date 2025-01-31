@@ -2,6 +2,7 @@ package codeemoji.inlay.structuralanalysis.codecomplexity;
 
 import codeemoji.core.collector.simple.CEClassCollector;
 import codeemoji.core.provider.CEProvider;
+import codeemoji.core.settings.CEConfigurableWindow;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
@@ -33,8 +34,8 @@ public class LargeMethodCountClass extends CEProvider<LargeMethodCountClassSetti
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull LargeMethodCountClassSettings settings) {
-        return new LargeMethodCountClassConfigurable(settings);
+    public @NotNull CEConfigurableWindow<LargeMethodCountClassSettings> createConfigurable() {
+        return new LargeMethodCountClassConfigurable();
     }
 
     private boolean isLargeMethodCountClass(PsiClass clazz){

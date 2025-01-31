@@ -2,6 +2,7 @@ package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.collector.simple.CEVariableCollector;
 import codeemoji.core.provider.CEProvider;
+import codeemoji.core.settings.CEConfigurableWindow;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
@@ -49,7 +50,7 @@ public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSetting
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull ShortDescriptiveNameSettings settings) {
-        return new ShortDescriptiveNameConfigurable(settings);
+    public @NotNull CEConfigurableWindow<ShortDescriptiveNameSettings> createConfigurable() {
+        return new ShortDescriptiveNameConfigurable();
     }
 }

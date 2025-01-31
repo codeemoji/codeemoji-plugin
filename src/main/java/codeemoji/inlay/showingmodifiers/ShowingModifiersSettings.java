@@ -1,10 +1,12 @@
 package codeemoji.inlay.showingmodifiers;
 
+import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
@@ -18,10 +20,11 @@ import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.SY
 import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.TRANSIENT_FIELD;
 import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.VOLATILE_FIELD;
 
+@EqualsAndHashCode(callSuper = true)
 @ToString
-@EqualsAndHashCode
+@Data
 @State(name = "ShowingModifiersSettings", storages = @Storage("codeemoji-showing-modifiers-settings.xml"))
-public class ShowingModifiersSettings implements PersistentStateComponent<ShowingModifiersSettings> {
+public class ShowingModifiersSettings extends CEBaseSettings<ShowingModifiersSettings> {
 
     @MapAnnotation
     private final Map<ScopeModifier, Boolean> basicModifiersMap = new EnumMap<>(ScopeModifier.class);

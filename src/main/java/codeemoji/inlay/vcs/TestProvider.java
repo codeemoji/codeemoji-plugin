@@ -26,7 +26,7 @@ public class TestProvider implements InlayHintsProvider {
                     PsiExpression[] arguments = argumentList.getExpressions();
                     PsiParameter[] parameters = method.getParameterList().getParameters();
 
-                    // Add inlay presentations for each argument
+                    // Add text presentations for each argument
                     for (int i = 0; i < Math.min(arguments.length, parameters.length); i++) {
                         PsiExpression argument = arguments[i];
                         PsiParameter parameter = parameters[i];

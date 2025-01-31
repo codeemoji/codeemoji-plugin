@@ -1,12 +1,12 @@
-package codeemoji.core.base;
+package codeemoji.core.settings;
 
 import codeemoji.core.ui.EmojiPickerPanel;
 import codeemoji.core.ui.EmojiRepository;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CESymbolHolder;
-import com.intellij.codeInsight.hints.ChangeListener;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
+import com.intellij.lang.Language;
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -17,17 +17,11 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 // a configurable class that holds a symbol list
-public class CEBaseConfigurable<S extends CEBaseSettings<S>> implements ImmediateConfigurable {
+public class CEConfigurableWindow<S extends CEBaseSettings<S>> {
 
-    protected final S settings;
     protected final List<CESymbolHolder> localSymbols = new ArrayList<>();
 
-    public CEBaseConfigurable(S settings) {
-        this.settings = settings;
-    }
-
-    @Override
-    public @NotNull JComponent createComponent(ChangeListener listener) {
+    public @NotNull JComponent createComponent(S settings, Project project, Language language, ChangeListener changeListener) {
         localSymbols.clear();
         for (var s : settings.getSymbols()) {
             localSymbols.add(s.makeCopy());
@@ -37,18 +31,18 @@ public class CEBaseConfigurable<S extends CEBaseSettings<S>> implements Immediat
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         for (var holder : localSymbols) {
-            addSymbolRow(panel, holder, listener);
+            addSymbolRow(panel, holder, settings, changeListener);
         }
         return panel;
     }
 
-    private void addSymbolRow(JPanel panel, CESymbolHolder holder, ChangeListener listener) {
+    private void addSymbolRow(JPanel panel, CESymbolHolder holder, S settings, ChangeListener listener) {
         // Create label
         JLabel label = holder.getSymbol().createLabel(holder.getName());
 
         // Create button
         JButton pickEmojiButton = new JButton(CEBundle.getString("codeemoji.configurable.edit"));
-        pickEmojiButton.addActionListener(e -> createPickEmojiMenu(label, holder, true, listener));
+        pickEmojiButton.addActionListener(e -> createPickEmojiMenu(label, holder, true, settings, listener));
 
         // Create a sub-panel for label and button with horizontal layout
         JPanel labelButtonPanel = new JPanel(new BorderLayout(10, 0)); // Add some horizontal spacing
@@ -61,18 +55,18 @@ public class CEBaseConfigurable<S extends CEBaseSettings<S>> implements Immediat
     }
 
     protected void createPickEmojiMenu(JLabel label, CESymbolHolder holder,
-                                      boolean hasName, ChangeListener listener) {
+                                       boolean hasName, S settings, ChangeListener listener) {
         AtomicReference<JDialog> thisDialog = new AtomicReference<>();
         EmojiPickerPanel emojiPickerPanel = new EmojiPickerPanel(
                 EmojiRepository.getLocalEmojis(true),
                 new JLabel().getFont(), 50,
                 em -> {
                     if (em != null) {
-                        CESymbol.Utf emoji = CESymbol.of(em.symbol());
+                        CESymbol emoji = CESymbol.of(em.symbol());
                         holder.setSymbol(emoji);
                         emoji.applyToLabel(hasName ? holder.getName() : "", label);
 
-                        syncSettings(listener);
+                        syncSettings(settings, listener);
                     }
 
                     // Close the dialog by disposing of it directly
@@ -104,13 +98,20 @@ public class CEBaseConfigurable<S extends CEBaseSettings<S>> implements Immediat
         dialog.setVisible(true);
     }
 
-    protected void syncSettings(ChangeListener listener) {
+    protected void syncSettings(S settings, ChangeListener listener) {
         var copy = new ArrayList<CESymbolHolder>();
         for (CESymbolHolder pair : localSymbols) {
             copy.add(pair.makeCopy());
         }
         settings.setSymbols(copy);
         listener.settingsChanged();
+    }
+
+
+    // no impl. just leaving here as it might be needed in the future
+    public interface ChangeListener {
+        void settingsChanged();
+
     }
 
 }

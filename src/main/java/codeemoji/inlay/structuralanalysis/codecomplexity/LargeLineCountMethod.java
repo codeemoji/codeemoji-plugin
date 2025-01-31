@@ -2,6 +2,7 @@ package codeemoji.inlay.structuralanalysis.codecomplexity;
 
 import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
+import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -34,8 +35,8 @@ public class LargeLineCountMethod extends CEProvider<LargeLineCountMethodSetting
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull LargeLineCountMethodSettings settings) {
-        return new LargeLineCountMethodConfigurable(settings);
+    public @NotNull CEConfigurableWindow<LargeLineCountMethodSettings> createConfigurable() {
+        return new LargeLineCountMethodConfigurable();
     }
 
     private boolean isLargeLineCountMethod(PsiMethod method) {

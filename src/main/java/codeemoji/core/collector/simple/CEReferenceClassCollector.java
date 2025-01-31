@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("UnstableApiUsage")
 public abstract non-sealed class CEReferenceClassCollector extends CESimpleCollector<PsiClass, PsiElement> {
 
-    protected CEReferenceClassCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key,
+    protected CEReferenceClassCollector(@NotNull Editor editor, String key,
                                         @NotNull String tooltipKey, @Nullable CESymbol symbol) {
         super(editor, key, tooltipKey, symbol);
     }

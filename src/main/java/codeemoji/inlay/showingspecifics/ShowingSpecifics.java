@@ -4,6 +4,7 @@ import codeemoji.core.collector.project.CEProjectClassCollector;
 import codeemoji.core.collector.project.CEProjectMethodCollector;
 import codeemoji.core.collector.project.CEProjectVariableCollector;
 import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.settings.CEConfigurableWindow;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.SettingsKey;
@@ -31,7 +32,7 @@ public class ShowingSpecifics extends CEProviderMulti<ShowingSpecificsSettings> 
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
         List<SharedBypassCollector> list = new ArrayList<>();
 
-        SettingsKey<?> key = getKey();
+        String key = getKey();
         list.add(new CEProjectClassCollector(editor, key));
         list.add(new CEProjectMethodCollector(editor, key));
         list.add(new CEProjectVariableCollector(editor, key, FIELD));
@@ -42,8 +43,8 @@ public class ShowingSpecifics extends CEProviderMulti<ShowingSpecificsSettings> 
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull ShowingSpecificsSettings settings) {
-        return new ShowingSpecificsConfigurable(settings);
+    public @NotNull CEConfigurableWindow<ShowingSpecificsSettings> createConfigurable() {
+        return new ShowingSpecificsConfigurable();
     }
 
 }

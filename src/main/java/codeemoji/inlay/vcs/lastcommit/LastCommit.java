@@ -1,13 +1,11 @@
 package codeemoji.inlay.vcs.lastcommit;
 
-import codeemoji.core.base.CEBaseConfigurable;
+import codeemoji.core.collector.InlayVisuals;
+import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSMethodCollector;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
-import com.intellij.codeInsight.hints.SettingsKey;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -22,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
-import java.util.Map;
 import java.util.PrimitiveIterator;
 import java.util.stream.IntStream;
 
@@ -39,19 +36,19 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull LastCommitSettings settings) {
-        return new CEBaseConfigurable<>(settings);
+    public @NotNull CEConfigurableWindow<LastCommitSettings> createConfigurable() {
+        return new CEConfigurableWindow<>();
     }
 
     //screw anonymous classes. they are ugly
     private class RecentlyModifiedCollector extends VCSMethodCollector {
 
-        protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor, SettingsKey<?> key) {
+        protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor, String key) {
             super(file, editor, key);
         }
 
         @Override
-        protected @Nullable InlayPresentation createInlayFor(@NotNull PsiMethod element) {
+        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
             if (vcsBlame == null) return null;
 
             //text range of this element without comments

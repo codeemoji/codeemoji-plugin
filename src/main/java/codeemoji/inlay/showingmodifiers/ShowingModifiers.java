@@ -5,6 +5,7 @@ import codeemoji.core.collector.simple.modifier.CEModifierFieldCollector;
 import codeemoji.core.collector.simple.modifier.CEModifierInterfaceMethodCollector;
 import codeemoji.core.collector.simple.modifier.CEModifierMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.settings.CEConfigurableWindow;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.SettingsKey;
@@ -54,7 +55,7 @@ public class ShowingModifiers extends CEProviderMulti<ShowingModifiersSettings> 
     @Override
     public @NotNull List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         List<SharedBypassCollector> list = new ArrayList<>();
-        SettingsKey<?> key = getKey();
+        String key = getKey();
         //class
         list.addAll(
                 Arrays.asList(
@@ -97,8 +98,8 @@ public class ShowingModifiers extends CEProviderMulti<ShowingModifiersSettings> 
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull ShowingModifiersSettings settings) {
-        return new ShowingModifiersConfigurable(settings);
+    public @NotNull CEConfigurableWindow<ShowingModifiersSettings> createConfigurable() {
+        return new ShowingModifiersConfigurable();
     }
 
     public enum ScopeModifier {

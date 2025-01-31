@@ -6,6 +6,7 @@ import codeemoji.core.collector.implicit.spring.CESpringConfigurationCollector;
 import codeemoji.core.collector.implicit.spring.CESpringControllerCollector;
 import codeemoji.core.collector.implicit.spring.CESpringRestControllerCollector;
 import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.settings.CEConfigurableWindow;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
@@ -19,18 +20,12 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
-@SuppressWarnings("UnstableApiUsage")
 public class ImplicitAnnotations extends CEProviderMulti<ImplicitAnnotationsSettings> {
-
-    @Override
-    public String getPreviewText() {
-        return null;
-    }
 
     @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
         final int codePoint = 0x1F4AD;
-        SettingsKey<?> key = getKey();
+        String key = getKey();
         return new ArrayList<>(
                 Arrays.asList(
                         new CEJPAEntityCollector(editor, key, codePoint, "javax.persistence"),
@@ -44,7 +39,12 @@ public class ImplicitAnnotations extends CEProviderMulti<ImplicitAnnotationsSett
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull ImplicitAnnotationsSettings settings) {
-        return new ImplicitAnnotationsConfigurable(settings);
+    public String getPreviewText() {
+        return null;
+    }
+
+    @Override
+    public @NotNull CEConfigurableWindow<ImplicitAnnotationsSettings> createConfigurable() {
+        return new ImplicitAnnotationsConfigurable();
     }
 }

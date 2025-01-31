@@ -1,11 +1,12 @@
 package codeemoji.inlay.vcs.recentlymodified;
 
+import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
+import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSMethodCollector;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.InlayHintsUtils;
 import com.intellij.codeInsight.hints.SettingsKey;
@@ -24,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Date;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
@@ -41,18 +41,18 @@ public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull RecentlyModifiedSettings settings) {
-        return new RecentlyModifiedConfigurable(settings);
+    public @NotNull CEConfigurableWindow<RecentlyModifiedSettings> createConfigurable() {
+        return new RecentlyModifiedConfigurable();
     }
 
     private class RecentlyModifiedCollector extends VCSMethodCollector {
 
-        protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor, @NotNull SettingsKey<?> key) {
+        protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor, @NotNull String key) {
             super(file, editor, key);
         }
 
         @Override
-        protected @Nullable InlayPresentation createInlayFor(@NotNull PsiMethod element) {
+        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
             if (vcsBlame == null) return null;
 
             //text range of this element without comments
@@ -74,29 +74,12 @@ public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
         }
 
         //TODO: really refactor these stuff and merge, there are similar methods in the base ECBuilder class
-        private InlayPresentation makePresentation(Date date) {
-            var factory = getFactory();
+        private InlayVisuals makePresentation(Date date) {
             RecentlyModifiedSettings settings = getSettings();
             String tooltip = settings.isShowDate() ? date.toString() : getDaysAgoTooltipString(date);
             CESymbol mainSymbol = settings.getMainSymbol();
-            InlayPresentation present = mainSymbol.createPresentation(factory, false);
-            present = factory.withCursorOnHover(present, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            present = factory.roundWithBackground(present);
-            present = factory.withTooltip(tooltip, present);
             // Add right-click functionality to open configuration panel
-            present = addContextMenu(present, getEditor().getProject());
-            return present;
-        }
-
-        //TODO: put this in a shared class
-        private InlayPresentation addContextMenu(InlayPresentation presentation, Project project) {
-            return new MenuOnClickPresentation(presentation, project,
-                    () -> InlayHintsUtils.INSTANCE.getDefaultInlayHintsProviderPopupActions(
-                            getKey(),
-                            RecentlyModified.this::getName
-                    )
-            );
-
+            return InlayVisuals.of(mainSymbol, tooltip);
         }
 
         // write a method that given a Data returns a string saying how many days ago it was. Should sya "today" for today, "yesterday", x days ago and such

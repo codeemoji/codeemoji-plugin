@@ -1,10 +1,11 @@
 package codeemoji.inlay.vcs.authoravatar;
 
-import codeemoji.core.base.CEBaseConfigurable;
+import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CESymbolHolder;
-import com.intellij.codeInsight.hints.ChangeListener;
+import com.intellij.lang.Language;
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -14,14 +15,10 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class AuthorAvatarConfigurable extends CEBaseConfigurable<AuthorAvatarSettings> {
-
-    public AuthorAvatarConfigurable(AuthorAvatarSettings settings) {
-        super(settings);
-    }
+public class AuthorAvatarConfigurable extends CEConfigurableWindow<AuthorAvatarSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(ChangeListener listener) {
+    public @NotNull JComponent createComponent(AuthorAvatarSettings settings, Project project, Language language, ChangeListener changeListener) {
         localSymbols.clear();
         //make deep copy. we update later
         for (CESymbolHolder pair : settings.getSymbols()) {
@@ -33,7 +30,7 @@ public class AuthorAvatarConfigurable extends CEBaseConfigurable<AuthorAvatarSet
 
         // Add existing rows to the panel
         for (CESymbolHolder pair : localSymbols) {
-            addRow(panel, pair, listener);
+            addRow(panel, pair, settings, changeListener);
         }
 
         // Add the "Add" button at the end
@@ -44,9 +41,9 @@ public class AuthorAvatarConfigurable extends CEBaseConfigurable<AuthorAvatarSet
                     CESymbol.of("\uD83D\uDC68\uFE0F")
             );
             localSymbols.add(newPair); // Add to the local list
-            addRow(panel, newPair, listener); // Add the new row to the panel
+            addRow(panel, newPair, settings, changeListener); // Add the new row to the panel
 
-            syncSettings(listener);
+            syncSettings(settings, changeListener);
         });
 
         JPanel addPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -57,7 +54,7 @@ public class AuthorAvatarConfigurable extends CEBaseConfigurable<AuthorAvatarSet
         return panel;
     }
 
-    private void addRow(JPanel panel, CESymbolHolder holder, ChangeListener listener) {
+    private void addRow(JPanel panel, CESymbolHolder holder, AuthorAvatarSettings settings, ChangeListener listener) {
         JPanel rowPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         // Create a text field for the author (editable)
@@ -72,14 +69,14 @@ public class AuthorAvatarConfigurable extends CEBaseConfigurable<AuthorAvatarSet
             public void insertUpdate(DocumentEvent e) {
                 holder.setName(authorTextField.getText()); // Update the Pair's author value
 
-                syncSettings(listener);
+                syncSettings(settings, listener);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 holder.setName(authorTextField.getText()); // Update the Pair's author value
 
-                syncSettings(listener);
+                syncSettings(settings, listener);
             }
 
             @Override
@@ -96,14 +93,14 @@ public class AuthorAvatarConfigurable extends CEBaseConfigurable<AuthorAvatarSet
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                createPickEmojiMenu(emojiLabel, holder, false, listener);
+                createPickEmojiMenu(emojiLabel, holder, false, settings, listener);
             }
         });
 
         // Create the button to pick a new emoji
         JButton pickEmojiButton = new JButton(CEBundle.getString("codeemoji.configurable.edit"));
         pickEmojiButton.addActionListener(e -> createPickEmojiMenu(
-                emojiLabel, holder, false, listener));
+                emojiLabel, holder, false, settings, listener));
 
         // Create the delete button to remove the current row
         JButton deleteButton = new JButton(CEBundle.getString("codeemoji.configurable.delete"));
@@ -114,7 +111,7 @@ public class AuthorAvatarConfigurable extends CEBaseConfigurable<AuthorAvatarSet
 
             localSymbols.remove(holder); // Remove from the settings list
 
-            syncSettings(listener);
+            syncSettings(settings, listener);
         });
 
         // Add the components to the row panel

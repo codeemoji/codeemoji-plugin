@@ -12,11 +12,11 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("UnstableApiUsage")
 public abstract non-sealed class CEReferenceMethodCollector extends CESimpleCollector<PsiMethod, PsiMethodCallExpression> {
 
-    protected CEReferenceMethodCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key,
+    protected CEReferenceMethodCollector(@NotNull Editor editor, String key,
                                          @Nullable CESymbol symbol) {
-        this(editor, key, key.getId(), symbol);
+        this(editor, key, key, symbol);
     }
-    protected CEReferenceMethodCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key,
+    protected CEReferenceMethodCollector(@NotNull Editor editor, String key,
                                          @NotNull String tooltipId, @Nullable CESymbol symbol) {
         super(editor, key, tooltipId, symbol);
     }

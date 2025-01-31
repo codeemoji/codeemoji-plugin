@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@SuppressWarnings("UnstableApiUsage")
 public record CECollectorMulti(List<SharedBypassCollector> collectors) implements SharedBypassCollector {
 
     @Override

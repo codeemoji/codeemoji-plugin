@@ -8,10 +8,9 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("UnstableApiUsage")
 public abstract non-sealed class CESimpleMethodCollector extends CESimpleCollector<PsiMethod, PsiIdentifier> {
 
-    protected CESimpleMethodCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, @Nullable CESymbol symbol) {
+    protected CESimpleMethodCollector(@NotNull Editor editor, String key, @Nullable CESymbol symbol) {
         super(editor, key, symbol);
     }
 

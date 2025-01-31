@@ -12,9 +12,9 @@ public class CESymbolHolder {
 
     //TODO. rethink. this should be immutable
     private String name;
-    private CESymbol.Utf symbol;
+    private CESymbol symbol;
 
-    public CESymbolHolder(@NotNull String name, @NotNull CESymbol.Utf defaultSymbol) {
+    public CESymbolHolder(@NotNull String name, @NotNull CESymbol defaultSymbol) {
         this.name = name;
         this.symbol = defaultSymbol;
     }

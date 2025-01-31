@@ -1,16 +1,19 @@
 package codeemoji.inlay.structuralanalysis.codecomplexity;
 
+import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @State(name = "LargeLineCountMethodSettings", storages = @Storage("codeemoji-large-line-count-method-settings.xml"))
-public class LargeLineCountMethodSettings implements PersistentStateComponent<LargeLineCountMethodSettings> {
+public class LargeLineCountMethodSettings extends CEBaseSettings<LargeLineCountMethodSettings> {
 
     private int linesOfCode = 20;
     private boolean commentExclusionApplied = false;

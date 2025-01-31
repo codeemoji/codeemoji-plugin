@@ -3,8 +3,6 @@ package codeemoji.core.collector.implicit.jpa;
 import codeemoji.core.collector.implicit.CEImplicit;
 import codeemoji.core.collector.implicit.CEImplicitCollector;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
-import com.intellij.codeInsight.hints.SettingsKey;
-import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMember;
@@ -20,7 +18,7 @@ public class CEJPAEmbeddableCollector extends CEImplicitCollector {
     public final @NotNull String baseName;
     private final @NotNull String nameSpace;
 
-    public CEJPAEmbeddableCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, int codePoint, @NotNull String nameSpace) {
+    public CEJPAEmbeddableCollector(@NotNull Editor editor, String key, int codePoint, @NotNull String nameSpace) {
         super(editor, key, codePoint);
         this.nameSpace = nameSpace;
         baseName = nameSpace + ".Embeddable";

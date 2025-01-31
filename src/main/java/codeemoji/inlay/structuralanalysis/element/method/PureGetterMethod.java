@@ -3,6 +3,7 @@ package codeemoji.inlay.structuralanalysis.element.method;
 import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.collector.simple.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.settings.CEConfigurableWindow;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
@@ -18,7 +19,6 @@ import java.util.Objects;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.PURE_GETTER_METHOD;
 
-@SuppressWarnings("UnstableApiUsage")
 public class PureGetterMethod extends CEProviderMulti<PureGetterMethodSettings> {
 
     @Nullable
@@ -61,8 +61,8 @@ public class PureGetterMethod extends CEProviderMulti<PureGetterMethodSettings> 
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull PureGetterMethodSettings settings) {
-        return new PureGetterMethodConfigurable(settings);
+    public @NotNull CEConfigurableWindow<PureGetterMethodSettings> createConfigurable() {
+        return new PureGetterMethodConfigurable();
     }
 
     private boolean isPureGetterMethod(PsiMethod method) {

@@ -21,7 +21,7 @@ public class CEJPAEntityCollector extends CEImplicitCollector {
     public final @NotNull String baseName;
     private final @NotNull String nameSpace;
 
-    public CEJPAEntityCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key, int codePoint, @NotNull String nameSpace) {
+    public CEJPAEntityCollector(@NotNull Editor editor, String key, int codePoint, @NotNull String nameSpace) {
         super(editor, key, codePoint);
         this.nameSpace = nameSpace;
         this.baseName = nameSpace + ".Entity";

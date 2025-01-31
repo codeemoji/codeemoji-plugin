@@ -17,7 +17,6 @@ import static codeemoji.core.config.CERuleElement.CLASS;
 import static codeemoji.core.config.CERuleFeature.*;
 
 @Getter
-@SuppressWarnings("UnstableApiUsage")
 public final class CEProjectClassCollector extends CEProjectCollector<PsiClass, PsiElement>
         implements CEProjectReferenceList<PsiReferenceList, PsiElement> {
 
@@ -26,8 +25,8 @@ public final class CEProjectClassCollector extends CEProjectCollector<PsiClass, 
     private final @NotNull CESymbol extendsSymbol;
     private final @NotNull CESymbol implementsSymbol;
 
-    public CEProjectClassCollector(@NotNull Editor editor, @NotNull SettingsKey<?> key) {
-        super(editor, key, key.getId() + ".class");
+    public CEProjectClassCollector(@NotNull Editor editor, String key) {
+        super(editor, key,key + ".class");
         extendsKey = getMainKeyId() + "." + EXTENDS.getValue() + ".tooltip";
         implementsKey = getMainKeyId() + "." + IMPLEMENTS.getValue() + ".tooltip";
         extendsSymbol = CESymbol.empty();

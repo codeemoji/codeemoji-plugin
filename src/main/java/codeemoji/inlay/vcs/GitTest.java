@@ -2,9 +2,10 @@ package codeemoji.inlay.vcs;
 
 import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
+import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CESymbol;
+import codeemoji.inlay.nameviolation.ValidationMethodDoesNotConfirm;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
-import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
@@ -27,8 +28,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@SuppressWarnings("UnstableApiUsage")
-public class GitTest extends CEProvider<NoSettings> {
+public class GitTest extends CEProvider<GitTest.Settings> {
+
+    public static class Settings extends CEBaseSettings<Settings> {}
 
     @Override
     public String getPreviewText() {

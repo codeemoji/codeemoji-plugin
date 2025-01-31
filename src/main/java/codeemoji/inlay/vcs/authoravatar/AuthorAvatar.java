@@ -1,13 +1,11 @@
 package codeemoji.inlay.vcs.authoravatar;
 
+import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSMethodCollector;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
-import com.intellij.codeInsight.hints.SettingsKey;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.codeInsight.hints.presentation.PresentationFactory;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -21,7 +19,6 @@ import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -29,7 +26,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@SuppressWarnings("UnstableApiUsage")
 public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
 
     @Override
@@ -42,19 +38,14 @@ public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
         return new RecentlyModifiedCollector(psiFile, editor, getKey());
     }
 
-    @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull AuthorAvatarSettings settings) {
-        return new AuthorAvatarConfigurable(settings);
-    }
-
     //screw anonymous classes. they are ugly
     private class RecentlyModifiedCollector extends VCSMethodCollector {
-        protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor, SettingsKey<?> key) {
+        protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor, String key) {
             super(file, editor, key);
         }
 
         @Override
-        protected @Nullable InlayPresentation createInlayFor(@NotNull PsiMethod element) {
+        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
             if (vcsBlame == null) return null;
 
             //text range of this element without comments
@@ -68,16 +59,12 @@ public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
         }
 
         @Nullable
-        private InlayPresentation makePresentation(String author) {
+        private InlayVisuals makePresentation(String author) {
             CESymbol authorAvatar = getSettings().getSymbolForAuthor(author
                     .substring(0, author.indexOf(" ")).toLowerCase(Locale.ROOT));
             if (authorAvatar == null) return null;
-            var factory = new PresentationFactory(this.getEditor());
 
-            var pres = authorAvatar.createPresentation(factory);
-            pres = factory.roundWithBackground(pres);
-            pres = factory.withTooltip(author, pres);
-            return pres;
+            return InlayVisuals.of(authorAvatar, author);
         }
 
         @Nullable

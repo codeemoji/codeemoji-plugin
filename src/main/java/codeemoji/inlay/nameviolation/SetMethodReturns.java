@@ -2,21 +2,21 @@ package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
+import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
-import com.intellij.codeInsight.hints.NoSettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiTypes;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
 import java.util.Objects;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
 
-@SuppressWarnings("UnstableApiUsage")
-public class SetMethodReturns extends CEProvider<NoSettings> {
+public class SetMethodReturns extends CEProvider<SetMethodReturns.Settings> {
+
+    public static class Settings extends CEBaseSettings<Settings> {}
 
     @Override
     public String getPreviewText() {
