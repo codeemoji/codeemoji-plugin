@@ -4,16 +4,25 @@ import codeemoji.core.collector.simple.CEVariableCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiTypes;
 import com.intellij.psi.PsiVariable;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
 
 public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NameSuggestsBooleanByTypeDoesNot.Settings> {
 
+    @EqualsAndHashCode(callSuper = true)
+    @ToString
+    @Data
+    @State(name = "NameSuggestsBooleanByTypeDoesNotSettings", storages = @Storage("codeemoji-name-suggests-boolean-but-type-does-not-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {}
 
     @Override

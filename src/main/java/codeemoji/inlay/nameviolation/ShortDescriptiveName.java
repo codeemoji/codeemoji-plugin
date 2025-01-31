@@ -14,7 +14,6 @@ import java.util.Map;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.SMALL_NAME;
 
-@SuppressWarnings("UnstableApiUsage")
 public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSettings> {
 
     @Override

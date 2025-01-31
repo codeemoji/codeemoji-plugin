@@ -5,16 +5,25 @@ import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiEllipsisType;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiVariable;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.MANY;
 
 public class SaysOneButContainsMany extends CEProvider<SaysOneButContainsMany.Settings> {
 
+    @EqualsAndHashCode(callSuper = true)
+    @ToString
+    @Data
+    @State(name = "SaysOneButContainsMany", storages = @Storage("codeemoji-says-one-but-contains-many-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {}
 
     @Override
