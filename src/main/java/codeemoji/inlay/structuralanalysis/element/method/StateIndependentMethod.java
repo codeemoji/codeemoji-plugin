@@ -19,7 +19,6 @@ import java.util.Map;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.STATE_INDEPENDENT_METHOD;
 
-@SuppressWarnings("UnstableApiUsage")
 public class StateIndependentMethod extends CEProviderMulti<StateIndependentMethodSettings> {
     @Nullable
     @Override
@@ -38,14 +37,14 @@ public class StateIndependentMethod extends CEProviderMulti<StateIndependentMeth
     @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
         return List.of(
-                new CESimpleMethodCollector(editor, getKey(), STATE_INDEPENDENT_METHOD) {
+                new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element){
                         return isStateIndependentMethod(element);
                     }
                 },
 
-                new CEReferenceMethodCollector(editor, getKey(), STATE_INDEPENDENT_METHOD) {
+                new CEReferenceMethodCollector(editor, getKey(), mainSymbol()) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element){
                         return isStateIndependentMethod(element);

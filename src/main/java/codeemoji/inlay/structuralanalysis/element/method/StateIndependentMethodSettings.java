@@ -10,13 +10,18 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 
- @EqualsAndHashCode(callSuper = true)
+import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.STATE_INDEPENDENT_METHOD;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
 @State(name = "StateIndependentMethodSettings", storages = @Storage("codeemoji-state-independent-method-settings.xml"))
 public class StateIndependentMethodSettings extends CEBaseSettings<StateIndependentMethodSettings> {
 
     private boolean checkMethodCallsForStateIndependenceApplied = false;
 
+    public StateIndependentMethodSettings(){
+        super(StateIndependentMethod.class, STATE_INDEPENDENT_METHOD);
+    }
     @Override
     public StateIndependentMethodSettings getState() {
         return this;

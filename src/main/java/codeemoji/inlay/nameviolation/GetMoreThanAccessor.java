@@ -53,7 +53,7 @@ public class GetMoreThanAccessor extends CEProvider<GetMoreThanAccessor.Settings
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), this::getSettings) {
+        return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
             @Override
             public boolean needsHint(@NotNull PsiMethod element){
                 if (element.getName().startsWith("get") && !Objects.equals(element.getReturnType(), PsiTypes.voidType()) && null != element.getBody()) {

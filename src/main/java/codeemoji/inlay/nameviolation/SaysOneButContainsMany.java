@@ -53,7 +53,7 @@ public class SaysOneButContainsMany extends CEProvider<SaysOneButContainsMany.Se
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CEVariableCollector(editor, getKey(), this::getSettings) {
+        return new CEVariableCollector(editor, getKey(), mainSymbol()) {
             @Override
             public boolean needsHint(@NotNull PsiVariable element){
                 var typeElement = element.getTypeElement();

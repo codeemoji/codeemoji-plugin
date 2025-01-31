@@ -43,7 +43,7 @@ public class PureGetterMethod extends CEProviderMulti<PureGetterMethodSettings> 
     @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
         return List.of(
-                new CESimpleMethodCollector(editor, getKey(), PURE_GETTER_METHOD) {
+                new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element){
                         return isPureGetterMethod(element);
@@ -51,7 +51,7 @@ public class PureGetterMethod extends CEProviderMulti<PureGetterMethodSettings> 
 
 
                 },
-                new CEReferenceMethodCollector(editor, getKey(), PURE_GETTER_METHOD) {
+                new CEReferenceMethodCollector(editor, getKey(), mainSymbol()) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element){
                         return isPureGetterMethod(element);

@@ -32,7 +32,7 @@ public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSetting
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CEVariableCollector(editor, getKey(), this::getSettings) {
+        return new CEVariableCollector(editor, getKey(), mainSymbol()) {
             @Override
             public boolean needsHint(@NotNull PsiVariable element){
                 if (null != element.getNameIdentifier()) {

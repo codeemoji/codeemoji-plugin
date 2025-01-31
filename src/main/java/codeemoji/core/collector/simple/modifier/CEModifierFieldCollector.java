@@ -20,7 +20,7 @@ public final class CEModifierFieldCollector extends CEReferenceFieldCollector {
     private final boolean activated;
     private final String modifier;
 
-    public CEModifierFieldCollector(@NotNull Editor editor, String key, Supplier<CEBaseSettings<?>> settings,
+    public CEModifierFieldCollector(@NotNull Editor editor, String key, Supplier<CESymbol> settings,
                                     String modifier, boolean activated) {
         super(editor, key, key + ".field." + modifier, settings);
         this.activated = activated;

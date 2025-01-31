@@ -2,6 +2,7 @@ package codeemoji.core.provider;
 
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCustomSettingsProvider;
 import com.intellij.codeInsight.hints.declarative.InlayHintsProvider;
@@ -18,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
+import java.util.function.Supplier;
 
 // Class that providers both the hints collectors and the configurables
 @Getter
@@ -91,6 +93,12 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
         }
     }
 
+
+    //helper
+
+    public Supplier<CESymbol> mainSymbol() {
+        return () -> this.getSettings().getMainSymbol();
+    }
 
     /*
 

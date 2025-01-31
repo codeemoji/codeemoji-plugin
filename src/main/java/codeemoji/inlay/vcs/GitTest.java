@@ -50,7 +50,7 @@ public class GitTest extends CEProvider<GitTest.Settings> {
     public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
 
         return new CESimpleMethodCollector(editor, getKey(),
-                CESymbol.of("\uD83D\uDC68\uFE0F\u200D\uD83D\uDCBC\uFE0F")) {
+                mainSymbol()) {
 
             //so i thin this is an object that returns the author name for each line
             @Nullable

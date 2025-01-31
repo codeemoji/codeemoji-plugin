@@ -55,43 +55,44 @@ public class ShowingModifiers extends CEProviderMulti<ShowingModifiersSettings> 
     public @NotNull List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         List<SharedBypassCollector> list = new ArrayList<>();
         String key = getKey();
+        //TODO: grab these from settings
         //class
         list.addAll(
                 Arrays.asList(
-                        new CEModifierClassCollector(editor, key,   PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_CLASS)),
-                        new CEModifierClassCollector(editor, key, DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_CLASS)),
-                        new CEModifierClassCollector(editor, key, FINAL_SYMBOL, FINAL, getSettings().query(FINAL_CLASS)),
-                        new CEModifierClassCollector(editor, key, ABSTRACT_SYMBOL, ABSTRACT, getSettings().query(ABSTRACT_CLASS))
+                        new CEModifierClassCollector(editor, key, ()->   PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_CLASS)),
+                        new CEModifierClassCollector(editor, key, ()-> DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_CLASS)),
+                        new CEModifierClassCollector(editor, key, ()-> FINAL_SYMBOL, FINAL, getSettings().query(FINAL_CLASS)),
+                        new CEModifierClassCollector(editor, key, ()-> ABSTRACT_SYMBOL, ABSTRACT, getSettings().query(ABSTRACT_CLASS))
                 )
         );
         //fields
         list.addAll(
                 Arrays.asList(
-                        new CEModifierFieldCollector(editor, key, PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_FIELD)),
-                        new CEModifierFieldCollector(editor, key, DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_FIELD)),
-                        new CEModifierFieldCollector(editor, key, FINAL_VAR_SYMBOL, FINAL, getSettings().query(FINAL_FIELD)),
-                        new CEModifierFieldCollector(editor, key, PROTECTED_SYMBOL, PROTECTED, getSettings().query(PROTECTED_FIELD)),
-                        new CEModifierFieldCollector(editor, key, PRIVATE_SYMBOL, PRIVATE, getSettings().query(PRIVATE_FIELD)),
-                        new CEModifierFieldCollector(editor, key, STATIC_SYMBOL, STATIC, getSettings().query(STATIC_FIELD)),
-                        new CEModifierFieldCollector(editor, key, VOLATILE_SYMBOL, VOLATILE, getSettings().query(VOLATILE_FIELD)),
-                        new CEModifierFieldCollector(editor, key, TRANSIENT_SYMBOL, TRANSIENT, getSettings().query(TRANSIENT_FIELD))
+                        new CEModifierFieldCollector(editor, key, ()-> PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_FIELD)),
+                        new CEModifierFieldCollector(editor, key, ()-> DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_FIELD)),
+                        new CEModifierFieldCollector(editor, key, ()-> FINAL_VAR_SYMBOL, FINAL, getSettings().query(FINAL_FIELD)),
+                        new CEModifierFieldCollector(editor, key, ()-> PROTECTED_SYMBOL, PROTECTED, getSettings().query(PROTECTED_FIELD)),
+                        new CEModifierFieldCollector(editor, key, ()-> PRIVATE_SYMBOL, PRIVATE, getSettings().query(PRIVATE_FIELD)),
+                        new CEModifierFieldCollector(editor, key, ()-> STATIC_SYMBOL, STATIC, getSettings().query(STATIC_FIELD)),
+                        new CEModifierFieldCollector(editor, key, ()-> VOLATILE_SYMBOL, VOLATILE, getSettings().query(VOLATILE_FIELD)),
+                        new CEModifierFieldCollector(editor, key, ()-> TRANSIENT_SYMBOL, TRANSIENT, getSettings().query(TRANSIENT_FIELD))
                 )
         );
         //methods
         list.addAll(
                 Arrays.asList(
-                        new CEModifierMethodCollector(editor, key, PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_METHOD)),
-                        new CEModifierMethodCollector(editor, key, DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_METHOD)),
-                        new CEModifierMethodCollector(editor, key, FINAL_SYMBOL, FINAL, getSettings().query(FINAL_METHOD)),
-                        new CEModifierMethodCollector(editor, key, PROTECTED_SYMBOL, PROTECTED, getSettings().query(PROTECTED_METHOD)),
-                        new CEModifierMethodCollector(editor, key, PRIVATE_SYMBOL, PRIVATE, getSettings().query(PRIVATE_METHOD)),
-                        new CEModifierMethodCollector(editor, key, STATIC_SYMBOL, STATIC, getSettings().query(STATIC_METHOD)),
-                        new CEModifierMethodCollector(editor, key, ABSTRACT_SYMBOL, ABSTRACT, getSettings().query(ABSTRACT_METHOD)),
-                        new CEModifierMethodCollector(editor, key, SYNCHRONIZED_SYMBOL, SYNCHRONIZED, getSettings().query(SYNCHRONIZED_METHOD)),
-                        new CEModifierMethodCollector(editor, key, NATIVE_SYMBOL, NATIVE, getSettings().query(NATIVE_METHOD))
+                        new CEModifierMethodCollector(editor, key, ()-> PUBLIC_SYMBOL, PUBLIC, getSettings().query(PUBLIC_METHOD)),
+                        new CEModifierMethodCollector(editor, key, ()-> DEFAULT_SYMBOL, DEFAULT, getSettings().query(DEFAULT_METHOD)),
+                        new CEModifierMethodCollector(editor, key, ()-> FINAL_SYMBOL, FINAL, getSettings().query(FINAL_METHOD)),
+                        new CEModifierMethodCollector(editor, key, ()-> PROTECTED_SYMBOL, PROTECTED, getSettings().query(PROTECTED_METHOD)),
+                        new CEModifierMethodCollector(editor, key, ()-> PRIVATE_SYMBOL, PRIVATE, getSettings().query(PRIVATE_METHOD)),
+                        new CEModifierMethodCollector(editor, key, ()-> STATIC_SYMBOL, STATIC, getSettings().query(STATIC_METHOD)),
+                        new CEModifierMethodCollector(editor, key, ()-> ABSTRACT_SYMBOL, ABSTRACT, getSettings().query(ABSTRACT_METHOD)),
+                        new CEModifierMethodCollector(editor, key, ()-> SYNCHRONIZED_SYMBOL, SYNCHRONIZED, getSettings().query(SYNCHRONIZED_METHOD)),
+                        new CEModifierMethodCollector(editor, key, ()-> NATIVE_SYMBOL, NATIVE, getSettings().query(NATIVE_METHOD))
                 )
         );
-        list.add(new CEModifierInterfaceMethodCollector(editor, key, DEFAULT_INTERFACE_SYMBOL, DEFAULT, getSettings().query(DEFAULT_INTERFACE_METHOD)));
+        list.add(new CEModifierInterfaceMethodCollector(editor, key, ()-> DEFAULT_INTERFACE_SYMBOL, DEFAULT, getSettings().query(DEFAULT_INTERFACE_METHOD)));
 
         return list;
     }

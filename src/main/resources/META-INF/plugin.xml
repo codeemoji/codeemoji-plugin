@@ -111,104 +111,145 @@
         <!--END OF CONFIGURABLE & SERVICES SECTION-->
 
         <!-- START IMPLEMENTATIONS SECTION-->
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <!-- START IMPLEMENTATIONS SECTION-->
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.vulnerabilities.VulnerableDependency"
                                               nameKey="inlay.vulnerabledependency.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.vulnerabledependency.description"
                                               providerId="inlay.vulnerabledependency"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.nameviolation.ShortDescriptiveName"
                                               nameKey="inlay.shortdescriptivename.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.shortdescriptivename.description"
                                               providerId="inlay.shortdescriptivename"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.nameviolation.GetMoreThanAccessor"
                                               nameKey="inlay.getmorethanaccessor.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.getmorethanaccessor.description"
                                               providerId="inlay.getmorethanaccessor"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.nameviolation.IsReturnsMoreThanABoolean"
                                               nameKey="inlay.isreturnsmorethanaboolean.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.isreturnsmorethanaboolean.description"
                                               providerId="inlay.isreturnsmorethanaboolean"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.nameviolation.SetMethodReturns"
                                               nameKey="inlay.setmethodreturns.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.setmethodreturns.description"
                                               providerId="inlay.setmethodreturns"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.nameviolation.ExpectingButNotGettingASingleInstance"
                                               nameKey="inlay.expectingbutnotgettingasingleinstance.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.expectingbutnotgettingasingleinstance.description"
                                               providerId="inlay.expectingbutnotgettingasingleinstance"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.nameviolation.ValidationMethodDoesNotConfirm"
                                               nameKey="inlay.validationmethoddoesnotconfirm.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.validationmethoddoesnotconfirm.description"
                                               providerId="inlay.validationmethoddoesnotconfirm"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.nameviolation.GetMethodDoesNotReturn"
                                               nameKey="inlay.getmethoddoesnotreturn.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.getmethoddoesnotreturn.description"
                                               providerId="inlay.getmethoddoesnotreturn"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.nameviolation.NotAnsweredQuestion"
                                               nameKey="inlay.notansweredquestion.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.notansweredquestion.description"
                                               providerId="inlay.notansweredquestion"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.nameviolation.TransformMethodDoesNotReturn"
                                               nameKey="inlay.transformmethoddoesnotreturn.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.transformmethoddoesnotreturn.description"
                                               providerId="inlay.transformmethoddoesnotreturn"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.nameviolation.ExpectingButNotGettingACollection"
                                               nameKey="inlay.expectingbutnotgettingacollection.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.expectingbutnotgettingacollection.description"
                                               providerId="inlay.expectingbutnotgettingacollection"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.nameviolation.SaysOneButContainsMany"
                                               nameKey="inlay.saysonebutcontainsmany.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.saysonebutcontainsmany.description"
                                               providerId="inlay.saysonebutcontainsmany"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.nameviolation.NameSuggestsBooleanByTypeDoesNot"
                                               nameKey="inlay.namesuggestsbooleanbytypedoesnot.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.namesuggestsbooleanbytypedoesnot.description"
                                               providerId="inlay.namesuggestsbooleanbytypedoesnot"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.nameviolation.SaysManyButContainsOne"
                                               nameKey="inlay.saysmanybutcontainsone.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.saysmanybutcontainsone.description"
                                               providerId="inlay.saysmanybutcontainsone"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.nameviolation.NameContainsOnlySpecialCharacters"
                                               nameKey="inlay.namecontainsonlyspecialcharacters.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.namecontainsonlyspecialcharacters.description"
                                               providerId="inlay.namecontainsonlyspecialcharacters"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.showingmodifiers.ShowingModifiers"
                                               nameKey="inlay.showingmodifiers.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.showingmodifiers.description"
                                               providerId="inlay.showingmodifiers"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.showingspecifics.ShowingSpecifics"
                                               nameKey="inlay.showingspecifics.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.showingspecifics.description"
                                               providerId="inlay.showingspecifics"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.implicit.ImplicitAnnotations"
                                               nameKey="inlay.implicitannotations.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.implicit.description"
                                               providerId="inlay.implicitannotations"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.vcs.recentlymodified.RecentlyModified"
                                               nameKey="inlay.recentlymodified.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.recentlymodified.description"
                                               providerId="inlay.recentlymodified"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true" group="CODE_VISION_GROUP"
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.vcs.lastcommit.LastCommit"
                                               nameKey="inlay.lastcommit.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.lastcommit.description"
                                               providerId="inlay.lastcommit"/>
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
@@ -219,9 +260,91 @@
                                               providerId="inlay.authoravatar"/>
 
 
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.vulnerabledependency"
+                implementationClass="codeemoji.inlay.vulnerabilities.VulnerableDependency" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.shortdescriptivename"
+                implementationClass="codeemoji.inlay.nameviolation.ShortDescriptiveName" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.getmorethanaccessor"
+                implementationClass="codeemoji.inlay.nameviolation.GetMoreThanAccessor" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.isreturnsmorethanaboolean"
+                implementationClass="codeemoji.inlay.nameviolation.IsReturnsMoreThanABoolean" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.setmethodreturns"
+                implementationClass="codeemoji.inlay.nameviolation.SetMethodReturns" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.expectingbutnotgettingasingleinstance"
+                implementationClass="codeemoji.inlay.nameviolation.ExpectingButNotGettingASingleInstance" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.validationmethoddoesnotconfirm"
+                implementationClass="codeemoji.inlay.nameviolation.ValidationMethodDoesNotConfirm" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.getmethoddoesnotreturn"
+                implementationClass="codeemoji.inlay.nameviolation.GetMethodDoesNotReturn" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.notansweredquestion"
+                implementationClass="codeemoji.inlay.nameviolation.NotAnsweredQuestion" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.transformmethoddoesnotreturn"
+                implementationClass="codeemoji.inlay.nameviolation.TransformMethodDoesNotReturn" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.expectingbutnotgettingacollection"
+                implementationClass="codeemoji.inlay.nameviolation.ExpectingButNotGettingACollection" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.saysonebutcontainsmany"
+                implementationClass="codeemoji.inlay.nameviolation.SaysOneButContainsMany" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.namesuggestsbooleanbytypedoesnot"
+                implementationClass="codeemoji.inlay.nameviolation.NameSuggestsBooleanByTypeDoesNot" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.saysmanybutcontainsone"
+                implementationClass="codeemoji.inlay.nameviolation.SaysManyButContainsOne" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.namecontainsonlyspecialcharacters"
+                implementationClass="codeemoji.inlay.nameviolation.NameContainsOnlySpecialCharacters" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.showingmodifiers"
+                implementationClass="codeemoji.inlay.showingmodifiers.ShowingModifiers" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.showingspecifics"
+                implementationClass="codeemoji.inlay.showingspecifics.ShowingSpecifics" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.implicitannotations"
+                implementationClass="codeemoji.inlay.implicit.ImplicitAnnotations" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.recentlymodified"
+                implementationClass="codeemoji.inlay.vcs.recentlymodified.RecentlyModified" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.lastcommit"
+                implementationClass="codeemoji.inlay.vcs.lastcommit.LastCommit" />
+
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.authoravatar"
                 implementationClass="codeemoji.inlay.vcs.authoravatar.AuthorAvatar" />
+
 
 
         <!--END OF IMPLEMENTATIONS SECTION-->

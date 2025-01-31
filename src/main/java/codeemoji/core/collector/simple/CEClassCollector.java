@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 public abstract non-sealed class CEClassCollector extends CESimpleCollector<PsiClass, PsiIdentifier> {
 
     @SuppressWarnings("unused")
-    protected CEClassCollector(@NotNull Editor editor, String key, Supplier<CEBaseSettings<?>> settings) {
+    protected CEClassCollector(@NotNull Editor editor, String key, Supplier<CESymbol> settings) {
         super(editor, key, settings);
     }
 

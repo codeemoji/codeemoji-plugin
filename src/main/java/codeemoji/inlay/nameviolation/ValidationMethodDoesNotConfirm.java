@@ -45,7 +45,7 @@ public class ValidationMethodDoesNotConfirm extends CEProvider<ValidationMethodD
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), this::getSettings) {
+        return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
             @Override
             public boolean needsHint(@NotNull PsiMethod element){
                 return (element.getName().startsWith("validate") || element.getName().startsWith("check") || element.getName().startsWith("ensure")) && !Objects.equals(element.getReturnType(), PsiTypes.booleanType());

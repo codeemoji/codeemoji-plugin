@@ -21,9 +21,9 @@ public final class CEModifierMethodCollector extends CEReferenceMethodCollector 
     private final boolean activated;
     private final String modifier;
 
-    public CEModifierMethodCollector(@NotNull Editor editor, String key,  Supplier<CEBaseSettings<?>> settings,
+    public CEModifierMethodCollector(@NotNull Editor editor, String key,  Supplier<CESymbol> symbol,
                                      String modifier, boolean activated) {
-        super(editor, key, key + ".method." + modifier, settings);
+        super(editor, key, key + ".method." + modifier, symbol);
         this.activated = activated;
         this.modifier = modifier;
     }

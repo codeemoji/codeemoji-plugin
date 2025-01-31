@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 public abstract non-sealed class CESimpleMethodCollector extends CESimpleCollector<PsiMethod, PsiIdentifier> {
 
-    protected CESimpleMethodCollector(@NotNull Editor editor, String key, Supplier<CEBaseSettings<?>> settings) {
+    protected CESimpleMethodCollector(@NotNull Editor editor, String key, Supplier<CESymbol> settings) {
         super(editor, key, settings);
     }
 

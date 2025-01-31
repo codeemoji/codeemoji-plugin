@@ -15,11 +15,11 @@ import java.util.function.Supplier;
 public abstract non-sealed class CEReferenceMethodCollector extends CESimpleCollector<PsiMethod, PsiMethodCallExpression> {
 
     protected CEReferenceMethodCollector(@NotNull Editor editor, String key,
-                                         Supplier<CEBaseSettings<?>> settings) {
+                                         Supplier<CESymbol> settings) {
         this(editor, key, key, settings);
     }
     protected CEReferenceMethodCollector(@NotNull Editor editor, String key,
-                                         @NotNull String tooltipId, Supplier<CEBaseSettings<?>> settings) {
+                                         @NotNull String tooltipId, Supplier<CESymbol> settings) {
         super(editor, key, tooltipId, settings);
     }
 

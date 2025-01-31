@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 public abstract non-sealed class CEReferenceClassCollector extends CESimpleCollector<PsiClass, PsiElement> {
 
     protected CEReferenceClassCollector(@NotNull Editor editor, String key,
-                                        @NotNull String tooltipKey, Supplier<CEBaseSettings<?>> settings) {
+                                        @NotNull String tooltipKey, Supplier<CESymbol> settings) {
         super(editor, key, tooltipKey, settings);
     }
 

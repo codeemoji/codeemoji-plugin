@@ -42,13 +42,13 @@ public class PureSetterMethod extends CEProviderMulti<PureSetterMethodSettings> 
     @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
         return List.of(
-                new CESimpleMethodCollector(editor, getKey(), this::getSettings) {
+                new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element) {
                         return isPureSetterMethod(element);
                     }
                 },
-                new CEReferenceMethodCollector(editor, getKey(), this::getSettings) {
+                new CEReferenceMethodCollector(editor, getKey(), mainSymbol()) {
                     @Override
                     protected boolean needsHint(@NotNull PsiMethod element) {
                         return isPureSetterMethod(element);

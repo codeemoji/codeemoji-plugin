@@ -26,7 +26,7 @@ public abstract non-sealed class CEVariableCollector extends CESimpleCollector<P
     private boolean enabledForLocalVariable;
 
     protected CEVariableCollector(@NotNull Editor editor, String key,
-                                  Supplier<CEBaseSettings<?>> settings) {
+                                  Supplier<CESymbol> settings) {
         super(editor, key, settings);
         enabledForField = true;
         enabledForParam = true;

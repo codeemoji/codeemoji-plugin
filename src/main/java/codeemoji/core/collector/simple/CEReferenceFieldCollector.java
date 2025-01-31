@@ -19,7 +19,7 @@ public abstract non-sealed class CEReferenceFieldCollector extends CESimpleColle
 
     protected CEReferenceFieldCollector(@NotNull Editor editor, String key,
                                         @NotNull String tooltipKey,
-                                        Supplier<CEBaseSettings<?>> settings) {
+                                        Supplier<CESymbol> settings) {
         super(editor, key, tooltipKey, settings);
     }
 
