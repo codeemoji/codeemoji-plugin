@@ -5,6 +5,7 @@ import codeemoji.core.ui.EmojiRepository;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CESymbolHolder;
+import com.github.weisj.jsvg.S;
 import com.intellij.codeInsight.hints.settings.language.SingleLanguageInlayHintsSettingsPanelKt;
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.EditorSettings;
@@ -13,6 +14,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -38,6 +41,8 @@ public class CEConfigurableWindow<S extends CEBaseSettings<S>> {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+
         addPreviewText(panel, project, language, preview);
         for (var holder : localSymbols) {
             addSymbolRow(panel, holder, settings, changeListener);
@@ -126,12 +131,12 @@ public class CEConfigurableWindow<S extends CEBaseSettings<S>> {
                 //  InlaySettingsPanelKt.getCASE_KEY().set((UserDataHolder) editor, var3);
                 //  InlaySettingsPanel.this.updateHints(editor, model, var3);
 
-             //   LanguageFileType fileType = language.getAssociatedFileType();
-               // ReadAction.nonBlocking(() -> updateHints(project, null, null, fileType, editor, null))
-                 //       .finishOnUiThread(ModalityState.stateForComponent(panel), Runnable::run)
-                     //   .expireWhen(editor::isDisposed)
-                   //     .inSmartMode(project)
-                       // .submit(AppExecutorUtil.getAppExecutorService());
+                //   LanguageFileType fileType = language.getAssociatedFileType();
+                // ReadAction.nonBlocking(() -> updateHints(project, null, null, fileType, editor, null))
+                //       .finishOnUiThread(ModalityState.stateForComponent(panel), Runnable::run)
+                //   .expireWhen(editor::isDisposed)
+                //     .inSmartMode(project)
+                // .submit(AppExecutorUtil.getAppExecutorService());
 
                 return null;
             }));

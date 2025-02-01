@@ -56,7 +56,7 @@ public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements Per
         allSymbols.forEach(s -> allSymbolsCopy.put(s.getId(), s));
         for (Field field : getClass().getDeclaredFields()) {
             //check if not transient
-            if (field.getType().equals(CESymbol.class) && !Modifier.isTransient(field.getModifiers())) {
+            if (field.getType().equals(CESymbol.class) && !isTransient(field)) {
                 try {
                     CESymbolHolder symbolHolder = allSymbolsCopy.get(field.getName());
                     if (symbolHolder != null) {
@@ -77,7 +77,7 @@ public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements Per
     public List<CESymbolHolder> getAllSymbols(){
         List<CESymbolHolder> allSymbols = new ArrayList<>(symbols);
         for (Field field : getClass().getDeclaredFields()) {
-            if (field.getType().equals(CESymbol.class) && !Modifier.isTransient(field.getModifiers())) {
+            if (field.getType().equals(CESymbol.class) && !isTransient(field)) {
                 try {
                     field.setAccessible(true);
                     allSymbols.add(new CESymbolHolder((CESymbol) field.get(this), field.getName()));
@@ -87,6 +87,11 @@ public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements Per
             }
         }
         return allSymbols;
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    private static boolean isTransient(Field field) {
+        return Modifier.isTransient(field.getModifiers()) || field.isAnnotationPresent(Transient.class);
     }
 }
 

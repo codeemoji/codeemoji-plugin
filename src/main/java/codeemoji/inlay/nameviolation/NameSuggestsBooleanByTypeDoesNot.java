@@ -33,14 +33,14 @@ public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NameSuggestsBoo
     public String getPreviewText() {
         return """
                 import java.util.*;
-                        
+                       \s
                 public class Customer {
                     private String isActive;
-                     
+                    \s
                     public String getItem(int isItemEnabled) {
                         return doSomething(isItemEnabled);
                     }
-                 
+                \s
                     public int buildMyObject(Double value) {
                         Integer isActiveForField = parseName(isActive);
                         return isActiveForField.intValue();

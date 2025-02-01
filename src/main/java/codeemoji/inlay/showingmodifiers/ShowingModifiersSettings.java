@@ -1,6 +1,7 @@
 package codeemoji.inlay.showingmodifiers;
 
 import codeemoji.core.settings.CEBaseSettings;
+import codeemoji.core.util.CESymbol;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -28,6 +29,22 @@ public class ShowingModifiersSettings extends CEBaseSettings<ShowingModifiersSet
 
     @MapAnnotation
     private final Map<ScopeModifier, Boolean> basicModifiersMap = new EnumMap<>(ScopeModifier.class);
+
+    // hacky. capitalized since keyword is reserved
+    private CESymbol Public = ShowingModifiersSymbols.PUBLIC_SYMBOL;
+    private CESymbol Default = ShowingModifiersSymbols.DEFAULT_SYMBOL;
+    private CESymbol Final = ShowingModifiersSymbols.FINAL_SYMBOL;
+    private CESymbol FinalVar = ShowingModifiersSymbols.FINAL_VAR_SYMBOL;
+    private CESymbol Protected = ShowingModifiersSymbols.PROTECTED_SYMBOL;
+    private CESymbol Private = ShowingModifiersSymbols.PRIVATE_SYMBOL;
+    private CESymbol Static = ShowingModifiersSymbols.STATIC_SYMBOL;
+    private CESymbol Abstract = ShowingModifiersSymbols.ABSTRACT_SYMBOL;
+    private CESymbol Synchronized = ShowingModifiersSymbols.SYNCHRONIZED_SYMBOL;
+    private CESymbol Native = ShowingModifiersSymbols.NATIVE_SYMBOL;
+    private CESymbol DefaultInterface = ShowingModifiersSymbols.DEFAULT_INTERFACE_SYMBOL;
+    private CESymbol Volatile = ShowingModifiersSymbols.VOLATILE_SYMBOL;
+    private CESymbol Transient = ShowingModifiersSymbols.TRANSIENT_SYMBOL;
+
 
     public ShowingModifiersSettings() {
         basicModifiersMap.put(VOLATILE_FIELD, true);

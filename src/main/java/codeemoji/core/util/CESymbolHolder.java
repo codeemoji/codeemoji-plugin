@@ -1,5 +1,6 @@
 package codeemoji.core.util;
 
+import com.intellij.util.xmlb.annotations.Transient;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,6 +13,7 @@ public class CESymbolHolder {
     //TODO. rethink. this should be immutable
     private String id;
     private CESymbol symbol;
+    @Transient
     private transient String translatedName;
 
     public CESymbolHolder(@NotNull CESymbol defaultSymbol, @NotNull String id) {

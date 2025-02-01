@@ -7,6 +7,8 @@ import codeemoji.inlay.showingspecifics.ShowingSpecificsSettings;
 import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
+import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,18 +38,22 @@ public class ShowingModifiersConfigurable extends CEConfigurableWindow<ShowingMo
         modifiersPanel.add(fieldPanel);
         modifiersPanel.add(methodPanel);
 
-        return FormBuilder.createFormBuilder()
+        var p= FormBuilder.createFormBuilder()
                 .addComponent(modifiersPanel)
+                .addComponent(super.createComponent(settings, preview, project, language, changeListener))
                 .getPanel();
+        JScrollPane scrollPane = new JBScrollPane(p);
+
+        return  scrollPane;
     }
 
     private @NotNull JPanel prepareClassPanel(ShowingModifiersSettings settings, @NotNull ChangeListener changeListener) {
         var result = CEUtils.createBasicInnerPanel("inlay.showingmodifiers.options.title.classes", 10, 1);
 
-        var publicClass = PUBLIC_SYMBOL.createCheckbox(PUBLIC, settings.query(PUBLIC_CLASS));
-        var defaultClass = DEFAULT_SYMBOL.createCheckbox(DEFAULT, settings.query(DEFAULT_CLASS));
-        var finalClass = FINAL_SYMBOL.createCheckbox(FINAL, settings.query(FINAL_CLASS));
-        var abstractClass = ABSTRACT_SYMBOL.createCheckbox(ABSTRACT, settings.query(ABSTRACT_CLASS));
+        var publicClass = settings.getPublic().createCheckbox(PUBLIC, settings.query(PUBLIC_CLASS));
+        var defaultClass = settings.getDefault().createCheckbox(DEFAULT, settings.query(DEFAULT_CLASS));
+        var finalClass = settings.getFinal().createCheckbox(FINAL, settings.query(FINAL_CLASS));
+        var abstractClass = settings.getAbstract().createCheckbox(ABSTRACT, settings.query(ABSTRACT_CLASS));
 
         addChangeListener(publicClass, PUBLIC_CLASS, settings, changeListener);
         addChangeListener(defaultClass, DEFAULT_CLASS, settings, changeListener);
@@ -65,14 +71,14 @@ public class ShowingModifiersConfigurable extends CEConfigurableWindow<ShowingMo
     private @NotNull JPanel prepareFieldPanel(ShowingModifiersSettings settings, @NotNull ChangeListener changeListener) {
         var result = CEUtils.createBasicInnerPanel("inlay.showingmodifiers.options.title.fields", 10, 1);
 
-        var publicField = PUBLIC_SYMBOL.createCheckbox(PUBLIC, settings.query(PUBLIC_FIELD));
-        var defaultField = DEFAULT_SYMBOL.createCheckbox(DEFAULT, settings.query(DEFAULT_FIELD));
-        var finalField = FINAL_VAR_SYMBOL.createCheckbox(FINAL, settings.query(FINAL_FIELD));
-        var protectedField = PROTECTED_SYMBOL.createCheckbox(PROTECTED, settings.query(PROTECTED_FIELD));
-        var privateField = PRIVATE_SYMBOL.createCheckbox(PRIVATE, settings.query(PRIVATE_FIELD));
-        var staticField = STATIC_SYMBOL.createCheckbox(STATIC, settings.query(STATIC_FIELD));
-        var volatileField = VOLATILE_SYMBOL.createCheckbox(VOLATILE, settings.query(VOLATILE_FIELD));
-        var transientField = TRANSIENT_SYMBOL.createCheckbox(TRANSIENT, settings.query(TRANSIENT_FIELD));
+        var publicField = settings.getPublic().createCheckbox(PUBLIC, settings.query(PUBLIC_FIELD));
+        var defaultField = settings.getDefault().createCheckbox(DEFAULT, settings.query(DEFAULT_FIELD));
+        var finalField = settings.getFinal().createCheckbox(FINAL, settings.query(FINAL_FIELD));
+        var protectedField = settings.getProtected().createCheckbox(PROTECTED, settings.query(PROTECTED_FIELD));
+        var privateField = settings.getPrivate().createCheckbox(PRIVATE, settings.query(PRIVATE_FIELD));
+        var staticField = settings.getStatic().createCheckbox(STATIC, settings.query(STATIC_FIELD));
+        var volatileField = settings.getVolatile().createCheckbox(VOLATILE, settings.query(VOLATILE_FIELD));
+        var transientField = settings.getTransient().createCheckbox(TRANSIENT, settings.query(TRANSIENT_FIELD));
 
         addChangeListener(publicField, PUBLIC_FIELD, settings, changeListener);
         addChangeListener(defaultField, DEFAULT_FIELD, settings, changeListener);
@@ -98,16 +104,16 @@ public class ShowingModifiersConfigurable extends CEConfigurableWindow<ShowingMo
     private @NotNull JPanel prepareMethodPanel(ShowingModifiersSettings settings, @NotNull ChangeListener changeListener) {
         var result = CEUtils.createBasicInnerPanel("inlay.showingmodifiers.options.title.methods", 10, 1);
 
-        var publicMethod = PUBLIC_SYMBOL.createCheckbox(PUBLIC, settings.query(PUBLIC_METHOD));
-        var defaultMethod = DEFAULT_SYMBOL.createCheckbox(DEFAULT, settings.query(DEFAULT_METHOD));
-        var finalMethod = FINAL_SYMBOL.createCheckbox(FINAL, settings.query(FINAL_METHOD));
-        var protectedMethod = PROTECTED_SYMBOL.createCheckbox(PROTECTED, settings.query(PROTECTED_METHOD));
-        var privateMethod = PRIVATE_SYMBOL.createCheckbox(PRIVATE, settings.query(PRIVATE_METHOD));
-        var staticMethod = STATIC_SYMBOL.createCheckbox(STATIC, settings.query(STATIC_METHOD));
-        var abstractMethod = ABSTRACT_SYMBOL.createCheckbox(ABSTRACT, settings.query(ABSTRACT_METHOD));
-        var synchronizedMethod = SYNCHRONIZED_SYMBOL.createCheckbox(SYNCHRONIZED, settings.query(SYNCHRONIZED_METHOD));
-        var nativeMethod = NATIVE_SYMBOL.createCheckbox(NATIVE, settings.query(NATIVE_METHOD));
-        var defaultInterfaceMethod = DEFAULT_INTERFACE_SYMBOL.createCheckbox(DEFAULT + " (in interfaces)", settings.query(DEFAULT_INTERFACE_METHOD));
+        var publicMethod = settings.getPublic().createCheckbox(PUBLIC, settings.query(PUBLIC_METHOD));
+        var defaultMethod = settings.getDefault().createCheckbox(DEFAULT, settings.query(DEFAULT_METHOD));
+        var finalMethod = settings.getFinal().createCheckbox(FINAL, settings.query(FINAL_METHOD));
+        var protectedMethod = settings.getProtected().createCheckbox(PROTECTED, settings.query(PROTECTED_METHOD));
+        var privateMethod = settings.getPrivate().createCheckbox(PRIVATE, settings.query(PRIVATE_METHOD));
+        var staticMethod = settings.getStatic().createCheckbox(STATIC, settings.query(STATIC_METHOD));
+        var abstractMethod = settings.getAbstract().createCheckbox(ABSTRACT, settings.query(ABSTRACT_METHOD));
+        var synchronizedMethod = settings.getSynchronized().createCheckbox(SYNCHRONIZED, settings.query(SYNCHRONIZED_METHOD));
+        var nativeMethod = settings.getNative().createCheckbox(NATIVE, settings.query(NATIVE_METHOD));
+        var defaultInterfaceMethod = settings.getDefaultInterface().createCheckbox(DEFAULT + " (in interfaces)", settings.query(DEFAULT_INTERFACE_METHOD));
 
         addChangeListener(publicMethod, PUBLIC_METHOD, settings, changeListener);
         addChangeListener(defaultMethod, DEFAULT_METHOD, settings, changeListener);
