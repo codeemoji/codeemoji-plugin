@@ -38,7 +38,7 @@ public class AuthorAvatarConfigurable extends CEConfigurableWindow<AuthorAvatarS
         JButton addButton = new JButton(CEBundle.getString("inlay.authoravatar.settings.add_avatar"));
         addButton.addActionListener(e -> {
             CESymbolHolder newPair = new CESymbolHolder(
-                    CESymbol.of("\uD83D\uDC68\uFE0F"),
+                    settings.getNextFriendlyAuthorEmoji(),
                     "inlay.authoravatar.settings.author", localSymbols.size() + 1);
             localSymbols.add(newPair); // Add to the local list
             addRow(panel, newPair, settings, changeListener); // Add the new row to the panel

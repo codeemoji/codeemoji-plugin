@@ -8,3 +8,4 @@
   // animal emoji
 
 - refactor (how??)
+- emoji selector, emoji on left like color
