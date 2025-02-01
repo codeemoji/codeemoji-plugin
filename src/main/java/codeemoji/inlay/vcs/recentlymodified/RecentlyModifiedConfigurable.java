@@ -7,13 +7,14 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
 public class RecentlyModifiedConfigurable extends CEConfigurableWindow<RecentlyModifiedSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(RecentlyModifiedSettings settings, Project project,
+    public @NotNull JComponent createComponent(RecentlyModifiedSettings settings, @Nullable String preview, Project project,
                                                Language language, ChangeListener changeListener) {
         var daySelector = new JSpinner();
         daySelector.setValue(settings.getDays());
@@ -30,7 +31,7 @@ public class RecentlyModifiedConfigurable extends CEConfigurableWindow<RecentlyM
         });
 
         return FormBuilder.createFormBuilder()
-                .addComponent(super.createComponent(settings, project, language, changeListener))
+                .addComponent(super.createComponent(settings, preview, project, language, changeListener))
                 .addLabeledComponent(CEBundle.getString("inlay.recentlymodified.settings.number_of_days"),
                         daySelector)
                 .addLabeledComponent(CEBundle.getString("inlay.recentlymodified.settings.show_date"),

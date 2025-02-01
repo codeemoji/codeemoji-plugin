@@ -7,6 +7,7 @@ import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -14,7 +15,8 @@ import javax.swing.*;
 class ImplicitAnnotationsConfigurable extends CEConfigurableWindow<ImplicitAnnotationsSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(ImplicitAnnotationsSettings settings, Project project, Language language, ChangeListener changeListener) {
+    public @NotNull JComponent createComponent(ImplicitAnnotationsSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
+        
         var implicitPanel = new JPanel();
 
         var jpaAnnotations = CEUtils.createBasicInnerPanel("inlay.implicitannotations.options.title.jpa", 10, 1);

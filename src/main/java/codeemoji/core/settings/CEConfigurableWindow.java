@@ -5,21 +5,31 @@ import codeemoji.core.ui.EmojiRepository;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CESymbolHolder;
-import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.codeInsight.hints.InlayHintsProvider;
-import com.intellij.codeInsight.hints.chain.DeclarativeCallChainCustomSettingsProvider;
-import com.intellij.execution.impl.InlayProvider;
+import com.intellij.codeInsight.hints.ImmediateConfigurable;
+import com.intellij.codeInsight.hints.settings.InlayProviderSettingsModel;
+import com.intellij.codeInsight.hints.settings.InlaySettingsPanel;
+import com.intellij.codeInsight.hints.settings.language.SingleLanguageInlayHintsSettingsPanelKt;
 import com.intellij.lang.Language;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.ReadAction;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorSettings;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogPanel;
-import com.intellij.ui.dsl.builder.BuilderKt;
-import com.intellij.ui.dsl.builder.Panel;
-import com.intellij.ui.dsl.builder.Row;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiFileFactory;
+import com.intellij.ui.EditorTextField;
+import com.intellij.ui.JBSplitter;
+import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.ui.JBUI;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -33,8 +43,7 @@ public class CEConfigurableWindow<S extends CEBaseSettings<S>> {
 
     protected final List<CESymbolHolder> localSymbols = new ArrayList<>();
 
-    public @NotNull JComponent createComponent(S settings, Project project, Language language, ChangeListener changeListener) {
-
+    public @NotNull JComponent createComponent(S settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
 
         localSymbols.clear();
         for (var s : settings.getSymbols()) {
@@ -43,10 +52,11 @@ public class CEConfigurableWindow<S extends CEBaseSettings<S>> {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
+        addPreviewText(panel, project, language, preview);
         for (var holder : localSymbols) {
             addSymbolRow(panel, holder, settings, changeListener);
         }
+
         return panel;
     }
 
@@ -119,6 +129,40 @@ public class CEConfigurableWindow<S extends CEBaseSettings<S>> {
         }
         settings.setSymbols(copy);
         listener.settingsChanged();
+    }
+
+    public void addPreviewText(JPanel panel, Project project, Language language, String previewText) {
+        if (previewText != null) {
+
+            EditorTextField editorTextField = SingleLanguageInlayHintsSettingsPanelKt.createEditor(language, project, ((editor) -> {
+                //InlaySettingsPanel.this.currentEditor = editor;
+                //   InlaySettingsPanel.PREVIEW_KEY.set((UserDataHolder) editor, treeNode);
+                //  InlaySettingsPanelKt.getCASE_KEY().set((UserDataHolder) editor, var3);
+                //  InlaySettingsPanel.this.updateHints(editor, model, var3);
+
+             //   LanguageFileType fileType = language.getAssociatedFileType();
+               // ReadAction.nonBlocking(() -> updateHints(project, null, null, fileType, editor, null))
+                 //       .finishOnUiThread(ModalityState.stateForComponent(panel), Runnable::run)
+                     //   .expireWhen(editor::isDisposed)
+                   //     .inSmartMode(project)
+                       // .submit(AppExecutorUtil.getAppExecutorService());
+
+                return null;
+            }));
+            editorTextField.setText(previewText);
+            editorTextField.addSettingsProvider(CEConfigurableWindow::addSettings);
+            panel.add(ScrollPaneFactory.createScrollPane(editorTextField), "growx");
+        }
+    }
+
+
+    private static void addSettings(EditorEx it) {
+        it.setBorder(JBUI.Borders.empty(10));
+        it.setBackgroundColor(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground());
+        EditorSettings editorSettings = it.getSettings();
+        editorSettings.setLineNumbersShown(false);
+        editorSettings.setCaretRowShown(false);
+        editorSettings.setRightMarginShown(false);
     }
 
 

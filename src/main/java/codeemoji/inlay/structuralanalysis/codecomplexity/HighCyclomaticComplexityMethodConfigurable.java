@@ -7,14 +7,15 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
 class HighCyclomaticComplexityMethodConfigurable extends CEConfigurableWindow<HighCyclomaticComplexityMethodSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(HighCyclomaticComplexityMethodSettings settings, Project project, Language language, ChangeListener changeListener) {
-        var panel = super.createComponent(settings, project, language, changeListener);
+    public @NotNull JComponent createComponent(HighCyclomaticComplexityMethodSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
+        var panel = super.createComponent(settings, preview, project, language, changeListener);
         var jSpinnerCyclomaticComplexityThreshold = new JSpinner();
         jSpinnerCyclomaticComplexityThreshold.setValue(settings.getCyclomaticComplexityThreshold());
         jSpinnerCyclomaticComplexityThreshold.addChangeListener(event -> {

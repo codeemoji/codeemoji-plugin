@@ -52,7 +52,7 @@ public class ShowingSpecificsConfigurable extends CEConfigurableWindow<ShowingSp
     }
 
     @Override
-    public @NotNull JComponent createComponent(ShowingSpecificsSettings settings, Project project, Language language, ChangeListener changeListener) {
+    public @NotNull JComponent createComponent(ShowingSpecificsSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
         var specificsPanel = new JPanel();
         var detailProject = initOpenProjectsPanel(settings);
         specificsPanel.add(detailProject);

@@ -9,6 +9,7 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +22,7 @@ import static com.intellij.psi.PsiModifier.*;
 public class ShowingModifiersConfigurable extends CEConfigurableWindow<ShowingModifiersSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(ShowingModifiersSettings settings, Project project, Language language, ChangeListener changeListener) {
+    public @NotNull JComponent createComponent(ShowingModifiersSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
         var modifiersPanel = new JPanel();
 
         var classPanel = prepareClassPanel(settings, changeListener);

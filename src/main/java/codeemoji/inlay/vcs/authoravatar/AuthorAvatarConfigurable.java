@@ -7,6 +7,7 @@ import codeemoji.core.util.CESymbolHolder;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -18,7 +19,7 @@ import java.awt.event.MouseEvent;
 public class AuthorAvatarConfigurable extends CEConfigurableWindow<AuthorAvatarSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(AuthorAvatarSettings settings, Project project, Language language, ChangeListener changeListener) {
+    public @NotNull JComponent createComponent(AuthorAvatarSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
         localSymbols.clear();
         //make deep copy. we update later
         for (CESymbolHolder pair : settings.getSymbols()) {

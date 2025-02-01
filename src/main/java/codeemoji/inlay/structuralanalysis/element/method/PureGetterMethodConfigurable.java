@@ -7,22 +7,25 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-@SuppressWarnings("UnstableApiUsage")
 class PureGetterMethodConfigurable extends CEConfigurableWindow<PureGetterMethodSettings>{
 
     @Override
-    public @NotNull JComponent createComponent(PureGetterMethodSettings settings, Project project, Language language, ChangeListener changeListener) {
+    public @NotNull JComponent createComponent(PureGetterMethodSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
+        var panel = super.createComponent(settings, preview, project, language, changeListener);
         var checkBox = new JCheckBox();
         checkBox.setSelected(settings.isJavaBeansNamingConventionApplied());
         checkBox.addChangeListener(event -> {
             settings.setJavaBeansNamingConventionApplied(checkBox.isSelected());
             changeListener.settingsChanged();
         });
-        return FormBuilder.createFormBuilder()
+        panel.add(FormBuilder.createFormBuilder()
                 .addLabeledComponent("Apply JavaBeans naming convention", checkBox)
-                .getPanel();
+                .getPanel());
+        
+        return panel;
     }
 }

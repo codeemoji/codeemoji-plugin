@@ -75,7 +75,7 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
     // encapsulate and delegates the UI behavior to a dedicated object that is composed instead of implemented directly into this class createComponent
     @Override
     public final @NotNull JComponent createComponent(@NotNull Project project, @NotNull Language language) {
-        return window.createComponent(settings, project, language, () -> {
+        return window.createComponent(settings, getPreviewText(), project, language, () -> {
         });
     }
 

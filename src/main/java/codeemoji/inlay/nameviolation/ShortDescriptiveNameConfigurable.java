@@ -5,14 +5,15 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
 class ShortDescriptiveNameConfigurable extends CEConfigurableWindow<ShortDescriptiveNameSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(ShortDescriptiveNameSettings settings, Project project, Language language, ChangeListener changeListener) {
-        var panel = super.createComponent(settings, project, language, changeListener);
+    public @NotNull JComponent createComponent(ShortDescriptiveNameSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
+        var panel = super.createComponent(settings, preview, project, language, changeListener);
         var jSpinner = new JSpinner();
         jSpinner.setValue(settings.getNumberOfLetters());
         jSpinner.addChangeListener(event -> {
