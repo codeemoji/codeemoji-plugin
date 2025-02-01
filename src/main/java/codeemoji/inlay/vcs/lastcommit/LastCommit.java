@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.PrimitiveIterator;
 import java.util.stream.IntStream;
 
-@SuppressWarnings("UnstableApiUsage")
 public class LastCommit extends CEProvider<LastCommitSettings> {
     @Override
     public String getPreviewText() {

@@ -19,7 +19,6 @@ import static codeemoji.core.config.CERuleFeature.ANNOTATIONS;
 import static codeemoji.core.config.CERuleFeature.TYPES;
 
 @Getter
-@SuppressWarnings("UnstableApiUsage")
 public final class CEProjectVariableCollector extends CEProjectCollector<PsiVariable, PsiReferenceExpression>
         implements CEProjectTypes<PsiReferenceExpression> {
 

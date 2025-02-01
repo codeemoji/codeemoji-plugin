@@ -18,7 +18,6 @@ import static codeemoji.core.config.CERuleElement.METHOD;
 import static codeemoji.core.config.CERuleFeature.*;
 
 @Getter
-@SuppressWarnings("UnstableApiUsage")
 public final class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiMethodCallExpression>
         implements CEProjectTypes<PsiMethodCallExpression>, CEProjectPackages<PsiMethodCallExpression> {
 

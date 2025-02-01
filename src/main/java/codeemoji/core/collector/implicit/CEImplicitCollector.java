@@ -5,6 +5,7 @@ import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.external.scanners.OSVVulnerabilityScanner;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
+import com.intellij.codeInsight.hints.declarative.InlineInlayPosition;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.lang.jvm.JvmAnnotatedElement;
 import com.intellij.lang.jvm.JvmAnnotation;
@@ -20,8 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Getter
-//TODO: fix generics
-public abstract class CEImplicitCollector extends CECollector {
+public abstract class CEImplicitCollector extends CECollector<PsiElement, PsiElement> {
 
     public final int codePoint;
 
@@ -74,16 +74,32 @@ public abstract class CEImplicitCollector extends CECollector {
 
     protected final void addInlayInAnnotation(@Nullable PsiAnnotation annotation, @NotNull InlayTreeSink sink, @NotNull InlayVisuals inlay) {
         if (null != annotation) {
-            //TODO: add back
-            //sink.addInlineElement(calcOffsetForAnnotation(annotation), false, text, false);
+            sink.addPresentation(
+                    new InlineInlayPosition(calcOffsetForAnnotation(annotation), true, 0),
+                    List.of(),
+                    inlay.tooltip(),
+                    inlay.hasBackground(),
+                    builder -> {
+                        builder.text(inlay.text(), null);
+                        return null;
+                    }
+            );
         }
     }
 
     protected final void addInlayInAttribute(@Nullable PsiAnnotation annotation, @Nullable String attributeName,
                                              @NotNull InlayTreeSink sink, @NotNull InlayVisuals inlay, int shiftOffset) {
         if (null != annotation && null != attributeName) {
-            //TODO: add back
-            //sink.addInlineElement(calcOffsetForAttribute(annotation, attributeName, shiftOffset), false, text, false);
+            sink.addPresentation(
+                    new InlineInlayPosition(calcOffsetForAttribute(annotation, attributeName, shiftOffset), true, 0),
+                    List.of(),
+                    inlay.tooltip(),
+                    inlay.hasBackground(),
+                    builder -> {
+                        builder.text(inlay.text(), null);
+                        return null;
+                    }
+            );
         }
     }
 

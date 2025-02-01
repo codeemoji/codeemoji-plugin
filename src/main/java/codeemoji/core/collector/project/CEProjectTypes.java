@@ -13,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("UnstableApiUsage")
 sealed interface CEProjectTypes<A extends PsiElement> extends CEProjectConfig
         permits CEProjectMethodCollector, CEProjectVariableCollector {
 

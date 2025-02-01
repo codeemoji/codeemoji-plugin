@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 @Getter
-@SuppressWarnings("UnstableApiUsage")
 public class CEJPAEmbeddableCollector extends CEImplicitCollector {
 
     public final @NotNull String baseName;

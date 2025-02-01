@@ -9,7 +9,6 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("UnstableApiUsage")
 public abstract class CEDynamicReferenceMethodCollector extends CECollector<PsiMethod, PsiMethodCallExpression> {
 
     protected CEDynamicReferenceMethodCollector(@NotNull Editor editor, String key) {

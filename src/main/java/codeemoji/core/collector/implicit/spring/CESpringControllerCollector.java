@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 @Getter
 @Setter
-@SuppressWarnings("UnstableApiUsage")
 public class CESpringControllerCollector extends CEImplicitCollector {
 
     public @NotNull String baseName;

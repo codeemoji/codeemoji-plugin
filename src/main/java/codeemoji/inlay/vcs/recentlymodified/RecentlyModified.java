@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
-@SuppressWarnings("UnstableApiUsage")
 public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
     @Override
     public String getPreviewText() {
@@ -73,12 +72,10 @@ public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
             return null;
         }
 
-        //TODO: really refactor these stuff and merge, there are similar methods in the base ECBuilder class
         private InlayVisuals makePresentation(Date date) {
             RecentlyModifiedSettings settings = getSettings();
             String tooltip = settings.isShowDate() ? date.toString() : getDaysAgoTooltipString(date);
             CESymbol mainSymbol = settings.getMainSymbol();
-            // Add right-click functionality to open configuration panel
             return InlayVisuals.of(mainSymbol, tooltip);
         }
 

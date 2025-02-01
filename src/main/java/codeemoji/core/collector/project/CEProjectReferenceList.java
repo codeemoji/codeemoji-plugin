@@ -14,7 +14,6 @@ import java.util.List;
 
 import static codeemoji.core.config.CERuleElement.CLASS;
 
-@SuppressWarnings("UnstableApiUsage")
 sealed interface CEProjectReferenceList<H extends PsiReferenceList, A extends PsiElement>
         extends CEProjectConfig permits CEProjectClassCollector {
 
