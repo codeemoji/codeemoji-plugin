@@ -14,14 +14,17 @@ class ExternalFunctionalityInvokingMethodConfigurable extends CEConfigurableWind
 
     @Override
     public @NotNull JComponent createComponent(ExternalFunctionalityInvokingMethodSettings settings, Project project, Language language, ChangeListener changeListener) {
+        var panel = super.createComponent(settings, project, language, changeListener);
         var checkBox = new JCheckBox();
         checkBox.setSelected(settings.isCheckMethodCallsForExternalityApplied());
         checkBox.addChangeListener(event -> {
             settings.setCheckMethodCallsForExternalityApplied(checkBox.isSelected());
             changeListener.settingsChanged();
         });
-        return FormBuilder.createFormBuilder()
+        panel.add(FormBuilder.createFormBuilder()
                 .addLabeledComponent("Follow method calls and recursively check externality", checkBox)
-                .getPanel();
+                .getPanel());
+
+        return panel;
     }
 }

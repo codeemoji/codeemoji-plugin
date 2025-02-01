@@ -14,14 +14,17 @@ public class StateIndependentMethodConfigurable extends CEConfigurableWindow<Sta
 
     @Override
     public @NotNull JComponent createComponent(StateIndependentMethodSettings settings, Project project, Language language, ChangeListener changeListener) {
+        var panel = super.createComponent(settings, project, language, changeListener);
         var checkBox = new JCheckBox();
         checkBox.setSelected(settings.isCheckMethodCallsForStateIndependenceApplied());
         checkBox.addChangeListener(event -> {
             settings.setCheckMethodCallsForStateIndependenceApplied(checkBox.isSelected());
             changeListener.settingsChanged();
         });
-        return FormBuilder.createFormBuilder()
+        panel.add(FormBuilder.createFormBuilder()
                 .addLabeledComponent("Follow method calls and recursively check state independence", checkBox)
-                .getPanel();
+                .getPanel());
+
+        return panel;
     }
 }

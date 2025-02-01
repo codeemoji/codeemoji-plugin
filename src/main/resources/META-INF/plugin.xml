@@ -429,6 +429,10 @@
                 language="JAVA" providerId="inlay.authoravatar"
                 implementationClass="codeemoji.inlay.vcs.authoravatar.AuthorAvatar" />
 
+        <codeInsight.inlayActionHandler
+                implementationClass="codeemoji.core.actions.TestAction"
+                handlerId="idk"
+        />
 
 
         <!--END OF IMPLEMENTATIONS SECTION-->

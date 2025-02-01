@@ -14,14 +14,17 @@ public class StateChangingMethodConfigurable extends CEConfigurableWindow<StateC
 
     @Override
     public @NotNull JComponent createComponent(StateChangingMethodSettings settings, Project project, Language language, ChangeListener changeListener) {
+        var panel = super.createComponent(settings, project, language, changeListener);
         var checkBox = new JCheckBox();
         checkBox.setSelected(settings.isCheckMethodCallsForStateChangeApplied());
         checkBox.addChangeListener(event -> {
             settings.setCheckMethodCallsForStateChangeApplied(checkBox.isSelected());
             changeListener.settingsChanged();
         });
-        return FormBuilder.createFormBuilder()
+        panel.add(FormBuilder.createFormBuilder()
                 .addLabeledComponent("Follow method calls and recursively check state change", checkBox)
-                .getPanel();
+                .getPanel());
+
+        return panel;
     }
 }

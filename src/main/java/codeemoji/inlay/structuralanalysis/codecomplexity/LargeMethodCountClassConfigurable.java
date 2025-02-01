@@ -14,15 +14,17 @@ class LargeMethodCountClassConfigurable extends CEConfigurableWindow<LargeMethod
 
     @Override
     public @NotNull JComponent createComponent(LargeMethodCountClassSettings settings, Project project, Language language, ChangeListener changeListener) {
+        var panel = super.createComponent(settings, project, language, changeListener);
         var jSpinner = new JSpinner();
         jSpinner.setValue(settings.getMethodCount());
         jSpinner.addChangeListener(event -> {
             settings.setMethodCount((Integer) jSpinner.getValue());
             changeListener.settingsChanged();
         });
-        return FormBuilder.createFormBuilder()
+        panel.add(FormBuilder.createFormBuilder()
                 .addLabeledComponent("Methods", jSpinner)
-                .getPanel();
+                .getPanel());
+        return panel;
     }
 
 }

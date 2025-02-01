@@ -7,6 +7,7 @@ import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCustomSettingsProvider;
 import com.intellij.codeInsight.hints.declarative.InlayHintsProvider;
 import com.intellij.lang.Language;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;

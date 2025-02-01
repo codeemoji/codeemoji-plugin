@@ -66,8 +66,12 @@ public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
 
         @Nullable
         private InlayVisuals makePresentation(String author) {
-            CESymbol authorAvatar = getSettings().getSymbolForAuthor(author
-                    .substring(0, author.indexOf(" ")).toLowerCase(Locale.ROOT));
+            String formattedAuthor =author;
+            if(author.contains(" ")) {
+                formattedAuthor = author.substring(0, author.indexOf(" "));
+            }
+            CESymbol authorAvatar = getSettings().getSymbolForAuthor(formattedAuthor
+                    .toLowerCase(Locale.ROOT));
             if (authorAvatar == null) return null;
 
             return InlayVisuals.of(authorAvatar, author);

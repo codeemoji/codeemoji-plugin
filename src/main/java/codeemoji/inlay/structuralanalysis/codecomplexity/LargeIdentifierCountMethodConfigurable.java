@@ -15,14 +15,17 @@ class LargeIdentifierCountMethodConfigurable extends CEConfigurableWindow<LargeI
 
     @Override
     public @NotNull JComponent createComponent(LargeIdentifierCountMethodSettings settings, Project project, Language language, ChangeListener changeListener) {
+        var panel = super.createComponent(settings, project, language, changeListener);
         var jSpinner = new JSpinner();
         jSpinner.setValue(settings.getIdentifierCount());
         jSpinner.addChangeListener(event -> {
             settings.setIdentifierCount((Integer) jSpinner.getValue());
             changeListener.settingsChanged();
         });
-        return FormBuilder.createFormBuilder()
+        panel.add(FormBuilder.createFormBuilder()
                 .addLabeledComponent("Identifiers", jSpinner)
-                .getPanel();
+                .getPanel());
+
+        return panel;
     }
 }

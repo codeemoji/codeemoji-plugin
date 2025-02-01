@@ -14,7 +14,7 @@ class HighCyclomaticComplexityMethodConfigurable extends CEConfigurableWindow<Hi
 
     @Override
     public @NotNull JComponent createComponent(HighCyclomaticComplexityMethodSettings settings, Project project, Language language, ChangeListener changeListener) {
-
+        var panel = super.createComponent(settings, project, language, changeListener);
         var jSpinnerCyclomaticComplexityThreshold = new JSpinner();
         jSpinnerCyclomaticComplexityThreshold.setValue(settings.getCyclomaticComplexityThreshold());
         jSpinnerCyclomaticComplexityThreshold.addChangeListener(event -> {
@@ -38,10 +38,13 @@ class HighCyclomaticComplexityMethodConfigurable extends CEConfigurableWindow<Hi
             changeListener.settingsChanged();
         });
 
-        return FormBuilder.createFormBuilder()
+        //TODO: translation here
+        panel.add(FormBuilder.createFormBuilder()
                 .addLabeledComponent("Cyclomatic Complexity Threshold", jSpinnerCyclomaticComplexityThreshold)
                 .addLabeledComponent("Line Count Threshold", jSpinnerLineCountStartThreshold)
                 .addLabeledComponent("Cyclomatic Complexity / Lines of Code", jSpinnerCyclomaticComplexityPerLine)
-                .getPanel();
+                .getPanel());
+
+        return panel;
     }
 }

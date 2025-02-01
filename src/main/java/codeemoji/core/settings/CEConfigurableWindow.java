@@ -5,8 +5,20 @@ import codeemoji.core.ui.EmojiRepository;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CESymbolHolder;
+import com.intellij.codeInsight.CodeInsightBundle;
+import com.intellij.codeInsight.hints.InlayHintsProvider;
+import com.intellij.codeInsight.hints.chain.DeclarativeCallChainCustomSettingsProvider;
+import com.intellij.execution.impl.InlayProvider;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.DialogPanel;
+import com.intellij.ui.dsl.builder.BuilderKt;
+import com.intellij.ui.dsl.builder.Panel;
+import com.intellij.ui.dsl.builder.Row;
+import com.intellij.util.ui.JBUI;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -22,6 +34,8 @@ public class CEConfigurableWindow<S extends CEBaseSettings<S>> {
     protected final List<CESymbolHolder> localSymbols = new ArrayList<>();
 
     public @NotNull JComponent createComponent(S settings, Project project, Language language, ChangeListener changeListener) {
+
+
         localSymbols.clear();
         for (var s : settings.getSymbols()) {
             localSymbols.add(s.makeCopy());
