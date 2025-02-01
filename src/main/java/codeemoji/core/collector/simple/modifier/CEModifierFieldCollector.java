@@ -1,21 +1,17 @@
 package codeemoji.core.collector.simple.modifier;
 
-import codeemoji.core.collector.simple.CEReferenceFieldCollector;
-import codeemoji.core.settings.CEBaseSettings;
+import codeemoji.core.collector.simple.CESimpleReferenceFieldCollector;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiField;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
 import java.util.function.Supplier;
 
 import static com.intellij.psi.PsiModifier.DEFAULT;
 
-public final class CEModifierFieldCollector extends CEReferenceFieldCollector {
+public final class CEModifierFieldCollector extends CESimpleReferenceFieldCollector {
 
     private final boolean activated;
     private final String modifier;
@@ -33,7 +29,7 @@ public final class CEModifierFieldCollector extends CEReferenceFieldCollector {
     }
 
     @Override
-    public boolean needsHint(@NotNull PsiField element){
+    public boolean needsInlay(@NotNull PsiField element){
         var psiModifierList = element.getModifierList();
         if (null != psiModifierList) {
             if (modifier.equalsIgnoreCase(DEFAULT)) {

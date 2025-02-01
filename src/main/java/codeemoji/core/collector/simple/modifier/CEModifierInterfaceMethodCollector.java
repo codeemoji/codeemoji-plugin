@@ -1,19 +1,15 @@
 package codeemoji.core.collector.simple.modifier;
 
-import codeemoji.core.collector.simple.CEReferenceMethodCollector;
-import codeemoji.core.settings.CEBaseSettings;
+import codeemoji.core.collector.simple.CESimpleReferenceMethodCollector;
 import codeemoji.core.util.CESymbol;
-import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
 import java.util.function.Supplier;
 
-public final class CEModifierInterfaceMethodCollector extends CEReferenceMethodCollector {
+public final class CEModifierInterfaceMethodCollector extends CESimpleReferenceMethodCollector {
 
     private final boolean activated;
     private final String modifier;
@@ -31,7 +27,7 @@ public final class CEModifierInterfaceMethodCollector extends CEReferenceMethodC
     }
 
     @Override
-    public boolean needsHint(@NotNull PsiMethod element){
+    public boolean needsInlay(@NotNull PsiMethod element){
         var parent = element.getParent();
         if (parent instanceof PsiClass clazz && (clazz.isInterface())) {
             var psiModifierList = element.getModifierList();

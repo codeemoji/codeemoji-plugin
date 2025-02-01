@@ -63,7 +63,7 @@ public class GitTest extends CEProvider<GitTest.Settings> {
 
             //extends InlayHintsCollector
             @Override
-            public boolean needsHint(@NotNull PsiMethod element){
+            public boolean needsInlay(@NotNull PsiMethod element){
                 if(true)return false;
                 if (vcsBlame == null) return false;
                 // Get the current project and file

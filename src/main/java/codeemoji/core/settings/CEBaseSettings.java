@@ -16,7 +16,6 @@ import java.util.*;
 @Data
 public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements PersistentStateComponent<S> {
 
-    @Tag("symbols")
     private List<CESymbolHolder> symbols = new ArrayList<>();
 
     public CEBaseSettings(CESymbolHolder... symbols) {
@@ -74,7 +73,7 @@ public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements Per
         onUpdated();
     }
 
-    public List<CESymbolHolder> getAllSymbols(){
+    public List<CESymbolHolder> gatherAllSymbols(){
         List<CESymbolHolder> allSymbols = new ArrayList<>(symbols);
         for (Field field : getClass().getDeclaredFields()) {
             if (field.getType().equals(CESymbol.class) && !isTransient(field)) {

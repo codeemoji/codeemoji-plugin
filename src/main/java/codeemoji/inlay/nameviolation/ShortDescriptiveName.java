@@ -1,6 +1,6 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CEVariableCollector;
+import codeemoji.core.collector.simple.CESimpleVariableCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEConfigurableWindow;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -32,9 +32,9 @@ public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSetting
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CEVariableCollector(editor, getKey(), mainSymbol()) {
+        return new CESimpleVariableCollector(editor, getKey(), mainSymbol()) {
             @Override
-            public boolean needsHint(@NotNull PsiVariable element){
+            public boolean needsInlay(@NotNull PsiVariable element){
                 if (null != element.getNameIdentifier()) {
                     return getSettings().getNumberOfLetters() >= element.getNameIdentifier().getTextLength();
                 }

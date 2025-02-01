@@ -10,27 +10,34 @@ import java.util.Locale;
 @Data
 public class CESymbolHolder {
 
-    //TODO. rethink. this should be immutable
     private String id;
     private CESymbol symbol;
-    @Transient
-    private transient String translatedName;
+
+    private @Transient String translatedName;
 
     public CESymbolHolder(@NotNull CESymbol defaultSymbol, @NotNull String id) {
-        this(defaultSymbol, id, new Object[0]);
-    }
-
-    //dumb
-    public void setId(String id) {
-        this.id = id;
-        this.translatedName = CEBundle.getString("inlay." + id.toLowerCase(Locale.ROOT) + ".name");
-    }
-
-    public CESymbolHolder(@NotNull CESymbol defaultSymbol, @NotNull String name, Object... args) {
         this.symbol = defaultSymbol;
-        this.id = name;
+        this.id = id;
+    }
+
+    public void setId(String id) {
+        this.id = id.toLowerCase(Locale.ROOT);
+        this.translatedName = null;
+    }
+
+    @Transient
+    public String getTranslatedName() {
+        if (translatedName == null) {
+            translatedName = CEBundle.getOptional("inlay." + id.toLowerCase(Locale.ROOT) + ".name", id);
+        }
+        return translatedName;
+    }
+
+    public CESymbolHolder(@NotNull CESymbol defaultSymbol, @NotNull String translationKey, Object... args) {
+        this.symbol = defaultSymbol;
+        this.id = translationKey;
         Arrays.stream(args).forEach(arg -> this.id += arg);
-        this.translatedName = CEBundle.getString("inlay." + name.toLowerCase(Locale.ROOT) + ".name", args);
+        this.translatedName = CEBundle.getString(translationKey, args);
     }
 
     private CESymbolHolder(@NotNull CESymbol symbol, @NotNull String name, @NotNull String translatedName) {
@@ -43,6 +50,6 @@ public class CESymbolHolder {
     }
 
     public CESymbolHolder makeCopy() {
-        return new CESymbolHolder(symbol, id, translatedName);
+        return new CESymbolHolder(symbol, id, getTranslatedName());
     }
 }

@@ -47,7 +47,7 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<ExpectingB
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
             @Override
-            public boolean needsHint(@NotNull PsiMethod element) {
+            public boolean needsInlay(@NotNull PsiMethod element) {
                 if ((element.getName().startsWith("get") || element.getName().startsWith("return")) &&
                         !Objects.equals(element.getReturnType(), PsiTypes.voidType()) &&
                         !CEUtils.isPluralForm(element.getName())) {

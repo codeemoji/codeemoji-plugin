@@ -36,7 +36,6 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
 
     @Override
     public void collectFromElement(@NotNull PsiElement psiElement, @NotNull InlayTreeSink inlayTreeSink) {
-        //TODO: review and see if passing editor is needed. also check for null
         if (isEnabled()) {
             if (psiElement instanceof PsiJavaFile) {
                 psiElement.accept(createElementVisitor(getEditor(), inlayTreeSink));
@@ -77,8 +76,17 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
             var indent = EditorUtil.getTabSize(getEditor()) * indentFactor;
             // inlay = getFactory().inset(inlay, indent, 0, 0, 0);
 
-            //TODO: implement
-            //sink.addBlockElement(element.getTextOffset(), true, true, 0, inlay);
+            //TODO: check this
+            sink.addPresentation(
+                    new InlineInlayPosition(element.getTextRange().getEndOffset()-indent, true,  0),
+                    List.of(),
+                    inlay.tooltip(),
+                    inlay.hasBackground(),
+                    builder -> {
+                        builder.text(inlay.text(), null);
+                        return Unit.INSTANCE;
+                    }
+            );
         }
     }
 
@@ -91,7 +99,6 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
         return result;
     }
 
-    //TODO: merge and refactor these
 
     public InlayVisuals buildInlayWithEmoji(@NotNull CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         return formatInlay(symbol.getEmoji(), symbol.isWithBackground(), keyTooltip, suffixTooltip);
@@ -104,7 +111,7 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
     // is tooltip suffix needed?
     private @NotNull InlayVisuals formatInlay(@NotNull String symbol, boolean background,
                                               @NotNull String keyTooltip, @Nullable String suffixTooltip) {
-        var tooltip = CEBundle.getString(keyTooltip);
+        String tooltip = CEBundle.getString(keyTooltip);
         if (null != suffixTooltip) {
             tooltip += " " + suffixTooltip;
         }

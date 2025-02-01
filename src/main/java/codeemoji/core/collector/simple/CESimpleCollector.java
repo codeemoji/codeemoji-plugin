@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 @Getter
 @ToString
 public sealed abstract class CESimpleCollector<H extends PsiElement, A extends PsiElement> extends CECollector<H, A>
-        permits CEClassCollector, CESimpleMethodCollector, CEReferenceClassCollector, CEReferenceFieldCollector, CEReferenceMethodCollector, CEVariableCollector {
+        permits CESimpleClassCollector, CESimpleMethodCollector, CESimpleReferenceClassCollector, CESimpleReferenceFieldCollector, CESimpleReferenceMethodCollector, CESimpleVariableCollector {
 
 
     private final String tooltipKey;
@@ -37,22 +37,14 @@ public sealed abstract class CESimpleCollector<H extends PsiElement, A extends P
     @Nullable
     @Override
     protected final InlayVisuals createInlayFor(@NotNull H element) {
-        return needsHint(element) ? buildInlayWithEmoji(
-                symbolGetter.get(), tooltipKey, null) : null;
+        return needsInlay(element) ? createInlay() : null;
     }
 
-    protected abstract boolean needsHint(@NotNull H element);
+    @NotNull
+    public InlayVisuals createInlay() {
+        return buildInlayWithEmoji(symbolGetter.get(), tooltipKey, null);
+    }
 
-
-    //TODO: finish so we dont have to call create and add inaly all the time
-    /*
-    protected final <H2 extends PsiNamedElement> boolean maybeAddInlay(@NotNull H2 element, @NotNull InlayTreeSink InlayTreeSink) {
-        var text = createInlay(element);
-        if (null != text) {
-            addInlayInline(element.getNameIdentifier(), InlayTreeSink, text);
-            return true;
-        }
-        return false;
-    }*/
+    protected abstract boolean needsInlay(@NotNull H element);
 
 }

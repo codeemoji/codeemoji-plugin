@@ -76,6 +76,7 @@
         <applicationService serviceImplementation="codeemoji.inlay.vcs.authoravatar.AuthorAvatarSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.recentlymodified.RecentlyModifiedSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.lastcommit.LastCommitSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.ownership.TooManyAuthorsSettings"/>
 
 
         <projectService serviceImplementation="codeemoji.inlay.external.services.OSSExternalServiceExternalService"/>
@@ -304,6 +305,12 @@
                                               descriptionKey="inlay.authoravatar.description"
                                               providerId="inlay.authoravatar"/>
 
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                              implementationClass="codeemoji.inlay.vcs.ownership.TooManyAuthors"
+                                              nameKey="inlay.toomanyauthors.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.toomanyauthors.description"
+                                              providerId="inlay.toomanyauthors"/>
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.showingmodifiers"
@@ -429,10 +436,10 @@
                 language="JAVA" providerId="inlay.authoravatar"
                 implementationClass="codeemoji.inlay.vcs.authoravatar.AuthorAvatar" />
 
-        <codeInsight.inlayActionHandler
-                implementationClass="codeemoji.core.actions.TestAction"
-                handlerId="idk"
-        />
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.toomanyauthors"
+                implementationClass="codeemoji.inlay.vcs.ownership.TooManyAuthors" />
+
 
 
         <!--END OF IMPLEMENTATIONS SECTION-->

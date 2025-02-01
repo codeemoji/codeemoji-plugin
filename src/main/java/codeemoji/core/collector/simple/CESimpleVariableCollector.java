@@ -1,10 +1,9 @@
 package codeemoji.core.collector.simple;
 
-import codeemoji.core.settings.CEBaseSettings;
+import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
-import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -19,14 +18,14 @@ import java.util.function.Supplier;
 
 @Getter
 @Setter
-public abstract non-sealed class CEVariableCollector extends CESimpleCollector<PsiVariable, PsiElement> {
+public abstract non-sealed class CESimpleVariableCollector extends CESimpleCollector<PsiVariable, PsiElement> {
 
     private boolean enabledForField;
     private boolean enabledForParam;
     private boolean enabledForLocalVariable;
 
-    protected CEVariableCollector(@NotNull Editor editor, String key,
-                                  Supplier<CESymbol> settings) {
+    protected CESimpleVariableCollector(@NotNull Editor editor, String key,
+                                        Supplier<CESymbol> settings) {
         super(editor, key, settings);
         enabledForField = true;
         enabledForParam = true;
@@ -82,10 +81,8 @@ public abstract non-sealed class CEVariableCollector extends CESimpleCollector<P
                     public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
                         if (CEUtils.hasAUniqueQualifier(expression)
                                 && Objects.equals(expression.getText(), variable.getName())) {
-                            var inlay = createInlayFor(null); //TODO: wrong! this is a hack
-                            if (inlay != null) {
-                                addInlayInline(expression, InlayTreeSink, inlay);
-                            }
+                            InlayVisuals inlay = createInlay();
+                            addInlayInline(expression, InlayTreeSink, inlay);
                         }
                         super.visitReferenceExpression(expression);
                     }

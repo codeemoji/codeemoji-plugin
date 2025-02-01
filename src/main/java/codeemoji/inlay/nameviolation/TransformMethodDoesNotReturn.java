@@ -46,7 +46,7 @@ public class TransformMethodDoesNotReturn extends CEProvider<TransformMethodDoes
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
             @Override
-            public boolean needsHint(@NotNull PsiMethod element){
+            public boolean needsInlay(@NotNull PsiMethod element){
                 return (element.getName().startsWith("translate") || element.getName().startsWith("transform") || element.getName().startsWith("convert")) && Objects.equals(element.getReturnType(), PsiTypes.voidType());
             }
         };

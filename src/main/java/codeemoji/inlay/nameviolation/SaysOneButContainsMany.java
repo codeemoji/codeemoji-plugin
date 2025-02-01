@@ -1,6 +1,6 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CEVariableCollector;
+import codeemoji.core.collector.simple.CESimpleVariableCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CEUtils;
@@ -17,7 +17,6 @@ import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.MANY;
-import static codeemoji.inlay.nameviolation.NameViolationSymbols.ONE;
 
 public class SaysOneButContainsMany extends CEProvider<SaysOneButContainsMany.Settings> {
 
@@ -53,9 +52,9 @@ public class SaysOneButContainsMany extends CEProvider<SaysOneButContainsMany.Se
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CEVariableCollector(editor, getKey(), mainSymbol()) {
+        return new CESimpleVariableCollector(editor, getKey(), mainSymbol()) {
             @Override
-            public boolean needsHint(@NotNull PsiVariable element){
+            public boolean needsInlay(@NotNull PsiVariable element){
                 var typeElement = element.getTypeElement();
                 return !CEUtils.isPluralForm(element.getName()) &&
                         !CEUtils.sameNameAsType(typeElement, element.getName()) &&

@@ -1,10 +1,8 @@
 package codeemoji.core.collector.simple;
 
-import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
-import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
@@ -12,14 +10,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public abstract non-sealed class CEReferenceMethodCollector extends CESimpleCollector<PsiMethod, PsiMethodCallExpression> {
+public abstract non-sealed class CESimpleReferenceMethodCollector extends CESimpleCollector<PsiMethod, PsiMethodCallExpression> {
 
-    protected CEReferenceMethodCollector(@NotNull Editor editor, String key,
-                                         Supplier<CESymbol> settings) {
+    protected CESimpleReferenceMethodCollector(@NotNull Editor editor, String key,
+                                               Supplier<CESymbol> settings) {
         this(editor, key, key, settings);
     }
-    protected CEReferenceMethodCollector(@NotNull Editor editor, String key,
-                                         @NotNull String tooltipId, Supplier<CESymbol> settings) {
+    protected CESimpleReferenceMethodCollector(@NotNull Editor editor, String key,
+                                               @NotNull String tooltipId, Supplier<CESymbol> settings) {
         super(editor, key, tooltipId, settings);
     }
 

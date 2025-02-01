@@ -8,10 +8,15 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.annotate.AnnotationProvider;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
+import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.vcs.CacheableAnnotationProvider;
+import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.Objects;
 
 // static class. clean up later.
 public final class CEVcsUtils {
@@ -19,6 +24,18 @@ public final class CEVcsUtils {
     // cache key. Same that VcsCodeAuthorInlay uses
     private static final Key<FileAnnotation> VCS_CODE_AUTHOR_ANNOTATION = new Key<>("Vcs.CodeAuthor.Annotation");
 
+
+    @Nullable
+    public static LineAnnotationAspect getAspect(@Nullable FileAnnotation vcsBlame, @MagicConstant(stringValues = {
+            LineAnnotationAspect.AUTHOR,
+            LineAnnotationAspect.DATE,
+            LineAnnotationAspect.REVISION
+    }) String aspect) {
+        if (vcsBlame == null) return null;
+        return Arrays.stream(vcsBlame.getAspects())
+                .filter(a -> Objects.equals(a.getId(), aspect))
+                .findFirst().orElse(null);
+    }
 
     // helper
     public static FileAnnotation getAnnotation( PsiFile file, Editor editor){

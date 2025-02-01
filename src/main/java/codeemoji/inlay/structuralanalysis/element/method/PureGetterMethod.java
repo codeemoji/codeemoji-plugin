@@ -1,11 +1,9 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
 import codeemoji.core.collector.simple.CESimpleMethodCollector;
-import codeemoji.core.collector.simple.CEReferenceMethodCollector;
+import codeemoji.core.collector.simple.CESimpleReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.settings.CEConfigurableWindow;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
@@ -14,10 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-
-import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.PURE_GETTER_METHOD;
 
 public class PureGetterMethod extends CEProviderMulti<PureGetterMethodSettings> {
 
@@ -45,15 +40,15 @@ public class PureGetterMethod extends CEProviderMulti<PureGetterMethodSettings> 
         return List.of(
                 new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
                     @Override
-                    protected boolean needsHint(@NotNull PsiMethod element){
+                    protected boolean needsInlay(@NotNull PsiMethod element){
                         return isPureGetterMethod(element);
                     }
 
 
                 },
-                new CEReferenceMethodCollector(editor, getKey(), mainSymbol()) {
+                new CESimpleReferenceMethodCollector(editor, getKey(), mainSymbol()) {
                     @Override
-                    protected boolean needsHint(@NotNull PsiMethod element){
+                    protected boolean needsInlay(@NotNull PsiMethod element){
                         return isPureGetterMethod(element);
                     }
                 }

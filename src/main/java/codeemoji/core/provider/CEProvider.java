@@ -23,11 +23,9 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Locale;
 import java.util.function.Supplier;
 
-// Class that providers both the hints collectors and the configurables
+// Class that providers both the hints collectors and the configurable
 @Getter
 public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHintsProvider, InlayHintsCustomSettingsProvider<S> {
-
-    private static final Logger LOG = Logger.getInstance(CEProvider.class);
 
     private S settings;
     private final CEConfigurableWindow<S> window;
@@ -43,7 +41,7 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
     @Override
     public abstract InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor);
 
-    //TODO: remove
+    //TODO: maybe move to bundle
     public abstract String getPreviewText();
 
     @Override
@@ -102,28 +100,4 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
         return () -> this.getSettings().getMainSymbol();
     }
 
-    /*
-
-
-    @Nls(capitalization = Nls.Capitalization.Sentence)
-    @Override
-    public @NotNull String getName() {
-        try {
-            return Objects.requireNonNull(getProperty("text." + getKeyId() + ".name"));
-        } catch (RuntimeException ex) {
-            return "<NAME_NOT_DEFINED>";
-        }
-    }
-
-    @Nls
-    @Override
-    public String getProperty(@NotNull String key) {
-        return CEBundle.getString(key);
-    }
-
-
-
-
-
-     */
 }

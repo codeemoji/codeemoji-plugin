@@ -6,10 +6,9 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
-//TODO: merge with superclass
-public abstract class CEDynamicMethodCollector extends CECollector<PsiMethod, PsiIdentifier> {
+public abstract class CEDynamicClassCollector extends CECollector<PsiClass, PsiIdentifier> {
 
-    protected CEDynamicMethodCollector(@NotNull Editor editor, String key) {
+    protected CEDynamicClassCollector(@NotNull Editor editor, String key) {
         super(editor, key);
     }
 
@@ -17,12 +16,16 @@ public abstract class CEDynamicMethodCollector extends CECollector<PsiMethod, Ps
     public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayTreeSink InlayTreeSink) {
         return new JavaRecursiveElementVisitor() {
             @Override
-            public void visitMethod(@NotNull PsiMethod method) {
-                var inlay = createInlayFor(method);
-                if (inlay != null) {
-                    addInlayInline(method.getNameIdentifier(), InlayTreeSink, inlay);
+            public void visitClass(@NotNull PsiClass clazz) {
+                if (clazz instanceof PsiTypeParameter) {
+                    return; // Skip generics
                 }
-                super.visitMethod(method);
+
+                var inlay = createInlayFor(clazz);
+                if (inlay != null) {
+                    addInlayInline(clazz.getNameIdentifier(), InlayTreeSink, inlay);
+                }
+                super.visitClass(clazz);
             }
         };
     }

@@ -33,7 +33,6 @@ public final class CEParsingUtils {
         int[] allCodePoints = new int[extraChars.length + 1];
         allCodePoints[0] = baseChar;
         System.arraycopy(extraChars, 0, allCodePoints, 1, extraChars.length);
-
         for (int codePoint : allCodePoints) {
             if (!emojiBuilder.isEmpty()) {
                 emojiBuilder.appendCodePoint(ZERO_WIDTH_JOINER);
@@ -44,6 +43,10 @@ public final class CEParsingUtils {
             }
         }
 
+        if (extraChars.length > 3) {
+
+            int aa = 1;
+        }
         // Append additional text, if specified
         if (extra != null) {
             emojiBuilder.append(extra);

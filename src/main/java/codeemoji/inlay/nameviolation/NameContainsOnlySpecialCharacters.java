@@ -1,12 +1,9 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CEVariableCollector;
+import codeemoji.core.collector.simple.CESimpleVariableCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
-import codeemoji.core.util.CEBundle;
-import codeemoji.core.util.CESymbolHolder;
 import codeemoji.core.util.CEUtils;
-import codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -19,8 +16,6 @@ import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-
-import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
 
 public class NameContainsOnlySpecialCharacters extends CEProvider<NameContainsOnlySpecialCharacters.Settings> {
 
@@ -54,9 +49,9 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NameContainsOn
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CEVariableCollector(editor, getKey(), mainSymbol()) {
+        return new CESimpleVariableCollector(editor, getKey(), mainSymbol()) {
             @Override
-            public boolean needsHint(@NotNull PsiVariable element){
+            public boolean needsInlay(@NotNull PsiVariable element){
                 return CEUtils.containsOnlySpecialCharacters(Objects.requireNonNull(element.getName()));
             }
         };

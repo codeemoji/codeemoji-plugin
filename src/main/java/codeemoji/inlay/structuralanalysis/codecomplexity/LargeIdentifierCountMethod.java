@@ -28,7 +28,7 @@ public class LargeIdentifierCountMethod extends CEProvider<LargeIdentifierCountM
     public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
             @Override
-            protected boolean needsHint(@NotNull PsiMethod element){
+            protected boolean needsInlay(@NotNull PsiMethod element){
                 return isLargeIdentifierCountMethod(element);
             }
         };

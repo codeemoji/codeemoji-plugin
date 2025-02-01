@@ -1,8 +1,8 @@
 package codeemoji.inlay.vcs.lastcommit;
 
 import codeemoji.core.collector.InlayVisuals;
-import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.provider.CEProvider;
+import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSMethodCollector;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -78,11 +78,11 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
                 int line = iterator.nextInt();
                 var revision = blame.getLineRevisionNumber(line);
                 if (lastRevision.equals(revision)) {
-                    var authorProvider = getAspect(LineAnnotationAspect.AUTHOR);
+                    var authorProvider = CEVcsUtils.getAspect(vcsBlame, LineAnnotationAspect.AUTHOR);
                     Date date = blame.getLineDate(line);
                     if (authorProvider != null && date != null) {
                         return new RevisionInfo(authorProvider.getValue(line), date, revision);
-                    }else {
+                    } else {
                         return null;
                     }
                 }
@@ -95,7 +95,7 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
 
     private record RevisionInfo(String author, Date date, VcsRevisionNumber number) {
         public String tooltip() {
-            return author + " " + date+ " " + number;
+            return author + " " + date + " " + number;
         }
     }
 }
