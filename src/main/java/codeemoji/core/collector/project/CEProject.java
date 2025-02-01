@@ -12,7 +12,6 @@ import java.util.List;
 
 import static codeemoji.core.config.CERuleFeature.ANNOTATIONS;
 
-@SuppressWarnings("UnstableApiUsage")
 interface CEProject<H extends PsiModifierListOwner, A extends PsiElement> extends CEProjectConfig {
 
     default void processAnnotationsFR(@NotNull CERuleElement elementRule, @NotNull H evaluationElement,

@@ -38,71 +38,45 @@
                                  instance="codeemoji.core.config.CEGlobalConfigurable"/>
         <applicationService serviceImplementation="codeemoji.core.config.CEGlobalSettings"/>
         <postStartupActivity implementation="codeemoji.core.external.CEExternalAnalyzerStartup"/>
-        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.ShortDescriptiveNameSettings"/>
+
+
         <applicationService serviceImplementation="codeemoji.inlay.showingmodifiers.ShowingModifiersSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.showingspecifics.ShowingSpecificsSettings"/>
+
         <applicationService serviceImplementation="codeemoji.inlay.implicit.ImplicitAnnotationsSettings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.structuralanalysis.codecomplexity.HighCyclomaticComplexityMethodSettings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.structuralanalysis.codecomplexity.LargeIdentifierCountMethodSettings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.structuralanalysis.codecomplexity.LargeLineCountMethodSettings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.structuralanalysis.codecomplexity.LargeMethodCountClassSettings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.ExternalFunctionalityInvokingMethodSettings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.PureGetterMethodSettings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.PureSetterMethodSettings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.StateChangingMethodSettings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.StateIndependentMethodSettings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.vulnerabilities.VulnerableDependencySettings"/>
 
-        <applicationService
-                serviceImplementation="codeemoji.inlay.vcs.authoravatar.AuthorAvatarSettings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.vcs.recentlymodified.RecentlyModifiedSettings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.vcs.lastcommit.LastCommitSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.ShortDescriptiveNameSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.ExpectingButNotGettingACollection$Settings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.ExpectingButNotGettingASingleInstance$Settings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.GetMethodDoesNotReturn$Settings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.GetMoreThanAccessor$Settings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.IsReturnsMoreThanABoolean$Settings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.NameContainsOnlySpecialCharacters$Settings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.NameSuggestsBooleanByTypeDoesNot$Settings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.NotAnsweredQuestion$Settings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.SaysManyButContainsOne$Settings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.SaysOneButContainsMany$Settings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.SetMethodReturns$Settings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.TransformMethodDoesNotReturn$Settings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.ValidationMethodDoesNotConfirm$Settings"/>
 
-        <!--simple ones-->
-        <applicationService
-                serviceImplementation="codeemoji.inlay.nameviolation.ExpectingButNotGettingACollection$Settings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.nameviolation.ExpectingButNotGettingASingleInstance$Settings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.nameviolation.GetMethodDoesNotReturn$Settings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.nameviolation.GetMoreThanAccessor$Settings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.nameviolation.IsReturnsMoreThanABoolean$Settings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.nameviolation.NameContainsOnlySpecialCharacters$Settings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.nameviolation.NameSuggestsBooleanByTypeDoesNot$Settings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.nameviolation.NotAnsweredQuestion$Settings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.nameviolation.SaysManyButContainsOne$Settings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.nameviolation.SaysOneButContainsMany$Settings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.nameviolation.SetMethodReturns$Settings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.nameviolation.TransformMethodDoesNotReturn$Settings"/>
-        <applicationService
-                serviceImplementation="codeemoji.inlay.nameviolation.ValidationMethodDoesNotConfirm$Settings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.structuralanalysis.codecomplexity.HighCyclomaticComplexityMethodSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.structuralanalysis.codecomplexity.LargeIdentifierCountMethodSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.structuralanalysis.codecomplexity.LargeLineCountMethodSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.structuralanalysis.codecomplexity.LargeMethodCountClassSettings"/>
 
+        <applicationService serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.ExternalFunctionalityInvokingMethodSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.PureGetterMethodSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.PureSetterMethodSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.StateChangingMethodSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.structuralanalysis.element.method.StateIndependentMethodSettings"/>
 
+        <applicationService serviceImplementation="codeemoji.inlay.vulnerabilities.VulnerableDependencySettings"/>
 
-        <applicationService
-                serviceInterface="codeemoji.core.util.CESymbol"
-                serviceImplementation="codeemoji.core.util.CESymbol$Serializer"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.authoravatar.AuthorAvatarSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.recentlymodified.RecentlyModifiedSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.lastcommit.LastCommitSettings"/>
+
 
         <projectService serviceImplementation="codeemoji.inlay.external.services.OSSExternalServiceExternalService"/>
         <projectService serviceImplementation="codeemoji.inlay.external.services.OSVExternalServiceExternalService"/>
@@ -111,13 +85,29 @@
         <!--END OF CONFIGURABLE & SERVICES SECTION-->
 
         <!-- START IMPLEMENTATIONS SECTION-->
-        <!-- START IMPLEMENTATIONS SECTION-->
+
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
-                                              implementationClass="codeemoji.inlay.vulnerabilities.VulnerableDependency"
-                                              nameKey="inlay.vulnerabledependency.name"
+                                              implementationClass="codeemoji.inlay.showingmodifiers.ShowingModifiers"
+                                              nameKey="inlay.showingmodifiers.name"
                                               group="OTHER_GROUP"
-                                              descriptionKey="inlay.vulnerabledependency.description"
-                                              providerId="inlay.vulnerabledependency"/>
+                                              descriptionKey="inlay.showingmodifiers.description"
+                                              providerId="inlay.showingmodifiers"/>
+
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                              implementationClass="codeemoji.inlay.showingspecifics.ShowingSpecifics"
+                                              nameKey="inlay.showingspecifics.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.showingspecifics.description"
+                                              providerId="inlay.showingspecifics"/>
+
+
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                              implementationClass="codeemoji.inlay.implicit.ImplicitAnnotations"
+                                              nameKey="inlay.implicitannotations.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.implicit.description"
+                                              providerId="inlay.implicitannotations"/>
+
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.nameviolation.ShortDescriptiveName"
@@ -217,26 +207,81 @@
                                               descriptionKey="inlay.namecontainsonlyspecialcharacters.description"
                                               providerId="inlay.namecontainsonlyspecialcharacters"/>
 
-        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
-                                              implementationClass="codeemoji.inlay.showingmodifiers.ShowingModifiers"
-                                              nameKey="inlay.showingmodifiers.name"
-                                              group="OTHER_GROUP"
-                                              descriptionKey="inlay.showingmodifiers.description"
-                                              providerId="inlay.showingmodifiers"/>
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
-                                              implementationClass="codeemoji.inlay.showingspecifics.ShowingSpecifics"
-                                              nameKey="inlay.showingspecifics.name"
+                                              implementationClass="codeemoji.inlay.structuralanalysis.codecomplexity.HighCyclomaticComplexityMethod"
+                                              nameKey="inlay.highcyclomaticcomplexitymethod.name"
                                               group="OTHER_GROUP"
-                                              descriptionKey="inlay.showingspecifics.description"
-                                              providerId="inlay.showingspecifics"/>
+                                              descriptionKey="inlay.highcyclomaticcomplexitymethod.description"
+                                              providerId="inlay.highcyclomaticcomplexitymethod"/>
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
-                                              implementationClass="codeemoji.inlay.implicit.ImplicitAnnotations"
-                                              nameKey="inlay.implicitannotations.name"
+                                                implementationClass="codeemoji.inlay.structuralanalysis.codecomplexity.LargeIdentifierCountMethod"
+                                                nameKey="inlay.largeidentifiercountmethod.name"
+                                                group="OTHER_GROUP"
+                                                descriptionKey="inlay.largeidentifiercountmethod.description"
+                                                providerId="inlay.largeidentifiercountmethod"/>
+
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                                implementationClass="codeemoji.inlay.structuralanalysis.codecomplexity.LargeLineCountMethod"
+                                                nameKey="inlay.largelinecountmethod.name"
+                                                group="OTHER_GROUP"
+                                                descriptionKey="inlay.largelinecountmethod.description"
+                                                providerId="inlay.largelinecountmethod"/>
+
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                                implementationClass="codeemoji.inlay.structuralanalysis.codecomplexity.LargeMethodCountClass"
+                                                nameKey="inlay.largemethodcountclass.name"
+                                                group="OTHER_GROUP"
+                                                descriptionKey="inlay.largemethodcountclass.description"
+                                                providerId="inlay.largemethodcountclass"/>
+
+
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                                implementationClass="codeemoji.inlay.structuralanalysis.element.method.ExternalFunctionalityInvokingMethod"
+                                                nameKey="inlay.externalfunctionalityinvokingmethod.name"
+                                                group="OTHER_GROUP"
+                                                descriptionKey="inlay.externalfunctionalityinvokingmethod.description"
+                                                providerId="inlay.externalfunctionalityinvokingmethod"/>
+
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                                implementationClass="codeemoji.inlay.structuralanalysis.element.method.PureGetterMethod"
+                                                nameKey="inlay.puregettermethod.name"
+                                                group="OTHER_GROUP"
+                                                descriptionKey="inlay.puregettermethod.description"
+                                                providerId="inlay.puregettermethod"/>
+
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                                implementationClass="codeemoji.inlay.structuralanalysis.element.method.PureSetterMethod"
+                                                nameKey="inlay.puresettermethod.name"
+                                                group="OTHER_GROUP"
+                                                descriptionKey="inlay.puresettermethod.description"
+                                                providerId="inlay.puresettermethod"/>
+
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                                implementationClass="codeemoji.inlay.structuralanalysis.element.method.StateChangingMethod"
+                                                nameKey="inlay.statechangingmethod.name"
+                                                group="OTHER_GROUP"
+                                                descriptionKey="inlay.statechangingmethod.description"
+                                                providerId="inlay.statechangingmethod"/>
+
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                                implementationClass="codeemoji.inlay.structuralanalysis.element.method.StateIndependentMethod"
+                                                nameKey="inlay.stateindependentmethod.name"
+                                                group="OTHER_GROUP"
+                                                descriptionKey="inlay.stateindependentmethod.description"
+                                                providerId="inlay.stateindependentmethod"/>
+
+
+
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                              implementationClass="codeemoji.inlay.vulnerabilities.VulnerableDependency"
+                                              nameKey="inlay.vulnerabledependency.name"
                                               group="OTHER_GROUP"
-                                              descriptionKey="inlay.implicit.description"
-                                              providerId="inlay.implicitannotations"/>
+                                              descriptionKey="inlay.vulnerabledependency.description"
+                                              providerId="inlay.vulnerabledependency"/>
+
+
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.vcs.recentlymodified.RecentlyModified"
@@ -260,10 +305,18 @@
                                               providerId="inlay.authoravatar"/>
 
 
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.showingmodifiers"
+                implementationClass="codeemoji.inlay.showingmodifiers.ShowingModifiers" />
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
-                language="JAVA" providerId="inlay.vulnerabledependency"
-                implementationClass="codeemoji.inlay.vulnerabilities.VulnerableDependency" />
+                language="JAVA" providerId="inlay.showingspecifics"
+                implementationClass="codeemoji.inlay.showingspecifics.ShowingSpecifics" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.implicitannotations"
+                implementationClass="codeemoji.inlay.implicit.ImplicitAnnotations" />
+
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.shortdescriptivename"
@@ -321,17 +374,48 @@
                 language="JAVA" providerId="inlay.namecontainsonlyspecialcharacters"
                 implementationClass="codeemoji.inlay.nameviolation.NameContainsOnlySpecialCharacters" />
 
-        <codeInsight.declarativeInlayProviderCustomSettingsProvider
-                language="JAVA" providerId="inlay.showingmodifiers"
-                implementationClass="codeemoji.inlay.showingmodifiers.ShowingModifiers" />
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
-                language="JAVA" providerId="inlay.showingspecifics"
-                implementationClass="codeemoji.inlay.showingspecifics.ShowingSpecifics" />
+                language="JAVA" providerId="inlay.highcyclomaticcomplexitymethod"
+                implementationClass="codeemoji.inlay.structuralanalysis.codecomplexity.HighCyclomaticComplexityMethod" />
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
-                language="JAVA" providerId="inlay.implicitannotations"
-                implementationClass="codeemoji.inlay.implicit.ImplicitAnnotations" />
+                language="JAVA" providerId="inlay.largeidentifiercountmethod"
+                implementationClass="codeemoji.inlay.structuralanalysis.codecomplexity.LargeIdentifierCountMethod" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.largelinecountmethod"
+                implementationClass="codeemoji.inlay.structuralanalysis.codecomplexity.LargeLineCountMethod" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.largemethodcountclass"
+                implementationClass="codeemoji.inlay.structuralanalysis.codecomplexity.LargeMethodCountClass" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.externalfunctionalityinvokingmethod"
+                implementationClass="codeemoji.inlay.structuralanalysis.element.method.ExternalFunctionalityInvokingMethod" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.puregettermethod"
+                implementationClass="codeemoji.inlay.structuralanalysis.element.method.PureGetterMethod" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.puresettermethod"
+                implementationClass="codeemoji.inlay.structuralanalysis.element.method.PureSetterMethod" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.statechangingmethod"
+                implementationClass="codeemoji.inlay.structuralanalysis.element.method.StateChangingMethod" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.stateindependentmethod"
+                implementationClass="codeemoji.inlay.structuralanalysis.element.method.StateIndependentMethod" />
+
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.vulnerabledependency"
+                implementationClass="codeemoji.inlay.vulnerabilities.VulnerableDependency" />
+
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.recentlymodified"

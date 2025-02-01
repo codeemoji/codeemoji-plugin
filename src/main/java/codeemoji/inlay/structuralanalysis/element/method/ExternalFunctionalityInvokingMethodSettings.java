@@ -18,9 +18,10 @@ public class ExternalFunctionalityInvokingMethodSettings extends CEBaseSettings<
 
     private boolean checkMethodCallsForExternalityApplied = false;
 
-    private ExternalFunctionalityInvokingMethodSettings(){
+    public ExternalFunctionalityInvokingMethodSettings(){
         super(ExternalFunctionalityInvokingMethod.class, EXTERNAL_FUNCTIONALITY_INVOKING_METHOD);
     }
+
     @Override
     public ExternalFunctionalityInvokingMethodSettings getState() {
         return this;

@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Objects;
 
 @Getter
-@SuppressWarnings("UnstableApiUsage")
 //TODO: fix generics
 public abstract class CEImplicitCollector extends CECollector {
 
@@ -140,7 +139,7 @@ public abstract class CEImplicitCollector extends CECollector {
 
     private void addImplicitInlayForAnnotation(PsiAnnotation annotation, @Nullable String newAttributesList, @NotNull InlayTreeSink sink) {
         if (null != newAttributesList) {
-            var inlay = buildInlayWithText(newAttributesList, "text." + getKey() + ".attributes.tooltip", null);
+            var inlay = buildInlayWithText(newAttributesList, "inlay." + getKey() + ".attributes.tooltip", null);
             addInlayInAnnotation(annotation, sink, inlay);
         }
     }
@@ -148,7 +147,7 @@ public abstract class CEImplicitCollector extends CECollector {
     private void addImplicitInlay(PsiElement element, @Nullable String fullText, @NotNull InlayTreeSink sink) {
         if (null != fullText) {
             var symbol = CESymbol.of(codePoint, fullText);
-            var inlay = buildInlayWithEmoji(symbol, "text." + getKey() + ".annotations.tooltip", null);
+            var inlay = buildInlayWithEmoji(symbol, "inlay." + getKey() + ".annotations.tooltip", null);
             addInlayBlock(element, sink, inlay);
         }
     }

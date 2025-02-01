@@ -3,11 +3,13 @@ package codeemoji.core.collector.implicit.spring;
 import codeemoji.core.collector.implicit.CEImplicitAttribute;
 import codeemoji.core.collector.implicit.CEImplicit;
 import codeemoji.core.util.CEUtils;
+import codeemoji.inlay.structuralanalysis.element.method.ExternalFunctionalityInvokingMethodSettings;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiMember;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 
 @Getter
 public class CESpringImplicitBean implements CEImplicit {
@@ -21,6 +23,7 @@ public class CESpringImplicitBean implements CEImplicit {
     @Override
     public @Nullable String createAttributesFor(@NotNull PsiMember member, @NotNull PsiAnnotation memberAnnotation) {
         var clazz = member.getContainingClass();
+
         Object attributeName = null;
         if (null != clazz) {
             var classAnnotation = clazz.getAnnotation("org.springframework.context.annotation.Configuration");

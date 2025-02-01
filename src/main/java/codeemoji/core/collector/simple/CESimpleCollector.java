@@ -26,7 +26,7 @@ public sealed abstract class CESimpleCollector<H extends PsiElement, A extends P
     protected CESimpleCollector(@NotNull Editor editor, String key,
                                 @NotNull String tooltipKey, Supplier<CESymbol> settingsSupplier) {
         super(editor, key);
-        this.tooltipKey = "text." + tooltipKey + ".tooltip";
+        this.tooltipKey = "inlay." + tooltipKey + ".tooltip";
         this.symbolGetter = settingsSupplier; //needed since it's not an inner class
     }
 

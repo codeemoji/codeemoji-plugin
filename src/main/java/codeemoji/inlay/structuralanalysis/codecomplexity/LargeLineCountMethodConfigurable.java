@@ -14,6 +14,7 @@ class LargeLineCountMethodConfigurable extends CEConfigurableWindow<LargeLineCou
 
     @Override
     public @NotNull JComponent createComponent(LargeLineCountMethodSettings settings, Project project, Language language, ChangeListener changeListener) {
+        var panel = super.createComponent(settings, project, language, changeListener);
         var checkBox = new JCheckBox();
         checkBox.setSelected(settings.isCommentExclusionApplied());
         checkBox.addChangeListener(event -> {
@@ -26,10 +27,11 @@ class LargeLineCountMethodConfigurable extends CEConfigurableWindow<LargeLineCou
             settings.setLinesOfCode((Integer) jSpinner.getValue());
             changeListener.settingsChanged();
         });
-        return FormBuilder.createFormBuilder()
+        panel.add(FormBuilder.createFormBuilder()
                 .addLabeledComponent("Exclude comments from calculation", checkBox)
                 .addLabeledComponent("Lines of Code", jSpinner)
-                .getPanel();
+                .getPanel());
+        return panel;
     }
 
 }

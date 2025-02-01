@@ -22,6 +22,7 @@ public class PureSetterMethodSettings extends CEBaseSettings<PureSetterMethodSet
     public PureSetterMethodSettings(){
         super(PureSetterMethod.class, PURE_SETTER_METHOD);
     }
+
     @Override
     public @Nullable PureSetterMethodSettings getState() {
         return this;

@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
+import java.util.Locale;
 import java.util.function.Supplier;
 
 // Class that providers both the hints collectors and the configurables
@@ -34,7 +35,7 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
     protected CEProvider() {
         settings = createSettings();
         window = createConfigurable();
-        key = ""; //TODO: make this the ID used in the xml
+        key = getClass().getSimpleName().toLowerCase(Locale.ROOT);
     }
 
     @Nullable

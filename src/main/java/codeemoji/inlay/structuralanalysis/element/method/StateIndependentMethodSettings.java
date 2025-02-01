@@ -22,6 +22,7 @@ public class StateIndependentMethodSettings extends CEBaseSettings<StateIndepend
     public StateIndependentMethodSettings(){
         super(StateIndependentMethod.class, STATE_INDEPENDENT_METHOD);
     }
+
     @Override
     public StateIndependentMethodSettings getState() {
         return this;

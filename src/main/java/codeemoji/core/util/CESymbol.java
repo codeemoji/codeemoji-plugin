@@ -26,25 +26,6 @@ public final class CESymbol {
 
     private CESymbol(){}
 
-    //doesnt work
-    static class Serializer implements Externalizer<CESymbol> {
-
-        public Serializer() {
-            int aa = 1;
-        }
-
-        @Override
-        public CESymbol readValue(Element dataElement) {
-            return empty();
-        }
-
-        @Override
-        public void writeValue(Element dataElement, CESymbol value) {
-            int aa = 1;
-            return;
-        }
-    }
-
     public static final CESymbol EMPTY = of(0x26AA);
 
     public JCheckBox createCheckbox(String name) {

@@ -21,6 +21,7 @@ public class PureGetterMethodSettings extends CEBaseSettings<PureGetterMethodSet
     public PureGetterMethodSettings(){
         super(PureGetterMethod.class, PURE_GETTER_METHOD);
     }
+
     @Override
     public PureGetterMethodSettings getState() {
         return this;

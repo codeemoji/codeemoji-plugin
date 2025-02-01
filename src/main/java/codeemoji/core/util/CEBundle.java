@@ -21,7 +21,11 @@ public final class CEBundle {
     }
 
     public static @NotNull String getString(@NotNull String key, @NotNull Object... args) {
-        return String.format(getInstance().getBundle().getString(key), args);
+        try {
+            return String.format(getInstance().getBundle().getString(key), args);
+        }catch (Exception e){
+            throw  new RuntimeException(e);
+        }
     }
     public static Supplier<String> getLazyString(@NotNull String key, @NotNull Object... args) {
         return () -> getString(key, args);

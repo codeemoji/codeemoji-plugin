@@ -4,7 +4,6 @@ import codeemoji.core.external.CEExternalAnalyzer;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.declarative.*;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.psi.PsiElement;
@@ -15,7 +14,6 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,33 +57,25 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
 
     public final void addInlayInline(@Nullable A element, @NotNull InlayTreeSink sink, @NotNull InlayVisuals inlay) {
         if (null != element) {
-            int lineNumber = getEditor().getDocument().getLineNumber(element.getTextRange().getEndOffset());
-            var localVariable = element.getParent();
 
-            //TODO: implement
             sink.addPresentation(
-                    new EndOfLinePosition(lineNumber),
-                    List.of(new InlayPayload("variablePayload", new StringInlayActionPayload("Go to Settings"))),
-
-               "todo",//     CEBundle.getString(inlay.tooltip()),  // Tooltip
-                    true,  // Has background
+                    new InlineInlayPosition(element.getTextRange().getEndOffset(), true, 0),
+                    List.of(),
+                    inlay.tooltip(),
+                    inlay.hasBackground(),
                     builder -> {
-                        builder.text("a" + inlay.text(),
-                                null);
+                        builder.text(inlay.text(), null);
                         return Unit.INSTANCE;
-                    } // Presentation content
+                    }
             );
-            //sink.addInlineElement(calcOffset(element), false, text, false);
         }
     }
-
-
 
     public final void addInlayBlock(@Nullable A element, @NotNull InlayTreeSink sink, InlayVisuals inlay) {
         if (null != element) {
             var indentFactor = EditorUtil.getPlainSpaceWidth(getEditor());
             var indent = EditorUtil.getTabSize(getEditor()) * indentFactor;
-           // inlay = getFactory().inset(inlay, indent, 0, 0, 0);
+            // inlay = getFactory().inset(inlay, indent, 0, 0, 0);
 
             //TODO: implement
             //sink.addBlockElement(element.getTextOffset(), true, true, 0, inlay);
@@ -114,19 +104,11 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
     // is tooltip suffix needed?
     private @NotNull InlayVisuals formatInlay(@NotNull String symbol, boolean background,
                                               @NotNull String keyTooltip, @Nullable String suffixTooltip) {
-        var tooltip = getTooltip(keyTooltip);
+        var tooltip = CEBundle.getString(keyTooltip);
         if (null != suffixTooltip) {
             tooltip += " " + suffixTooltip;
         }
         return InlayVisuals.of(symbol, tooltip, background);
-    }
-
-    private static String getTooltip(@NotNull String key) {
-        try {
-            return CEBundle.getString(key);
-        } catch (RuntimeException ex) {
-            return key;
-        }
     }
 
 }
