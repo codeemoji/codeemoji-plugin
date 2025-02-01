@@ -5,7 +5,6 @@
   //commit last modivier or mstcmmo or most recent
   //modified by many people
   // owneed by just 1 people
-  // animal emoji
 
 - refactor (how??)
 - emoji selector, emoji on left like color
