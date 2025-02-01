@@ -21,14 +21,4 @@ public class StateChangingMethodSettings extends CEBaseSettings<StateChangingMet
     public StateChangingMethodSettings(){
         super(StateChangingMethod.class, STATE_CHANGING_METHOD);
     }
-
-    @Override
-    public StateChangingMethodSettings getState() {
-        return this;
-    }
-
-    @Override
-    public void loadState(@NotNull StateChangingMethodSettings state) {
-        XmlSerializerUtil.copyBean(state, this);
-    }
 }

@@ -18,16 +18,8 @@ import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.LARGE
 public class LargeIdentifierCountMethodSettings extends CEBaseSettings<LargeIdentifierCountMethodSettings> {
 
     private int identifierCount = 70;
+
     public LargeIdentifierCountMethodSettings(){
         super(LargeIdentifierCountMethod.class, LARGE_IDENTIFIER_COUNT_METHOD);
-    }
-    @Override
-    public @Nullable LargeIdentifierCountMethodSettings getState() {
-        return this;
-    }
-
-    @Override
-    public void loadState(@NotNull LargeIdentifierCountMethodSettings state) {
-        XmlSerializerUtil.copyBean(state, this);
     }
 }

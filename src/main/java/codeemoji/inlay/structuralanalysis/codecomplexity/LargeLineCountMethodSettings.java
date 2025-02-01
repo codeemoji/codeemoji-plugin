@@ -1,6 +1,7 @@
 package codeemoji.inlay.structuralanalysis.codecomplexity;
 
 import codeemoji.core.settings.CEBaseSettings;
+import codeemoji.core.util.CESymbol;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -10,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.LARGE_IDENTIFIER_COUNT_METHOD;
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.LARGE_LINE_COUNT_METHOD;
 
 @EqualsAndHashCode(callSuper = true)
@@ -23,13 +25,5 @@ public class LargeLineCountMethodSettings extends CEBaseSettings<LargeLineCountM
     public LargeLineCountMethodSettings(){
         super(LargeLineCountMethod.class, LARGE_LINE_COUNT_METHOD);
     }
-    @Override
-    public @Nullable LargeLineCountMethodSettings getState() {
-        return this;
-    }
 
-    @Override
-    public void loadState(@NotNull LargeLineCountMethodSettings state) {
-        XmlSerializerUtil.copyBean(state, this);
-    }
 }

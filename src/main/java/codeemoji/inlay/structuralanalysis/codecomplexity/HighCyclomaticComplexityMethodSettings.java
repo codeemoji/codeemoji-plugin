@@ -25,13 +25,4 @@ public class HighCyclomaticComplexityMethodSettings extends CEBaseSettings<HighC
         super(HighCyclomaticComplexityMethod.class, HIGH_CYCLOMATIC_COMPLEXITY_METHOD);
     }
 
-    @Override
-    public @Nullable HighCyclomaticComplexityMethodSettings getState() {
-        return this;
-    }
-
-    @Override
-    public void loadState(@NotNull HighCyclomaticComplexityMethodSettings state) {
-        XmlSerializerUtil.copyBean(state, this);
-    }
 }

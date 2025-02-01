@@ -3,6 +3,7 @@ package codeemoji.core.collector.implicit;
 import codeemoji.core.collector.CECollector;
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.util.CESymbol;
+import codeemoji.inlay.external.scanners.OSVVulnerabilityScanner;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.lang.jvm.JvmAnnotatedElement;

@@ -21,18 +21,7 @@ public class LargeMethodCountClassSettings extends CEBaseSettings<LargeMethodCou
 
     private int methodCount = 15;
     public LargeMethodCountClassSettings() {
-        super(new CESymbolHolder(CEBundle.getString("inlay.largemethodcountclass.name"),
-                StructuralAnalysisSymbols.LARGE_METHOD_COUNT_CLASS));
-    }
-
-    @Override
-    public @Nullable LargeMethodCountClassSettings getState() {
-        return this;
-    }
-
-    @Override
-    public void loadState(@NotNull LargeMethodCountClassSettings state) {
-        XmlSerializerUtil.copyBean(state, this);
+        super(LargeMethodCountClass.class, StructuralAnalysisSymbols.LARGE_METHOD_COUNT_CLASS);
     }
 
 }

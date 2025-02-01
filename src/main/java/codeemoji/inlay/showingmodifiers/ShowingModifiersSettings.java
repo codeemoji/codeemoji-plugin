@@ -36,16 +36,6 @@ public class ShowingModifiersSettings extends CEBaseSettings<ShowingModifiersSet
         basicModifiersMap.put(NATIVE_METHOD, true);
     }
 
-    @Override
-    public @NotNull ShowingModifiersSettings getState() {
-        return this;
-    }
-
-    @Override
-    public void loadState(@NotNull ShowingModifiersSettings state) {
-        XmlSerializerUtil.copyBean(state, this);
-    }
-
     synchronized boolean query(@NotNull ScopeModifier scopeModifier) {
         basicModifiersMap.putIfAbsent(scopeModifier, false);
         return basicModifiersMap.get(scopeModifier);

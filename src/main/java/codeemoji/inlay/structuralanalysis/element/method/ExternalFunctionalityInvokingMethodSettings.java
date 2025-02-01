@@ -22,13 +22,4 @@ public class ExternalFunctionalityInvokingMethodSettings extends CEBaseSettings<
         super(ExternalFunctionalityInvokingMethod.class, EXTERNAL_FUNCTIONALITY_INVOKING_METHOD);
     }
 
-    @Override
-    public ExternalFunctionalityInvokingMethodSettings getState() {
-        return this;
-    }
-
-    @Override
-    public void loadState(@NotNull ExternalFunctionalityInvokingMethodSettings state) {
-        XmlSerializerUtil.copyBean(state, this);
-    }
 }

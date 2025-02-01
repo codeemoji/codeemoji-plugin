@@ -19,14 +19,4 @@ public class ShowingSpecificsSettings extends CEBaseSettings<ShowingSpecificsSet
     public ShowingSpecificsSettings() {
         howToConfigureURL = "https://github.com/codeemoji/codeemoji-plugin/tree/develop#cases-of-showing-specifics-of-projects";
     }
-
-    @Override
-    public @NotNull ShowingSpecificsSettings getState() {
-        return this;
-    }
-
-    @Override
-    public void loadState(@NotNull ShowingSpecificsSettings state) {
-        XmlSerializerUtil.copyBean(state, this);
-    }
 }

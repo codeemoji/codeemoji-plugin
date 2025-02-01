@@ -23,13 +23,4 @@ public class PureSetterMethodSettings extends CEBaseSettings<PureSetterMethodSet
         super(PureSetterMethod.class, PURE_SETTER_METHOD);
     }
 
-    @Override
-    public @Nullable PureSetterMethodSettings getState() {
-        return this;
-    }
-
-    @Override
-    public void loadState(@NotNull PureSetterMethodSettings state) {
-        XmlSerializerUtil.copyBean(state, this);
-    }
 }

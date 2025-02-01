@@ -23,13 +23,4 @@ public class StateIndependentMethodSettings extends CEBaseSettings<StateIndepend
         super(StateIndependentMethod.class, STATE_INDEPENDENT_METHOD);
     }
 
-    @Override
-    public StateIndependentMethodSettings getState() {
-        return this;
-    }
-
-    @Override
-    public void loadState(@NotNull StateIndependentMethodSettings state) {
-        XmlSerializerUtil.copyBean(state, this);
-    }
 }

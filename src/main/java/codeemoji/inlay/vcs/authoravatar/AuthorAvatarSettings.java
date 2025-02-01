@@ -6,7 +6,6 @@ import codeemoji.core.util.CESymbolHolder;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.annotations.Transient;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -17,24 +16,14 @@ public final class AuthorAvatarSettings extends CEBaseSettings<AuthorAvatarSetti
     private transient final Map<String, CESymbol> authorToSymbols = new HashMap<>();  // Map for author-to-emoji string
 
     public AuthorAvatarSettings() {
+        onUpdated();
     }
 
     @Override
-    public void loadState(@NotNull AuthorAvatarSettings state) {
-        super.loadState(state);
-        updateDataStructure();
-    }
-
-    @Override
-    public void setSymbols(ArrayList<CESymbolHolder> copy) {
-        super.setSymbols(copy);
-        updateDataStructure();
-    }
-
-    private void updateDataStructure() {
+    public void onUpdated() {
         authorToSymbols.clear();
         for (CESymbolHolder pair : getSymbols()) {
-            authorToSymbols.put(pair.getName(), pair.getSymbol());
+            authorToSymbols.put(pair.getId(), pair.getSymbol());
         }
     }
 

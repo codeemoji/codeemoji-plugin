@@ -38,9 +38,8 @@ public class AuthorAvatarConfigurable extends CEConfigurableWindow<AuthorAvatarS
         JButton addButton = new JButton(CEBundle.getString("inlay.authoravatar.settings.add_avatar"));
         addButton.addActionListener(e -> {
             CESymbolHolder newPair = new CESymbolHolder(
-                    CEBundle.getString("inlay.authoravatar.settings.author", (localSymbols.size() + 1)),
-                    CESymbol.of("\uD83D\uDC68\uFE0F")
-            );
+                    CESymbol.of("\uD83D\uDC68\uFE0F"),
+                    "inlay.authoravatar.settings.author", localSymbols.size() + 1);
             localSymbols.add(newPair); // Add to the local list
             addRow(panel, newPair, settings, changeListener); // Add the new row to the panel
 
@@ -59,7 +58,7 @@ public class AuthorAvatarConfigurable extends CEConfigurableWindow<AuthorAvatarS
         JPanel rowPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         // Create a text field for the author (editable)
-        JTextField authorTextField = new JTextField(holder.getName());
+        JTextField authorTextField = new JTextField(holder.getTranslatedName());
         authorTextField.setEditable(true);
         int height = 30;
         authorTextField.setPreferredSize(new Dimension(160, height));
@@ -68,14 +67,14 @@ public class AuthorAvatarConfigurable extends CEConfigurableWindow<AuthorAvatarS
         authorTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                holder.setName(authorTextField.getText()); // Update the Pair's author value
+                holder.setId(authorTextField.getText()); // Update the Pair's author value
 
                 syncSettings(settings, listener);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                holder.setName(authorTextField.getText()); // Update the Pair's author value
+                holder.setId(authorTextField.getText()); // Update the Pair's author value
 
                 syncSettings(settings, listener);
             }

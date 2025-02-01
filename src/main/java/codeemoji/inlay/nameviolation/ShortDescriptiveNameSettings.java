@@ -22,13 +22,4 @@ public class ShortDescriptiveNameSettings extends CEBaseSettings<ShortDescriptiv
 
     private int numberOfLetters = 1;
 
-    @Override
-    public ShortDescriptiveNameSettings getState() {
-        return this;
-    }
-
-    @Override
-    public void loadState(@NotNull ShortDescriptiveNameSettings state) {
-        XmlSerializerUtil.copyBean(state, this);
-    }
 }

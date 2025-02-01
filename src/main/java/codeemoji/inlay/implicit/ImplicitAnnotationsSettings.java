@@ -16,14 +16,4 @@ import org.jetbrains.annotations.NotNull;
 @State(name = "ImplicitAnnotationsSettings", storages = @Storage("codeemoji-implicit-annotations-settings.xml"))
 public class ImplicitAnnotationsSettings extends CEBaseSettings<ImplicitAnnotationsSettings> {
 
-    @Override
-    public @NotNull ImplicitAnnotationsSettings getState() {
-        return this;
-    }
-
-    @Override
-    public void loadState(@NotNull ImplicitAnnotationsSettings state) {
-        XmlSerializerUtil.copyBean(state, this);
-    }
-
 }

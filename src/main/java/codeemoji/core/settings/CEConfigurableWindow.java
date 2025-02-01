@@ -5,29 +5,15 @@ import codeemoji.core.ui.EmojiRepository;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CESymbolHolder;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.settings.InlayProviderSettingsModel;
-import com.intellij.codeInsight.hints.settings.InlaySettingsPanel;
 import com.intellij.codeInsight.hints.settings.language.SingleLanguageInlayHintsSettingsPanelKt;
 import com.intellij.lang.Language;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorSettings;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
 import com.intellij.ui.EditorTextField;
-import com.intellij.ui.JBSplitter;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.ui.JBUI;
-import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +32,7 @@ public class CEConfigurableWindow<S extends CEBaseSettings<S>> {
     public @NotNull JComponent createComponent(S settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
 
         localSymbols.clear();
-        for (var s : settings.getSymbols()) {
+        for (var s : settings.getAllSymbols()) {
             localSymbols.add(s.makeCopy());
         }
 
@@ -62,7 +48,7 @@ public class CEConfigurableWindow<S extends CEBaseSettings<S>> {
 
     private void addSymbolRow(JPanel panel, CESymbolHolder holder, S settings, ChangeListener listener) {
         // Create label
-        JLabel label = holder.getSymbol().createLabel(holder.getName());
+        JLabel label = holder.getSymbol().createLabel(holder.getTranslatedName());
 
         // Create button
         JButton pickEmojiButton = new JButton(CEBundle.getString("codeemoji.configurable.edit"));
@@ -88,7 +74,7 @@ public class CEConfigurableWindow<S extends CEBaseSettings<S>> {
                     if (em != null) {
                         CESymbol emoji = CESymbol.of(em.symbol());
                         holder.setSymbol(emoji);
-                        emoji.applyToLabel(hasName ? holder.getName() : "", label);
+                        emoji.applyToLabel(hasName ? holder.getTranslatedName() : "", label);
 
                         syncSettings(settings, listener);
                     }
@@ -127,7 +113,7 @@ public class CEConfigurableWindow<S extends CEBaseSettings<S>> {
         for (CESymbolHolder pair : localSymbols) {
             copy.add(pair.makeCopy());
         }
-        settings.setSymbols(copy);
+        settings.setAllSymbols(copy);
         listener.settingsChanged();
     }
 

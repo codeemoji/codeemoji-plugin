@@ -15,9 +15,9 @@ class VulnerableDependencyConfigurable extends CEConfigurableWindow<VulnerableDe
     public @NotNull JComponent createComponent(VulnerableDependencySettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
         var panel = super.createComponent(settings, preview, project, language, changeListener);
         var checkBox = new JCheckBox();
-        checkBox.setSelected(settings.isCheckVulnerableDependecyApplied());
+        checkBox.setSelected(settings.isCheckVulnerableDependencyApplied());
         checkBox.addChangeListener(event -> {
-            settings.setCheckVulnerableDependecyApplied(checkBox.isSelected());
+            settings.setCheckVulnerableDependencyApplied(checkBox.isSelected());
             changeListener.settingsChanged();
         });
         panel.add(FormBuilder.createFormBuilder()

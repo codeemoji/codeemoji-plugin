@@ -76,7 +76,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
             for (PsiMethod externalMethod : externalMethods) {
                 InlayInfo result = isVulnerable(externalMethod, project, externalInfo);
                 if (result != null) {
-                    vulnerableDependencies.add(result.dependencyName);
+                    vulnerableDependencies.add(result.dependencyName());
                 }
             }
 
@@ -127,7 +127,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
         @Override
         public InlayVisuals createInlayFor(@NotNull PsiMethod element) {
-            if (getSettings().isCheckVulnerableDependecyApplied()) {
+            if (getSettings().isCheckVulnerableDependencyApplied()) {
                 return isIndirectlyUsingVulnerableDependencies(element,
                         getEditor().getProject(),
                         getExternalInfo(element));
@@ -172,7 +172,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         }
 
         private InlayVisuals makeVulnerableDependencyCallInlay(InlayInfo result) {
-            StringBuilder tooltipBuilder = new StringBuilder(result.dependencyName + " " +
+            StringBuilder tooltipBuilder = new StringBuilder(result.dependencyName() + " " +
                     CEBundle.getString("inlay.vulnerabledependency.call.has") + " ");
 
             String[] severities = {"CRITICAL", "HIGH", "MEDIUM", "LOW"};
@@ -180,7 +180,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
             int totalVulnerabilities = 0;
 
             for (String severity : severities) {
-                int count = result.severityCounts.getOrDefault(severity, 0);
+                int count = result.severityCounts().getOrDefault(severity, 0);
                 if (count > 0) {
                     if (!firstSeverity) {
                         tooltipBuilder.append(", ");
@@ -200,7 +200,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
             String tooltip = tooltipBuilder.toString();
             String scannerPrefix = CEBundle.getString("inlay.vulnerabledependency.call.scanner");
             return this.buildInlayWithEmoji(VULNERABLE_DEPENDENCY_CALL,
-                    result.scanner + scannerPrefix, tooltip);
+                    result.scanner() + scannerPrefix, tooltip);
         }
 
     }
