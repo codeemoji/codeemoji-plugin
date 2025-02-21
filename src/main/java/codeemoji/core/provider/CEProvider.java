@@ -7,9 +7,7 @@ import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCustomSettingsProvider;
 import com.intellij.codeInsight.hints.declarative.InlayHintsProvider;
 import com.intellij.lang.Language;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
@@ -41,8 +39,10 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
     @Override
     public abstract InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor);
 
-    //TODO: maybe move to bundle
-    public abstract String getPreviewText();
+    @Deprecated(forRemoval = true)
+    public String getPreviewText(){
+       return "none";
+    };
 
     @Override
     public boolean isDifferentFrom(@NotNull Project project, S newSettings) {
@@ -61,7 +61,6 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
 
     @Override
     public void persistSettings(@NotNull Project project, S settings, @NotNull Language language) {
-        int aa = 1;
         //TODO: figure these out. also what about the setting own save method?
         //   settings.save(project);
     }
@@ -73,7 +72,7 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
     // encapsulate and delegates the UI behavior to a dedicated object that is composed instead of implemented directly into this class createComponent
     @Override
     public final @NotNull JComponent createComponent(@NotNull Project project, @NotNull Language language) {
-        return window.createComponent(settings, getPreviewText(), project, language, () -> {
+        return window.createComponent(settings, "something", project, language, () -> {
         });
     }
 

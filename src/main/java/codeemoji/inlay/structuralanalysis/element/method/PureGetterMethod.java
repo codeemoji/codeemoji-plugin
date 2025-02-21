@@ -16,25 +16,6 @@ import java.util.Objects;
 
 public class PureGetterMethod extends CEProviderMulti<PureGetterMethodSettings> {
 
-    @Nullable
-    @Override
-    public String getPreviewText() {
-        return """
-                public class PureGetterMethodExample {
-                                
-                    private int attribute;
-                    
-                    public PureGetterMethodExample(int attribute){
-                        this.attribute = attribute;
-                    }
-                    
-                    private int getAttribute(){
-                        return attribute;
-                    }
-                }
-                """;
-    }
-
     @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
         return List.of(

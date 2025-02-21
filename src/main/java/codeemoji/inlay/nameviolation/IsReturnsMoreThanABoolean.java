@@ -32,16 +32,6 @@ public class IsReturnsMoreThanABoolean extends CEProvider<IsReturnsMoreThanABool
     }
 
     @Override
-    public String getPreviewText() {
-        return """
-                public class Customer {
-                    public String isHuman() {
-                        return "Yes";
-                    }
-                }""";
-    }
-
-    @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
             @Override

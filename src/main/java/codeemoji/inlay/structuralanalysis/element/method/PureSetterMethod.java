@@ -15,24 +15,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class PureSetterMethod extends CEProviderMulti<PureSetterMethodSettings> {
-    @Nullable
-    @Override
-    public String getPreviewText() {
-        return """
-                public class PureSetterMethodExample {
-                                
-                    private int attribute;
-                    
-                    public PureSetterMethodExample(int attribute){
-                        this.attribute = attribute;
-                    }
-                    
-                    private void setAttribute(int attribute){
-                        this.attribute = attribute;
-                    }
-                }
-                """;
-    }
 
     @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {

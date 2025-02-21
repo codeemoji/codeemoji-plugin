@@ -40,7 +40,7 @@ public class CEConfigurableWindow<S extends CEBaseSettings<S>> {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
 
-        addPreviewText(panel, project, language, preview);
+        //addPreviewText(panel, project, language, preview);
         for (var holder : localSymbols) {
             addSymbolRow(panel, holder, settings, changeListener);
         }
@@ -119,9 +119,10 @@ public class CEConfigurableWindow<S extends CEBaseSettings<S>> {
         listener.settingsChanged();
     }
 
-    public void addPreviewText(JPanel panel, Project project, Language language, String previewText) {
+    // use inlayProviders resources files instead
+    @Deprecated(forRemoval = true)
+    protected void addPreviewText(JPanel panel, Project project, Language language, String previewText) {
         if (previewText != null) {
-
             EditorTextField editorTextField = SingleLanguageInlayHintsSettingsPanelKt.createEditor(language, project, ((editor) -> {
                 //InlaySettingsPanel.this.currentEditor = editor;
                 //   InlaySettingsPanel.PREVIEW_KEY.set((UserDataHolder) editor, treeNode);

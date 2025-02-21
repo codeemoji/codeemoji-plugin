@@ -7,7 +7,9 @@ import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSClassCollector;
 import codeemoji.inlay.vcs.VCSMethodCollector;
+import com.intellij.codeInsight.hints.VcsCodeAuthorInfo;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
+import com.intellij.codeInsight.hints.settings.language.NewInlayProviderSettingsModel;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -30,11 +32,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class AuthorAvatar extends CEProviderMulti<AuthorAvatarSettings> {
-
-    @Override
-    public String getPreviewText() {
-        return null;
-    }
 
     @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {

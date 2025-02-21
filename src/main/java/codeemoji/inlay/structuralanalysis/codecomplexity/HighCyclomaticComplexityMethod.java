@@ -32,12 +32,6 @@ public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticCom
             PsiSwitchLabeledRuleStatementImpl.class
     );
 
-    @Nullable
-    @Override
-    public String getPreviewText() {
-        return null;
-    }
-
     @Override
     public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {

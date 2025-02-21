@@ -12,25 +12,6 @@ import org.jetbrains.annotations.NotNull;
 public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSettings> {
 
     @Override
-    public String getPreviewText() {
-        return """
-                public class Customer {
-                                
-                  private String s = ": ";
-                                
-                  public String statement(String p) {
-                    String result = p + "-> ";
-                    while (rentals.hasMoreElements()) {
-                      Rental a = (Rental) rentals.nextElement();
-                      result += a.getMovie().getTitle() + s
-                        + String.valueOf(a.calculateAmount());
-                    }
-                    return result;
-                  }
-                }""";
-    }
-
-    @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CESimpleVariableCollector(editor, getKey(), mainSymbol()) {
             @Override

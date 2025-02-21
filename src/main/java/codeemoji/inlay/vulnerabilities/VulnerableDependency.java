@@ -28,12 +28,6 @@ import static codeemoji.inlay.vulnerabilities.VulnerableDependencySymbols.*;
 
 public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySettings> {
 
-    @Nullable
-    @Override
-    public String getPreviewText() {
-        return null;
-    }
-
     @Override
     public @NotNull CEConfigurableWindow<VulnerableDependencySettings> createConfigurable() {
         return new VulnerableDependencyConfigurable();

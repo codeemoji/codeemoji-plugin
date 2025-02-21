@@ -1,26 +1,14 @@
-package codeemoji.core.actions;
+package codeemoji.core.wip;
 
-import com.intellij.codeInsight.hints.JavaFqnDeclarativeInlayActionHandler;
 import com.intellij.codeInsight.hints.declarative.InlayActionHandler;
 import com.intellij.codeInsight.hints.declarative.InlayActionPayload;
 import com.intellij.codeInsight.hints.declarative.StringInlayActionPayload;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ActionsKt;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.stream.Stream;
 
 public class TestAction implements InlayActionHandler {
 

@@ -26,10 +26,6 @@ import java.util.Objects;
 import java.util.stream.IntStream;
 
 public class FrequentlyModified extends CEProvider<RecentlyModifiedSettings> {
-    @Override
-    public String getPreviewText() {
-        return null;
-    }
 
     @Override
     public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {

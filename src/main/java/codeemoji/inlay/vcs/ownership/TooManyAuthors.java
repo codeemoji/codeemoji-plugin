@@ -29,11 +29,6 @@ import java.util.stream.IntStream;
 public class TooManyAuthors extends CEProviderMulti<TooManyAuthorsSettings> {
 
     @Override
-    public String getPreviewText() {
-        return null;
-    }
-
-    @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
         return List.of(new Collector(psiFile, editor, getKey()));
     }

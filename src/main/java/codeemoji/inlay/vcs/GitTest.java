@@ -32,16 +32,6 @@ public class GitTest extends CEProvider<GitTest.Settings> {
 
     public static class Settings extends CEBaseSettings<Settings> {}
 
-    @Override
-    public String getPreviewText() {
-        return """
-                public class Customer {
-                    public void blame() {
-                        doSomething();
-                    }
-                }""";
-    }
-
     //TODO: EditorGutterAction seems to be an interfeace to impl to be able to click on the annotations. useful
 
     // I believe this is called once per FILE in your project, when opened

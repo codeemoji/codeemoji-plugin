@@ -18,12 +18,6 @@ import java.util.List;
 
 public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<ExternalFunctionalityInvokingMethodSettings> {
 
-    @Nullable
-    @Override
-    public String getPreviewText() {
-        return null;
-    }
-
     @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
 

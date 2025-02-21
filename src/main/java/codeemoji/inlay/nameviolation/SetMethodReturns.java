@@ -33,17 +33,6 @@ public class SetMethodReturns extends CEProvider<SetMethodReturns.Settings> {
     }
 
     @Override
-    public String getPreviewText() {
-        return """
-                public class Customer {
-                    public String setName(String name) {
-                        this.name = name;
-                        return this.name;
-                    }
-                }""";
-    }
-
-    @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
             @Override

@@ -1,16 +1,13 @@
 package codeemoji.core.util;
 
-import com.intellij.util.config.Externalizer;
 import com.intellij.util.xmlb.Converter;
 import com.intellij.util.xmlb.annotations.Attribute;
 import lombok.Data;
-import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-// Uff this should be final! Data makes it have setters...
 @Data
 public final class CESymbol {
 
@@ -24,7 +21,8 @@ public final class CESymbol {
         this.withBackground = hasBackground;
     }
 
-    private CESymbol(){}
+    private CESymbol() {
+    }
 
     public static final CESymbol EMPTY = of(0x26AA);
 

@@ -15,19 +15,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class StateIndependentMethod extends CEProviderMulti<StateIndependentMethodSettings> {
-    @Nullable
-    @Override
-    public String getPreviewText() {
-        return """
-                public class StateIndependentMethodExample {
-                                                    
-                    public int stateIndependentMethod(int num1, int num2) {
-                            int result = num1 + num2;
-                            return result;
-                    }
-                }
-                """;
-    }
 
     @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {

@@ -17,35 +17,16 @@ import org.jetbrains.annotations.NotNull;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
 
-public class NameSuggestsBooleanByTypeDoesNot extends CEProvider<NameSuggestsBooleanByTypeDoesNot.Settings> {
+public class NameSuggestsBooleanButTypeDoesNot extends CEProvider<NameSuggestsBooleanButTypeDoesNot.Settings> {
 
     @EqualsAndHashCode(callSuper = true)
     @ToString
     @Data
-    @State(name = "NameSuggestsBooleanByTypeDoesNotSettings", storages = @Storage("codeemoji-name-suggests-boolean-but-type-does-not-settings.xml"))
+    @State(name = "NameSuggestsBooleanButTypeDoesNotSettings", storages = @Storage("codeemoji-name-suggests-boolean-but-type-does-not-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings(){
-            super(NameSuggestsBooleanByTypeDoesNot.class, CONFUSED);
+            super(NameSuggestsBooleanButTypeDoesNot.class, CONFUSED);
         }
-    }
-
-    @Override
-    public String getPreviewText() {
-        return """
-                import java.util.*;
-                       \s
-                public class Customer {
-                    private String isActive;
-                    \s
-                    public String getItem(int isItemEnabled) {
-                        return doSomething(isItemEnabled);
-                    }
-                \s
-                    public int buildMyObject(Double value) {
-                        Integer isActiveForField = parseName(isActive);
-                        return isActiveForField.intValue();
-                    }
-                }""";
     }
 
     @Override

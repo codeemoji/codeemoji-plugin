@@ -11,11 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class LargeMethodCountClass extends CEProvider<LargeMethodCountClassSettings> {
-    @Nullable
-    @Override
-    public String getPreviewText() {
-        return null;
-    }
 
     @Override
     public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {

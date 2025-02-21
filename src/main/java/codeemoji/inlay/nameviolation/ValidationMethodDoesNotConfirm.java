@@ -32,18 +32,6 @@ public class ValidationMethodDoesNotConfirm extends CEProvider<ValidationMethodD
     }
 
     @Override
-    public String getPreviewText() {
-        return """
-                public class Customer {
-                    private void checkClose() {
-                        if(connection.isFinished()){
-                            close();
-                        }
-                    }
-                }""";
-    }
-
-    @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
             @Override

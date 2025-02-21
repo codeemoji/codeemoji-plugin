@@ -31,26 +31,6 @@ public class SaysOneButContainsMany extends CEProvider<SaysOneButContainsMany.Se
     }
 
     @Override
-    public String getPreviewText() {
-        return """
-                import java.util.*;
-                                
-                public class Customer {
-                  private String[] name;
-                  
-                  public String getItem(byte[] buffer, List device) {
-                    return doSomething(buffer, device);
-                  }
-                  
-                  public List<Object> transformValue(int value) {
-                    List<Object> item = new ArrayList<>();
-                    item.addAll(doSomething(name, value));
-                    return item;
-                  }
-                }""";
-    }
-
-    @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CESimpleVariableCollector(editor, getKey(), mainSymbol()) {
             @Override

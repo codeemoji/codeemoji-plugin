@@ -21,12 +21,6 @@ import static codeemoji.core.config.CERuleElement.*;
 
 public class ShowingSpecifics extends CEProviderMulti<ShowingSpecificsSettings> {
 
-    @Nullable
-    @Override
-    public String getPreviewText() {
-        return null;
-    }
-
     @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
         List<SharedBypassCollector> list = new ArrayList<>();

@@ -4,7 +4,10 @@ import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CEUtils;
+import com.intellij.codeInsight.hints.JavaMethodChainsDeclarativeInlayProvider;
+import com.intellij.codeInsight.hints.chain.AbstractCallChainHintsProvider;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.impl.DeclarativeHintsProviderSettingsModel;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.editor.Editor;
@@ -30,16 +33,6 @@ public class ExpectingButNotGettingACollection extends CEProvider<ExpectingButNo
         public Settings(){
             super(ExpectingButNotGettingACollection.class, ONE);
         }
-    }
-
-    @Override
-    public String getPreviewText() {
-        return """
-                public class Customer {
-                    public byte getBytes() {
-                        doSomething();
-                    }
-                }""";
     }
 
     @Override

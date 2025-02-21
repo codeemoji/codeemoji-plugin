@@ -30,24 +30,6 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NameContainsOn
     }
 
     @Override
-    public String getPreviewText() {
-        return """
-                public class Customer {
-                  private String __;
-                       
-                  public String getItem(String _____, int ___) {
-                      return doSomething(_____, ___);
-                  }
-                               
-                  public Object buildMyObject(int value) {
-                      Object ____ = new MyObject();
-                      ____.calcData(__, value);
-                      return item;
-                  }
-                }""";
-    }
-
-    @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CESimpleVariableCollector(editor, getKey(), mainSymbol()) {
             @Override

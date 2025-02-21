@@ -32,16 +32,6 @@ public class GetMethodDoesNotReturn extends CEProvider<GetMethodDoesNotReturn.Se
     }
 
     @Override
-    public String getPreviewText() {
-        return """
-                public class Customer {
-                    public void getName() {
-                        doSomething();
-                    }
-                }""";
-    }
-
-    @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
             @Override

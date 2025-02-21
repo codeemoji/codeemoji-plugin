@@ -15,19 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class StateChangingMethod extends CEProviderMulti<StateChangingMethodSettings> {
-    @Nullable
-    @Override
-    public String getPreviewText() {
-        return """
-                public class StateChangingMethodExample {
-                    private int attribute;
-                                
-                    public void stateChangingMethod() {
-                        this.attribute = this.attribute * 2;
-                    }
-                }
-                """;
-    }
 
     @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {

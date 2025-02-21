@@ -33,16 +33,6 @@ public class TransformMethodDoesNotReturn extends CEProvider<TransformMethodDoes
     }
 
     @Override
-    public String getPreviewText() {
-        return """
-                public class Customer {
-                    public void translateText(String text) {
-                        text = doSomething(text);
-                    }
-                }""";
-    }
-
-    @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
             @Override

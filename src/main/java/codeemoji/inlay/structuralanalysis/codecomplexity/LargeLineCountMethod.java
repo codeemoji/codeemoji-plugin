@@ -17,11 +17,6 @@ import java.util.Map;
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.LARGE_LINE_COUNT_METHOD;
 
 public class LargeLineCountMethod extends CEProvider<LargeLineCountMethodSettings> {
-    @Nullable
-    @Override
-    public String getPreviewText() {
-        return null;
-    }
 
     @Override
     public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {

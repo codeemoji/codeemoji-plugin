@@ -24,10 +24,6 @@ import java.util.PrimitiveIterator;
 import java.util.stream.IntStream;
 
 public class LastCommit extends CEProvider<LastCommitSettings> {
-    @Override
-    public String getPreviewText() {
-        return null;
-    }
 
     @Override
     public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {

@@ -32,16 +32,6 @@ public class NotAnsweredQuestion extends CEProvider<NotAnsweredQuestion.Settings
     }
 
     @Override
-    public String getPreviewText() {
-        return """
-                public class Customer {
-                    public void isHuman() {
-                        doSomething();
-                    }
-                }""";
-    }
-
-    @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
             @Override

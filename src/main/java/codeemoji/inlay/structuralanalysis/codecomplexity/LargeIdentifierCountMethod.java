@@ -18,11 +18,6 @@ import java.util.Map;
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.LARGE_IDENTIFIER_COUNT_METHOD;
 
 public class LargeIdentifierCountMethod extends CEProvider<LargeIdentifierCountMethodSettings> {
-    @Nullable
-    @Override
-    public String getPreviewText() {
-        return null;
-    }
 
     @Override
     public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {

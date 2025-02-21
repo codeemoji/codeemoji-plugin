@@ -52,7 +52,7 @@
         <applicationService serviceImplementation="codeemoji.inlay.nameviolation.GetMoreThanAccessor$Settings"/>
         <applicationService serviceImplementation="codeemoji.inlay.nameviolation.IsReturnsMoreThanABoolean$Settings"/>
         <applicationService serviceImplementation="codeemoji.inlay.nameviolation.NameContainsOnlySpecialCharacters$Settings"/>
-        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.NameSuggestsBooleanByTypeDoesNot$Settings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.nameviolation.NameSuggestsBooleanButTypeDoesNot$Settings"/>
         <applicationService serviceImplementation="codeemoji.inlay.nameviolation.NotAnsweredQuestion$Settings"/>
         <applicationService serviceImplementation="codeemoji.inlay.nameviolation.SaysManyButContainsOne$Settings"/>
         <applicationService serviceImplementation="codeemoji.inlay.nameviolation.SaysOneButContainsMany$Settings"/>
@@ -188,11 +188,11 @@
                                               providerId="inlay.saysonebutcontainsmany"/>
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
-                                              implementationClass="codeemoji.inlay.nameviolation.NameSuggestsBooleanByTypeDoesNot"
-                                              nameKey="inlay.namesuggestsbooleanbytypedoesnot.name"
+                                              implementationClass="codeemoji.inlay.nameviolation.NameSuggestsBooleanButTypeDoesNot"
+                                              nameKey="inlay.namesuggestsbooleanbuttypedoesnot.name"
                                               group="OTHER_GROUP"
-                                              descriptionKey="inlay.namesuggestsbooleanbytypedoesnot.description"
-                                              providerId="inlay.namesuggestsbooleanbytypedoesnot"/>
+                                              descriptionKey="inlay.namesuggestsbooleanbuttypedoesnot.description"
+                                              providerId="inlay.namesuggestsbooleanbuttypedoesnot"/>
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.nameviolation.SaysManyButContainsOne"
@@ -370,8 +370,8 @@
                 implementationClass="codeemoji.inlay.nameviolation.SaysOneButContainsMany" />
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
-                language="JAVA" providerId="inlay.namesuggestsbooleanbytypedoesnot"
-                implementationClass="codeemoji.inlay.nameviolation.NameSuggestsBooleanByTypeDoesNot" />
+                language="JAVA" providerId="inlay.namesuggestsbooleanbuttypedoesnot"
+                implementationClass="codeemoji.inlay.nameviolation.NameSuggestsBooleanButTypeDoesNot" />
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.saysmanybutcontainsone"
@@ -440,7 +440,12 @@
                 language="JAVA" providerId="inlay.toomanyauthors"
                 implementationClass="codeemoji.inlay.vcs.ownership.TooManyAuthors" />
 
-
+        <!--
+        <config.inlaySettingsProvider
+                implementation="codeemoji.core.wip.TestSettings"
+                id="inlay.getmorethanaccessor"
+                />
+        -->
 
         <!--END OF IMPLEMENTATIONS SECTION-->
 

@@ -22,11 +22,6 @@ import static com.intellij.psi.PsiModifier.*;
 public class ShowingModifiers extends CEProviderMulti<ShowingModifiersSettings> {
 
     @Override
-    public String getPreviewText() {
-        return null;
-    }
-
-    @Override
     public @NotNull List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         List<SharedBypassCollector> list = new ArrayList<>();
         String key = getKey();

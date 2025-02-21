@@ -39,11 +39,6 @@ public class ImplicitAnnotations extends CEProviderMulti<ImplicitAnnotationsSett
     }
 
     @Override
-    public String getPreviewText() {
-        return null;
-    }
-
-    @Override
     public @NotNull CEConfigurableWindow<ImplicitAnnotationsSettings> createConfigurable() {
         return new ImplicitAnnotationsConfigurable();
     }
