@@ -21,7 +21,7 @@ public class AuthorAvatarConfigurable extends CEConfigurableWindow<AuthorAvatarS
     @Override
     public @NotNull JComponent createComponent(AuthorAvatarSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
         localSymbols.clear();
-        //make deep copy. we update later
+        // Make deep copy. we update later
         for (CESymbolHolder pair : settings.getSymbols()) {
             localSymbols.add(pair.makeCopy());
         }

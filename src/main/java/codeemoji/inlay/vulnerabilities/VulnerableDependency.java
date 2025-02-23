@@ -22,7 +22,6 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
     @Override
     public @NotNull CEConfigurableWindow<VulnerableDependencySettings> createConfigurable() {
-
         return new VulnerableDependencyConfigurable();
     }
 

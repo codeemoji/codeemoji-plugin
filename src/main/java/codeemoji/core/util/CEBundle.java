@@ -15,7 +15,6 @@ public final class CEBundle {
         bundle = ResourceBundle.getBundle("CEBundle");
     }
 
-    @SuppressWarnings("SameReturnValue")
     private static @NotNull CEBundle getInstance() {
         return CEBundleHolder.INSTANCE;
     }
