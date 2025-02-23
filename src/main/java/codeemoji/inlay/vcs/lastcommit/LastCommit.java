@@ -51,8 +51,8 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
 
             RevisionInfo lastRevision = getLastRevision(element.getProject(), textRange, getEditor(), vcsBlame);
             if (lastRevision != null) {
-                return buildInlayWithEmoji(getSettings().getMainSymbol(),
-                        "inlay.lastcommit.tooltip", null); //TODO: clean tooltip string
+                return buildInlayVisualsWithEmoji(getSettings().getMainSymbol(),
+                        "inlay.lastcommit.tooltip", null);
             }
             return null;
         }

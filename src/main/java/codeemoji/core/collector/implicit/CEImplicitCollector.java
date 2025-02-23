@@ -21,6 +21,7 @@ import java.util.Objects;
 @Getter
 public abstract class CEImplicitCollector extends CECollector<PsiElement, PsiElement> {
 
+    //TODO:i think this should be the emoji hence should be fetched from settings
     public final int codePoint;
 
     protected CEImplicitCollector(@NotNull Editor editor, String key, int codePoint) {
@@ -147,14 +148,14 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement, PsiEle
     private void addImplicitInlayForAttributeValue(PsiAnnotation annotation, @Nullable String attributeName,
                                                    @Nullable CEImplicitAttributeInsetValue attributeValueInset, InlayTreeSink sink) {
         if (null != attributeValueInset && null != attributeValueInset.getValue()) {
-            var inlay = buildInlayWithText(attributeValueInset.getValue().toString(), "text." + getKey() + ".attributes.tooltip", null);
+            InlayVisuals inlay = InlayVisuals.translatedWithText(attributeValueInset.getValue().toString(), "text." + getKey() + ".attributes.tooltip", null);
             addInlayInAttribute(annotation, attributeName, sink, inlay, attributeValueInset.getShiftOffset());
         }
     }
 
     private void addImplicitInlayForAnnotation(PsiAnnotation annotation, @Nullable String newAttributesList, @NotNull InlayTreeSink sink) {
         if (null != newAttributesList) {
-            var inlay = buildInlayWithText(newAttributesList, "inlay." + getKey() + ".attributes.tooltip", null);
+            InlayVisuals inlay = InlayVisuals.translatedWithText(newAttributesList, "inlay." + getKey() + ".attributes.tooltip", null);
             addInlayInAnnotation(annotation, sink, inlay);
         }
     }
@@ -162,7 +163,7 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement, PsiEle
     private void addImplicitInlay(PsiElement element, @Nullable String fullText, @NotNull InlayTreeSink sink) {
         if (null != fullText) {
             var symbol = CESymbol.of(codePoint, fullText);
-            var inlay = buildInlayWithEmoji(symbol, "inlay." + getKey() + ".annotations.tooltip", null);
+            InlayVisuals inlay = InlayVisuals.translated(symbol, "inlay." + getKey() + ".annotations.tooltip", null);
             addInlayBlock(element, sink, inlay);
         }
     }

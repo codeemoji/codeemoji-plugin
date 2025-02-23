@@ -42,7 +42,7 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
     @Deprecated(forRemoval = true)
     public String getPreviewText(){
        return "none";
-    };
+    }
 
     @Override
     public boolean isDifferentFrom(@NotNull Project project, S newSettings) {

@@ -1,6 +1,7 @@
 package codeemoji.inlay.structuralanalysis.codecomplexity;
 
 import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.util.CEBundle;
 import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.lang.Language;
@@ -41,9 +42,9 @@ class HighCyclomaticComplexityMethodConfigurable extends CEConfigurableWindow<Hi
 
         //TODO: translation here
         panel.add(FormBuilder.createFormBuilder()
-                .addLabeledComponent("Cyclomatic Complexity Threshold", jSpinnerCyclomaticComplexityThreshold)
-                .addLabeledComponent("Line Count Threshold", jSpinnerLineCountStartThreshold)
-                .addLabeledComponent("Cyclomatic Complexity / Lines of Code", jSpinnerCyclomaticComplexityPerLine)
+                .addLabeledComponent(CEBundle.getString("inlay.highcyclomaticcomplexitymethod.settings.threshold"), jSpinnerCyclomaticComplexityThreshold)
+                .addLabeledComponent(CEBundle.getString("inlay.highcyclomaticcomplexitymethod.settings.linethreshold"), jSpinnerLineCountStartThreshold)
+                .addLabeledComponent(CEBundle.getString("inlay.highcyclomaticcomplexitymethod.settings.ratio"), jSpinnerCyclomaticComplexityPerLine)
                 .getPanel());
 
         return panel;

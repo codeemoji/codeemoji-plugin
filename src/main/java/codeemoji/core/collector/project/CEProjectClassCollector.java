@@ -1,9 +1,9 @@
 package codeemoji.core.collector.project;
 
+import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
-import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import lombok.Getter;
@@ -98,7 +98,7 @@ public final class CEProjectClassCollector extends CEProjectCollector<PsiClass, 
     public void addInlayReferenceListFR(@NotNull PsiElement addHintElement, @NotNull List<String> hintValues,
                                         @NotNull InlayTreeSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
-            var inlay = buildInlayWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
+            InlayVisuals inlay = InlayVisuals.translated(symbol, keyTooltip, String.valueOf(hintValues));
             addInlayInline(addHintElement, sink, inlay);
         }
     }

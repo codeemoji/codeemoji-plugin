@@ -7,16 +7,12 @@ import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -44,7 +40,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         );
     }
 
-    private static class VulnerableMethodCollector extends CEDynamicMethodCollector {
+    private class VulnerableMethodCollector extends CEDynamicMethodCollector {
         protected VulnerableMethodCollector(@NotNull Editor editor, String settingsKey) {
             super(editor, settingsKey);
         }
@@ -74,7 +70,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
                 }
             }
 
-            if (!vulnerableDependencies.isEmpty()) {
+            if (!vulnerableDependencies.isEmpty() || true) {
                 return vulnerableMethodInlay(vulnerableDependencies.size());
             }
             return null;
@@ -82,22 +78,20 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
         // text parsers
         protected InlayVisuals vulnerableMethodInlay(int vuln) {
-            String pt1 = CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.pt1.tooltip");
-            String pt2 = CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.pt2.tooltip");
-            String pt3_1 = CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.pt3singular.tooltip");
-            String pt3_2 = CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.pt3plural.tooltip");
-            String tooltip = pt1 + vuln + " " + pt2 + (vuln == 1 ? pt3_1 : pt3_2);
-            return this.buildInlayWithEmoji(VULNERABLE_METHOD, tooltip, null);
+            String tooltip = vuln == 1 ? CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.tooltip.singular") :
+                    CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.tooltip.plural", vuln);
+
+            return InlayVisuals.of(getSettings().getVulnerableMethod(), tooltip);
         }
 
 
         protected InlayVisuals indirectVulnerableMethodInlay() {
             String tooltip = CEBundle.getString("inlay.vulnerabledependency.indirectvulnerable.tooltip");
-            return this.buildInlayWithEmoji(INDIRECT_VULNERABLE_METHOD, tooltip, null);
+            return InlayVisuals.of(getSettings().getIndirectVulnerableMethod(), tooltip);
         }
     }
 
-    private static class VulnerableMethodReferenceCollector extends VulnerableMethodCollector {
+    private class VulnerableMethodReferenceCollector extends VulnerableMethodCollector {
         protected VulnerableMethodReferenceCollector(@NotNull Editor editor, String key) {
             super(editor, key);
         }
@@ -147,7 +141,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
     }
 
-    private static class VulnerableDependencyCallCollector extends CEDynamicReferenceMethodCollector {
+    private class VulnerableDependencyCallCollector extends CEDynamicReferenceMethodCollector {
         protected VulnerableDependencyCallCollector(@NotNull Editor editor, String key) {
             super(editor, key);
         }
@@ -193,7 +187,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
             String tooltip = tooltipBuilder.toString();
             String scannerPrefix = CEBundle.getString("inlay.vulnerabledependency.call.scanner");
-            return this.buildInlayWithEmoji(VULNERABLE_DEPENDENCY_CALL,
+            return InlayVisuals.translated(getSettings().getVulnerableDependencyCall(),
                     result.scanner() + scannerPrefix, tooltip);
         }
 

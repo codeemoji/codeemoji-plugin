@@ -4,7 +4,6 @@ import codeemoji.core.config.CERuleElement;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
-import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import lombok.Getter;
@@ -80,7 +79,7 @@ public final class CEProjectVariableCollector extends CEProjectCollector<PsiVari
     public void addInlayTypesFR(@NotNull PsiReferenceExpression addHintElement, @NotNull List<String> hintValues,
                                 @NotNull InlayTreeSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
-            var inlay = buildInlayWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
+            var inlay = buildInlayVisualsWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
             addInlayInline(addHintElement, sink, inlay);
         }
     }

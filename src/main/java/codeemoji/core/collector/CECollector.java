@@ -99,23 +99,4 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
         return result;
     }
 
-
-    public InlayVisuals buildInlayWithEmoji(@NotNull CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
-        return formatInlay(symbol.getEmoji(), symbol.isWithBackground(), keyTooltip, suffixTooltip);
-    }
-
-    protected @NotNull InlayVisuals buildInlayWithText(@NotNull String fullText, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
-        return formatInlay(fullText, true, keyTooltip, suffixTooltip);
-    }
-
-    // is tooltip suffix needed?
-    private @NotNull InlayVisuals formatInlay(@NotNull String symbol, boolean background,
-                                              @NotNull String keyTooltip, @Nullable String suffixTooltip) {
-        String tooltip = CEBundle.getString(keyTooltip);
-        if (null != suffixTooltip) {
-            tooltip += " " + suffixTooltip;
-        }
-        return InlayVisuals.of(symbol, tooltip, background);
-    }
-
 }

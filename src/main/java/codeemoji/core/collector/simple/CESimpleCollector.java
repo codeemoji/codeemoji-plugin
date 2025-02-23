@@ -42,7 +42,7 @@ public sealed abstract class CESimpleCollector<H extends PsiElement, A extends P
 
     @NotNull
     public InlayVisuals createInlay() {
-        return buildInlayWithEmoji(symbolGetter.get(), tooltipKey, null);
+        return InlayVisuals.translated(symbolGetter.get(), tooltipKey, null);
     }
 
     protected abstract boolean needsInlay(@NotNull H element);

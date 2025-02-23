@@ -52,7 +52,7 @@ public abstract class CEProjectCollector<H extends PsiModifierListOwner, A exten
     @Override
     public void addInlayAnnotationsFR(@NotNull A addHintElement, @NotNull List<String> hintValues, @NotNull InlayTreeSink sink) {
         if (!hintValues.isEmpty()) {
-            var inlay = buildInlayWithEmoji(getAnnotationsSymbol(), getAnnotationsKey(), String.valueOf(hintValues));
+            InlayVisuals inlay = InlayVisuals.translated(getAnnotationsSymbol(), getAnnotationsKey(), String.valueOf(hintValues));
             addInlayInline(addHintElement, sink, inlay);
         }
     }
