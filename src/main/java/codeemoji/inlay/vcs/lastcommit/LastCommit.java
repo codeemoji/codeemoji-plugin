@@ -35,7 +35,6 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
         return new CEConfigurableWindow<>();
     }
 
-    //screw anonymous classes. they are ugly
     private class RecentlyModifiedCollector extends VCSMethodCollector {
 
         protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor, String key) {
@@ -51,7 +50,7 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
 
             RevisionInfo lastRevision = getLastRevision(element.getProject(), textRange, getEditor(), vcsBlame);
             if (lastRevision != null) {
-                return buildInlayVisualsWithEmoji(getSettings().getMainSymbol(),
+                return InlayVisuals.translated(getSettings().getMainSymbol(),
                         "inlay.lastcommit.tooltip", null);
             }
             return null;

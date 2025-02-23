@@ -1,5 +1,6 @@
 package codeemoji.core.collector.project;
 
+import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.config.CERuleElement;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
@@ -79,7 +80,7 @@ public final class CEProjectVariableCollector extends CEProjectCollector<PsiVari
     public void addInlayTypesFR(@NotNull PsiReferenceExpression addHintElement, @NotNull List<String> hintValues,
                                 @NotNull InlayTreeSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
-            var inlay = buildInlayVisualsWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
+            InlayVisuals inlay = InlayVisuals.translated(symbol, keyTooltip, String.valueOf(hintValues));
             addInlayInline(addHintElement, sink, inlay);
         }
     }

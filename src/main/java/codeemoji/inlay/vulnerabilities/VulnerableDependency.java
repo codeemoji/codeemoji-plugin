@@ -14,13 +14,9 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static codeemoji.core.util.CEUtils.isVulnerable;
-import static codeemoji.inlay.vulnerabilities.VulnerableDependencySymbols.*;
 
 public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySettings> {
 
@@ -70,7 +66,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
                 }
             }
 
-            if (!vulnerableDependencies.isEmpty() || true) {
+            if (!vulnerableDependencies.isEmpty()) {
                 return vulnerableMethodInlay(vulnerableDependencies.size());
             }
             return null;
@@ -149,8 +145,9 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         @Override
         protected InlayVisuals createInlayFor(@NotNull PsiMethod method) {
             Project project = getEditor().getProject();
-            if (CEUtils.checkMethodExternality(method, project)) {
+            if (CEUtils.checkMethodExternality(method, project) || true) {
                 InlayInfo result = CEUtils.isVulnerable(method, project, getExternalInfo(method));
+                result = new InlayInfo("skibid", Map.of("CRITICAL", 1), "scanner");
                 if (result != null) {
                     return makeVulnerableDependencyCallInlay(result);
                 }
@@ -160,35 +157,33 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         }
 
         private InlayVisuals makeVulnerableDependencyCallInlay(InlayInfo result) {
-            StringBuilder tooltipBuilder = new StringBuilder(result.dependencyName() + " " +
-                    CEBundle.getString("inlay.vulnerabledependency.call.has") + " ");
+            StringBuilder severityBuilder = new StringBuilder();
 
-            String[] severities = {"CRITICAL", "HIGH", "MEDIUM", "LOW"};
             boolean firstSeverity = true;
             int totalVulnerabilities = 0;
 
-            for (String severity : severities) {
-                int count = result.severityCounts().getOrDefault(severity, 0);
+            for (var entry : result.severityCounts().entrySet()) {
+                int count = entry.getValue();
+                InlayInfo.Severity severity = entry.getKey();
                 if (count > 0) {
                     if (!firstSeverity) {
-                        tooltipBuilder.append(", ");
+                        severityBuilder.append(", ");
                     }
-                    tooltipBuilder.append(count).append(" ")
-                            .append(CEBundle.getString("text.vulnerabledependency.call.severity." + severity.toLowerCase()));
+                    severityBuilder.append(count).append(" ")
+                            .append(CEBundle.getString("inlay.vulnerabledependency.call.severity." +
+                                    severity.name().toLowerCase(Locale.ROOT)));
                     firstSeverity = false;
                     totalVulnerabilities += count;
                 }
             }
 
-            tooltipBuilder.append(" ")
-                    .append(CEBundle.getString(totalVulnerabilities == 1 ?
-                            "inlay.vulnerabledependency.call.vulnerability" :
-                            "inlay.vulnerabledependency.call.vulnerabilities"));
+            String vulnerabilitiesTooltip = totalVulnerabilities == 1 ?
+                    CEBundle.getString("inlay.vulnerabledependency.tooltip.singular", severityBuilder.toString()) :
+                    CEBundle.getString("inlay.vulnerabledependency.tooltip.plural", severityBuilder.toString());
 
-            String tooltip = tooltipBuilder.toString();
-            String scannerPrefix = CEBundle.getString("inlay.vulnerabledependency.call.scanner");
-            return InlayVisuals.translated(getSettings().getVulnerableDependencyCall(),
-                    result.scanner() + scannerPrefix, tooltip);
+            String scannerPrefix = CEBundle.getString("inlay.vulnerabledependency.call.scanner", result.scanner());
+            return InlayVisuals.of(getSettings().getVulnerableDependencyCall(),
+                    scannerPrefix + result.dependencyName() + " " + vulnerabilitiesTooltip);
         }
 
     }
