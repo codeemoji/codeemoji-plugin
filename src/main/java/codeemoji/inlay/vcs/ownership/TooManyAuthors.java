@@ -21,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -86,7 +85,7 @@ public class TooManyAuthors extends CEProviderMulti<TooManyAuthorsSettings> {
             return IntStream.rangeClosed(startLine, endLine)
                     .mapToObj(provider::getLineNumber)
                     .map(aspect::getValue) // gets the author name for line
-                    .filter(a->a != null && !a.isEmpty())
+                    .filter(a -> a != null && !a.isEmpty())
                     .collect(Collectors.groupingBy(Function.identity(), Collectors.counting())) // group by author and count occurrences
                     .entrySet().stream()
                     .sorted(Map.Entry.comparingByValue())

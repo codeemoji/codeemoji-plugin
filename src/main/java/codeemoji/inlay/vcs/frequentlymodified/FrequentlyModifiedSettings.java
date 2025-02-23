@@ -11,13 +11,13 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@State(name = "RecentlyModifiedSettings", storages = @Storage("codeemoji-recently-modified-settings.xml"))
+@State(name = "FrequentlyModifiedSettings", storages = @Storage("codeemoji-frequently-modified-settings.xml"))
 public final class FrequentlyModifiedSettings extends CEBaseSettings<FrequentlyModifiedSettings> {
 
-    private int days = 7;
-    private boolean showDate = false;
+    private int modifications = 15;
+    private int daysTimeFrame = 30;
     public FrequentlyModifiedSettings() {
-        super(RecentlyModified.class, VCSSymbols.RECENTLY_MODIFIED);
+        super(RecentlyModified.class, VCSSymbols.FREQUENTLY_MODIFIED);
     }
 
 }

@@ -1,45 +1,48 @@
 package codeemoji.inlay.vcs.frequentlymodified;
 
 import codeemoji.core.collector.InlayVisuals;
-import codeemoji.core.provider.CEProvider;
+import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
+import codeemoji.inlay.vcs.VCSClassCollector;
 import codeemoji.inlay.vcs.VCSMethodCollector;
-import codeemoji.inlay.vcs.recentlymodified.RecentlyModifiedConfigurable;
-import codeemoji.inlay.vcs.recentlymodified.RecentlyModifiedSettings;
-import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
-public class FrequentlyModified extends CEProvider<RecentlyModifiedSettings> {
+public class FrequentlyModified extends CEProviderMulti<FrequentlyModifiedSettings> {
 
     @Override
-    public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new RecentlyModifiedCollector(psiFile, editor, getKey());
+    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
+        return List.of(new FrequentlyModifiedMethodCollector(psiFile, editor, getKey()),
+                new FrequentlyModifiedClassCollector(psiFile, editor, getKey()));
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<RecentlyModifiedSettings> createConfigurable() {
-        return new RecentlyModifiedConfigurable();
+    public @NotNull CEConfigurableWindow<FrequentlyModifiedSettings> createConfigurable() {
+        return new FrequentlyModifiedConfigurable();
     }
 
-    private class RecentlyModifiedCollector extends VCSMethodCollector {
+    private class FrequentlyModifiedMethodCollector extends VCSMethodCollector {
 
-        protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor, @NotNull String key) {
+        protected FrequentlyModifiedMethodCollector(@NotNull PsiFile file, @NotNull Editor editor, @NotNull String key) {
             super(file, editor, key);
         }
 
@@ -47,66 +50,67 @@ public class FrequentlyModified extends CEProvider<RecentlyModifiedSettings> {
         protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
             if (vcsBlame == null) return null;
 
-            //text range of this element without comments
-            TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
+            return maybeCreatePresentation(element, getEditor(), vcsBlame);
+        }
+    }
 
-            Date date = getEarliestModificationDate(element.getProject(), textRange, getEditor(), vcsBlame);
+    private class FrequentlyModifiedClassCollector extends VCSClassCollector {
 
-            if (date == null) return null;
-
-            //check if date is within a week from now
-
-            long diff = System.currentTimeMillis() - date.getTime();
-            long diffDays = diff / (24 * 60 * 60 * 1000);
-
-            if (diffDays <= getSettings().getDays()) {
-                return makePresentation(date);
-            }
-            return null;
+        protected FrequentlyModifiedClassCollector(@NotNull PsiFile file, @NotNull Editor editor, @NotNull String key) {
+            super(file, editor, key);
         }
 
-        private InlayVisuals makePresentation(Date date) {
-            RecentlyModifiedSettings settings = getSettings();
-            String tooltip = settings.isShowDate() ? date.toString() : getDaysAgoTooltipString(date);
-            CESymbol mainSymbol = settings.getMainSymbol();
-            return InlayVisuals.of(mainSymbol, tooltip);
+        @Override
+        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiClass element) {
+            if (vcsBlame == null) return null;
+
+            return maybeCreatePresentation(element, getEditor(), vcsBlame);
         }
+    }
 
-        // write a method that given a Data returns a string saying how many days ago it was. Should sya "today" for today, "yesterday", x days ago and such
+    private @Nullable InlayVisuals maybeCreatePresentation(@NotNull PsiElement element, Editor editor, FileAnnotation vcsBlame) {
+        //text range of this element without comments
+        TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 
-        private static String getDaysAgoTooltipString(Date date) {
-            // calculate how many days ago it was
-            long diff = System.currentTimeMillis() - date.getTime();
-            long diffDays = diff / (24 * 60 * 60 * 1000);
-            if (diffDays == 0) {
-                return CEBundle.getString("inlay.recentlymodified.tooltip.today");
-            } else if (diffDays == 1) {
-                return CEBundle.getString("inlay.recentlymodified.tooltip.yesterday");
-            } else if (diffDays < 365) {
-                return CEBundle.getString("inlay.recentlymodified.tooltip.days_ago", diffDays);
-            } else {
-                int years = (int) (diffDays / 365);
-                return CEBundle.getString("inlay.recentlymodified.tooltip.years_ago", years);
+        List<Date> date = getAllModificationDates(element.getProject(), textRange, editor, vcsBlame);
+
+        int timeFrame = getSettings().getDaysTimeFrame();
+        int modifications = getSettings().getModifications();
+        Date timeFrameAgo = new Date(System.currentTimeMillis() - timeFrame * 24L * 60 * 60 * 1000);
+        int modificationsInTimeFrame = 0;
+        //check if it has had more modifications in last x days
+        for (Date modificationDate : date) {
+            if (modificationDate.after(timeFrameAgo)) {
+                modificationsInTimeFrame++;
             }
         }
 
-        @Nullable
-        private static Date getEarliestModificationDate(
-                Project project, TextRange range, Editor editor, FileAnnotation blame) {
-
-            Document document = editor.getDocument();
-            int startLine = document.getLineNumber(range.getStartOffset());
-            int endLine = document.getLineNumber(range.getEndOffset());
-            UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);
-
-            return IntStream.rangeClosed(startLine, endLine)
-                    .mapToObj(provider::getLineNumber)
-                    .map(blame::getLineDate)  //gets the author name for line
-                    .filter(Objects::nonNull)
-                    .min(Date::compareTo)
-                    .orElse(null);
+        if (modificationsInTimeFrame >= modifications) {
+            return makePresentation(modificationsInTimeFrame, timeFrame);
         }
+        return null;
+    }
 
+    private InlayVisuals makePresentation(int modifications, int timeFrame) {
+        FrequentlyModifiedSettings settings = getSettings();
+        String tooltip = CEBundle.getString("inlay.frequentlymodified.tooltip", modifications, timeFrame);
+        CESymbol mainSymbol = settings.getMainSymbol();
+        return InlayVisuals.of(mainSymbol, tooltip);
+    }
+
+    private static List<Date> getAllModificationDates(
+            Project project, TextRange range, Editor editor, FileAnnotation blame) {
+
+        Document document = editor.getDocument();
+        int startLine = document.getLineNumber(range.getStartOffset());
+        int endLine = document.getLineNumber(range.getEndOffset());
+        UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);
+
+        return IntStream.rangeClosed(startLine, endLine)
+                .mapToObj(provider::getLineNumber)
+                .map(blame::getLineDate)
+                .filter(Objects::nonNull)
+                .toList();
     }
 }
 

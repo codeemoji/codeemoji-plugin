@@ -75,8 +75,6 @@ public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
             return InlayVisuals.of(mainSymbol, tooltip);
         }
 
-        // write a method that given a Data returns a string saying how many days ago it was. Should sya "today" for today, "yesterday", x days ago and such
-
         private static String getDaysAgoTooltipString(Date date) {
             // calculate how many days ago it was
             long diff = System.currentTimeMillis() - date.getTime();

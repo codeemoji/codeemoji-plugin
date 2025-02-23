@@ -77,6 +77,8 @@
         <applicationService serviceImplementation="codeemoji.inlay.vcs.recentlymodified.RecentlyModifiedSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.lastcommit.LastCommitSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.ownership.TooManyAuthorsSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.frequentlymodified.FrequentlyModifiedSettings"/>
+
 
 
         <projectService serviceImplementation="codeemoji.inlay.external.services.OSSExternalServiceExternalService"/>
@@ -312,6 +314,13 @@
                                               descriptionKey="inlay.toomanyauthors.description"
                                               providerId="inlay.toomanyauthors"/>
 
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                              implementationClass="codeemoji.inlay.vcs.frequentlymodified.FrequentlyModified"
+                                              nameKey="inlay.frequentlymodified.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.frequentlymodified.description"
+                                              providerId="inlay.frequentlymodified"/>
+
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.showingmodifiers"
                 implementationClass="codeemoji.inlay.showingmodifiers.ShowingModifiers" />
@@ -439,6 +448,10 @@
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.toomanyauthors"
                 implementationClass="codeemoji.inlay.vcs.ownership.TooManyAuthors" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.frequentlymodified"
+                implementationClass="codeemoji.inlay.vcs.frequentlymodified.FrequentlyModified" />
 
         <!--
         <config.inlaySettingsProvider

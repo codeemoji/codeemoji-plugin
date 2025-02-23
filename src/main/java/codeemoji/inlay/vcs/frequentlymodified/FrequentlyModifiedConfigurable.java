@@ -11,31 +11,32 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class FrequentlyModifiedConfigurable extends CEConfigurableWindow<RecentlyModifiedSettings> {
+public class FrequentlyModifiedConfigurable extends CEConfigurableWindow<FrequentlyModifiedSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(RecentlyModifiedSettings settings, @Nullable String preview, Project project,
+    public @NotNull JComponent createComponent(FrequentlyModifiedSettings settings, @Nullable String preview, Project project,
                                                Language language, ChangeListener changeListener) {
         var daySelector = new JSpinner();
-        daySelector.setValue(settings.getDays());
+        daySelector.setValue(settings.getDaysTimeFrame());
         daySelector.addChangeListener(event -> {
-            settings.setDays((Integer) daySelector.getValue());
+            settings.setDaysTimeFrame((Integer) daySelector.getValue());
             changeListener.settingsChanged();
         });
 
-        var showDaysButton = new JCheckBox();
-        showDaysButton.setSelected(settings.isShowDate());
-        showDaysButton.addChangeListener(event -> {
-            settings.setShowDate(showDaysButton.isSelected());
+        var modificationSelector = new JSpinner();
+        modificationSelector.setValue(settings.getModifications());
+        modificationSelector.addChangeListener(event -> {
+            settings.setModifications((Integer) daySelector.getValue());
             changeListener.settingsChanged();
         });
+
 
         return FormBuilder.createFormBuilder()
                 .addComponent(super.createComponent(settings, preview, project, language, changeListener))
-                .addLabeledComponent(CEBundle.getString("inlay.recentlymodified.settings.number_of_days"),
+                .addLabeledComponent(CEBundle.getString("inlay.frequentlymodified.settings.timeframe"),
                         daySelector)
-                .addLabeledComponent(CEBundle.getString("inlay.recentlymodified.settings.show_date"),
-                        showDaysButton)
+                .addLabeledComponent(CEBundle.getString("inlay.frequentlymodified.settings.modifications"),
+                        modificationSelector)
                 .getPanel();
     }
 }
