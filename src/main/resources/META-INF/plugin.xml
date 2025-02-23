@@ -455,7 +455,7 @@
 
         <!--
         <config.inlaySettingsProvider
-                implementation="codeemoji.core.wip.TestSettings"
+                implementation="codeemoji.inlay.vcs.wip.TestSettings"
                 id="inlay.getmorethanaccessor"
                 />
         -->

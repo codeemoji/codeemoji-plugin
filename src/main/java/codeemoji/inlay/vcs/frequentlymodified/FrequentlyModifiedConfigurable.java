@@ -26,7 +26,7 @@ public class FrequentlyModifiedConfigurable extends CEConfigurableWindow<Frequen
         var modificationSelector = new JSpinner();
         modificationSelector.setValue(settings.getModifications());
         modificationSelector.addChangeListener(event -> {
-            settings.setModifications((Integer) daySelector.getValue());
+            settings.setModifications((Integer) modificationSelector.getValue());
             changeListener.settingsChanged();
         });
 

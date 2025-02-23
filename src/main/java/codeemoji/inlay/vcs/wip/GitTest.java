@@ -1,10 +1,9 @@
-package codeemoji.inlay.vcs;
+package codeemoji.inlay.vcs.wip;
 
 import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
-import codeemoji.core.util.CESymbol;
-import codeemoji.inlay.nameviolation.ValidationMethodDoesNotConfirm;
+import codeemoji.inlay.vcs.CEVcsUtils;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;

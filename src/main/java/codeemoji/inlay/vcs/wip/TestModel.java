@@ -1,4 +1,4 @@
-package codeemoji.core.wip;
+package codeemoji.inlay.vcs.wip;
 
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.InlayDumpUtil;
