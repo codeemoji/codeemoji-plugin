@@ -1,7 +1,8 @@
 package codeemoji.core.collector.project;
 
 import codeemoji.core.config.CERuleElement;
-import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiModifierListOwner;
 import org.jetbrains.annotations.NotNull;
@@ -11,11 +12,10 @@ import java.util.List;
 
 import static codeemoji.core.config.CERuleFeature.ANNOTATIONS;
 
-@SuppressWarnings("UnstableApiUsage")
 interface CEProject<H extends PsiModifierListOwner, A extends PsiElement> extends CEProjectConfig {
 
     default void processAnnotationsFR(@NotNull CERuleElement elementRule, @NotNull H evaluationElement,
-                                      @NotNull A hintElement, @NotNull InlayHintsSink sink) {
+                                      @NotNull A hintElement, @NotNull InlayTreeSink sink) {
         addInlayAnnotationsFR(hintElement, needsHintAnnotationsFR(elementRule, evaluationElement), sink);
     }
 
@@ -37,6 +37,6 @@ interface CEProject<H extends PsiModifierListOwner, A extends PsiElement> extend
         return hintValues;
     }
 
-    void addInlayAnnotationsFR(@NotNull A hintElement, @NotNull List<String> hintValues, @NotNull InlayHintsSink sink);
+    void addInlayAnnotationsFR(@NotNull A hintElement, @NotNull List<String> hintValues, @NotNull InlayTreeSink sink);
 
 }

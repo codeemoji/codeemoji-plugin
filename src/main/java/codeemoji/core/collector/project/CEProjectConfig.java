@@ -36,7 +36,7 @@ public interface CEProjectConfig {
                 if (null != emoji) {
                     try {
                         var codePoint = Integer.parseInt(emoji, 16);
-                        return new CESymbol(codePoint);
+                        return CESymbol.of(codePoint);
                     } catch (NumberFormatException ex) {
                         Logger.getInstance(CEProjectConfig.class).info(ex);
                     }
@@ -44,7 +44,7 @@ public interface CEProjectConfig {
             }
         }
         if (null == defaultSymbol) {
-            return new CESymbol();
+            return CESymbol.empty();
         }
         return defaultSymbol;
     }

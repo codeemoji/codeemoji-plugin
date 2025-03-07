@@ -3,7 +3,7 @@ package codeemoji.core.collector.project;
 import codeemoji.core.config.CERuleFeature;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceList;
 import org.jetbrains.annotations.NotNull;
@@ -14,12 +14,11 @@ import java.util.List;
 
 import static codeemoji.core.config.CERuleElement.CLASS;
 
-@SuppressWarnings("UnstableApiUsage")
 sealed interface CEProjectReferenceList<H extends PsiReferenceList, A extends PsiElement>
         extends CEProjectConfig permits CEProjectClassCollector {
 
     default void processReferenceListFR(@NotNull CERuleFeature featureRule, @Nullable H evaluationElement,
-                                        @NotNull A hintElement, @NotNull InlayHintsSink sink,
+                                        @NotNull A hintElement, @NotNull InlayTreeSink sink,
                                         @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         addInlayReferenceListFR(hintElement, needsHintReferenceListFR(featureRule, evaluationElement), sink,
                 symbol, keyTooltip);
@@ -45,6 +44,6 @@ sealed interface CEProjectReferenceList<H extends PsiReferenceList, A extends Ps
     }
 
     void addInlayReferenceListFR(@NotNull A addHintElement, @NotNull List<String> hintValues,
-                                 @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip);
+                                 @NotNull InlayTreeSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip);
 
 }

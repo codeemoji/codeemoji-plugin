@@ -1,9 +1,10 @@
 package codeemoji.core.collector.implicit;
 
 import codeemoji.core.collector.CECollector;
+import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.util.CESymbol;
-import com.intellij.codeInsight.hints.InlayHintsSink;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
+import com.intellij.codeInsight.hints.declarative.InlineInlayPosition;
 import com.intellij.lang.jvm.JvmAnnotatedElement;
 import com.intellij.lang.jvm.JvmAnnotation;
 import com.intellij.openapi.editor.Editor;
@@ -18,67 +19,86 @@ import java.util.List;
 import java.util.Objects;
 
 @Getter
-@SuppressWarnings("UnstableApiUsage")
-public abstract class CEImplicitCollector extends CECollector {
+public abstract class CEImplicitCollector extends CECollector<PsiElement, PsiElement> {
 
-    public final @NotNull String keyId;
+    //TODO:i think this should be the emoji hence should be fetched from settings
     public final int codePoint;
 
-    protected CEImplicitCollector(@NotNull Editor editor, @NotNull String keyId, int codePoint) {
-        super(editor);
-        this.keyId = keyId;
+    protected CEImplicitCollector(@NotNull Editor editor, String key, int codePoint) {
+        super(editor, key);
         this.codePoint = codePoint;
     }
 
+    // No-op
     @Override
-    public final boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
-        if (psiElement instanceof PsiJavaFile) {
-            psiElement.accept(new JavaRecursiveElementVisitor() {
-                @Override
-                public void visitClass(@NotNull PsiClass aClass) {
-                    if (hasImplicitBase(aClass)) {
-                        processImplicitsFor(aClass, inlayHintsSink);
-                    }
-                    super.visitClass(aClass);
-                }
-
-                @Override
-                public void visitField(@NotNull PsiField field) {
-                    if (hasImplicitBase(field.getContainingClass())) {
-                        processImplicitsFor(field, inlayHintsSink);
-                    }
-                    super.visitField(field);
-                }
-
-                @Override
-                public void visitMethod(@NotNull PsiMethod method) {
-                    if (hasImplicitBase(method.getContainingClass())) {
-                        processImplicitsFor(method, inlayHintsSink);
-                    }
-                    super.visitMethod(method);
-                }
-
-                private boolean hasImplicitBase(@Nullable JvmAnnotatedElement clazz) {
-                    if (null != clazz) {
-                        return null != clazz.getAnnotation(getBaseName()) && !isDeactivatedFor(clazz);
-                    }
-                    return false;
-                }
-            });
-        }
-        return false;
+    protected @Nullable InlayVisuals createInlayFor(@NotNull PsiElement element) {
+        return null;
     }
 
-    protected final void addInlayInAnnotation(@Nullable PsiAnnotation annotation, @NotNull InlayHintsSink sink, @NotNull InlayPresentation inlay) {
+    @Override
+    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayTreeSink InlayTreeSink) {
+        return new JavaRecursiveElementVisitor() {
+            @Override
+            public void visitClass(@NotNull PsiClass aClass) {
+                if (hasImplicitBase(aClass)) {
+                    processImplicitsFor(aClass, InlayTreeSink);
+                }
+                super.visitClass(aClass);
+            }
+
+            @Override
+            public void visitField(@NotNull PsiField field) {
+                if (hasImplicitBase(field.getContainingClass())) {
+                    processImplicitsFor(field, InlayTreeSink);
+                }
+                super.visitField(field);
+            }
+
+            @Override
+            public void visitMethod(@NotNull PsiMethod method) {
+                if (hasImplicitBase(method.getContainingClass())) {
+                    processImplicitsFor(method, InlayTreeSink);
+                }
+                super.visitMethod(method);
+            }
+
+            private boolean hasImplicitBase(@Nullable JvmAnnotatedElement clazz) {
+                if (null != clazz) {
+                    return null != clazz.getAnnotation(getBaseName()) && !isDeactivatedFor(clazz);
+                }
+                return false;
+            }
+        };
+    }
+
+    protected final void addInlayInAnnotation(@Nullable PsiAnnotation annotation, @NotNull InlayTreeSink sink, @NotNull InlayVisuals inlay) {
         if (null != annotation) {
-            sink.addInlineElement(calcOffsetForAnnotation(annotation), false, inlay, false);
+            sink.addPresentation(
+                    new InlineInlayPosition(calcOffsetForAnnotation(annotation), true, 0),
+                    List.of(),
+                    inlay.tooltip(),
+                    inlay.hasBackground(),
+                    builder -> {
+                        builder.text(inlay.text(), null);
+                        return null;
+                    }
+            );
         }
     }
 
     protected final void addInlayInAttribute(@Nullable PsiAnnotation annotation, @Nullable String attributeName,
-                                             @NotNull InlayHintsSink sink, @NotNull InlayPresentation inlay, int shiftOffset) {
+                                             @NotNull InlayTreeSink sink, @NotNull InlayVisuals inlay, int shiftOffset) {
         if (null != annotation && null != attributeName) {
-            sink.addInlineElement(calcOffsetForAttribute(annotation, attributeName, shiftOffset), false, inlay, false);
+            sink.addPresentation(
+                    new InlineInlayPosition(calcOffsetForAttribute(annotation, attributeName, shiftOffset), true, 0),
+                    List.of(),
+                    inlay.tooltip(),
+                    inlay.hasBackground(),
+                    builder -> {
+                        builder.text(inlay.text(), null);
+                        return null;
+                    }
+            );
         }
     }
 
@@ -102,7 +122,7 @@ public abstract class CEImplicitCollector extends CECollector {
         return result;
     }
 
-    protected final void processImplicitsList(@NotNull PsiMember member, @NotNull Iterable<? extends CEImplicit> implicits, @NotNull InlayHintsSink sink) {
+    protected final void processImplicitsList(@NotNull PsiMember member, @NotNull Iterable<? extends CEImplicit> implicits, @NotNull InlayTreeSink sink) {
         for (var implicit : implicits) {
             var hasImplicitAnnotation = false;
             var annotation = member.getAnnotation(implicit.getBaseName());
@@ -126,24 +146,24 @@ public abstract class CEImplicitCollector extends CECollector {
     }
 
     private void addImplicitInlayForAttributeValue(PsiAnnotation annotation, @Nullable String attributeName,
-                                                   @Nullable CEImplicitAttributeInsetValue attributeValueInset, InlayHintsSink sink) {
+                                                   @Nullable CEImplicitAttributeInsetValue attributeValueInset, InlayTreeSink sink) {
         if (null != attributeValueInset && null != attributeValueInset.getValue()) {
-            var inlay = buildInlayWithText(attributeValueInset.getValue().toString(), "inlay." + keyId + ".attributes.tooltip", null);
+            InlayVisuals inlay = InlayVisuals.translatedWithText(attributeValueInset.getValue().toString(), "text." + getKey() + ".attributes.tooltip", null);
             addInlayInAttribute(annotation, attributeName, sink, inlay, attributeValueInset.getShiftOffset());
         }
     }
 
-    private void addImplicitInlayForAnnotation(PsiAnnotation annotation, @Nullable String newAttributesList, @NotNull InlayHintsSink sink) {
+    private void addImplicitInlayForAnnotation(PsiAnnotation annotation, @Nullable String newAttributesList, @NotNull InlayTreeSink sink) {
         if (null != newAttributesList) {
-            var inlay = buildInlayWithText(newAttributesList, "inlay." + keyId + ".attributes.tooltip", null);
+            InlayVisuals inlay = InlayVisuals.translatedWithText(newAttributesList, "inlay." + getKey() + ".attributes.tooltip", null);
             addInlayInAnnotation(annotation, sink, inlay);
         }
     }
 
-    private void addImplicitInlay(PsiElement element, @Nullable String fullText, @NotNull InlayHintsSink sink) {
+    private void addImplicitInlay(PsiElement element, @Nullable String fullText, @NotNull InlayTreeSink sink) {
         if (null != fullText) {
-            var symbol = new CESymbol(codePoint, fullText);
-            var inlay = buildInlayWithEmoji(symbol, "inlay." + keyId + ".annotations.tooltip", null);
+            var symbol = CESymbol.of(codePoint, fullText);
+            InlayVisuals inlay = InlayVisuals.translated(symbol, "inlay." + getKey() + ".annotations.tooltip", null);
             addInlayBlock(element, sink, inlay);
         }
     }
@@ -163,5 +183,5 @@ public abstract class CEImplicitCollector extends CECollector {
 
     protected abstract String getBaseName();
 
-    protected abstract void processImplicitsFor(@NotNull PsiMember member, @NotNull InlayHintsSink sink);
+    protected abstract void processImplicitsFor(@NotNull PsiMember member, @NotNull InlayTreeSink sink);
 }

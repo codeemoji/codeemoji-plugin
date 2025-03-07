@@ -1,7 +1,7 @@
 package codeemoji.core.collector.implicit.jpa;
 
-import codeemoji.core.collector.implicit.CEImplicitAttribute;
 import codeemoji.core.collector.implicit.CEImplicit;
+import codeemoji.core.collector.implicit.CEImplicitAttribute;
 import codeemoji.core.util.CEUtils;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiField;
@@ -23,9 +23,9 @@ public class CEJPAImplicitBasic implements CEImplicit {
 
     public CEJPAImplicitBasic(@NotNull String nameSpace) {
         this.nameSpace = nameSpace;
-        baseName = nameSpace + ".Basic";
-        deactivatedCases.add(nameSpace + ".Transient");
-        deactivatedInTypeCases.add(nameSpace + ".Embeddable");
+        this.baseName = nameSpace + ".Basic";
+        this.deactivatedCases.add(nameSpace + ".Transient");
+        this.deactivatedInTypeCases.add(nameSpace + ".Embeddable");
     }
 
     @Override

@@ -26,7 +26,6 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.28")
     annotationProcessor("org.projectlombok:lombok:1.18.28")
     implementation("com.google.code.gson:gson:2.10.1")
-    implementation("org.json:json:20240303")
 }
 
 
@@ -39,7 +38,10 @@ intellij {
     updateSinceUntilBuild.set(true)
     val platformPlugins = properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty)
     plugins.set(
-            platformPlugins + listOf("com.intellij.java")
+            platformPlugins + listOf(
+                    "com.intellij.java",
+                    "Git4Idea"
+            )
     )
 }
 

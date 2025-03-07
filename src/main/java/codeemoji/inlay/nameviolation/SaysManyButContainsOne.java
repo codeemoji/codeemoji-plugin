@@ -1,47 +1,40 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CEVariableCollector;
+import codeemoji.core.collector.simple.CESimpleVariableCollector;
 import codeemoji.core.provider.CEProvider;
+import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
-import com.intellij.codeInsight.hints.NoSettings;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiEllipsisType;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiVariable;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.ONE;
 
-@SuppressWarnings("UnstableApiUsage")
-public class SaysManyButContainsOne extends CEProvider<NoSettings> {
+public class SaysManyButContainsOne extends CEProvider<SaysManyButContainsOne.Settings> {
 
-    @Override
-    public String getPreviewText() {
-        return """
-                import java.util.*;
-                        
-                public class Customer {
-                    private String names;
-                      
-                    public String getItem(String buffers, int devices) {
-                        return doSomething(buffers, devices);
-                    }
-                     
-                    public Object buildMyObject(int value) {
-                        Object items = new MyObject();
-                        items.calcData(names, value);
-                        return item;
-                    }
-                }""";
+    @EqualsAndHashCode(callSuper = true)
+    @ToString
+    @Data
+    @State(name = "SaysManyButContainsOne", storages = @Storage("codeemoji-says-many-but-contains-one-settings.xml"))
+    public static class Settings extends CEBaseSettings<Settings> {
+        public Settings(){
+            super(SaysManyButContainsOne.class, ONE);
+        }
     }
 
     @Override
-    public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
-        return new CEVariableCollector(editor, getKeyId(), ONE) {
+    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
+        return new CESimpleVariableCollector(editor, getKey(), mainSymbol()) {
             @Override
-            public boolean needsHint(@NotNull PsiVariable element, @NotNull Map<?, ?> externalInfo) {
+            public boolean needsInlay(@NotNull PsiVariable element){
                 var typeElement = element.getTypeElement();
                 return null != typeElement &&
                         CEUtils.isPluralForm(element.getName()) &&

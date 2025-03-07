@@ -6,12 +6,12 @@ import org.jetbrains.annotations.NotNull;
 
 public final class ProjectRuleSymbol {
 
-    public static final CESymbol ANNOTATIONS_SYMBOL = new CESymbol(0x1F4DD); //memo
-    public static final CESymbol EXTENDS_SYMBOL = new CESymbol(0x1F517); //link
-    public static final CESymbol IMPLEMENTS_SYMBOL = new CESymbol(0x1F91D); //handshake
-    public static final CESymbol TYPES_SYMBOL = new CESymbol(0x1F4D1); //bookmark
-    public static final CESymbol RETURNS_SYMBOL = new CESymbol(0x21A9); //right arrow curving left
-    public static final CESymbol PACKAGES_SYMBOL = new CESymbol(0x1F4E6); //package
+    public static final CESymbol ANNOTATIONS_SYMBOL = CESymbol.of(0x1F4DD); //memo
+    public static final CESymbol EXTENDS_SYMBOL = CESymbol.of(0x1F517); //link
+    public static final CESymbol IMPLEMENTS_SYMBOL = CESymbol.of(0x1F91D); //handshake
+    public static final CESymbol TYPES_SYMBOL = CESymbol.of(0x1F4D1); //bookmark
+    public static final CESymbol RETURNS_SYMBOL = CESymbol.of(0x21A9); //right arrow curving left
+    public static final CESymbol PACKAGES_SYMBOL = CESymbol.of(0x1F4E6); //package
 
 
     private ProjectRuleSymbol() {
@@ -38,7 +38,7 @@ public final class ProjectRuleSymbol {
                 return PACKAGES_SYMBOL;
             }
             default -> {
-                return new CESymbol();
+                return CESymbol.empty();
             }
         }
     }

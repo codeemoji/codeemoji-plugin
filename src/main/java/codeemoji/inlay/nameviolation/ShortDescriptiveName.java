@@ -1,44 +1,21 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CEVariableCollector;
+import codeemoji.core.collector.simple.CESimpleVariableCollector;
 import codeemoji.core.provider.CEProvider;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
+import codeemoji.core.settings.CEConfigurableWindow;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-
-import static codeemoji.inlay.nameviolation.NameViolationSymbols.SMALL_NAME;
-
-@SuppressWarnings("UnstableApiUsage")
 public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSettings> {
 
     @Override
-    public String getPreviewText() {
-        return """
-                public class Customer {
-                                
-                  private String s = ": ";
-                                
-                  public String statement(String p) {
-                    String result = p + "-> ";
-                    while (rentals.hasMoreElements()) {
-                      Rental a = (Rental) rentals.nextElement();
-                      result += a.getMovie().getTitle() + s
-                        + String.valueOf(a.calculateAmount());
-                    }
-                    return result;
-                  }
-                }""";
-    }
-
-    @Override
-    public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
-        return new CEVariableCollector(editor, getKeyId(), SMALL_NAME) {
+    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
+        return new CESimpleVariableCollector(editor, getKey(), mainSymbol()) {
             @Override
-            public boolean needsHint(@NotNull PsiVariable element, @NotNull Map<?, ?> externalInfo) {
+            public boolean needsInlay(@NotNull PsiVariable element){
                 if (null != element.getNameIdentifier()) {
                     return getSettings().getNumberOfLetters() >= element.getNameIdentifier().getTextLength();
                 }
@@ -48,7 +25,7 @@ public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSetting
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull ShortDescriptiveNameSettings settings) {
-        return new ShortDescriptiveNameConfigurable(settings);
+    public @NotNull CEConfigurableWindow<ShortDescriptiveNameSettings> createConfigurable() {
+        return new ShortDescriptiveNameConfigurable();
     }
 }

@@ -1,45 +1,39 @@
 package codeemoji.core.collector.simple;
 
+import codeemoji.core.collector.CECollector;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.InlayHintsSink;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
+import com.intellij.codeInsight.hints.SettingsKey;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("UnstableApiUsage")
-public abstract non-sealed class CEDynamicReferenceMethodCollector extends CESimpleDynamicCollector<PsiMethod, PsiMethodCallExpression> {
+public abstract class CEDynamicReferenceMethodCollector extends CECollector<PsiMethod, PsiMethodCallExpression> {
 
-    protected CEDynamicReferenceMethodCollector(@NotNull Editor editor) {
-        super(editor);
+    protected CEDynamicReferenceMethodCollector(@NotNull Editor editor, String key) {
+        super(editor, key);
     }
 
     @Override
-    public final boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
-        if (psiElement instanceof PsiJavaFile) {
-            psiElement.accept(new JavaRecursiveElementVisitor() {
-                @Override
-                public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
-                    if (CEUtils.isNotPreviewEditor(editor) &&
-                            (callExpression instanceof PsiMethodCallExpression mexp)) {
-                        var method = mexp.resolveMethod();
-                        if (null != method) {
-                            InlayPresentation dynamicInlay = needsHint(method, processExternalInfo(method));
-                            if (dynamicInlay != null) {
-                                inlay = dynamicInlay;
-                                addInlay(mexp, inlayHintsSink);
-                            }
-
+    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayTreeSink InlayTreeSink) {
+        return new JavaRecursiveElementVisitor() {
+            @Override
+            public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
+                if (CEUtils.isNotPreviewEditor(editor) &&
+                        (callExpression instanceof PsiMethodCallExpression mexp)) {
+                    var method = mexp.resolveMethod();
+                    if (null != method) {
+                        var inlay = createInlayFor(method);
+                        if (inlay != null) {
+                            addInlayInline(mexp, InlayTreeSink, inlay);
                         }
-
                     }
-                    super.visitCallExpression(callExpression);
                 }
+                super.visitCallExpression(callExpression);
+            }
 
-            });
-        }
-        return false;
+        };
     }
 
     @Override

@@ -878,7 +878,7 @@ As can be seen in the diagram above, a class of type _InlayHintProvider_ must im
 which will allow you to configure the inlay hint case in the IDE, allowing you to configure it in the appropriate menus
 for a
 programming language. The most important point concerns the _getCollectorFor(PsiFile, Editor, S,
-InlayHintsSink)_ method. This method returns a class of type [
+InlayTreeSink)_ method. This method returns a class of type [
 _InlayHintsCollector_](https://github.com/JetBrains/intellij-community/blob/idea/232.9921.47/platform/lang-api/src/com/intellij/codeInsight/hints/InlayHintsCollector.kt).
 This class that is responsible for scanning
 the source code elements and execute the logic to identify the point where the addition of an inlay hint is necessary.
@@ -896,12 +896,12 @@ class diagram available for this purpose.
 ![Collector Class Diagram - Example](docs/screenshots/CECollectorDiagram.png)
 
 The _InlayHintsCollector_ framework interface can be implemented in the plugin by the _CECollector_ and
-_CECollectorMulti_. The interface defines the _collect(PsiElement, Editor, InlayHintsSink)_ method. _CECollectorMulti_
+_CECollectorMulti_. The interface defines the _collect(PsiElement, Editor, InlayTreeSink)_ method. _CECollectorMulti_
 allows you to implement this method using a list of collectors, useful for use with _CEProviderMulti_.
 
 The _CECollector_ abstract class is the main class for implementing a collector. It extends the abstract class
 _CEInlayBuilder_ which contains all the methods for manipulating inlay hints. Child classes must implement
-_processCollect(PsiElement, Editor, InlayHintsSink)_.
+_processCollect(PsiElement, Editor, InlayTreeSink)_.
 
 ![CECollector Class Diagram - Example](docs/screenshots/CECollectorWithInlayBuilder.png)
 
@@ -932,7 +932,7 @@ referenced in the source code: _Reference Class_, _Reference Field_ and _Referen
 Example of use:
 
 ````java
-public class GetMethodDoesNotReturn extends CEProvider<NoSettings> {
+public class GetMethodDoesNotReturn extends CEProvider<CEDefaultSettings> {
 
     @Override
     public String getPreviewText() {
@@ -945,7 +945,7 @@ public class GetMethodDoesNotReturn extends CEProvider<NoSettings> {
     }
 
     @Override
-    public @NotNull InlayHintsCollector buildCollector(@NotNull Editor editor) {
+    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
         return new CEMethodCollector(editor, getKeyId(), CONFUSED) {
             @Override
             public boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {

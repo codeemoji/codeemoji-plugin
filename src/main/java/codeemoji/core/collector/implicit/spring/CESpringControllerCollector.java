@@ -2,7 +2,9 @@ package codeemoji.core.collector.implicit.spring;
 
 import codeemoji.core.collector.implicit.CEImplicit;
 import codeemoji.core.collector.implicit.CEImplicitCollector;
-import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
+import com.intellij.codeInsight.hints.SettingsKey;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMember;
@@ -15,18 +17,17 @@ import java.util.ArrayList;
 
 @Getter
 @Setter
-@SuppressWarnings("UnstableApiUsage")
 public class CESpringControllerCollector extends CEImplicitCollector {
 
     public @NotNull String baseName;
 
-    public CESpringControllerCollector(@NotNull Editor editor, @NotNull String keyId, int codePoint) {
-        super(editor, keyId, codePoint);
+    public CESpringControllerCollector(@NotNull Editor editor, String key, int codePoint) {
+        super(editor, key, codePoint);
         baseName = "org.springframework.stereotype.Controller";
     }
 
     @Override
-    protected void processImplicitsFor(@NotNull PsiMember member, @NotNull InlayHintsSink sink) {
+    protected void processImplicitsFor(@NotNull PsiMember member, @NotNull InlayTreeSink sink) {
         if (member instanceof PsiClass clazz) {
             var implicits = new ArrayList<CEImplicit>();
             implicits.add(new CESpringImplicitRequestMapping());

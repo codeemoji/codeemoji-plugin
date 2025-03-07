@@ -1,10 +1,11 @@
 package codeemoji.inlay.structuralanalysis.codecomplexity;
 
-import codeemoji.core.collector.simple.CEMethodCollector;
+import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
+import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.java.*;
@@ -19,7 +20,6 @@ import java.util.Map;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.HIGH_CYCLOMATIC_COMPLEXITY_METHOD;
 
-@SuppressWarnings("UnstableApiUsage")
 public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticComplexityMethodSettings> {
 
     private static final Collection<String> booleanOperators = List.of("&&", "||");
@@ -32,17 +32,11 @@ public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticCom
             PsiSwitchLabeledRuleStatementImpl.class
     );
 
-    @Nullable
     @Override
-    public String getPreviewText() {
-        return null;
-    }
-
-    @Override
-    protected InlayHintsCollector buildCollector(Editor editor) {
-        return new CEMethodCollector(editor, getKeyId(), HIGH_CYCLOMATIC_COMPLEXITY_METHOD) {
+    public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
+        return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
             @Override
-            protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+            protected boolean needsInlay(@NotNull PsiMethod element){
                 if(isHighCyclomaticComplexityMethod(element)) System.out.println("Found HIGH_CYCLOMATIC_COMPLEXITY_METHOD in " + element.getName());
                 return isHighCyclomaticComplexityMethod(element);
             }
@@ -50,8 +44,8 @@ public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticCom
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull HighCyclomaticComplexityMethodSettings settings) {
-        return new HighCyclomaticComplexityMethodConfigurable(settings);
+    public @NotNull CEConfigurableWindow<HighCyclomaticComplexityMethodSettings> createConfigurable() {
+        return new HighCyclomaticComplexityMethodConfigurable();
     }
 
     private boolean isHighCyclomaticComplexityMethod(PsiMethod method){

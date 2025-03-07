@@ -1,12 +1,16 @@
 package codeemoji.inlay.external;
 
+import lombok.Getter;
+
 import java.util.Objects;
 
+@Getter
 public class DependencyInfo {
-    private String groupId;
-    private String artifactId;
-    private String version;
-    private String path;
+    // Getters
+    private final String groupId;
+    private final String artifactId;
+    private final String version;
+    private final String path;
 
     public DependencyInfo(String groupId, String artifactId, String version, String path) {
         this.groupId = groupId;
@@ -14,12 +18,6 @@ public class DependencyInfo {
         this.version = version;
         this.path = path;
     }
-
-    // Getters
-    public String getGroupId() { return groupId; }
-    public String getArtifactId() { return artifactId; }
-    public String getVersion() { return version; }
-    public String getPath() { return path; }
 
     @Override
     public boolean equals(Object o) {

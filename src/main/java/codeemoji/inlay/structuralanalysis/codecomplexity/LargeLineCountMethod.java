@@ -1,11 +1,13 @@
 package codeemoji.inlay.structuralanalysis.codecomplexity;
 
-import codeemoji.core.collector.simple.CEMethodCollector;
+import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
+import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,27 +16,21 @@ import java.util.Map;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.LARGE_LINE_COUNT_METHOD;
 
-@SuppressWarnings("UnstableApiUsage")
 public class LargeLineCountMethod extends CEProvider<LargeLineCountMethodSettings> {
-    @Nullable
-    @Override
-    public String getPreviewText() {
-        return null;
-    }
 
     @Override
-    protected InlayHintsCollector buildCollector(Editor editor) {
-        return new CEMethodCollector(editor, getKeyId(), LARGE_LINE_COUNT_METHOD) {
+    public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
+        return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
             @Override
-            protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+            protected boolean needsInlay(@NotNull PsiMethod element) {
                 return isLargeLineCountMethod(element);
             }
         };
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull LargeLineCountMethodSettings settings) {
-        return new LargeLineCountMethodConfigurable(settings);
+    public @NotNull CEConfigurableWindow<LargeLineCountMethodSettings> createConfigurable() {
+        return new LargeLineCountMethodConfigurable();
     }
 
     private boolean isLargeLineCountMethod(PsiMethod method) {

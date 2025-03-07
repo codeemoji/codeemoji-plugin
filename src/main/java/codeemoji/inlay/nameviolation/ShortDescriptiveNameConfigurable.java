@@ -1,26 +1,29 @@
 package codeemoji.inlay.nameviolation;
 
-import com.intellij.codeInsight.hints.ChangeListener;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
+import codeemoji.core.settings.CEConfigurableWindow;
+import com.intellij.lang.Language;
+import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-@SuppressWarnings("UnstableApiUsage")
-record ShortDescriptiveNameConfigurable(ShortDescriptiveNameSettings settings) implements ImmediateConfigurable {
+class ShortDescriptiveNameConfigurable extends CEConfigurableWindow<ShortDescriptiveNameSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(@NotNull ChangeListener changeListener) {
+    public @NotNull JComponent createComponent(ShortDescriptiveNameSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
+        var panel = super.createComponent(settings, preview, project, language, changeListener);
         var jSpinner = new JSpinner();
-        jSpinner.setValue(settings().getNumberOfLetters());
+        jSpinner.setValue(settings.getNumberOfLetters());
         jSpinner.addChangeListener(event -> {
-            settings().setNumberOfLetters((Integer) jSpinner.getValue());
+            settings.setNumberOfLetters((Integer) jSpinner.getValue());
             changeListener.settingsChanged();
         });
-        return FormBuilder.createFormBuilder()
+        panel.add(FormBuilder.createFormBuilder()
                 .addLabeledComponent("Number of letters", jSpinner)
-                .getPanel();
+                .getPanel());
+        return panel;
     }
 
 }

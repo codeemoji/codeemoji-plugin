@@ -5,11 +5,13 @@ import codeemoji.core.collector.project.ProjectRuleSymbol;
 import codeemoji.core.config.CEConfigFile;
 import codeemoji.core.config.CERuleElement;
 import codeemoji.core.config.CERuleFeature;
+import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.ide.BrowserUtil;
+import com.intellij.lang.Language;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -33,9 +35,7 @@ import static codeemoji.core.config.CERuleElement.PARAMETER;
 import static java.awt.GridBagConstraints.HORIZONTAL;
 import static java.awt.GridBagConstraints.WEST;
 
-@SuppressWarnings("UnstableApiUsage")
-public record ShowingSpecificsConfigurable(
-        ShowingSpecificsSettings settings) implements ImmediateConfigurable, CEProjectConfig {
+public class ShowingSpecificsConfigurable extends CEConfigurableWindow<ShowingSpecificsSettings> implements CEProjectConfig {
 
     private static @NotNull JPanel createBasicInnerBagPanel(@NotNull String title) {
         var result = new JPanel(new GridBagLayout());
@@ -52,20 +52,20 @@ public record ShowingSpecificsConfigurable(
     }
 
     @Override
-    public @NotNull JComponent createComponent(@NotNull ChangeListener changeListener) {
+    public @NotNull JComponent createComponent(ShowingSpecificsSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
         var specificsPanel = new JPanel();
-        var detailProject = initOpenProjectsPanel();
+        var detailProject = initOpenProjectsPanel(settings);
         specificsPanel.add(detailProject);
         return FormBuilder.createFormBuilder()
                 .addComponent(specificsPanel)
                 .getPanel();
     }
 
-    private @NotNull JComponent initOpenProjectsPanel() {
+    private @NotNull JComponent initOpenProjectsPanel(ShowingSpecificsSettings settings) {
         var project = getOpenProject();
         var file = new CEConfigFile(project);
         if (file.getRules().isEmpty()) {
-            return howToConfigurePanel();
+            return howToConfigurePanel(settings);
         }
         if (null != project && !project.isDisposed()) {
             return buildPanelsForOpenProject(project);
@@ -74,16 +74,16 @@ public record ShowingSpecificsConfigurable(
         }
     }
 
-    private @NotNull JComponent howToConfigurePanel() {
+    private @NotNull JComponent howToConfigurePanel(ShowingSpecificsSettings settings) {
         var panel = new JPanel();
         var noRuleLoaded = CEBundle.getString("inlay.showingspecifics.options.title.noruleloaded");
         var howToConfigure = CEBundle.getString("inlay.showingspecifics.options.title.noruleloaded.howtoconfigure");
         panel.add(new JLabel(noRuleLoaded + ":"));
         var button = new JButton();
-        button.setText(new CESymbol(0x1F575).getEmoji() + " " + howToConfigure);
+        button.setText(CESymbol.of(0x1F575).getEmoji() + " " + howToConfigure);
         button.addActionListener(event -> {
             try {
-                BrowserUtil.browse(new URI(settings().getHowToConfigureURL()));
+                BrowserUtil.browse(new URI(settings.getHowToConfigureURL()));
             } catch (URISyntaxException ex) {
                 Logger LOG = Logger.getInstance(ShowingSpecificsConfigurable.class);
                 LOG.info(ex);
@@ -140,7 +140,7 @@ public record ShowingSpecificsConfigurable(
             var feature = entry.getKey();
             var defaultSymbol = ProjectRuleSymbol.detectDefaultSymbol(feature);
             var symbol = readRuleEmoji(elementRule, feature, defaultSymbol);
-            var key = new JLabel(symbol.getEmoji() + " " + feature.getValue() + ": ");
+            var key = symbol.createLabel(feature.getValue() + ": ");
             var valuesStr = entry.getValue().toString();
             valuesStr = valuesStr.replace("[", "").replace("]", "");
             var value = new JTextField(valuesStr);

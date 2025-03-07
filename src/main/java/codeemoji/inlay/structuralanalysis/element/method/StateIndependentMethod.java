@@ -1,54 +1,34 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
-import codeemoji.core.collector.simple.CEMethodCollector;
-import codeemoji.core.collector.simple.CEReferenceMethodCollector;
+import codeemoji.core.collector.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.simple.CESimpleReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
+import codeemoji.core.settings.CEConfigurableWindow;
+import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiReferenceExpression;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
-import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.STATE_INDEPENDENT_METHOD;
-
-@SuppressWarnings("UnstableApiUsage")
 public class StateIndependentMethod extends CEProviderMulti<StateIndependentMethodSettings> {
-    @Nullable
-    @Override
-    public String getPreviewText() {
-        return """
-                public class StateIndependentMethodExample {
-                                                    
-                    public int stateIndependentMethod(int num1, int num2) {
-                            int result = num1 + num2;
-                            return result;
-                    }
-                }
-                """;
-    }
 
     @Override
-    protected List<InlayHintsCollector> buildCollectors(Editor editor) {
+    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
         return List.of(
-                new CEMethodCollector(editor, getKeyId(), STATE_INDEPENDENT_METHOD) {
+                new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
                     @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                    protected boolean needsInlay(@NotNull PsiMethod element){
                         return isStateIndependentMethod(element);
                     }
                 },
 
-                new CEReferenceMethodCollector(editor, getKeyId(), STATE_INDEPENDENT_METHOD) {
+                new CESimpleReferenceMethodCollector(editor, getKey(), mainSymbol()) {
                     @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                    protected boolean needsInlay(@NotNull PsiMethod element){
                         return isStateIndependentMethod(element);
                     }
                 }
@@ -56,10 +36,9 @@ public class StateIndependentMethod extends CEProviderMulti<StateIndependentMeth
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull StateIndependentMethodSettings settings) {
-        return new StateIndependentMethodConfigurable(settings);
+    public @NotNull CEConfigurableWindow<StateIndependentMethodSettings> createConfigurable() {
+        return new StateIndependentMethodConfigurable();
     }
-
 
     private boolean isStateIndependentMethod(PsiMethod method){
 

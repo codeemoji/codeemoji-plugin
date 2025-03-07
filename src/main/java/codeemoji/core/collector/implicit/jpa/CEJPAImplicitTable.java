@@ -21,7 +21,7 @@ public class CEJPAImplicitTable implements CEImplicit {
 
     public CEJPAImplicitTable(@NotNull String nameSpace) {
         this.nameSpace = nameSpace;
-        baseName = nameSpace + ".Table";
+        this.baseName = nameSpace + ".Table";
     }
 
     @Override

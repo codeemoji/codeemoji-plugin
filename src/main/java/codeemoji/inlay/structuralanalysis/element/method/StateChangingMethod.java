@@ -1,10 +1,10 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
-import codeemoji.core.collector.simple.CEMethodCollector;
-import codeemoji.core.collector.simple.CEReferenceMethodCollector;
+import codeemoji.core.collector.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.simple.CESimpleReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
+import codeemoji.core.settings.CEConfigurableWindow;
+import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -13,41 +13,23 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.STATE_CHANGING_METHOD;
-
-@SuppressWarnings("UnstableApiUsage")
 public class StateChangingMethod extends CEProviderMulti<StateChangingMethodSettings> {
-    @Nullable
-    @Override
-    public String getPreviewText() {
-        return """
-                public class StateChangingMethodExample {
-                    private int attribute;
-                                
-                    public void stateChangingMethod() {
-                        this.attribute = this.attribute * 2;
-                    }
-                }
-                """;
-    }
 
     @Override
-    protected List<InlayHintsCollector> buildCollectors(Editor editor) {
-
+    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
         return List.of(
-                new CEMethodCollector(editor, getKeyId(), STATE_CHANGING_METHOD) {
+                new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
                     @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                    protected boolean needsInlay(@NotNull PsiMethod element){
                         return isStateChangingMethod(element);
                     }
 
 
                 },
-                new CEReferenceMethodCollector(editor, getKeyId(), STATE_CHANGING_METHOD) {
+                new CESimpleReferenceMethodCollector(editor, getKey(), mainSymbol()) {
                     @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                    protected boolean needsInlay(@NotNull PsiMethod element){
                         return isStateChangingMethod(element);
                     }
                 }
@@ -55,8 +37,8 @@ public class StateChangingMethod extends CEProviderMulti<StateChangingMethodSett
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull StateChangingMethodSettings settings) {
-        return new StateChangingMethodConfigurable(settings);
+    public @NotNull CEConfigurableWindow<StateChangingMethodSettings> createConfigurable() {
+        return new StateChangingMethodConfigurable();
     }
 
     private PsiElement[] collectStateChangingElements(PsiMethod method){

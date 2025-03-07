@@ -1,46 +1,37 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
-import codeemoji.core.collector.simple.CEMethodCollector;
-import codeemoji.core.collector.simple.CEReferenceMethodCollector;
+import codeemoji.core.collector.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.simple.CESimpleReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.EXTERNAL_FUNCTIONALITY_INVOKING_METHOD;
-
-@SuppressWarnings("UnstableApiUsage")
 public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<ExternalFunctionalityInvokingMethodSettings> {
 
-    @Nullable
     @Override
-    public String getPreviewText() {
-        return null;
-    }
-
-    @Override
-    protected List<InlayHintsCollector> buildCollectors(Editor editor) {
+    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
 
         return List.of(
-                new CEMethodCollector(editor, getKeyId(), EXTERNAL_FUNCTIONALITY_INVOKING_METHOD) {
+                new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
                     @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                    protected boolean needsInlay(@NotNull PsiMethod element){
                         return isExternalFunctionalityInvokingMethod(element, editor.getProject());
                     }
                 },
 
-                new CEReferenceMethodCollector(editor, getKeyId(), EXTERNAL_FUNCTIONALITY_INVOKING_METHOD) {
+                new CESimpleReferenceMethodCollector(editor, getKey(), mainSymbol()) {
                     @Override
-                    protected boolean needsHint(@NotNull PsiMethod element, @NotNull Map<?, ?> externalInfo) {
+                    protected boolean needsInlay(@NotNull PsiMethod element){
                         return isExternalFunctionalityInvokingMethod(element, editor.getProject());
                     }
                 }
@@ -48,10 +39,9 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull ExternalFunctionalityInvokingMethodSettings settings) {
-        return new ExternalFunctionalityInvokingMethodConfigurable(settings);
+    public @NotNull CEConfigurableWindow<ExternalFunctionalityInvokingMethodSettings> createConfigurable() {
+   return new ExternalFunctionalityInvokingMethodConfigurable();
     }
-
 
 
     private boolean isExternalFunctionalityInvokingMethod(PsiMethod method, Project project) {

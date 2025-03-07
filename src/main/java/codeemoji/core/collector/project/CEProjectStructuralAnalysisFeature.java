@@ -3,7 +3,7 @@ package codeemoji.core.collector.project;
 import codeemoji.core.config.CERuleElement;
 import codeemoji.core.config.CERuleFeature;
 import codeemoji.core.util.CESymbol;
-import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +15,7 @@ public interface CEProjectStructuralAnalysisFeature<H, A extends PsiElement> ext
                                      @NotNull CERuleFeature ruleFeature,
                                      @NotNull H structuralAnalysisFeatureElement,
                                      @NotNull A addHintElement,
-                                     @NotNull InlayHintsSink sink,
+                                     @NotNull InlayTreeSink sink,
                                      @NotNull CESymbol symbol,
                                      @NotNull String keyTooltip);
 
@@ -25,7 +25,7 @@ public interface CEProjectStructuralAnalysisFeature<H, A extends PsiElement> ext
 
     void addInlayStructuralAnalysisFR(@NotNull A addHintElement,
                                       @NotNull List<String> hintValues,
-                                      @NotNull InlayHintsSink sink,
+                                      @NotNull InlayTreeSink sink,
                                       @NotNull CESymbol symbol,
                                       @NotNull String keyTooltip);
 

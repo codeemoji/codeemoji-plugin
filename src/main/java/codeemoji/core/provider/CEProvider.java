@@ -1,109 +1,102 @@
 package codeemoji.core.provider;
 
-import codeemoji.core.util.CEBundle;
-import com.intellij.codeInsight.hints.ChangeListener;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.InlayHintsCollector;
-import com.intellij.codeInsight.hints.InlayHintsProvider;
-import com.intellij.codeInsight.hints.InlayHintsSink;
-import com.intellij.codeInsight.hints.NoSettings;
-import com.intellij.codeInsight.hints.SettingsKey;
+import codeemoji.core.settings.CEBaseSettings;
+import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.util.CESymbol;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
+import com.intellij.codeInsight.hints.declarative.InlayHintsCustomSettingsProvider;
+import com.intellij.codeInsight.hints.declarative.InlayHintsProvider;
 import com.intellij.lang.Language;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.ui.FormBuilder;
 import lombok.Getter;
-import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
-import java.util.Objects;
+import java.util.Locale;
+import java.util.function.Supplier;
 
+// Class that providers both the hints collectors and the configurable
 @Getter
-@SuppressWarnings("UnstableApiUsage")
-public abstract class CEProvider<S> implements InlayHintsProvider<S> {
-
-    private static final Logger LOG = Logger.getInstance(CEProvider.class);
+public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHintsProvider, InlayHintsCustomSettingsProvider<S> {
 
     private S settings;
+    private final CEConfigurableWindow<S> window;
+    private final String key;
 
     protected CEProvider() {
         settings = createSettings();
+        window = createConfigurable();
+        key = getClass().getSimpleName().toLowerCase(Locale.ROOT);
+    }
+
+    @Nullable
+    @Override
+    public abstract InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor);
+
+    @Deprecated(forRemoval = true)
+    public String getPreviewText(){
+       return "none";
     }
 
     @Override
-    public @NotNull SettingsKey<S> getKey() {
-        return new SettingsKey<>(getClass().getSimpleName().toLowerCase());
-    }
-
-    @Nls(capitalization = Nls.Capitalization.Sentence)
-    @Override
-    public @NotNull String getName() {
-        try {
-            return Objects.requireNonNull(getProperty("inlay." + getKeyId() + ".name"));
-        } catch (RuntimeException ex) {
-            return "<NAME_NOT_DEFINED>";
-        }
-    }
-
-    @Nls
-    @Override
-    public String getProperty(@NotNull String key) {
-        return CEBundle.getString(key);
+    public boolean isDifferentFrom(@NotNull Project project, S newSettings) {
+        return !settings.equals(newSettings);
     }
 
     @Override
-    public @NotNull ImmediateConfigurable createConfigurable(@NotNull S settings) {
-        return new MyImmediateConfigurable();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public final @NotNull S createSettings() {
-        if (null == settings) {
-            try {
-                var type = (Class<S>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-                var genericType = type.getDeclaredConstructor().newInstance();
-                if (genericType instanceof NoSettings) {
-                    settings = (S) new NoSettings();
-                } else if (genericType instanceof PersistentStateComponent<?> typeT) {
-                    settings = (S) ApplicationManager.getApplication().getService(typeT.getClass());
-                } else {
-                    throw new CEProviderException();
-                }
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                     NoSuchMethodException ex) {
-                LOG.error(ex);
-            }
-        }
+    public @NotNull S getSettingsCopy() {
         return settings;
     }
 
-    public final @NotNull String getKeyId() {
-        return getKey().getId();
-    }
-
-    protected abstract InlayHintsCollector buildCollector(Editor editor);
-
     @Override
-    public final InlayHintsCollector getCollectorFor(@NotNull PsiFile psiFile, @NotNull Editor editor, @NotNull S settings, @NotNull InlayHintsSink inlayHintsSink) {
-        return buildCollector(editor);
+    public void putSettings(@NotNull Project project, S newSettings, @NotNull Language language) {
+        settings = newSettings;
     }
 
     @Override
-    public final boolean isLanguageSupported(@NotNull Language language) {
-        return "JAVA".equals(language.getID());
+    public void persistSettings(@NotNull Project project, S settings, @NotNull Language language) {
+        //TODO: figure these out. also what about the setting own save method?
+        //   settings.save(project);
     }
 
-    private static class MyImmediateConfigurable implements ImmediateConfigurable {
-        @Override
-        public @NotNull JComponent createComponent(@NotNull ChangeListener changeListener) {
-            return FormBuilder.createFormBuilder().getPanel();
+    public @NotNull CEConfigurableWindow<S> createConfigurable() {
+        return new CEConfigurableWindow<>();
+    }
+
+    // encapsulate and delegates the UI behavior to a dedicated object that is composed instead of implemented directly into this class createComponent
+    @Override
+    public final @NotNull JComponent createComponent(@NotNull Project project, @NotNull Language language) {
+        return window.createComponent(settings, "something", project, language, () -> {
+        });
+    }
+
+    // Config stuff
+
+    // Reflection magic to instantiate an object of our generic
+    @SuppressWarnings("unchecked")
+    private @NotNull S createSettings() {
+        try {
+            var type = (Class<S>) ((ParameterizedType) getClass()
+                    .getGenericSuperclass()).getActualTypeArguments()[0];
+            var genericType = type.getDeclaredConstructor().newInstance();
+            return (S) ApplicationManager.getApplication().getService(genericType.getClass());
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException ex) {
+            throw new RuntimeException(ex);
         }
     }
+
+
+    //helper
+
+    public Supplier<CESymbol> mainSymbol() {
+        return () -> this.getSettings().getMainSymbol();
+    }
+
 }

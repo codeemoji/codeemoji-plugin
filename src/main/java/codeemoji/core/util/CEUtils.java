@@ -3,6 +3,7 @@ package codeemoji.core.util;
 import codeemoji.inlay.external.DependencyInfo;
 import codeemoji.inlay.external.VulnerabilityInfo;
 import codeemoji.inlay.vulnerabilities.InlayInfo;
+import codeemoji.inlay.vulnerabilities.Severity;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.intellij.openapi.diagnostic.Logger;
@@ -571,13 +572,13 @@ public enum CEUtils {
                         List<VulnerabilityInfo> vulnerabilities = cveList.stream()
                                 .filter(VulnerabilityInfo.class::isInstance)
                                 .map(VulnerabilityInfo.class::cast)
-                                .collect(Collectors.toList());
+                                .toList();
 
                         if (!vulnerabilities.isEmpty()) {
                             String scanner = String.valueOf(vulnerabilities.get(0).getScanner());
-                            Map<String, Integer> severityCounts = new HashMap<>();
+                            Map<Severity, Integer> severityCounts = new HashMap<>();
                             for (VulnerabilityInfo vuln : vulnerabilities) {
-                                String severity = vuln.getSeverity();
+                                Severity severity = vuln.getSeverity();
                                 severityCounts.put(severity, severityCounts.getOrDefault(severity, 0) + 1);
                             }
                             return new InlayInfo(dependency, severityCounts, scanner);

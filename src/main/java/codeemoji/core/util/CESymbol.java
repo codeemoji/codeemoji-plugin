@@ -1,66 +1,95 @@
 package codeemoji.core.util;
 
+import com.intellij.util.xmlb.Converter;
+import com.intellij.util.xmlb.annotations.Attribute;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.Arrays;
 
-@SuppressWarnings("ConstantValue")
 @Data
-public class CESymbol {
+public final class CESymbol {
 
-    private int codePoint = 0x26AA; //white circle
-    private int qualifier;
-    private boolean background = true;
-    private @NotNull String emoji = buildFullEmoji(codePoint, qualifier, true, null);
-    private @Nullable Icon icon;
+    @Attribute(value = "emoji", converter = EmojiToCodePointConverter.class)
+    private String emoji;
+    @Attribute("hasBackground")
+    private boolean withBackground;
 
-    public CESymbol() {
+    private CESymbol(String emoji, boolean hasBackground) {
+        this.emoji = emoji;
+        this.withBackground = hasBackground;
     }
 
-    @SuppressWarnings("unused")
-    public CESymbol(@Nullable Icon icon) {
-        this.icon = icon;
+    private CESymbol() {
     }
 
-    public CESymbol(int codePoint) {
-        this.codePoint = codePoint;
-        emoji = buildFullEmoji(this.codePoint, qualifier, background, null);
+    public static final CESymbol EMPTY = of(0x26AA);
+
+    public JCheckBox createCheckbox(String name) {
+        return createCheckbox(name, false);
     }
 
-    public CESymbol(int codePoint, String suffixText) {
-        this.codePoint = codePoint;
-        emoji = buildFullEmoji(this.codePoint, qualifier, background, suffixText);
+    public static CESymbol of(@NotNull String emoji, boolean hasBackground) {
+        return new CESymbol(emoji, hasBackground);
     }
 
-    @SuppressWarnings("unused")
-    public CESymbol(int codePoint, int qualifier, boolean background) {
-        this.codePoint = codePoint;
-        this.qualifier = qualifier;
-        this.background = background;
-        emoji = buildFullEmoji(this.codePoint, this.qualifier, this.background, null);
+    public static CESymbol of(@NotNull String emoji) {
+        return of(emoji, true);
     }
 
-    private static @NotNull String buildFullEmoji(int codePoint, int qualifier, boolean addColor, @Nullable String suffixText) {
-        var codePointChars = Character.toChars(codePoint);
-        var withoutColorChars = codePointChars;
-        var result = new String(withoutColorChars);
-        if (0 < qualifier) {
-            var modifierChars = Character.toChars(qualifier);
-            withoutColorChars = Arrays.copyOf(codePointChars, codePointChars.length + modifierChars.length);
-            System.arraycopy(modifierChars, 0, withoutColorChars, codePointChars.length, modifierChars.length);
+
+    public static CESymbol of(int codePoint, boolean background, @Nullable String suffixText, int... qualifiers) {
+        return of(CEParsingUtils.buildEmojiSymbol(codePoint, !background, suffixText, qualifiers), background);
+    }
+
+    public static CESymbol empty() {
+        return EMPTY;
+    }
+
+    //code point oes
+    public static CESymbol of(int codePoint) {
+        return of(codePoint, 0);
+    }
+
+    public static CESymbol of(int codePoint, String suffixText) {
+        return of(codePoint, true, suffixText);
+    }
+
+    public static CESymbol of(int codePoint, int... qualifiers) {
+        return of(codePoint, true, qualifiers);
+    }
+
+    public static CESymbol of(int codePoint, boolean background, int... qualifiers) {
+        return of(codePoint, background, null, qualifiers);
+    }
+
+    public JCheckBox createCheckbox(String name, boolean selected) {
+        return new JCheckBox(emoji + " " + name, selected);
+    }
+
+    public JLabel createLabel(String name) {
+        return new JLabel(" " + emoji + " " + name, SwingConstants.LEFT);
+    }
+
+    public void applyToLabel(String name, JLabel label) {
+        label.setText(emoji + " " + name);
+    }
+
+    public static class EmojiToCodePointConverter extends Converter<String> {
+
+        @Override
+        public String fromString(String toDeserialize) {
+            // Convert from code points during deserialization
+            return CEParsingUtils.parseSymbolFromCodePointString(toDeserialize, true);
         }
-        if (addColor) {
-            var addColorChars = Character.toChars(0x0FE0F);
-            var withColorChars = Arrays.copyOf(withoutColorChars, withoutColorChars.length + addColorChars.length);
-            System.arraycopy(addColorChars, 0, withColorChars, withoutColorChars.length, addColorChars.length);
-            result = new String(withColorChars);
+
+        @Override
+        public String toString(String toSerialize) {
+            // Convert to code points during serialization
+            return CEParsingUtils.encodeSymbolToCodePointString(toSerialize);
         }
-        if (null != suffixText) {
-            result += suffixText;
-        }
-        return result;
     }
+
+
 }

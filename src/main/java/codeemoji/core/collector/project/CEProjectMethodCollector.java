@@ -1,8 +1,9 @@
 package codeemoji.core.collector.project;
 
+import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.InlayHintsSink;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import lombok.Getter;
@@ -16,7 +17,6 @@ import static codeemoji.core.config.CERuleElement.METHOD;
 import static codeemoji.core.config.CERuleFeature.*;
 
 @Getter
-@SuppressWarnings("UnstableApiUsage")
 public final class CEProjectMethodCollector extends CEProjectCollector<PsiMethod, PsiMethodCallExpression>
         implements CEProjectTypes<PsiMethodCallExpression>, CEProjectPackages<PsiMethodCallExpression> {
 
@@ -26,61 +26,57 @@ public final class CEProjectMethodCollector extends CEProjectCollector<PsiMethod
     private final @NotNull CESymbol returnsSymbol;
     private final @NotNull CESymbol packagesSymbol;
 
-    public CEProjectMethodCollector(@NotNull Editor editor, @NotNull String mainKeyId) {
-        super(editor, mainKeyId + ".method");
+    public CEProjectMethodCollector(@NotNull Editor editor, @NotNull String key) {
+        super(editor, key, key + ".method");
         returnsKey = getMainKeyId() + "." + RETURNS.getValue() + ".tooltip";
-        returnsSymbol = new CESymbol();
+        returnsSymbol = CESymbol.empty();
 
         packagesKey = getMainKeyId() + "." + PACKAGES.getValue() + ".tooltip";
-        packagesSymbol = new CESymbol();
+        packagesSymbol = CESymbol.empty();
     }
 
     @Override
-    public boolean processCollect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
-        if (psiElement instanceof PsiJavaFile) {
-            psiElement.accept(new JavaRecursiveElementVisitor() {
-                @Override
-                public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
-                    if (CEUtils.isNotPreviewEditor(editor) &&
-                            (callExpression instanceof PsiMethodCallExpression mexp)) {
-                        var method = mexp.resolveMethod();
-                        if (null != method) {
-                            processHint(mexp, method, inlayHintsSink);
-                        }
+    public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayTreeSink InlayTreeSink) {
+        return new JavaRecursiveElementVisitor() {
+            @Override
+            public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
+                if (CEUtils.isNotPreviewEditor(editor) &&
+                        (callExpression instanceof PsiMethodCallExpression mexp)) {
+                    var method = mexp.resolveMethod();
+                    if (null != method) {
+                        processHint(mexp, method, InlayTreeSink);
                     }
-                    super.visitCallExpression(callExpression);
                 }
-
-            });
-        }
-        return false;
+                super.visitCallExpression(callExpression);
+            }
+        };
     }
 
     @Override
-    protected void processHint(@NotNull PsiMethodCallExpression addHintElement, @NotNull PsiMethod evaluationElement, @NotNull InlayHintsSink sink) {
+    protected void processHint(@NotNull PsiMethodCallExpression addHintElement, @NotNull PsiMethod evaluationElement, @NotNull InlayTreeSink sink) {
         processAnnotationsFR(METHOD, evaluationElement, addHintElement, sink);
         var type = evaluationElement.getReturnType();
         if (!evaluationElement.isConstructor() && null != type) {
             processTypesFR(METHOD, RETURNS, type, addHintElement, sink, getReturnsSymbol(), returnsKey);
         }
-        if(evaluationElement.getContainingFile() instanceof PsiJavaFile javaFile && javaFile.getPackageStatement() != null) {
+        if (evaluationElement.getContainingFile() instanceof PsiJavaFile javaFile && javaFile.getPackageStatement() != null) {
             processStructuralAnalysisFR(METHOD, PACKAGES, javaFile.getPackageStatement(), addHintElement, sink, getPackagesSymbol(), packagesKey);
         }
     }
 
     @Override
     public void addInlayTypesFR(@NotNull PsiMethodCallExpression addHintElement, @NotNull List<String> hintValues,
-                                @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
+                                @NotNull InlayTreeSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
-            var inlay = buildInlayWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
+            InlayVisuals inlay = InlayVisuals.translated(symbol, keyTooltip, String.valueOf(hintValues));
             addInlayInline(addHintElement, sink, inlay);
         }
     }
 
     @Override
-    public void addInlayStructuralAnalysisFR(@NotNull PsiMethodCallExpression addHintElement, @NotNull List<String> hintValues, @NotNull InlayHintsSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
+    public void addInlayStructuralAnalysisFR(@NotNull PsiMethodCallExpression addHintElement, @NotNull List<String> hintValues, @NotNull InlayTreeSink sink, @NotNull CESymbol symbol, @NotNull String keyTooltip) {
         if (!hintValues.isEmpty()) {
-            var inlay = buildInlayWithEmoji(symbol, keyTooltip, String.valueOf(hintValues));
+            var inlay = InlayVisuals.translated(symbol, keyTooltip, String.valueOf(hintValues));
             addInlayInline(addHintElement, sink, inlay);
         }
     }
@@ -104,7 +100,7 @@ public final class CEProjectMethodCollector extends CEProjectCollector<PsiMethod
         return readRuleEmoji(METHOD, RETURNS, RETURNS_SYMBOL);
     }
 
-    private CESymbol getPackagesSymbol(){
+    private CESymbol getPackagesSymbol() {
         return readRuleEmoji(METHOD, PACKAGES, PACKAGES_SYMBOL);
     }
 }

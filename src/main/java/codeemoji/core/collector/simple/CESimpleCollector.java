@@ -1,46 +1,50 @@
 package codeemoji.core.collector.simple;
 
 import codeemoji.core.collector.CECollector;
-import codeemoji.core.external.CEExternalAnalyzer;
+import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.util.CESymbol;
-import com.intellij.codeInsight.hints.InlayHintsSink;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.function.Supplier;
 
+// collector with static presentation
 @Getter
-@Setter
 @ToString
-@SuppressWarnings("UnstableApiUsage")
-public sealed abstract class CESimpleCollector<H extends PsiElement, A extends PsiElement> extends CECollector<A>
-        permits CEClassCollector, CEMethodCollector, CEReferenceClassCollector, CEReferenceFieldCollector, CEReferenceMethodCollector, CEVariableCollector {
+public sealed abstract class CESimpleCollector<H extends PsiElement, A extends PsiElement> extends CECollector<H, A>
+        permits CESimpleClassCollector, CESimpleMethodCollector, CESimpleReferenceClassCollector, CESimpleReferenceFieldCollector, CESimpleReferenceMethodCollector, CESimpleVariableCollector {
 
-    protected InlayPresentation inlay;
 
-    protected CESimpleCollector(@NotNull Editor editor, @NotNull String keyId, @Nullable CESymbol symbol) {
-        super(editor);
-        inlay = buildInlayWithEmoji(symbol, "inlay." + keyId + ".tooltip", null);
+    private final String tooltipKey;
+    protected final Supplier<CESymbol> symbolGetter;
+
+    //collector with a static presentation. Soon this wil be changed to accept a standard configuration instead
+    protected CESimpleCollector(@NotNull Editor editor, String key,
+                                @NotNull String tooltipKey, Supplier<CESymbol> settingsSupplier) {
+        super(editor, key);
+        this.tooltipKey = "inlay." + tooltipKey + ".tooltip";
+        this.symbolGetter = settingsSupplier; //needed since it's not an inner class
     }
 
-    protected final void addInlay(@Nullable A element, InlayHintsSink sink) {
-        addInlayInline(element, sink, getInlay());
+    protected CESimpleCollector(@NotNull Editor editor, String key, Supplier<CESymbol> settings) {
+        this(editor, key, key, settings);
     }
 
-    protected @NotNull Map<?, ?> processExternalInfo(@Nullable H element) {
-        Map<?, ?> result = new HashMap<>();
-        if (element != null) {
-            CEExternalAnalyzer.getInstance().buildExternalInfo(result, element);
-        }
-        return result;
+    @Nullable
+    @Override
+    protected final InlayVisuals createInlayFor(@NotNull H element) {
+        return needsInlay(element) ? createInlay() : null;
     }
 
-    protected abstract boolean needsHint(@NotNull H element, @NotNull Map<?, ?> externalInfo);
+    @NotNull
+    public InlayVisuals createInlay() {
+        return InlayVisuals.translated(symbolGetter.get(), tooltipKey, null);
+    }
+
+    protected abstract boolean needsInlay(@NotNull H element);
+
 }
