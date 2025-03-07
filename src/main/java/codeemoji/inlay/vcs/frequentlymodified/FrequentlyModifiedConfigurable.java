@@ -2,7 +2,6 @@ package codeemoji.inlay.vcs.frequentlymodified;
 
 import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEBundle;
-import codeemoji.inlay.vcs.recentlymodified.RecentlyModifiedSettings;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;

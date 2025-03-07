@@ -17,7 +17,7 @@ public final class FrequentlyModifiedSettings extends CEBaseSettings<FrequentlyM
     private int modifications = 15;
     private int daysTimeFrame = 30;
     public FrequentlyModifiedSettings() {
-        super(RecentlyModified.class, VCSSymbols.FREQUENTLY_MODIFIED);
+        super(FrequentlyModified.class, VCSSymbols.FREQUENTLY_MODIFIED);
     }
 
 }
