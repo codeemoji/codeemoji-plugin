@@ -17,6 +17,7 @@ public final class RecentlyModifiedSettings extends CEBaseSettings<RecentlyModif
 
     private int days = 7;
     private boolean showDate = false;
+
     public RecentlyModifiedSettings() {
         super(RecentlyModified.class, VCSSymbols.RECENTLY_MODIFIED);
     }

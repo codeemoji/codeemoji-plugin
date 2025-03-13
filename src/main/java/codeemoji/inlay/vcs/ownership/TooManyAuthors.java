@@ -37,7 +37,6 @@ public class TooManyAuthors extends CEProviderMulti<TooManyAuthorsSettings> {
         return new TooManyAuthorsConfigurable();
     }
 
-    //screw anonymous classes. they are ugly
     private class Collector extends VCSClassCollector {
         protected Collector(@NotNull PsiFile file, @NotNull Editor editor, String key) {
             super(file, editor, key);
