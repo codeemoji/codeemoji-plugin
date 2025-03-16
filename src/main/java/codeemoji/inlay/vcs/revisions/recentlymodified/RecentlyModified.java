@@ -1,4 +1,4 @@
-package codeemoji.inlay.vcs.recentlymodified;
+package codeemoji.inlay.vcs.revisions.recentlymodified;
 
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
@@ -8,10 +8,6 @@ import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSMethodCollector;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
-import com.intellij.codeInsight.hints.InlayHintsUtils;
-import com.intellij.codeInsight.hints.SettingsKey;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
-import com.intellij.codeInsight.hints.presentation.MenuOnClickPresentation;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -23,7 +19,6 @@ import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
 import java.util.Date;
 import java.util.Objects;
 import java.util.stream.IntStream;

@@ -74,10 +74,10 @@
         <applicationService serviceImplementation="codeemoji.inlay.vulnerabilities.VulnerableDependencySettings"/>
 
         <applicationService serviceImplementation="codeemoji.inlay.vcs.authoravatar.AuthorAvatarSettings"/>
-        <applicationService serviceImplementation="codeemoji.inlay.vcs.recentlymodified.RecentlyModifiedSettings"/>
-        <applicationService serviceImplementation="codeemoji.inlay.vcs.lastcommit.LastCommitSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.recentlymodified.RecentlyModifiedSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.lastcommit.LastCommitSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.ownership.TooManyAuthorsSettings"/>
-        <applicationService serviceImplementation="codeemoji.inlay.vcs.frequentlymodified.FrequentlyModifiedSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.frequentlymodified.FrequentlyModifiedSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.refactors.NameChangedSettings"/>
 
 
@@ -288,14 +288,14 @@
 
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
-                                              implementationClass="codeemoji.inlay.vcs.recentlymodified.RecentlyModified"
+                                              implementationClass="codeemoji.inlay.vcs.revisions.recentlymodified.RecentlyModified"
                                               nameKey="inlay.recentlymodified.name"
                                               group="OTHER_GROUP"
                                               descriptionKey="inlay.recentlymodified.description"
                                               providerId="inlay.recentlymodified"/>
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
-                                              implementationClass="codeemoji.inlay.vcs.lastcommit.LastCommit"
+                                              implementationClass="codeemoji.inlay.vcs.revisions.lastcommit.LastCommit"
                                               nameKey="inlay.lastcommit.name"
                                               group="OTHER_GROUP"
                                               descriptionKey="inlay.lastcommit.description"
@@ -316,7 +316,7 @@
                                               providerId="inlay.toomanyauthors"/>
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
-                                              implementationClass="codeemoji.inlay.vcs.frequentlymodified.FrequentlyModified"
+                                              implementationClass="codeemoji.inlay.vcs.revisions.frequentlymodified.FrequentlyModified"
                                               nameKey="inlay.frequentlymodified.name"
                                               group="OTHER_GROUP"
                                               descriptionKey="inlay.frequentlymodified.description"
@@ -443,11 +443,11 @@
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.recentlymodified"
-                implementationClass="codeemoji.inlay.vcs.recentlymodified.RecentlyModified" />
+                implementationClass="codeemoji.inlay.vcs.revisions.recentlymodified.RecentlyModified" />
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.lastcommit"
-                implementationClass="codeemoji.inlay.vcs.lastcommit.LastCommit" />
+                implementationClass="codeemoji.inlay.vcs.revisions.lastcommit.LastCommit" />
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.authoravatar"
@@ -459,7 +459,7 @@
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.frequentlymodified"
-                implementationClass="codeemoji.inlay.vcs.frequentlymodified.FrequentlyModified" />
+                implementationClass="codeemoji.inlay.vcs.revisions.frequentlymodified.FrequentlyModified" />
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.namechanged"

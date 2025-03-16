@@ -1,4 +1,4 @@
-package codeemoji.inlay.vcs.lastcommit;
+package codeemoji.inlay.vcs.revisions.lastcommit;
 
 import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEBundle;

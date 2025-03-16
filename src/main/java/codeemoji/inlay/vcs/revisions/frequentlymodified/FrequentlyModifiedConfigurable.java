@@ -1,4 +1,4 @@
-package codeemoji.inlay.vcs.frequentlymodified;
+package codeemoji.inlay.vcs.revisions.frequentlymodified;
 
 import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEBundle;

@@ -1,4 +1,4 @@
-package codeemoji.inlay.vcs.lastcommit;
+package codeemoji.inlay.vcs.revisions.lastcommit;
 
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.inlay.vcs.VCSSymbols;

@@ -2,7 +2,6 @@ package codeemoji.inlay.vcs.refactors;
 
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.inlay.vcs.VCSSymbols;
-import codeemoji.inlay.vcs.lastcommit.LastCommit;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import lombok.Data;

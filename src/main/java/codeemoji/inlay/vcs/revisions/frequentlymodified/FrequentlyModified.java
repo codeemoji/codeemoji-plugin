@@ -1,4 +1,4 @@
-package codeemoji.inlay.vcs.frequentlymodified;
+package codeemoji.inlay.vcs.revisions.frequentlymodified;
 
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProviderMulti;
@@ -71,7 +71,7 @@ public class FrequentlyModified extends CEProviderMulti<FrequentlyModifiedSettin
     }
 
     private @Nullable InlayVisuals maybeCreatePresentation(@NotNull PsiElement element, Editor editor, FileAnnotation vcsBlame) {
-        //text range of this element without comments
+        // text range of this element without comments
         TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 
         Set<Date> date = getAllModificationDates(element.getProject(), textRange, editor, vcsBlame);
@@ -80,7 +80,7 @@ public class FrequentlyModified extends CEProviderMulti<FrequentlyModifiedSettin
         int modifications = getSettings().getModifications();
         Date timeFrameAgo = new Date(System.currentTimeMillis() - timeFrame * 24L * 60 * 60 * 1000);
         int modificationsInTimeFrame = 0;
-        //check if it has had more modifications in last x days
+        // check if it has had more modifications in last x days
         for (Date modificationDate : date) {
             if (modificationDate.after(timeFrameAgo)) {
                 modificationsInTimeFrame++;
