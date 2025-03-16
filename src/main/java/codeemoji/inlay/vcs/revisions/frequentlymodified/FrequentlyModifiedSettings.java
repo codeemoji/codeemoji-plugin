@@ -1,9 +1,7 @@
-package codeemoji.inlay.vcs.frequentlymodified;
+package codeemoji.inlay.vcs.revisions.frequentlymodified;
 
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.inlay.vcs.VCSSymbols;
-import codeemoji.inlay.vcs.recentlymodified.RecentlyModified;
-import com.intellij.codeInsight.hints.InlayHintsProvider;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import lombok.Data;

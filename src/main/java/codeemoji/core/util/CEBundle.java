@@ -23,7 +23,7 @@ public final class CEBundle {
         try {
             return String.format(getInstance().getBundle().getString(key), args);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to get localization for string " + key, e);
         }
     }
 

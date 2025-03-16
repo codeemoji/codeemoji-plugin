@@ -10,6 +10,6 @@
         <module name="codEEmojiPlugin.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="19" />
+    <bytecodeTargetLevel target="17" />
   </component>
 </project>

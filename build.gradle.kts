@@ -26,10 +26,13 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.28")
     annotationProcessor("org.projectlombok:lombok:1.18.28")
     implementation("com.google.code.gson:gson:2.10.1")
+
 }
 
 
-
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
 
 intellij {
     version.set(properties("platformVersion"))

@@ -1,4 +1,4 @@
-package codeemoji.inlay.vcs.frequentlymodified;
+package codeemoji.inlay.vcs.revisions.frequentlymodified;
 
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProviderMulti;
@@ -25,12 +25,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class FrequentlyModified extends CEProviderMulti<FrequentlyModifiedSettings> {
 
     @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
+
         return List.of(new FrequentlyModifiedMethodCollector(psiFile, editor, getKey()),
                 new FrequentlyModifiedClassCollector(psiFile, editor, getKey()));
     }
@@ -49,7 +52,6 @@ public class FrequentlyModified extends CEProviderMulti<FrequentlyModifiedSettin
         @Override
         protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
             if (vcsBlame == null) return null;
-
             return maybeCreatePresentation(element, getEditor(), vcsBlame);
         }
     }
@@ -69,16 +71,16 @@ public class FrequentlyModified extends CEProviderMulti<FrequentlyModifiedSettin
     }
 
     private @Nullable InlayVisuals maybeCreatePresentation(@NotNull PsiElement element, Editor editor, FileAnnotation vcsBlame) {
-        //text range of this element without comments
+        // text range of this element without comments
         TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 
-        List<Date> date = getAllModificationDates(element.getProject(), textRange, editor, vcsBlame);
+        Set<Date> date = getAllModificationDates(element.getProject(), textRange, editor, vcsBlame);
 
         int timeFrame = getSettings().getDaysTimeFrame();
         int modifications = getSettings().getModifications();
         Date timeFrameAgo = new Date(System.currentTimeMillis() - timeFrame * 24L * 60 * 60 * 1000);
         int modificationsInTimeFrame = 0;
-        //check if it has had more modifications in last x days
+        // check if it has had more modifications in last x days
         for (Date modificationDate : date) {
             if (modificationDate.after(timeFrameAgo)) {
                 modificationsInTimeFrame++;
@@ -98,7 +100,7 @@ public class FrequentlyModified extends CEProviderMulti<FrequentlyModifiedSettin
         return InlayVisuals.of(mainSymbol, tooltip);
     }
 
-    private static List<Date> getAllModificationDates(
+    private static Set<Date> getAllModificationDates(
             Project project, TextRange range, Editor editor, FileAnnotation blame) {
 
         Document document = editor.getDocument();
@@ -110,7 +112,7 @@ public class FrequentlyModified extends CEProviderMulti<FrequentlyModifiedSettin
                 .mapToObj(provider::getLineNumber)
                 .map(blame::getLineDate)
                 .filter(Objects::nonNull)
-                .toList();
+                .collect(Collectors.toSet());
     }
 }
 
