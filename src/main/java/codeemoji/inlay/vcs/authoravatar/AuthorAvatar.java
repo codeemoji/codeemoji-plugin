@@ -7,12 +7,11 @@ import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSClassCollector;
 import codeemoji.inlay.vcs.VCSMethodCollector;
-import com.intellij.codeInsight.hints.VcsCodeAuthorInfo;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
-import com.intellij.codeInsight.hints.settings.language.NewInlayProviderSettingsModel;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
@@ -57,11 +56,11 @@ public class AuthorAvatar extends CEProviderMulti<AuthorAvatarSettings> {
             //text range of this element without comments
             TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 
-            String author = getMostCommonAuthor(element.getProject(), textRange, getEditor(), vcsBlame);
+            var author = getMostCommonAuthor(element.getProject(), textRange, getEditor(), vcsBlame);
 
             if (author == null) return null;
 
-            return makePresentation(author);
+            return makePresentation(author.first, author.second);
         }
     }
 
@@ -78,16 +77,16 @@ public class AuthorAvatar extends CEProviderMulti<AuthorAvatarSettings> {
             //text range of this element without comments
             TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 
-            String author = getMostCommonAuthor(element.getProject(), textRange, getEditor(), vcsBlame);
+            var author = getMostCommonAuthor(element.getProject(), textRange, getEditor(), vcsBlame);
 
             if (author == null) return null;
 
-            return makePresentation(author);
+            return makePresentation(author.first, author.second);
         }
     }
 
     @Nullable
-    private InlayVisuals makePresentation(String author) {
+    private InlayVisuals makePresentation(String author, int otherAuthors) {
         String formattedAuthor = author;
         if (author.contains(" ")) {
             formattedAuthor = author.substring(0, author.indexOf(" "));
@@ -95,12 +94,14 @@ public class AuthorAvatar extends CEProviderMulti<AuthorAvatarSettings> {
         CESymbol authorAvatar = getSettings().getSymbolForAuthor(formattedAuthor
                 .toLowerCase(Locale.ROOT));
         if (authorAvatar == null) return null;
-
-        return InlayVisuals.of(authorAvatar, author);
+        if (otherAuthors > 0) {
+            formattedAuthor += " +" + otherAuthors;
+        }
+        return InlayVisuals.of(authorAvatar, formattedAuthor);
     }
 
     @Nullable
-    private String getMostCommonAuthor(
+    private Pair<String, Integer> getMostCommonAuthor(
             Project project, TextRange range, Editor editor, FileAnnotation blame) {
 
         LineAnnotationAspect aspect = CEVcsUtils.getAspect(blame, LineAnnotationAspect.AUTHOR);
@@ -112,16 +113,24 @@ public class AuthorAvatar extends CEProviderMulti<AuthorAvatarSettings> {
         int endLine = document.getLineNumber(range.getEndOffset());
         UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);
 
-        return IntStream.rangeClosed(startLine, endLine)
+        Map<String, Long> authorCounts = IntStream.rangeClosed(startLine, endLine)
                 .mapToObj(provider::getLineNumber)
                 .map(aspect::getValue) // gets the author name for line
                 .filter(Objects::nonNull)
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting())) // group by author and count occurrences
-                .entrySet()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting())); // group by author and count occurrences
+
+        if (authorCounts.isEmpty()) return null;
+
+        Map.Entry<String, Long> mostCommonEntry = authorCounts.entrySet()
                 .stream()
                 .max(Map.Entry.comparingByValue()) // find the entry with the highest count
-                .map(Map.Entry::getKey) // get the most common author's name
-                .orElse(null); // return null if no author found
+                .orElse(null);
+
+        if (mostCommonEntry == null) return null;
+
+        int otherAuthorsCount = authorCounts.size() - 1; // Count of other distinct authors
+
+        return Pair.create(mostCommonEntry.getKey(), otherAuthorsCount);
     }
 
 }

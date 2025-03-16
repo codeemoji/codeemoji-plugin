@@ -31,6 +31,7 @@ public class FrequentlyModified extends CEProviderMulti<FrequentlyModifiedSettin
 
     @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
+
         return List.of(new FrequentlyModifiedMethodCollector(psiFile, editor, getKey()),
                 new FrequentlyModifiedClassCollector(psiFile, editor, getKey()));
     }
@@ -49,7 +50,6 @@ public class FrequentlyModified extends CEProviderMulti<FrequentlyModifiedSettin
         @Override
         protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
             if (vcsBlame == null) return null;
-
             return maybeCreatePresentation(element, getEditor(), vcsBlame);
         }
     }

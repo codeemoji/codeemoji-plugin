@@ -5,17 +5,25 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.AbstractVcs;
-import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.annotate.AnnotationProvider;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
+import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiComment;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.SyntaxTraverser;
 import com.intellij.vcs.CacheableAnnotationProvider;
+import git4idea.*;
+import git4idea.history.GitLogUtil;
+import git4idea.repo.GitRepository;
+import git4idea.repo.GitRepositoryManager;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 
 // static class. clean up later.
@@ -37,17 +45,11 @@ public final class CEVcsUtils {
                 .findFirst().orElse(null);
     }
 
-    // helper
-    public static FileAnnotation getAnnotation( PsiFile file, Editor editor){
-        VirtualFile virtualFile = file.getVirtualFile();
-        return getAnnotation(file.getProject(), virtualFile, editor);
-    }
-
-    //copied from VcsCodeAuthorInlayHintsCollector
-    //gets the git annotation of the current file
-    //basically gets the git blame for each line
+    // copied from VcsCodeAuthorInlayHintsCollector
+    // gets the git annotation of the current file
+    // basically gets the git blame for each line
     @Nullable
-    public static FileAnnotation getAnnotation(Project project, VirtualFile file, Editor editor) {
+    public static FileAnnotation getAnnotation(AbstractVcs vcs, VirtualFile file, Editor editor) {
         // uhm get cached one maybe
         FileAnnotation annotation = editor.getUserData(VCS_CODE_AUTHOR_ANNOTATION);
         if (annotation != null) {
@@ -55,7 +57,6 @@ public final class CEVcsUtils {
         }
 
         // gets version control for this project file. Similar to GitInstance thing i guess?
-        AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
         if (vcs == null) {
             return null;
         }
@@ -99,12 +100,41 @@ public final class CEVcsUtils {
     }
 
     public static TextRange getTextRangeWithoutLeadingCommentsAndWhitespaces(PsiElement element) {
+        //same as
+        // InlayHintsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element)
+
         PsiElement startElement = SyntaxTraverser.psiApi().children(element)
                 .find(child -> !(child instanceof PsiComment || child instanceof PsiWhiteSpace));
         if (startElement == null) startElement = element;
         return TextRange.create(startElement.getTextRange().getStartOffset(), element.getTextRange().getEndOffset());
     }
 
+    // I cant find an equivalent of this using intellij vcs. This needs to return the global last revision not the latest one that modifies a certain file
+    @Nullable
+    public static VcsRevisionNumber getLastGitRevision(Project project, VirtualFile file, AbstractVcs vcs) {
+        // Get all Git repositories in the project
+        GitRepositoryManager repositoryManager = GitUtil.getRepositoryManager(project);
+        Collection<GitRepository> repositories = repositoryManager.getRepositories();
+
+        if (repositories.isEmpty()) {
+            return null;
+        }
+
+        // Get the first repository (assuming single-repo project)
+        GitRepository repo = repositories.iterator().next();
+
+        // Get the current branch and its latest commit hash
+        GitLocalBranch currentBranch = repo.getCurrentBranch();
+        if (currentBranch == null) {
+            return null;
+
+        }
+
+        var latestCommitHash = repo.getInfo().getCurrentRevision();
+        if (latestCommitHash == null) return null;
+
+        return new GitRevisionNumber(latestCommitHash);
+    }
 
 
     //there's also a Vcsutil calss

@@ -78,6 +78,7 @@
         <applicationService serviceImplementation="codeemoji.inlay.vcs.lastcommit.LastCommitSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.ownership.TooManyAuthorsSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.frequentlymodified.FrequentlyModifiedSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.refactors.NameChangedSettings"/>
 
 
 
@@ -321,6 +322,13 @@
                                               descriptionKey="inlay.frequentlymodified.description"
                                               providerId="inlay.frequentlymodified"/>
 
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                              implementationClass="codeemoji.inlay.vcs.refactors.NameChanged"
+                                              nameKey="inlay.namechanged.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.namechanged.description"
+                                              providerId="inlay.namechanged"/>
+
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.showingmodifiers"
                 implementationClass="codeemoji.inlay.showingmodifiers.ShowingModifiers" />
@@ -453,6 +461,9 @@
                 language="JAVA" providerId="inlay.frequentlymodified"
                 implementationClass="codeemoji.inlay.vcs.frequentlymodified.FrequentlyModified" />
 
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.namechanged"
+                implementationClass="codeemoji.inlay.vcs.refactors.NameChanged" />
         <!--
         <config.inlaySettingsProvider
                 implementation="codeemoji.inlay.vcs.wip.TestSettings"

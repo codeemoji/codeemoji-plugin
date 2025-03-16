@@ -528,14 +528,14 @@ public enum CEUtils {
     }
 
     public static boolean checkMethodExternality(PsiMethod method, Project project) {
-        return method.getContainingFile() instanceof PsiJavaFile javaFile &&
+        @Nullable
+        VirtualFile virtualFile = method.getNavigationElement().getContainingFile().getVirtualFile();
+        return virtualFile != null && method.getContainingFile() instanceof PsiJavaFile javaFile &&
                 method.getContainingClass() != null &&
                 javaFile.getPackageStatement() != null &&
                 !javaFile.getPackageName().startsWith("java") &&
                 !CEUtils.getSourceRootsInProject(project).contains(
-                        ProjectFileIndex.getInstance(method.getProject()).getSourceRootForFile(
-                                method.getNavigationElement().getContainingFile().getVirtualFile()
-                        )
+                        ProjectFileIndex.getInstance(project).getSourceRootForFile(virtualFile)
                 );
     }
 
@@ -557,6 +557,7 @@ public enum CEUtils {
             return null;
         }
 
+        @Nullable
         VirtualFile file = method.getNavigationElement().getContainingFile().getVirtualFile();
         if (file == null) {
             return null;

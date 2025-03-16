@@ -3,6 +3,7 @@ package codeemoji.inlay.vcs.lastcommit;
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.util.CEBundle;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSMethodCollector;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -10,7 +11,6 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
@@ -32,7 +32,7 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
 
     @Override
     public @NotNull CEConfigurableWindow<LastCommitSettings> createConfigurable() {
-        return new CEConfigurableWindow<>();
+        return new LastCommitConfigurable();
     }
 
     private class RecentlyModifiedCollector extends VCSMethodCollector {
@@ -47,21 +47,29 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
 
             //text range of this element without comments
             TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
+            Project project = element.getProject();
+            VcsRevisionNumber lastRevision = CEVcsUtils.getLastGitRevision(element.getProject(),
+                    element.getContainingFile().getVirtualFile(), vcs);
 
-            RevisionInfo lastRevision = getLastRevision(element.getProject(), textRange, getEditor(), vcsBlame);
-            if (lastRevision != null) {
-                return InlayVisuals.translated(getSettings().getMainSymbol(),
-                        "inlay.lastcommit.tooltip", null);
+            RevisionInfo revisionInfo = isLastRevision(project, textRange, getEditor(), lastRevision);
+            if (revisionInfo != null) {
+                if (getSettings().isShowDate()) {
+                    return InlayVisuals.of(getSettings().getMainSymbol(),
+                            CEBundle.getString("inlay.lastcommit.tooltip.message", revisionInfo.date));
+                }
+                return InlayVisuals.of(getSettings().getMainSymbol(),
+                        CEBundle.getString("inlay.lastcommit.tooltip"));
             }
             return null;
         }
 
         //null if it's not from last revision
         @Nullable
-        private RevisionInfo getLastRevision(
-                Project project, TextRange range, Editor editor, FileAnnotation blame) {
-            VcsRevisionNumber lastRevision = blame.getCurrentRevision();
-            if (lastRevision == null) return null;
+        private RevisionInfo isLastRevision(Project project, TextRange range, Editor editor, VcsRevisionNumber lastRevision) {
+
+
+            if (lastRevision == null || vcsBlame == null) return null;
+            if (!lastRevision.equals(vcsBlame.getCurrentRevision())) return null; //Must be last to modify this file
             Document document = editor.getDocument();
             int startLine = document.getLineNumber(range.getStartOffset());
             int endLine = document.getLineNumber(range.getEndOffset());
@@ -71,12 +79,13 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
                     .map(provider::getLineNumber).iterator();
             while (iterator.hasNext()) {
                 int line = iterator.nextInt();
-                var revision = blame.getLineRevisionNumber(line);
+                VcsRevisionNumber revision = vcsBlame.getLineRevisionNumber(line);
                 if (lastRevision.equals(revision)) {
                     var authorProvider = CEVcsUtils.getAspect(vcsBlame, LineAnnotationAspect.AUTHOR);
-                    Date date = blame.getLineDate(line);
+                    Date date = vcsBlame.getLineDate(line);
                     if (authorProvider != null && date != null) {
-                        return new RevisionInfo(authorProvider.getValue(line), date, revision);
+                        return new RevisionInfo(authorProvider.getValue(line), date,
+                                revision);
                     } else {
                         return null;
                     }

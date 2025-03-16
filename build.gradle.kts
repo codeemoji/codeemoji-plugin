@@ -41,8 +41,7 @@ intellij {
     val platformPlugins = properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty)
     plugins.set(
             platformPlugins + listOf(
-                    "com.intellij.java",
-                    "Git4Idea"
+                    "com.intellij.java"
             )
     )
 }

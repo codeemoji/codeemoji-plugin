@@ -4,13 +4,18 @@ import codeemoji.core.collector.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.inlay.vcs.CEVcsUtils;
+import com.intellij.codeInsight.hints.AnnotationInlayProvider;
+import com.intellij.codeInsight.hints.InlayHintsProvider;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
+import com.intellij.execution.impl.InlayProvider;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.vcs.annotate.AnnotationProvider;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
+import com.intellij.openapi.vcs.annotate.VcsCacheableAnnotationProvider;
 import com.intellij.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -31,6 +36,7 @@ public class GitTest extends CEProvider<GitTest.Settings> {
 
     public static class Settings extends CEBaseSettings<Settings> {}
 
+    //TODO: COdeVisionProvider seems to be a better interface than the prvovider we are using
     //TODO: EditorGutterAction seems to be an interfeace to impl to be able to click on the annotations. useful
 
     // I believe this is called once per FILE in your project, when opened
@@ -41,9 +47,13 @@ public class GitTest extends CEProvider<GitTest.Settings> {
         return new CESimpleMethodCollector(editor, getKey(),
                 mainSymbol()) {
 
+            //CodeVisionProvider
+            //VcsCodeVisionProvider
+//VcsCodeVisionProviderKt
+
             //so i thin this is an object that returns the author name for each line
-            @Nullable
-            private final FileAnnotation vcsBlame = CEVcsUtils.getAnnotation(psiFile, editor);
+            //@Nullable
+            private final FileAnnotation vcsBlame = null;//CEVcsUtils.getAnnotation(this.vcs, psiFile, editor);
 
 
             //key for stuff stored in the editor. Probably used to cache stuff
