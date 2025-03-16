@@ -25,6 +25,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class FrequentlyModified extends CEProviderMulti<FrequentlyModifiedSettings> {
@@ -72,7 +74,7 @@ public class FrequentlyModified extends CEProviderMulti<FrequentlyModifiedSettin
         //text range of this element without comments
         TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 
-        List<Date> date = getAllModificationDates(element.getProject(), textRange, editor, vcsBlame);
+        Set<Date> date = getAllModificationDates(element.getProject(), textRange, editor, vcsBlame);
 
         int timeFrame = getSettings().getDaysTimeFrame();
         int modifications = getSettings().getModifications();
@@ -98,7 +100,7 @@ public class FrequentlyModified extends CEProviderMulti<FrequentlyModifiedSettin
         return InlayVisuals.of(mainSymbol, tooltip);
     }
 
-    private static List<Date> getAllModificationDates(
+    private static Set<Date> getAllModificationDates(
             Project project, TextRange range, Editor editor, FileAnnotation blame) {
 
         Document document = editor.getDocument();
@@ -110,7 +112,7 @@ public class FrequentlyModified extends CEProviderMulti<FrequentlyModifiedSettin
                 .mapToObj(provider::getLineNumber)
                 .map(blame::getLineDate)
                 .filter(Objects::nonNull)
-                .toList();
+                .collect(Collectors.toSet());
     }
 }
 

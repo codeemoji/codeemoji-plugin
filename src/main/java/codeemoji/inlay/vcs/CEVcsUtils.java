@@ -116,6 +116,7 @@ public final class CEVcsUtils {
         GitRepositoryManager repositoryManager = GitUtil.getRepositoryManager(project);
         Collection<GitRepository> repositories = repositoryManager.getRepositories();
 
+        
         if (repositories.isEmpty()) {
             return null;
         }
