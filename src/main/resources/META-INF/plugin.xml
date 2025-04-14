@@ -464,12 +464,6 @@
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.namechanged"
                 implementationClass="codeemoji.inlay.vcs.refactors.NameChanged" />
-        <!--
-        <config.inlaySettingsProvider
-                implementation="codeemoji.inlay.vcs.wip.TestSettings"
-                id="inlay.getmorethanaccessor"
-                />
-        -->
 
         <!--END OF IMPLEMENTATIONS SECTION-->
 
