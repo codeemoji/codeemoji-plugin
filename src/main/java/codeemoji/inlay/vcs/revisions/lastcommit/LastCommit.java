@@ -48,8 +48,7 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
             //text range of this element without comments
             TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
             Project project = element.getProject();
-            VcsRevisionNumber lastRevision = CEVcsUtils.getLastGitRevision(element.getProject(),
-                    element.getContainingFile().getVirtualFile(), vcs);
+            VcsRevisionNumber lastRevision = CEVcsUtils.getProjectHeadRevision(element.getProject());
 
             RevisionInfo revisionInfo = isLastRevision(project, textRange, getEditor(), lastRevision);
             if (revisionInfo != null) {

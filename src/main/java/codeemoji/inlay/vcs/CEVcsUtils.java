@@ -5,6 +5,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.AbstractVcs;
+import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.annotate.AnnotationProvider;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
@@ -15,15 +16,18 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.SyntaxTraverser;
 import com.intellij.vcs.CacheableAnnotationProvider;
-import git4idea.*;
-import git4idea.history.GitLogUtil;
+import git4idea.GitCommit;
+import git4idea.GitRevisionNumber;
+import git4idea.GitUtil;
+import git4idea.history.GitHistoryUtils;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryManager;
 import org.intellij.lang.annotations.MagicConstant;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 // static class. clean up later.
@@ -110,31 +114,45 @@ public final class CEVcsUtils {
     }
 
     // I cant find an equivalent of this using intellij vcs. This needs to return the global last revision not the latest one that modifies a certain file
-    @Nullable
-    public static VcsRevisionNumber getLastGitRevision(Project project, VirtualFile file, AbstractVcs vcs) {
-        // Get all Git repositories in the project
+
+    /**
+     * Gets the latest (HEAD) revision for the current Git repo.
+     */
+    public static @Nullable VcsRevisionNumber getProjectHeadRevision(@NotNull Project project) {
         GitRepositoryManager repositoryManager = GitUtil.getRepositoryManager(project);
-        Collection<GitRepository> repositories = repositoryManager.getRepositories();
+        GitRepository repo = repositoryManager.getRepositories().stream().findFirst().orElse(null);
+        if (repo == null) return null;
 
-        
-        if (repositories.isEmpty()) {
+        String hash = repo.getCurrentRevision();
+        return hash != null ? new GitRevisionNumber(hash) : null;
+    }
+
+    /**
+     * Gets the full commit message for the given revision hash.
+     */
+    public static @Nullable String getCommitMessageForRevision(@NotNull Project project, @NotNull String commitHash) {
+        GitRepository repo = GitUtil.getRepositoryManager(project).getRepositories().stream().findFirst().orElse(null);
+        if (repo == null) return null;
+
+        try {
+            //TODO: cache this
+            List<GitCommit> commits = GitHistoryUtils.history(project, repo.getRoot(), commitHash);
+            if (!commits.isEmpty()) {
+                return commits.get(0).getFullMessage();
+            }
+        } catch (Exception e) {
+            //errorrr!
             return null;
         }
 
-        // Get the first repository (assuming single-repo project)
-        GitRepository repo = repositories.iterator().next();
+        return null;
+    }
 
-        // Get the current branch and its latest commit hash
-        GitLocalBranch currentBranch = repo.getCurrentBranch();
-        if (currentBranch == null) {
-            return null;
-
-        }
-
-        var latestCommitHash = repo.getInfo().getCurrentRevision();
-        if (latestCommitHash == null) return null;
-
-        return new GitRevisionNumber(latestCommitHash);
+    /**
+     * Gets the full commit message for a given revision object.
+     */
+    public static @Nullable String getCommitMessageForRevision(@NotNull Project project, @NotNull VcsRevisionNumber revision) {
+        return getCommitMessageForRevision(project, revision.asString());
     }
 
 
