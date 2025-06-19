@@ -13,6 +13,8 @@ import lombok.EqualsAndHashCode;
 @State(name = "FixedIssue", storages = @Storage("codeemoji-fixed-issue-settings.xml"))
 public final class FixedIssueSettings extends CEBaseSettings<FixedIssueSettings> {
 
+    private int maxRevisions = 1;
+
     public FixedIssueSettings() {
         super(FixedIssue.class, VCSSymbols.FIXES_BUG);
     }

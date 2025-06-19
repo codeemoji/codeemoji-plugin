@@ -12,4 +12,5 @@ public enum VCSSymbols {
     public static final CESymbol TOO_MANY_OWNERS = CESymbol.of(0x1F468, 0x1F469, 0x1F467, 0x1F466);
     public static final CESymbol FIXES_BUG = CESymbol.of(0x1F41E);
     public static final CESymbol NEWLY_ADDED = CESymbol.of(0x1F476);
+    public static final CESymbol UN_FREQUENTLY_MODIFIED = CESymbol.of(0x1F996);
 }

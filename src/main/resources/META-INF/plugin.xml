@@ -79,8 +79,9 @@
         <applicationService serviceImplementation="codeemoji.inlay.vcs.ownership.TooManyAuthorsSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.frequentlymodified.FrequentlyModifiedSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.newlyadded.NewlyAddedSettings"/>
-        <applicationService serviceImplementation="codeemoji.inlay.vcs.refactors.NameChangedSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.unfrequentlymodified.UnFrequentlyModifiedSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.bugs.FixedIssueSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.refactors.NameChangedSettings"/>
 
 
 
@@ -332,11 +333,11 @@
                                               providerId="inlay.newlyadded"/>
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
-                                              implementationClass="codeemoji.inlay.vcs.refactors.NameChanged"
-                                              nameKey="inlay.namechanged.name"
+                                              implementationClass="codeemoji.inlay.vcs.revisions.unfrequentlymodified.UnFrequentlyModified"
+                                              nameKey="inlay.unfrequentlymodified.name"
                                               group="OTHER_GROUP"
-                                              descriptionKey="inlay.namechanged.description"
-                                              providerId="inlay.namechanged"/>
+                                              descriptionKey="inlay.unfrequentlymodified.description"
+                                              providerId="inlay.unfrequentlymodified"/>
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
                                               implementationClass="codeemoji.inlay.vcs.bugs.FixedIssue"
@@ -344,6 +345,14 @@
                                               group="OTHER_GROUP"
                                               descriptionKey="inlay.fixedissue.description"
                                               providerId="inlay.fixedissue"/>
+
+
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                              implementationClass="codeemoji.inlay.vcs.refactors.NameChanged"
+                                              nameKey="inlay.namechanged.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.namechanged.description"
+                                              providerId="inlay.namechanged"/>
 
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
@@ -479,17 +488,21 @@
                 implementationClass="codeemoji.inlay.vcs.revisions.frequentlymodified.FrequentlyModified" />
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
-                language="JAVA" providerId="inlay.frequentlymodified"
+                language="JAVA" providerId="inlay.newlyadded"
                 implementationClass="codeemoji.inlay.vcs.revisions.newlyadded.NewlyAdded" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.newlyadded"
+                implementationClass="codeemoji.inlay.vcs.revisions.unfrequentlymodified.UnFrequentlyModified" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.fixedissue"
+                implementationClass="codeemoji.inlay.vcs.bugs.FixedIssue" />
 
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.namechanged"
                 implementationClass="codeemoji.inlay.vcs.refactors.NameChanged" />
-
-        <codeInsight.declarativeInlayProviderCustomSettingsProvider
-                language="JAVA" providerId="inlay.fixedissue"
-                implementationClass="codeemoji.inlay.vcs.bugs.FixedIssue" />
 
         <!--END OF IMPLEMENTATIONS SECTION-->
 

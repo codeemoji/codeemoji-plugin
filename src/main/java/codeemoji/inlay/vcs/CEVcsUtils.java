@@ -1,5 +1,7 @@
 package codeemoji.inlay.vcs;
 
+import codeemoji.core.util.CEBundle;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
@@ -10,6 +12,7 @@ import com.intellij.openapi.vcs.annotate.AnnotationProvider;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
+import com.intellij.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
@@ -27,8 +30,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 // static class. clean up later.
 public final class CEVcsUtils {
@@ -115,6 +120,25 @@ public final class CEVcsUtils {
 
     // I cant find an equivalent of this using intellij vcs. This needs to return the global last revision not the latest one that modifies a certain file
 
+    public static boolean isRevisionRecent(@NotNull Project project,
+                                                  @NotNull VcsRevisionNumber revisionToCheck,
+                                                  int maxRevisions) {
+        GitRepositoryManager repositoryManager = GitUtil.getRepositoryManager(project);
+        GitRepository repo = repositoryManager.getRepositories().stream().findFirst().orElse(null);
+        if (repo == null) return false;
+
+        List<GitCommit> recentCommits;
+        try {
+            recentCommits = GitHistoryUtils.history(project, repo.getRoot(), "--max-count=" + maxRevisions);
+        } catch (VcsException e) {
+            return false;
+        }
+
+        return recentCommits.stream()
+                .map(commit -> commit.getId().asString())
+                .anyMatch(rev -> rev.equals(revisionToCheck.asString()));
+    }
+
     /**
      * Gets the latest (HEAD) revision for the current Git repo.
      */
@@ -125,6 +149,21 @@ public final class CEVcsUtils {
 
         String hash = repo.getCurrentRevision();
         return hash != null ? new GitRevisionNumber(hash) : null;
+    }
+
+    public static @NotNull List<GitCommit> getLastCommits(@NotNull Project project, int limit) {
+        GitRepositoryManager repositoryManager = GitUtil.getRepositoryManager(project);
+        GitRepository repo = repositoryManager.getRepositories().stream().findFirst().orElse(null);
+        if (repo == null) return List.of();
+
+        VirtualFile root = repo.getRoot();
+
+        try {
+            // "--max-count=X" limits the number of commits returned
+            return GitHistoryUtils.history(project, root, "--max-count=" + limit);
+        } catch (VcsException e) {
+            return List.of();
+        }
     }
 
     /**
@@ -155,6 +194,56 @@ public final class CEVcsUtils {
         return getCommitMessageForRevision(project, revision.asString());
     }
 
+    @Nullable
+    public static Date getEarliestModificationDate(
+            Project project, TextRange range, Editor editor, FileAnnotation blame) {
+
+        Document document = editor.getDocument();
+        int startLine = document.getLineNumber(range.getStartOffset());
+        int endLine = document.getLineNumber(range.getEndOffset());
+        UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);
+
+        return IntStream.rangeClosed(startLine, endLine)
+                .mapToObj(provider::getLineNumber)
+                .map(blame::getLineDate)  //gets the author name for line
+                .filter(Objects::nonNull)
+                .min(Date::compareTo)
+                .orElse(null);
+    }
+
+    @Nullable
+    public static Date getLatestModificationDate(
+            Project project, TextRange range, Editor editor, FileAnnotation blame) {
+
+        Document document = editor.getDocument();
+        int startLine = document.getLineNumber(range.getStartOffset());
+        int endLine = document.getLineNumber(range.getEndOffset());
+        UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);
+
+        return IntStream.rangeClosed(startLine, endLine)
+                .mapToObj(provider::getLineNumber)
+                .map(blame::getLineDate)  //gets the author name for line
+                .filter(Objects::nonNull)
+                .max(Date::compareTo)
+                .orElse(null);
+    }
+
+
+    public static String getDaysAgoTooltipString(Date date) {
+        // calculate how many days ago it was
+        long diff = System.currentTimeMillis() - date.getTime();
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+        if (diffDays == 0) {
+            return CEBundle.getString("inlay.recentlymodified.tooltip.today");
+        } else if (diffDays == 1) {
+            return CEBundle.getString("inlay.recentlymodified.tooltip.yesterday");
+        } else if (diffDays < 365) {
+            return CEBundle.getString("inlay.recentlymodified.tooltip.days_ago", diffDays);
+        } else {
+            int years = (int) (diffDays / 365);
+            return CEBundle.getString("inlay.recentlymodified.tooltip.years_ago", years);
+        }
+    }
 
     //there's also a Vcsutil calss
 }

@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +32,7 @@ public class FixedIssue extends CEProviderMulti<FixedIssueSettings> {
 
     @Override
     public @NotNull CEConfigurableWindow<FixedIssueSettings> createConfigurable() {
-        return new CEConfigurableWindow<>();
+        return new FixedIssueConfigurable();
     }
 
     private class Collector extends VCSMethodCollector {
@@ -64,10 +63,11 @@ public class FixedIssue extends CEProviderMulti<FixedIssueSettings> {
             int endLine = document.getLineNumber(range.getEndOffset());
             UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);
 
+            var settings = getSettings();
             for (int i = startLine; i <= endLine; i++) {
                 int updatedLine = provider.getLineNumber(i);
                 VcsRevisionNumber revision = blame.getLineRevisionNumber(updatedLine);
-                if (revision != null) {
+                if (revision != null && CEVcsUtils.isRevisionRecent(project, revision, settings.getMaxRevisions())) {
                     String message = CEVcsUtils.getCommitMessageForRevision(project, revision);
                     Integer fixedIssue = getIssueThatWasFixed(message);
                     if (message != null && fixedIssue != null) {
