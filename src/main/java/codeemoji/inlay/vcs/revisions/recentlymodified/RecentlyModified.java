@@ -1,14 +1,11 @@
 package codeemoji.inlay.vcs.revisions.recentlymodified;
 
 import codeemoji.core.collector.InlayVisuals;
-import codeemoji.core.provider.CEProvider;
 import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
-import codeemoji.inlay.vcs.RefactorManager;
 import codeemoji.inlay.vcs.VCSMethodCollector;
-import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.TextRange;
