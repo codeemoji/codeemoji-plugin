@@ -5,10 +5,12 @@ import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
+import codeemoji.inlay.vcs.VCSClassCollector;
 import codeemoji.inlay.vcs.VCSMethodCollector;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
@@ -51,14 +53,14 @@ public class UnFrequentlyModified extends CEProviderMulti<UnFrequentlyModifiedSe
         }
     }
 
-    public class UnFrequentlyModifiedClassCollector extends VCSMethodCollector {
+    public class UnFrequentlyModifiedClassCollector extends VCSClassCollector {
 
         protected UnFrequentlyModifiedClassCollector(@NotNull PsiFile file, @NotNull Editor editor, @NotNull String key) {
             super(file, editor, key);
         }
 
         @Override
-        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
+        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiClass element) {
             if (vcsBlame == null) return null;
 
             //text range of this element without comments

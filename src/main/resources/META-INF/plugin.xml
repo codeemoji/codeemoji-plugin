@@ -492,7 +492,7 @@
                 implementationClass="codeemoji.inlay.vcs.revisions.newlyadded.NewlyAdded" />
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
-                language="JAVA" providerId="inlay.newlyadded"
+                language="JAVA" providerId="inlay.unfrequentlymodified"
                 implementationClass="codeemoji.inlay.vcs.revisions.unfrequentlymodified.UnFrequentlyModified" />
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider

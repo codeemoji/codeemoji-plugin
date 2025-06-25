@@ -17,18 +17,17 @@ version = properties("pluginVersion")
 
 repositories {
     mavenCentral()
-    maven {
-        url = uri("https://snyk.io/repository/maven-releases")
-    }
+    maven { url = uri("https://snyk.io/repository/maven-releases") }
+    maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {
     compileOnly("org.projectlombok:lombok:1.18.28")
     annotationProcessor("org.projectlombok:lombok:1.18.28")
     implementation("com.google.code.gson:gson:2.10.1")
-
+    implementation("org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r")
+    implementation("com.github.tsantalis:refactoring-miner:3.0.10")
 }
-
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))

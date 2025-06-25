@@ -123,8 +123,8 @@ public final class CEVcsUtils {
     public static boolean isRevisionRecent(@NotNull Project project,
                                                   @NotNull VcsRevisionNumber revisionToCheck,
                                                   int maxRevisions) {
-        GitRepositoryManager repositoryManager = GitUtil.getRepositoryManager(project);
-        GitRepository repo = repositoryManager.getRepositories().stream().findFirst().orElse(null);
+        //TODO: cache?
+        GitRepository repo = getProjectGitRepository(project);
         if (repo == null) return false;
 
         List<GitCommit> recentCommits;
@@ -139,12 +139,16 @@ public final class CEVcsUtils {
                 .anyMatch(rev -> rev.equals(revisionToCheck.asString()));
     }
 
+    public static @Nullable GitRepository getProjectGitRepository(@NotNull Project project) {
+        GitRepositoryManager repositoryManager = GitUtil.getRepositoryManager(project);
+        return repositoryManager.getRepositories().stream().findFirst().orElse(null);
+    }
+
     /**
      * Gets the latest (HEAD) revision for the current Git repo.
      */
     public static @Nullable VcsRevisionNumber getProjectHeadRevision(@NotNull Project project) {
-        GitRepositoryManager repositoryManager = GitUtil.getRepositoryManager(project);
-        GitRepository repo = repositoryManager.getRepositories().stream().findFirst().orElse(null);
+        GitRepository repo = getProjectGitRepository(project);
         if (repo == null) return null;
 
         String hash = repo.getCurrentRevision();
@@ -152,8 +156,7 @@ public final class CEVcsUtils {
     }
 
     public static @NotNull List<GitCommit> getLastCommits(@NotNull Project project, int limit) {
-        GitRepositoryManager repositoryManager = GitUtil.getRepositoryManager(project);
-        GitRepository repo = repositoryManager.getRepositories().stream().findFirst().orElse(null);
+        GitRepository repo = getProjectGitRepository(project);
         if (repo == null) return List.of();
 
         VirtualFile root = repo.getRoot();
@@ -170,7 +173,7 @@ public final class CEVcsUtils {
      * Gets the full commit message for the given revision hash.
      */
     public static @Nullable String getCommitMessageForRevision(@NotNull Project project, @NotNull String commitHash) {
-        GitRepository repo = GitUtil.getRepositoryManager(project).getRepositories().stream().findFirst().orElse(null);
+        GitRepository repo = getProjectGitRepository(project);
         if (repo == null) return null;
 
         try {

@@ -6,6 +6,7 @@ import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
+import codeemoji.inlay.vcs.RefactorManager;
 import codeemoji.inlay.vcs.VCSMethodCollector;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
@@ -60,6 +61,12 @@ public class RecentlyModified extends CEProviderMulti<RecentlyModifiedSettings> 
         @Override
         protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
             if (vcsBlame == null) return null;
+
+            //test
+            var man = new RefactorManager(element.getProject());
+           var b = man.isRefactored(element);
+            int aa = 1;
+            //end test
 
             //text range of this element without comments
             TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
