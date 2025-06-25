@@ -1,5 +1,6 @@
 package codeemoji.inlay.vcs;
 
+import com.intellij.openapi.components.Service;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
@@ -27,6 +28,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+@Service
 public class RefactorManager {
     private final Project project;
     private final GitHistoryRefactoringMiner miner = new GitHistoryRefactoringMinerImpl();

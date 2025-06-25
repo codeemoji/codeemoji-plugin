@@ -31,7 +31,6 @@ import java.util.*;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static com.intellij.psi.PsiModifier.*;
 
@@ -566,7 +565,7 @@ public enum CEUtils {
 
         for (Map.Entry<?, ?> entry : externalInfo.entrySet()) {
             if (entry.getKey() instanceof DependencyInfo dependencyInfo) {
-                String name = dependencyInfo.getPath();
+                String name = dependencyInfo.path();
                 String dependency = name.split("@")[0];
                 if (dependency.equals(normalizedPath)) {
                     if (entry.getValue() instanceof ArrayList<?> cveList) {

@@ -62,12 +62,6 @@ public class RecentlyModified extends CEProviderMulti<RecentlyModifiedSettings> 
         protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
             if (vcsBlame == null) return null;
 
-            //test
-            var man = new RefactorManager(element.getProject());
-           var b = man.isRefactored(element);
-            int aa = 1;
-            //end test
-
             //text range of this element without comments
             TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 

@@ -21,8 +21,8 @@ public final class CEExternalAnalyzer {
 
     public @NotNull List<CEExternalService<?, ?>> retrieveExternalServices(@NotNull Project project) {
         List<CEExternalService<?, ?>> externalServices = new ArrayList<>();
-        var globalSettings = CEGlobalSettings.getInstance();
-        var myExternalServiceState = globalSettings.getMyExternalServiceState();
+        CEGlobalSettings globalSettings = CEGlobalSettings.getInstance();
+        boolean myExternalServiceState = globalSettings.getMyExternalServiceState();
         if (myExternalServiceState) {
             VulnerabilityInfo.ScannerType scannerType = globalSettings.getType();
             if (scannerType.equals(VulnerabilityInfo.ScannerType.OSS)) {
