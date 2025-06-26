@@ -1,6 +1,7 @@
 package codeemoji.inlay.vcs;
 
 import codeemoji.core.util.CEBundle;
+import com.intellij.dvcs.repo.Repository;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -22,6 +23,9 @@ import com.intellij.vcs.CacheableAnnotationProvider;
 import git4idea.GitCommit;
 import git4idea.GitRevisionNumber;
 import git4idea.GitUtil;
+import git4idea.commands.Git;
+import git4idea.commands.GitCommand;
+import git4idea.commands.GitLineHandler;
 import git4idea.history.GitHistoryUtils;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryManager;
@@ -189,6 +193,7 @@ public final class CEVcsUtils {
 
         return null;
     }
+
 
     /**
      * Gets the full commit message for a given revision object.

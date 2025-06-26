@@ -5,13 +5,14 @@ import com.google.common.cache.CacheBuilder;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
+import com.intellij.psi.util.TypeConversionUtil;
 import gr.uom.java.xmi.UMLOperation;
 import gr.uom.java.xmi.UMLParameter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
 public final class MethodSignature {
     private final String className;
@@ -34,8 +35,11 @@ public final class MethodSignature {
         if (className == null) className = "";
         String methodName = operation.getName();
         List<UMLParameter> parameters = operation.getParameters();
-
-        List<String> paramTypes = new java.util.ArrayList<>(parameters.size());
+        var returnParameter = operation.getReturnParameter();
+        if (returnParameter != null) {
+            parameters.remove(returnParameter);
+        }
+        List<String> paramTypes = new ArrayList<>(parameters.size());
         for (UMLParameter p : parameters) {
             paramTypes.add(p.getType().toQualifiedString());
         }
@@ -44,30 +48,27 @@ public final class MethodSignature {
     }
 
     public static MethodSignature from(PsiMethod method) {
-        try {
-            return PSI_CACHE.get(method, () -> {
-                String className = method.getContainingClass() != null ? method.getContainingClass().getQualifiedName() : "";
-                String methodName = method.getName();
-                PsiParameter[] parameters = method.getParameterList().getParameters();
+        String className = method.getContainingClass() != null
+                ? method.getContainingClass().getQualifiedName()
+                : "";
+        String methodName = method.getName();
+        PsiParameter[] parameters = method.getParameterList().getParameters();
 
-                List<String> paramTypes = new java.util.ArrayList<>(parameters.length);
-                for (PsiParameter param : parameters) {
-                    PsiType type = param.getType();
-                    paramTypes.add(type.getCanonicalText());
-                }
-
-                return new MethodSignature(className, methodName, paramTypes);
-            });
-        } catch (ExecutionException e) {
-            throw new RuntimeException("Failed to create MethodSignature", e);
+        List<String> paramTypes = new ArrayList<>(parameters.length);
+        for (PsiParameter param : parameters) {
+            PsiType type = param.getType();
+            // Use erased type to match UMLOperation's representation
+            PsiType erasedType = TypeConversionUtil.erasure(type);
+            paramTypes.add(erasedType.getCanonicalText());
         }
+
+        return new MethodSignature(className, methodName, paramTypes);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MethodSignature)) return false;
-        MethodSignature that = (MethodSignature) o;
+        if (!(o instanceof MethodSignature that)) return false;
         return Objects.equals(className, that.className)
                 && Objects.equals(methodName, that.methodName)
                 && Objects.equals(parameterTypes, that.parameterTypes);

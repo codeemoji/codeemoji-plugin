@@ -5,6 +5,7 @@ import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEBundle;
 import codeemoji.inlay.vcs.CEVcsUtils;
+import codeemoji.inlay.vcs.GitCommitCacheService;
 import codeemoji.inlay.vcs.VCSMethodCollector;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Document;
@@ -63,14 +64,18 @@ public class FixedIssue extends CEProviderMulti<FixedIssueSettings> {
             int endLine = document.getLineNumber(range.getEndOffset());
             UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);
 
+            GitCommitCacheService gitCache = GitCommitCacheService.getInstance(project);
             var settings = getSettings();
             for (int i = startLine; i <= endLine; i++) {
                 int updatedLine = provider.getLineNumber(i);
                 VcsRevisionNumber revision = blame.getLineRevisionNumber(updatedLine);
-                if (revision != null && CEVcsUtils.isRevisionRecent(project, revision, settings.getMaxRevisions())) {
-                    String message = CEVcsUtils.getCommitMessageForRevision(project, revision);
+                if (revision != null && gitCache.isRevisionRecent(revision, settings.getMaxRevisions())) {
+                    String message = gitCache.getCommitMessage(revision);
+                    if (message == null) {
+                        continue; // Skip if message is not available
+                    }
                     Integer fixedIssue = getIssueThatWasFixed(message);
-                    if (message != null && fixedIssue != null) {
+                    if (fixedIssue != null) {
                         return fixedIssue.toString();
                     }
                 }

@@ -90,12 +90,10 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
         }
     }
 
-    //helper function. we are not feeding this all the time into craete inlay
-    protected @NotNull Map<?, ?> getExternalInfo(@Nullable H element) {
+    //helper function. we are not feeding this all the time into create inlay
+    protected @NotNull Map<?, ?> getExternalInfo(@NotNull H element) {
         Map<?, ?> result = new HashMap<>();
-        if (element != null) {
             CEExternalAnalyzer.getInstance().buildExternalInfo(result, element);
-        }
         return result;
     }
 

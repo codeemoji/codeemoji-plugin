@@ -36,11 +36,9 @@ public final class CEExternalAnalyzer {
         return externalServices;
     }
 
-    public void buildExternalInfo(@NotNull Map<?, ?> result, @Nullable PsiElement element) {
-        if (element != null) {
-            for (CEExternalService<?, ?> service : retrieveExternalServices(element.getProject())) {
-                service.buildInfo(result, element);
-            }
+    public void buildExternalInfo(@NotNull Map<?, ?> result, @NotNull PsiElement element) {
+        for (CEExternalService<?, ?> service : retrieveExternalServices(element.getProject())) {
+            service.buildInfo(result, element);
         }
     }
 

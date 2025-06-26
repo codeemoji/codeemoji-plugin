@@ -88,6 +88,7 @@
         <projectService serviceImplementation="codeemoji.inlay.external.services.OSSExternalServiceExternalService"/>
         <projectService serviceImplementation="codeemoji.inlay.external.services.OSVExternalServiceExternalService"/>
         <projectService serviceImplementation="codeemoji.inlay.vcs.RefactorService"/>
+        <projectService serviceImplementation="codeemoji.inlay.vcs.GitCommitCacheService"/>
 
 
         <!--END OF CONFIGURABLE & SERVICES SECTION-->

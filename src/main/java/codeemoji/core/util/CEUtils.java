@@ -485,7 +485,7 @@ public enum CEUtils {
         return 1 + (documentOfMethod.getLineNumber(element.getTextOffset() + element.getTextLength()) - documentOfMethod.getLineNumber(element.getTextOffset()));
     }
 
-    public static DependencyInfo getDependecyInfo(Library library) {
+    public static DependencyInfo getDependencyInfo(Library library) {
         String dependencyName = library.getName();
         if (!dependencyName.startsWith("Gradle: ")) {
             throw new IllegalArgumentException("Invalid format: not starting with Gradle");

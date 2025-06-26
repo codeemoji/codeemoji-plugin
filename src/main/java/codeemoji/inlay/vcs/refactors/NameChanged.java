@@ -32,9 +32,11 @@ public class NameChanged extends CEProvider<NameChangedSettings> {
 
         @Override
         protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod method) {
-            if (RefactorService.getInstance(method.getProject()).isRefactored(method)) {
+            RefactorService instance = RefactorService.getInstance(method.getProject());
+            var ref = instance.getRename(method);
+            if (ref != null) {
                 return InlayVisuals.translated(getSettings().getMainSymbol(),
-                        "inlay.namechanged.tooltip", previousMethodName);
+                        "inlay.namechanged.tooltip", ref.getName());
             }
             return null;
         }
