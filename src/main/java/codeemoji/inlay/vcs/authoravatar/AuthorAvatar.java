@@ -22,10 +22,7 @@ import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -34,8 +31,15 @@ public class AuthorAvatar extends CEProviderMulti<AuthorAvatarSettings> {
 
     @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
-        return List.of(new MethodCollector(psiFile, editor, getKey()),
-                new ClassCollector(psiFile, editor, getKey()));
+        var settings = getSettings();
+        List<SharedBypassCollector> list = new ArrayList<>();
+        if (settings.isShowOnMethods()) {
+            list.add(new MethodCollector(psiFile, editor, getKey()));
+        }
+        if (settings.isShowOnClasses()) {
+            list.add(new ClassCollector(psiFile, editor, getKey()));
+        }
+        return list;
     }
 
     @Override

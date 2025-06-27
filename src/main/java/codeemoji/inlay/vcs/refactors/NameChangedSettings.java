@@ -12,6 +12,8 @@ import lombok.EqualsAndHashCode;
 @State(name = "NameChangedSettings", storages = @Storage("codeemoji-name-changed-settings.xml"))
 public final class NameChangedSettings extends CEBaseSettings<NameChangedSettings> {
 
+    private int maxRevisions = 1;
+
     public NameChangedSettings() {
         super(NameChanged.class, VCSSymbols.NAME_CHANGED);
     }

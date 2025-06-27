@@ -3,6 +3,7 @@ package codeemoji.inlay.vcs.refactors;
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.util.CEBundle;
 import codeemoji.inlay.vcs.RefactorService;
 import codeemoji.inlay.vcs.VCSMethodCollector;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -14,14 +15,23 @@ import org.jetbrains.annotations.Nullable;
 
 public class NameChanged extends CEProvider<NameChangedSettings> {
 
+    public NameChanged() {
+        super();
+
+    }
+
     @Override
     public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
+        // initialize service
+        RefactorService.getInstance(psiFile.getProject())
+                .preProcess();
+
         return new NameChangedCollector(psiFile, editor, getKey());
     }
 
     @Override
     public @NotNull CEConfigurableWindow<NameChangedSettings> createConfigurable() {
-        return new CEConfigurableWindow<>();
+        return new NameChangedConfigurable();
     }
 
     private class NameChangedCollector extends VCSMethodCollector {
@@ -35,8 +45,8 @@ public class NameChanged extends CEProvider<NameChangedSettings> {
             RefactorService instance = RefactorService.getInstance(method.getProject());
             var ref = instance.getRename(method);
             if (ref != null) {
-                return InlayVisuals.translated(getSettings().getMainSymbol(),
-                        "inlay.namechanged.tooltip", ref.getName());
+                return InlayVisuals.of(getSettings().getMainSymbol(),
+                        CEBundle.getString("inlay.namechanged.tooltip", ref.getOriginalOperation().getName()));
             }
             return null;
         }

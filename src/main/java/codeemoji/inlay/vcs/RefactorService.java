@@ -120,7 +120,6 @@ public final class RefactorService implements Disposable {
         if (repo == null || indicator.isCanceled()) {
             return;
         }
-
         String currentSha = repo.getCurrentRevision();
         if (currentSha == null || currentSha.equals(lastScannedCommit)) {
             return;
@@ -130,6 +129,7 @@ public final class RefactorService implements Disposable {
         Map<MethodSignature, RenameOperationRefactoring> newRefactoredMethods = new HashMap<>();
 
         try (Repository jgitRepo = gitService.openRepository(repo.getRoot().getCanonicalPath())) {
+
             miner.detectAtCommit(jgitRepo, currentSha, new RefactoringHandler() {
                 @Override
                 public void handle(String commitId, List<Refactoring> refactorings) {

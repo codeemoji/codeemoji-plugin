@@ -60,10 +60,10 @@ public class TooManyAuthors extends CEProviderMulti<TooManyAuthorsSettings> {
             StringBuilder authors = new StringBuilder();
             int max = 4;
             for (int i = 0; i < author.size() && i < max; i++) {
-                authors.append(author.get(i));
-                if (i < author.size() - 1) {
+                if (i != 0) {
                     authors.append(", ");
                 }
+                authors.append(author.get(i));
             }
             return InlayVisuals.of(getSettings().getMainSymbol(),
                     CEBundle.getString("inlay.toomanyauthors.tooltip", authors.toString()));
