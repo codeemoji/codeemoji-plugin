@@ -10,6 +10,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.util.messages.MessageBusConnection;
+import git4idea.history.GitHistoryUtils;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryChangeListener;
 import gr.uom.java.xmi.diff.RenameOperationRefactoring;
@@ -24,6 +25,7 @@ import org.refactoringminer.api.RefactoringHandler;
 import org.refactoringminer.rm1.GitHistoryRefactoringMinerImpl;
 import org.refactoringminer.util.GitServiceImpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service(Level.PROJECT)
@@ -38,6 +41,7 @@ public final class RefactorService implements Disposable {
 
     private static final Logger LOG = Logger.getInstance(RefactorService.class);
     private static final int SCAN_DELAY_MS = 1000; // 1 second delay for batching events
+    private static final int DEFAULT_MAX_COMMITS = 10; // Default scan depth
 
     public static RefactorService getInstance(@NotNull Project project) {
         return project.getService(RefactorService.class);
@@ -52,13 +56,14 @@ public final class RefactorService implements Disposable {
             r -> new Thread(r, "RefactorScanThread")
     );
     private final AtomicReference<ScheduledFuture<?>> scheduledScan = new AtomicReference<>();
+    private final AtomicInteger maxCommits = new AtomicInteger(DEFAULT_MAX_COMMITS);
 
     private volatile String lastScannedCommit = null;
     private volatile boolean scanInProgress = false;
 
-    //cached refactors
-    private Map<MethodSignature, RenameOperationRefactoring> refactoredMethods = Map.of();
-
+    // Cached refactors
+    private final List<Map<MethodSignature, RenameOperationRefactoring>> refactoredMethods = new ArrayList<>();
+    private String lastMaxCommitsConfig = ""; // Tracks maxCommits configuration state
 
     public RefactorService(Project project) {
         this.project = project;
@@ -71,18 +76,54 @@ public final class RefactorService implements Disposable {
                 });
     }
 
+    /**
+     * Set the maximum number of commits to scan for refactorings
+     */
+    public void setMaxCommits(int maxCommits) {
+        int previous = this.maxCommits.getAndSet(maxCommits);
+
+        // If the value actually changed
+        if (previous != maxCommits) {
+            String newConfig = maxCommits + ":" + getCurrentCommit();
+
+            // If we've scanned with a different configuration, invalidate cache
+            if (!newConfig.equals(lastMaxCommitsConfig)) {
+                refactoredMethods.clear(); // Clear cache
+                lastScannedCommit = null; // Force rescan
+                scheduleScan();
+            }
+        }
+    }
+
     @Nullable
-    public RenameOperationRefactoring getRename(PsiMethod method) {
+    public RenameOperationRefactoring getRename(PsiMethod method, int maxCommits) {
+        if (maxCommits > this.maxCommits.get()) {
+            setMaxCommits(maxCommits);
+        }
         if (lastScannedCommit == null && !scanInProgress) {
             scheduleScan();
         }
-        return refactoredMethods.get(MethodSignature.from(method));
+        MethodSignature signature = MethodSignature.from(method);
+        for (int i = 0; i < Math.min(maxCommits,  refactoredMethods.size()); i++) {
+            Map<MethodSignature, RenameOperationRefactoring> methods = refactoredMethods.get(i);
+            RenameOperationRefactoring refactor = methods.get(signature);
+            if (refactor != null) {
+                return refactor;
+            }
+        }
+        return null;
     }
 
     private void scheduleScan() {
         String currentCommit = getCurrentCommit();
-        if (currentCommit == null || currentCommit.equals(lastScannedCommit)) {
+        if (currentCommit == null) {
             return;
+        }
+
+        // Check if we need to rescan based on configuration changes
+        String currentConfig = maxCommits.get() + ":" + currentCommit;
+        if (currentConfig.equals(lastMaxCommitsConfig)) {
+            return; // Already scanned with this config
         }
 
         ScheduledFuture<?> previous = scheduledScan.getAndSet(executor.schedule(
@@ -106,7 +147,7 @@ public final class RefactorService implements Disposable {
             public void run(@NotNull ProgressIndicator indicator) {
                 scanInProgress = true;
                 try {
-                    scanLastCommit(indicator);
+                    scanRecentCommits(indicator);
                 } finally {
                     scanInProgress = false;
                 }
@@ -114,51 +155,93 @@ public final class RefactorService implements Disposable {
         }.queue();
     }
 
-    private void scanLastCommit(ProgressIndicator indicator) {
+    private void scanRecentCommits(ProgressIndicator indicator) {
         indicator.setText("Locating repository...");
         GitRepository repo = CEVcsUtils.getProjectGitRepository(project);
         if (repo == null || indicator.isCanceled()) {
             return;
         }
+
         String currentSha = repo.getCurrentRevision();
-        if (currentSha == null || currentSha.equals(lastScannedCommit)) {
+        if (currentSha == null) {
+            return;
+        }
+        // Get commit history
+        List<String> commitHashes;
+        try {
+            commitHashes = GitHistoryUtils.history(project, repo.getRoot(),
+                            "--max-count=" + maxCommits.get(), "--pretty=format:%H")
+                    .stream().map(g -> g.getId().asString()).toList();
+        } catch (Exception e) {
+            LOG.warn("Failed to get commit history", e);
             return;
         }
 
-        indicator.setText("Scanning for refactorings...");
-        Map<MethodSignature, RenameOperationRefactoring> newRefactoredMethods = new HashMap<>();
+        if (commitHashes.isEmpty()) {
+            return;
+        }
+
+        String newestCommit = commitHashes.get(0);
+        String oldestCommit = commitHashes.get(commitHashes.size() - 1);
+        String currentConfig = maxCommits.get() + ":" + newestCommit;
+
+        if (currentConfig.equals(lastMaxCommitsConfig)) {
+            return; // Already scanned with this config
+        }
+
+        indicator.setText("Scanning " + commitHashes.size() + " commits for refactorings...");
+        indicator.setFraction(0);
+        List<Map<MethodSignature, RenameOperationRefactoring>> newRefactoredMethods = new ArrayList<>();
 
         try (Repository jgitRepo = gitService.openRepository(repo.getRoot().getCanonicalPath())) {
+            for (int c = 0; c< commitHashes.size(); c++) {
+                String commitHash = commitHashes.get(c);
+                Map<MethodSignature, RenameOperationRefactoring> map = new HashMap<>();
+                 newRefactoredMethods.add(map);
 
-            miner.detectAtCommit(jgitRepo, currentSha, new RefactoringHandler() {
-                @Override
-                public void handle(String commitId, List<Refactoring> refactorings) {
-                    if (indicator.isCanceled()) return;
+                miner.detectAtCommit(jgitRepo, commitHash, new RefactoringHandler() {
+                    private int processedCommits = 0;
 
-                    LOG.info("Processing refactorings for commit " + commitId);
-                    for (Refactoring ref : refactorings) {
-                        if (ref instanceof RenameOperationRefactoring ren) {
-                            newRefactoredMethods.put(MethodSignature.from(ren.getRenamedOperation()), ren);
+                    @Override
+                    public void handle(String commitId, List<Refactoring> refactorings) {
+                        if (indicator.isCanceled()) return;
+
+                        indicator.setText2("Processing commit " + processedCommits + "/" + commitHashes.size());
+                        indicator.setFraction((double) processedCommits / commitHashes.size());
+
+                        processedCommits++;
+
+                        LOG.debug("Processing refactorings for commit " + commitId);
+                        for (Refactoring ref : refactorings) {
+                            if (ref instanceof RenameOperationRefactoring ren) {
+                                MethodSignature signature = MethodSignature.from(ren.getRenamedOperation());
+                                if (!map.containsKey(signature)) {
+                                    map.put(signature, ren);
+                                }
+                            }
                         }
-                        // Add new refactoring types here
                     }
-                }
 
-                @Override
-                public void handleException(String commitId, Exception e) {
-                    LOG.warn("Refactoring scan failed for commit " + commitId, e);
-                    lastScannedCommit = null; // Allow retry
-                }
-            });
-
+                    @Override
+                    public void handleException(String commitId, Exception e) {
+                        LOG.warn("Refactoring scan failed for commit " + commitId, e);
+                        lastMaxCommitsConfig = ""; // Allow retry
+                    }
+                });
+            }
             if (!indicator.isCanceled()) {
-                lastScannedCommit = currentSha;
-                refactoredMethods = newRefactoredMethods;
-                LOG.info("Refactoring scan completed for commit " + currentSha);
+                lastScannedCommit = newestCommit;
+                lastMaxCommitsConfig = currentConfig;
+                refactoredMethods.clear();
+                refactoredMethods.addAll(newRefactoredMethods);
+                LOG.info("Scanned " + commitHashes.size() + " commits. Found " +
+                        newRefactoredMethods.size() + " method renames.");
             }
         } catch (Exception e) {
-            LOG.warn("Failed to scan refactorings", e);
-            lastScannedCommit = null; // Allow retry
+            LOG.warn("Failed to scan refactorings between commits", e);
+            lastMaxCommitsConfig = ""; // Allow retry
+        } finally {
+            indicator.setFraction(1.0);
         }
     }
 

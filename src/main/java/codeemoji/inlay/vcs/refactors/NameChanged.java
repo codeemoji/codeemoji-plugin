@@ -43,7 +43,8 @@ public class NameChanged extends CEProvider<NameChangedSettings> {
         @Override
         protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod method) {
             RefactorService instance = RefactorService.getInstance(method.getProject());
-            var ref = instance.getRename(method);
+            var settings = getSettings();
+            var ref = instance.getRename(method ,settings.getMaxRevisions());
             if (ref != null) {
                 return InlayVisuals.of(getSettings().getMainSymbol(),
                         CEBundle.getString("inlay.namechanged.tooltip", ref.getOriginalOperation().getName()));
