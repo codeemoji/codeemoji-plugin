@@ -1,6 +1,6 @@
 package codeemoji.inlay.vcs;
 
-import codeemoji.core.collector.simple.CEDynamicMethodCollector;
+import codeemoji.core.collector.base.CEMethodCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
@@ -9,7 +9,7 @@ import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class VCSMethodCollector extends CEDynamicMethodCollector {
+public abstract class VCSMethodCollector extends CEMethodCollector {
 
     @Nullable
     protected final FileAnnotation vcsBlame;

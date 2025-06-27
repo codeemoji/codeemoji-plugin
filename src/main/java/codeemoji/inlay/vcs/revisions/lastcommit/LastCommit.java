@@ -55,8 +55,10 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
                 if (getSettings().isShowDate()) {
                     return InlayVisuals.of(getSettings().getMainSymbol(),
                             CEBundle.getString("inlay.lastcommit.tooltip.message", revisionInfo.date));
-                } else return InlayVisuals.of(getSettings().getMainSymbol(),
-                        CEBundle.getString("inlay.lastcommit.tooltip"));
+                } else{
+                    return InlayVisuals.of(getSettings().getMainSymbol(),
+                            CEBundle.getString("inlay.lastcommit.tooltip"));
+                }
             }
             return null;
         }

@@ -1,7 +1,7 @@
-package codeemoji.core.collector.simple;
+package codeemoji.core.collector.base;
 
+import codeemoji.core.collector.CECollector;
 import codeemoji.core.collector.InlayVisuals;
-import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.openapi.editor.Editor;
@@ -18,15 +18,14 @@ import java.util.function.Supplier;
 
 @Getter
 @Setter
-public abstract non-sealed class CESimpleVariableCollector extends CESimpleCollector<PsiVariable, PsiElement> {
+public abstract class CEVariableCollector extends CECollector<PsiVariable, PsiElement> {
 
     private boolean enabledForField;
     private boolean enabledForParam;
     private boolean enabledForLocalVariable;
 
-    protected CESimpleVariableCollector(@NotNull Editor editor, String key,
-                                        Supplier<CESymbol> settings) {
-        super(editor, key, settings);
+    protected CEVariableCollector(@NotNull Editor editor, String key) {
+        super(editor, key);
         enabledForField = true;
         enabledForParam = true;
         enabledForLocalVariable = true;
@@ -70,18 +69,18 @@ public abstract non-sealed class CESimpleVariableCollector extends CESimpleColle
                             addInlayInline(ref.getElement(), sink, inlay);
                         }
                     } else {
-                        processReferencesInPreviewEditor(variable, sink);
+                        processReferencesInPreviewEditor(variable, sink, inlay);
                     }
                 }
             }
 
-            private void processReferencesInPreviewEditor(@NotNull PsiNamedElement variable, @NotNull InlayTreeSink InlayTreeSink) {
+            private void processReferencesInPreviewEditor(@NotNull PsiNamedElement variable, @NotNull InlayTreeSink InlayTreeSink,
+                                                          @NotNull InlayVisuals inlay) {
                 variable.getContainingFile().accept(new JavaRecursiveElementVisitor() {
                     @Override
                     public void visitReferenceExpression(@NotNull PsiReferenceExpression expression) {
                         if (CEUtils.hasAUniqueQualifier(expression)
                                 && Objects.equals(expression.getText(), variable.getName())) {
-                            InlayVisuals inlay = createInlay();
                             addInlayInline(expression, InlayTreeSink, inlay);
                         }
                         super.visitReferenceExpression(expression);
@@ -94,7 +93,7 @@ public abstract non-sealed class CESimpleVariableCollector extends CESimpleColle
     @Override
     public int calcOffset(@Nullable PsiElement element) {
         if (null != element) {
-            var length = element.getTextLength();
+            int length = element.getTextLength();
             final var attr = "this.";
             if (element.getText().contains(attr)) {
                 length -= attr.length();

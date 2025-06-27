@@ -1,6 +1,7 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CESimpleVariableCollector;
+import codeemoji.core.collector.base.CEVariableCollector;
+import codeemoji.core.collector.base.simple.CESimpleVariableCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CEUtils;
@@ -31,7 +32,7 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NameContainsOn
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleVariableCollector(editor, getKey(), mainSymbol()) {
+        return new CESimpleVariableCollector(editor, this) {
             @Override
             public boolean needsInlay(@NotNull PsiVariable element){
                 return CEUtils.containsOnlySpecialCharacters(Objects.requireNonNull(element.getName()));

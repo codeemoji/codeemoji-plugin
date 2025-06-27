@@ -1,4 +1,4 @@
-package codeemoji.core.collector.simple;
+package codeemoji.core.collector.base;
 
 import codeemoji.core.collector.CECollector;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
@@ -6,9 +6,9 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class CEDynamicClassCollector extends CECollector<PsiClass, PsiIdentifier> {
+public abstract class CEClassCollector extends CECollector<PsiClass, PsiIdentifier> {
 
-    protected CEDynamicClassCollector(@NotNull Editor editor, String key) {
+    protected CEClassCollector(@NotNull Editor editor, String key) {
         super(editor, key);
     }
 

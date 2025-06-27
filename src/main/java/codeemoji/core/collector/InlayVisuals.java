@@ -1,5 +1,6 @@
 package codeemoji.core.collector;
 
+import codeemoji.core.provider.CEProvider;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +17,7 @@ public record InlayVisuals(String text, String tooltip, boolean hasBackground) {
         return new InlayVisuals(symbol.getEmoji(), tooltip, symbol.isWithBackground());
     }
 
+    //TODO: remove string concat, use %s
     public static InlayVisuals translated(@NotNull CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
         return translated(symbol.getEmoji(), symbol.isWithBackground(), keyTooltip, suffixTooltip);
     }
@@ -32,5 +34,12 @@ public record InlayVisuals(String text, String tooltip, boolean hasBackground) {
             tooltip += " " + suffixTooltip;
         }
         return InlayVisuals.of(symbol, tooltip, background);
+    }
+
+    //maybe ugly
+    public static InlayVisuals fromProviderSimple(CEProvider<?> ceProvider){
+        var tooltipKey = "inlay." + ceProvider.getKey() + ".tooltip";
+        var symbolGetter = ceProvider.getSettings().getMainSymbol();
+        return InlayVisuals.translated(symbolGetter, tooltipKey, null);
     }
 }

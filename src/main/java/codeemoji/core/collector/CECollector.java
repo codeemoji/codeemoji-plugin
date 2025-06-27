@@ -1,9 +1,9 @@
 package codeemoji.core.collector;
 
 import codeemoji.core.external.CEExternalAnalyzer;
-import codeemoji.core.util.CEBundle;
-import codeemoji.core.util.CESymbol;
-import com.intellij.codeInsight.hints.declarative.*;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
+import com.intellij.codeInsight.hints.declarative.InlineInlayPosition;
+import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.psi.PsiElement;
@@ -36,10 +36,8 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
 
     @Override
     public void collectFromElement(@NotNull PsiElement psiElement, @NotNull InlayTreeSink inlayTreeSink) {
-        if (isEnabled()) {
-            if (psiElement instanceof PsiJavaFile) {
-                psiElement.accept(createElementVisitor(getEditor(), inlayTreeSink));
-            }
+        if (psiElement instanceof PsiJavaFile) {
+            psiElement.accept(createElementVisitor(getEditor(), inlayTreeSink));
         }
     }
 
@@ -78,7 +76,7 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
 
             //TODO: check this
             sink.addPresentation(
-                    new InlineInlayPosition(element.getTextRange().getEndOffset()-indent, true,  0),
+                    new InlineInlayPosition(element.getTextRange().getEndOffset() - indent, true, 0),
                     List.of(),
                     inlay.tooltip(),
                     inlay.hasBackground(),
@@ -93,7 +91,7 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
     //helper function. we are not feeding this all the time into create inlay
     protected @NotNull Map<?, ?> getExternalInfo(@NotNull H element) {
         Map<?, ?> result = new HashMap<>();
-            CEExternalAnalyzer.getInstance().buildExternalInfo(result, element);
+        CEExternalAnalyzer.getInstance().buildExternalInfo(result, element);
         return result;
     }
 

@@ -1,7 +1,7 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
-import codeemoji.core.collector.simple.CESimpleMethodCollector;
-import codeemoji.core.collector.simple.CESimpleReferenceMethodCollector;
+import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.base.simple.CESimpleReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.settings.CEConfigurableWindow;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
@@ -9,7 +9,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,14 +18,14 @@ public class StateIndependentMethod extends CEProviderMulti<StateIndependentMeth
     @Override
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
         return List.of(
-                new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
+                new CESimpleMethodCollector(editor, this) {
                     @Override
                     protected boolean needsInlay(@NotNull PsiMethod element){
                         return isStateIndependentMethod(element);
                     }
                 },
 
-                new CESimpleReferenceMethodCollector(editor, getKey(), mainSymbol()) {
+                new CESimpleReferenceMethodCollector(editor, this) {
                     @Override
                     protected boolean needsInlay(@NotNull PsiMethod element){
                         return isStateIndependentMethod(element);

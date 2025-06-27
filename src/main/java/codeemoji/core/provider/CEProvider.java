@@ -92,11 +92,4 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
         }
     }
 
-
-    //helper
-
-    public Supplier<CESymbol> mainSymbol() {
-        return () -> this.getSettings().getMainSymbol();
-    }
-
 }

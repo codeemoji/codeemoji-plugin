@@ -1,21 +1,16 @@
 package codeemoji.inlay.vcs.wip;
 
-import codeemoji.core.collector.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.inlay.vcs.CEVcsUtils;
-import com.intellij.codeInsight.hints.AnnotationInlayProvider;
-import com.intellij.codeInsight.hints.InlayHintsProvider;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
-import com.intellij.execution.impl.InlayProvider;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vcs.annotate.AnnotationProvider;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
-import com.intellij.openapi.vcs.annotate.VcsCacheableAnnotationProvider;
 import com.intellij.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -44,8 +39,7 @@ public class GitTest extends CEProvider<GitTest.Settings> {
     @Override
     public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
 
-        return new CESimpleMethodCollector(editor, getKey(),
-                mainSymbol()) {
+        return new CESimpleMethodCollector(editor, this) {
 
             //CodeVisionProvider
             //VcsCodeVisionProvider

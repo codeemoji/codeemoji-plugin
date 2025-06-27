@@ -1,7 +1,7 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
-import codeemoji.core.collector.simple.CESimpleMethodCollector;
-import codeemoji.core.collector.simple.CESimpleReferenceMethodCollector;
+import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.base.simple.CESimpleReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEUtils;
@@ -11,7 +11,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,14 +21,14 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
     protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
 
         return List.of(
-                new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
+                new CESimpleMethodCollector(editor, this) {
                     @Override
                     protected boolean needsInlay(@NotNull PsiMethod element){
                         return isExternalFunctionalityInvokingMethod(element, editor.getProject());
                     }
                 },
 
-                new CESimpleReferenceMethodCollector(editor, getKey(), mainSymbol()) {
+                new CESimpleReferenceMethodCollector(editor,this) {
                     @Override
                     protected boolean needsInlay(@NotNull PsiMethod element){
                         return isExternalFunctionalityInvokingMethod(element, editor.getProject());

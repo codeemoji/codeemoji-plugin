@@ -1,6 +1,6 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -18,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
-import static codeemoji.inlay.nameviolation.NameViolationSymbols.SMALL_NAME;
 
 public class TransformMethodDoesNotReturn extends CEProvider<TransformMethodDoesNotReturn.Settings> {
 
@@ -34,7 +33,7 @@ public class TransformMethodDoesNotReturn extends CEProvider<TransformMethodDoes
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
+        return new CESimpleMethodCollector(editor, this) {
             @Override
             public boolean needsInlay(@NotNull PsiMethod element){
                 return (element.getName().startsWith("translate") || element.getName().startsWith("transform") || element.getName().startsWith("convert")) && Objects.equals(element.getReturnType(), PsiTypes.voidType());

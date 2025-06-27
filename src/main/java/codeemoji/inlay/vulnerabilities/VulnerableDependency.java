@@ -1,8 +1,8 @@
 package codeemoji.inlay.vulnerabilities;
 
 import codeemoji.core.collector.InlayVisuals;
-import codeemoji.core.collector.simple.CEDynamicMethodCollector;
-import codeemoji.core.collector.simple.CEDynamicReferenceMethodCollector;
+import codeemoji.core.collector.base.CEMethodCollector;
+import codeemoji.core.collector.base.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEBundle;
@@ -36,7 +36,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
         );
     }
 
-    private class VulnerableMethodCollector extends CEDynamicMethodCollector {
+    private class VulnerableMethodCollector extends CEMethodCollector {
         protected VulnerableMethodCollector(@NotNull Editor editor, String settingsKey) {
             super(editor, settingsKey);
         }
@@ -137,7 +137,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
 
     }
 
-    private class VulnerableDependencyCallCollector extends CEDynamicReferenceMethodCollector {
+    private class VulnerableDependencyCallCollector extends CEReferenceMethodCollector {
         protected VulnerableDependencyCallCollector(@NotNull Editor editor, String key) {
             super(editor, key);
         }

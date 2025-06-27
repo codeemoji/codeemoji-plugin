@@ -1,20 +1,15 @@
-package codeemoji.core.collector.simple;
+package codeemoji.core.collector.base;
 
-import codeemoji.core.util.CESymbol;
+import codeemoji.core.collector.CECollector;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.JavaRecursiveElementVisitor;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiIdentifier;
-import com.intellij.psi.PsiMethod;
+import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
+public abstract class CEMethodCollector extends CECollector<PsiMethod, PsiIdentifier> {
 
-public abstract non-sealed class CESimpleMethodCollector extends CESimpleCollector<PsiMethod, PsiIdentifier> {
-
-    protected CESimpleMethodCollector(@NotNull Editor editor, String key, Supplier<CESymbol> settings) {
-        super(editor, key, settings);
+    protected CEMethodCollector(@NotNull Editor editor, String key) {
+        super(editor, key);
     }
 
     @Override
@@ -31,4 +26,6 @@ public abstract non-sealed class CESimpleMethodCollector extends CESimpleCollect
         };
     }
 
+
 }
+

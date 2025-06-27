@@ -1,13 +1,10 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.JavaMethodChainsDeclarativeInlayProvider;
-import com.intellij.codeInsight.hints.chain.AbstractCallChainHintsProvider;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
-import com.intellij.codeInsight.hints.declarative.impl.DeclarativeHintsProviderSettingsModel;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.editor.Editor;
@@ -29,17 +26,17 @@ public class ExpectingButNotGettingACollection extends CEProvider<ExpectingButNo
     @ToString
     @Data
     @State(name = "ExpectingButNotGettingACollectionSettings", storages = @Storage("codeemoji-expecting-but-not-getting-a-collection-settings.xml"))
-    public static class Settings extends CEBaseSettings<Settings>{
-        public Settings(){
+    public static class Settings extends CEBaseSettings<Settings> {
+        public Settings() {
             super(ExpectingButNotGettingACollection.class, ONE);
         }
     }
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
+        return new CESimpleMethodCollector(editor, this) {
             @Override
-            public boolean needsInlay(@NotNull PsiMethod element){
+            public boolean needsInlay(@NotNull PsiMethod element) {
                 if ((element.getName().startsWith("get") || element.getName().startsWith("return"))
                         && CEUtils.isPluralForm(element.getName())) {
                     var typeElement = element.getReturnTypeElement();

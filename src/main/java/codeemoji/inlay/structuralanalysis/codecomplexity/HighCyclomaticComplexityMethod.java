@@ -1,10 +1,9 @@
 package codeemoji.inlay.structuralanalysis.codecomplexity;
 
-import codeemoji.core.collector.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEConfigurableWindow;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
@@ -16,9 +15,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-
-import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.HIGH_CYCLOMATIC_COMPLEXITY_METHOD;
 
 public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticComplexityMethodSettings> {
 
@@ -34,7 +30,7 @@ public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticCom
 
     @Override
     public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
+        return new CESimpleMethodCollector(editor, this) {
             @Override
             protected boolean needsInlay(@NotNull PsiMethod element){
                 if(isHighCyclomaticComplexityMethod(element)) System.out.println("Found HIGH_CYCLOMATIC_COMPLEXITY_METHOD in " + element.getName());

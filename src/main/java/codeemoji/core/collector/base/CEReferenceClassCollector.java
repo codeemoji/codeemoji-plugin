@@ -1,6 +1,6 @@
-package codeemoji.core.collector.simple;
+package codeemoji.core.collector.base;
 
-import codeemoji.core.util.CESymbol;
+import codeemoji.core.collector.CECollector;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.openapi.editor.Editor;
@@ -8,14 +8,12 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
+public abstract class CEReferenceClassCollector extends CECollector<PsiClass, PsiElement> {
 
-public abstract non-sealed class CESimpleReferenceClassCollector extends CESimpleCollector<PsiClass, PsiElement> {
-
-    protected CESimpleReferenceClassCollector(@NotNull Editor editor, String key,
-                                              @NotNull String tooltipKey, Supplier<CESymbol> settings) {
-        super(editor, key, tooltipKey, settings);
+    protected CEReferenceClassCollector(@NotNull Editor editor, String key) {
+        super(editor, key);
     }
+
 
     @Override
     public PsiElementVisitor createElementVisitor(@NotNull Editor editor, @NotNull InlayTreeSink InlayTreeSink) {

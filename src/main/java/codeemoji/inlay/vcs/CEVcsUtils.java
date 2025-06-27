@@ -213,7 +213,7 @@ public final class CEVcsUtils {
 
         return IntStream.rangeClosed(startLine, endLine)
                 .mapToObj(provider::getLineNumber)
-                .map(blame::getLineDate)  //gets the author name for line
+                .map(blame::getLineDate)  //gets the date name for line
                 .filter(Objects::nonNull)
                 .min(Date::compareTo)
                 .orElse(null);

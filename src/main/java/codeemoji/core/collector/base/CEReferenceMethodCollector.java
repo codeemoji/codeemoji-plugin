@@ -1,6 +1,6 @@
-package codeemoji.core.collector.simple;
+package codeemoji.core.collector.base;
 
-import codeemoji.core.util.CESymbol;
+import codeemoji.core.collector.CECollector;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.openapi.editor.Editor;
@@ -8,17 +8,10 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
+public abstract class CEReferenceMethodCollector extends CECollector<PsiMethod, PsiMethodCallExpression> {
 
-public abstract non-sealed class CESimpleReferenceMethodCollector extends CESimpleCollector<PsiMethod, PsiMethodCallExpression> {
-
-    protected CESimpleReferenceMethodCollector(@NotNull Editor editor, String key,
-                                               Supplier<CESymbol> settings) {
-        this(editor, key, key, settings);
-    }
-    protected CESimpleReferenceMethodCollector(@NotNull Editor editor, String key,
-                                               @NotNull String tooltipId, Supplier<CESymbol> settings) {
-        super(editor, key, tooltipId, settings);
+    protected CEReferenceMethodCollector(@NotNull Editor editor, String key) {
+        super(editor, key);
     }
 
     @Override
@@ -35,10 +28,10 @@ public abstract non-sealed class CESimpleReferenceMethodCollector extends CESimp
                             addInlayInline(mexp, InlayTreeSink, inlay);
                         }
                     }
-
                 }
                 super.visitCallExpression(callExpression);
             }
+
         };
     }
 

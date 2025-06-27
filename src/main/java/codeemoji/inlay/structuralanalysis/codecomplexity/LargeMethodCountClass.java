@@ -1,6 +1,6 @@
 package codeemoji.inlay.structuralanalysis.codecomplexity;
 
-import codeemoji.core.collector.simple.CESimpleClassCollector;
+import codeemoji.core.collector.base.simple.CESimpleClassCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEConfigurableWindow;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -14,9 +14,9 @@ public class LargeMethodCountClass extends CEProvider<LargeMethodCountClassSetti
 
     @Override
     public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleClassCollector(editor, getKey(), mainSymbol()) {
+        return new CESimpleClassCollector(editor, this) {
             @Override
-            protected boolean needsInlay(@NotNull PsiClass element){
+            protected boolean needsInlay(@NotNull PsiClass element) {
                 return isLargeMethodCountClass(element);
             }
         };
@@ -27,7 +27,7 @@ public class LargeMethodCountClass extends CEProvider<LargeMethodCountClassSetti
         return new LargeMethodCountClassConfigurable();
     }
 
-    private boolean isLargeMethodCountClass(PsiClass clazz){
+    private boolean isLargeMethodCountClass(PsiClass clazz) {
         return clazz.getMethods().length >= getSettings().getMethodCount();
     }
 }

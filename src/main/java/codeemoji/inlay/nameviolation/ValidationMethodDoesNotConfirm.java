@@ -1,6 +1,6 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -33,7 +33,7 @@ public class ValidationMethodDoesNotConfirm extends CEProvider<ValidationMethodD
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
+        return new CESimpleMethodCollector(editor, this) {
             @Override
             public boolean needsInlay(@NotNull PsiMethod element){
                 return (element.getName().startsWith("validate") || element.getName().startsWith("check") || element.getName().startsWith("ensure")) && !Objects.equals(element.getReturnType(), PsiTypes.booleanType());

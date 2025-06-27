@@ -1,6 +1,6 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CEUtils;
@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.MANY;
-import static codeemoji.inlay.nameviolation.NameViolationSymbols.ONE;
 
 public class ExpectingButNotGettingASingleInstance extends CEProvider<ExpectingButNotGettingASingleInstance.Settings> {
 
@@ -35,7 +34,7 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<ExpectingB
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
+        return new CESimpleMethodCollector(editor, this) {
             @Override
             public boolean needsInlay(@NotNull PsiMethod element) {
                 if ((element.getName().startsWith("get") || element.getName().startsWith("return")) &&

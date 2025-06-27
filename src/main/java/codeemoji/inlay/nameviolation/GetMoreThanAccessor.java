@@ -1,6 +1,6 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -33,7 +33,7 @@ public class GetMoreThanAccessor extends CEProvider<GetMoreThanAccessor.Settings
 
     @Override
     public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
+        return new CESimpleMethodCollector(editor, this) {
             @Override
             public boolean needsInlay(@NotNull PsiMethod element){
                 if (element.getName().startsWith("get") && !Objects.equals(element.getReturnType(), PsiTypes.voidType()) && null != element.getBody()) {
