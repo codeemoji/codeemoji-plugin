@@ -4,42 +4,32 @@ import codeemoji.core.provider.CEProvider;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public record InlayVisuals(String text, String tooltip, boolean hasBackground) {
 
-    // direct, you must provide already translated text
-    public static InlayVisuals of(@NotNull String text, @NotNull String tooltip, boolean hasBackground) {
-        return new InlayVisuals(text, tooltip, hasBackground);
+    public static InlayVisuals direct(@NotNull CESymbol symbol, @NotNull String keyTooltip) {
+        return new InlayVisuals(symbol.getEmoji(),keyTooltip, symbol.isWithBackground());
     }
 
-    public static InlayVisuals of(@NotNull CESymbol symbol, @NotNull String tooltip) {
-        return new InlayVisuals(symbol.getEmoji(), tooltip, symbol.isWithBackground());
+    public static InlayVisuals translated(@NotNull CESymbol symbol, @NotNull String keyTooltip, @NotNull Object ...args) {
+        return translated(symbol.getEmoji(), symbol.isWithBackground(), keyTooltip, args);
     }
 
-    //TODO: remove string concat, use %s
-    public static InlayVisuals translated(@NotNull CESymbol symbol, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
-        return translated(symbol.getEmoji(), symbol.isWithBackground(), keyTooltip, suffixTooltip);
-    }
-
-    public static @NotNull InlayVisuals translatedWithText(@NotNull String fullText, @NotNull String keyTooltip, @Nullable String suffixTooltip) {
-        return translated(fullText, true, keyTooltip, suffixTooltip);
+    public static @NotNull InlayVisuals translatedWithText(@NotNull String fullText, @NotNull String keyTooltip, @NotNull Object ...args) {
+        return translated(fullText, true, keyTooltip, args);
     }
 
     // is tooltip suffix needed?
     private static @NotNull InlayVisuals translated(@NotNull String symbol, boolean background,
-                                                     @NotNull String keyTooltip, @Nullable String suffixTooltip) {
-        String tooltip = CEBundle.getString(keyTooltip);
-        if (null != suffixTooltip) {
-            tooltip += " " + suffixTooltip;
-        }
-        return InlayVisuals.of(symbol, tooltip, background);
+                                                     @NotNull String keyTooltip, @NotNull Object ...args) {
+        String tooltip = CEBundle.getString(keyTooltip, args);
+        return new InlayVisuals(symbol, tooltip, background);
     }
 
     //maybe ugly
     public static InlayVisuals fromProviderSimple(CEProvider<?> ceProvider){
         var tooltipKey = "inlay." + ceProvider.getKey() + ".tooltip";
         var symbolGetter = ceProvider.getSettings().getMainSymbol();
-        return InlayVisuals.translated(symbolGetter, tooltipKey, null);
+        return InlayVisuals.translated(symbolGetter, tooltipKey);
     }
 }

@@ -49,8 +49,8 @@ public class FixedIssue extends CEProviderMulti<FixedIssueSettings> {
             TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
             String matchedMessage = findFixingCommitMessage(element.getProject(), textRange, getEditor(), vcsBlame);
             if (matchedMessage != null) {
-                return InlayVisuals.of(getSettings().getMainSymbol(),
-                        CEBundle.getString("inlay.fixedissue.tooltip", matchedMessage));
+                return InlayVisuals.translated(getSettings().getMainSymbol(),
+                        "inlay.fixedissue.tooltip", matchedMessage);
             }
             return null;
         }

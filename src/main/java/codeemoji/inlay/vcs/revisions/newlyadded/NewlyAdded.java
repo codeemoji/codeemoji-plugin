@@ -59,9 +59,7 @@ public class NewlyAdded extends CEProviderMulti<NewlyAddedSettings> {
 
             if (allLinesAddedInHead) {
                 NewlyAddedSettings settings = getSettings();
-                String tooltip = CEBundle.getString("inlay.newlyadded.tooltip.method");
-                CESymbol mainSymbol = settings.getMainSymbol();
-                return InlayVisuals.of(mainSymbol, tooltip);
+                return InlayVisuals.translated(settings.getMainSymbol(), "inlay.newlyadded.tooltip.method");
             }
 
             return null;
@@ -88,9 +86,7 @@ public class NewlyAdded extends CEProviderMulti<NewlyAddedSettings> {
 
             if (allLinesAddedInHead) {
                 NewlyAddedSettings settings = getSettings();
-                String tooltip = CEBundle.getString("inlay.newlyadded.tooltip.class");
-                CESymbol mainSymbol = settings.getMainSymbol();
-                return InlayVisuals.of(mainSymbol, tooltip);
+                return InlayVisuals.translated(settings.getMainSymbol(), "inlay.newlyadded.tooltip.class");
             }
 
             return null;

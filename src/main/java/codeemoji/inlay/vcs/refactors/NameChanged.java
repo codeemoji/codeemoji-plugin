@@ -46,8 +46,8 @@ public class NameChanged extends CEProvider<NameChangedSettings> {
             var settings = getSettings();
             var ref = instance.getRename(method ,settings.getMaxRevisions());
             if (ref != null) {
-                return InlayVisuals.of(getSettings().getMainSymbol(),
-                        CEBundle.getString("inlay.namechanged.tooltip", ref.getOriginalOperation().getName()));
+                return InlayVisuals.translated(getSettings().getMainSymbol(),
+                        "inlay.namechanged.tooltip", ref.getOriginalOperation().getName());
             }
             return null;
         }

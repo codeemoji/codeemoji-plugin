@@ -82,7 +82,7 @@ public class UnFrequentlyModified extends CEProviderMulti<UnFrequentlyModifiedSe
             var settings = getSettings();
             String tooltip = settings.isShowDate() ? date.toString() : CEVcsUtils.getDaysAgoTooltipString(date);
             CESymbol mainSymbol = settings.getMainSymbol();
-            return InlayVisuals.of(mainSymbol, tooltip);
+            return InlayVisuals.direct(mainSymbol, tooltip);
         }
         return null;
     }

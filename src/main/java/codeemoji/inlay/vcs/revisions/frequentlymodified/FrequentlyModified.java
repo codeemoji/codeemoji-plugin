@@ -95,9 +95,8 @@ public class FrequentlyModified extends CEProviderMulti<FrequentlyModifiedSettin
 
     private InlayVisuals makePresentation(int modifications, int timeFrame) {
         FrequentlyModifiedSettings settings = getSettings();
-        String tooltip = CEBundle.getString("inlay.frequentlymodified.tooltip", modifications, timeFrame);
-        CESymbol mainSymbol = settings.getMainSymbol();
-        return InlayVisuals.of(mainSymbol, tooltip);
+        return InlayVisuals.translated(settings.getMainSymbol(),
+                "inlay.frequentlymodified.tooltip", modifications, timeFrame);
     }
 
     private static Set<Date> getAllModificationDates(

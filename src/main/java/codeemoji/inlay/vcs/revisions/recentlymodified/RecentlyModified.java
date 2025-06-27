@@ -3,8 +3,6 @@ package codeemoji.inlay.vcs.revisions.recentlymodified;
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProviderMulti;
 import codeemoji.core.settings.CEConfigurableWindow;
-import codeemoji.core.util.CESymbol;
-import codeemoji.inlay.structuralanalysis.element.method.StateChangingMethod;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSClassCollector;
 import codeemoji.inlay.vcs.VCSMethodCollector;
@@ -82,8 +80,7 @@ public class RecentlyModified extends CEProviderMulti<RecentlyModifiedSettings> 
 
         if (diffDays <= settings.getDays()) {
             String tooltip = settings.isShowDate() ? date.toString() : CEVcsUtils.getDaysAgoTooltipString(date);
-            CESymbol mainSymbol = settings.getMainSymbol();
-            return InlayVisuals.of(mainSymbol, tooltip);
+            return InlayVisuals.direct( settings.getMainSymbol(), tooltip);
         }
         return null;
     }

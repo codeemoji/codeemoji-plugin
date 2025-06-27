@@ -65,8 +65,8 @@ public class TooManyAuthors extends CEProviderMulti<TooManyAuthorsSettings> {
                 }
                 authors.append(author.get(i));
             }
-            return InlayVisuals.of(getSettings().getMainSymbol(),
-                    CEBundle.getString("inlay.toomanyauthors.tooltip", authors.toString()));
+            return InlayVisuals.translated(getSettings().getMainSymbol(),
+                    "inlay.toomanyauthors.tooltip", authors.toString());
         }
 
 

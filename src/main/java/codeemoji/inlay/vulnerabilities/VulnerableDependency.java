@@ -77,13 +77,13 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
             String tooltip = vuln == 1 ? CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.tooltip.singular") :
                     CEBundle.getString("inlay.vulnerabledependency.vulnerablemethod.tooltip.plural", vuln);
 
-            return InlayVisuals.of(getSettings().getVulnerableMethod(), tooltip);
+            return InlayVisuals.direct(getSettings().getVulnerableMethod(), tooltip);
         }
 
 
         protected InlayVisuals indirectVulnerableMethodInlay() {
-            String tooltip = CEBundle.getString("inlay.vulnerabledependency.indirectvulnerable.tooltip");
-            return InlayVisuals.of(getSettings().getIndirectVulnerableMethod(), tooltip);
+            return InlayVisuals.translated(getSettings().getIndirectVulnerableMethod(),
+                    "inlay.vulnerabledependency.indirectvulnerable.tooltip");
         }
     }
 
@@ -181,7 +181,7 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
                     CEBundle.getString("inlay.vulnerabledependency.call.plural",result.dependencyName(), severityBuilder.toString());
 
             String scannerPrefix = CEBundle.getString("inlay.vulnerabledependency.call.scanner", result.scanner());
-            return InlayVisuals.of(getSettings().getVulnerableDependencyCall(),
+            return InlayVisuals.direct(getSettings().getVulnerableDependencyCall(),
                     scannerPrefix +": "+ vulnerabilitiesTooltip);
         }
 

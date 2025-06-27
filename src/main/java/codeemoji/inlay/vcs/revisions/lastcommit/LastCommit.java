@@ -3,7 +3,6 @@ package codeemoji.inlay.vcs.revisions.lastcommit;
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEConfigurableWindow;
-import codeemoji.core.util.CEBundle;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSMethodCollector;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -53,11 +52,11 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
             RevisionInfo revisionInfo = isLastRevision(project, textRange, getEditor(), lastRevision);
             if (revisionInfo != null) {
                 if (getSettings().isShowDate()) {
-                    return InlayVisuals.of(getSettings().getMainSymbol(),
-                            CEBundle.getString("inlay.lastcommit.tooltip.message", revisionInfo.date));
-                } else{
-                    return InlayVisuals.of(getSettings().getMainSymbol(),
-                            CEBundle.getString("inlay.lastcommit.tooltip"));
+                    return InlayVisuals.translated(getSettings().getMainSymbol(),
+                            "inlay.lastcommit.tooltip.message", revisionInfo.date);
+                } else {
+                    return InlayVisuals.translated(getSettings().getMainSymbol(),
+                            "inlay.lastcommit.tooltip");
                 }
             }
             return null;

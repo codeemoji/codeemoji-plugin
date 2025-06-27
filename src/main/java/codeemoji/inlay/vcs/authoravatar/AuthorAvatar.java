@@ -101,7 +101,7 @@ public class AuthorAvatar extends CEProviderMulti<AuthorAvatarSettings> {
         if (otherAuthors > 0) {
             formattedAuthor += " +" + otherAuthors;
         }
-        return InlayVisuals.of(authorAvatar, formattedAuthor);
+        return InlayVisuals.direct(authorAvatar, formattedAuthor);
     }
 
     @Nullable
