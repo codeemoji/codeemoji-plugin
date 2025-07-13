@@ -1,6 +1,7 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
 import codeemoji.core.settings.CEBaseConfigurableWindow;
+import codeemoji.core.util.CEBundle;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
@@ -12,18 +13,15 @@ import javax.swing.*;
 public class StateChangingMethodConfigurable extends CEBaseConfigurableWindow<StateChangingMethodSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(StateChangingMethodSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
-        var panel = super.createComponent(settings, preview ,project, language, changeListener);
+    protected void buildForm(FormBuilder builder, StateChangingMethodSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
+        super.buildForm(builder, settings, preview, project, language, changeListener);
         var checkBox = new JCheckBox();
         checkBox.setSelected(settings.isCheckMethodCallsForStateChangeApplied());
         checkBox.addChangeListener(event -> {
             settings.setCheckMethodCallsForStateChangeApplied(checkBox.isSelected());
             changeListener.settingsChanged();
         });
-        panel.add(FormBuilder.createFormBuilder()
-                .addLabeledComponent("Follow method calls and recursively check state change", checkBox)
-                .getPanel());
 
-        return panel;
+        builder.addLabeledComponent(CEBundle.getString("inlay.statechangingmethod.settings"), checkBox);
     }
 }

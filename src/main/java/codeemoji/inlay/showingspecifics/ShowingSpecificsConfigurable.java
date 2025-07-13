@@ -46,13 +46,12 @@ public class ShowingSpecificsConfigurable extends CEBaseConfigurableWindow<Showi
     }
 
     @Override
-    public @NotNull JComponent createComponent(ShowingSpecificsSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
+    protected void buildForm(FormBuilder builder, ShowingSpecificsSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
+        super.buildForm(builder, settings, preview, project, language, changeListener);
         var specificsPanel = new JPanel();
         var detailProject = initOpenProjectsPanel(settings);
         specificsPanel.add(detailProject);
-        return FormBuilder.createFormBuilder()
-                .addComponent(specificsPanel)
-                .getPanel();
+        builder.addComponent(specificsPanel);
     }
 
     private @NotNull JComponent initOpenProjectsPanel(ShowingSpecificsSettings settings) {

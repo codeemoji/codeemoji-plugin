@@ -13,21 +13,14 @@ import javax.swing.*;
 public class FixedIssueConfigurable extends CEBaseConfigurableWindow<FixedIssueSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(FixedIssueSettings settings, @Nullable String preview, Project project,
-                                               Language language, ChangeListener changeListener) {
-
+    protected void buildForm(FormBuilder builder, FixedIssueSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
+        super.buildForm(builder, settings, preview, project, language, changeListener);
         var revisionsSelector = new JSpinner();
         revisionsSelector.setValue(settings.getMaxRevisions());
         revisionsSelector.addChangeListener(event -> {
             settings.setMaxRevisions((Integer) revisionsSelector.getValue());
             changeListener.settingsChanged();
         });
-
-        // Create the form builder and add components
-        return FormBuilder.createFormBuilder()
-                .addComponent(super.createComponent(settings, preview, project, language, changeListener))
-                .addLabeledComponent(CEBundle.getString("inlay.fixedissue.settings.max_revisions"),
-                        revisionsSelector)
-                .getPanel();
+        builder.addLabeledComponent(CEBundle.getString("inlay.fixedissue.settings.max_revisions"), revisionsSelector);
     }
 }

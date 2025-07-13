@@ -13,8 +13,8 @@ import javax.swing.*;
 public class UnFrequentlyModifiedConfigurable extends CEBaseConfigurableWindow<UnFrequentlyModifiedSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(UnFrequentlyModifiedSettings settings, @Nullable String preview, Project project,
-                                               Language language, ChangeListener changeListener) {
+    protected void buildForm(FormBuilder builder, UnFrequentlyModifiedSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
+        super.buildForm(builder, settings, preview, project, language, changeListener);
         var daySelector = new JSpinner();
         daySelector.setValue(settings.getDays());
         daySelector.addChangeListener(event -> {
@@ -28,13 +28,7 @@ public class UnFrequentlyModifiedConfigurable extends CEBaseConfigurableWindow<U
             settings.setShowDate(showDaysButton.isSelected());
             changeListener.settingsChanged();
         });
-
-        return FormBuilder.createFormBuilder()
-                .addComponent(super.createComponent(settings, preview, project, language, changeListener))
-                .addLabeledComponent(CEBundle.getString("inlay.recentlymodified.settings.number_of_days"),
-                        daySelector)
-                .addLabeledComponent(CEBundle.getString("inlay.recentlymodified.settings.show_date"),
-                        showDaysButton)
-                .getPanel();
+        builder.addLabeledComponent(CEBundle.getString("inlay.recentlymodified.settings.number_of_days"), daySelector);
+        builder.addLabeledComponent(CEBundle.getString("inlay.recentlymodified.settings.show_date"), showDaysButton);
     }
 }

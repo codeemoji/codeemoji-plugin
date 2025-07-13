@@ -13,19 +13,15 @@ import javax.swing.*;
 public class LastCommitConfigurable extends CEBaseConfigurableWindow<LastCommitSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(LastCommitSettings settings, @Nullable String preview, Project project,
-                                               Language language, ChangeListener changeListener) {
+    protected void buildForm(FormBuilder builder, LastCommitSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
+        super.buildForm(builder, settings, preview, project, language, changeListener);
         var showDaysButton = new JCheckBox();
         showDaysButton.setSelected(settings.isShowDate());
         showDaysButton.addChangeListener(event -> {
             settings.setShowDate(showDaysButton.isSelected());
             changeListener.settingsChanged();
         });
+        builder.addLabeledComponent(CEBundle.getString("inlay.lastcommit.settings.show_message"), showDaysButton);
 
-        return FormBuilder.createFormBuilder()
-                .addComponent(super.createComponent(settings, preview, project, language, changeListener))
-                .addLabeledComponent(CEBundle.getString("inlay.lastcommit.settings.show_message"),
-                        showDaysButton)
-                .getPanel();
     }
 }

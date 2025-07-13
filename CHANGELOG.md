@@ -1,5 +1,10 @@
 # codEEmoji Plugin Changelog
 
+## 7.0.0
+
+- Improved settings menu
+- references and class targets
+
 ## 6.0.0 (March 15th, 2025)
 
 - Updated the plugin to the new Declarative Annotation API

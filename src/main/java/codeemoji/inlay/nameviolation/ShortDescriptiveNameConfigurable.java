@@ -1,6 +1,7 @@
 package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.settings.CEBaseConfigurableWindow;
+import codeemoji.core.util.CEBundle;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
@@ -12,18 +13,14 @@ import javax.swing.*;
 class ShortDescriptiveNameConfigurable extends CEBaseConfigurableWindow<ShortDescriptiveNameSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(ShortDescriptiveNameSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
-        var panel = super.createComponent(settings, preview, project, language, changeListener);
+    protected void buildForm(FormBuilder builder, ShortDescriptiveNameSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
+        super.buildForm(builder, settings, preview, project, language, changeListener);
         var jSpinner = new JSpinner();
         jSpinner.setValue(settings.getNumberOfLetters());
         jSpinner.addChangeListener(event -> {
             settings.setNumberOfLetters((Integer) jSpinner.getValue());
             changeListener.settingsChanged();
         });
-        panel.add(FormBuilder.createFormBuilder()
-                .addLabeledComponent("Number of letters", jSpinner)
-                .getPanel());
-        return panel;
+        builder.addLabeledComponent(CEBundle.getString("inlay.shortdescriptivename.settings"), jSpinner);
     }
-
 }

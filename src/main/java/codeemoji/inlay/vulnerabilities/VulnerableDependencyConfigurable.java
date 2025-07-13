@@ -1,6 +1,7 @@
 package codeemoji.inlay.vulnerabilities;
 
 import codeemoji.core.settings.CEBaseConfigurableWindow;
+import codeemoji.core.util.CEBundle;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
@@ -20,7 +21,7 @@ class VulnerableDependencyConfigurable extends CEBaseConfigurableWindow<Vulnerab
             settings.setCheckVulnerableDependencyApplied(checkBox.isSelected());
             changeListener.settingsChanged();
         });
-        builder.addLabeledComponent("Follow method calls and recursively check vulnerability", checkBox)
+        builder.addLabeledComponent(CEBundle.getString("inlay.vulnerabledependency.settings"), checkBox);
     }
 }
 
