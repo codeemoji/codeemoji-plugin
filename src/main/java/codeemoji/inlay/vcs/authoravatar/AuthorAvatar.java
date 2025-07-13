@@ -1,13 +1,11 @@
 package codeemoji.inlay.vcs.authoravatar;
 
 import codeemoji.core.collector.InlayVisuals;
+import codeemoji.core.collector.base.CEClassCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
-import codeemoji.inlay.vcs.VCSClassCollector;
-import codeemoji.inlay.vcs.VCSMethodCollector;
-import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -17,6 +15,7 @@ import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
 import com.intellij.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
@@ -29,10 +28,14 @@ import java.util.stream.IntStream;
 
 public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
 
+    @Nullable
+    private FileAnnotation vcsBlame = null;
+
     @Override
     protected void createCollectors(Builder builder, @NotNull PsiFile psiFile, Editor editor) {
-        builder.addIf(getSettings().appliesToMethods(), new MethodCollector(psiFile, editor, getKey()));
-        builder.addIf(getSettings().appliesToClasses(), new ClassCollector(psiFile, editor, getKey()));
+        vcsBlame = CEVcsUtils.getAnnotation(psiFile, editor);
+       // builder.addMethodCollector(e -> createInlay(e, editor));
+        // builder.addClassCollector(e -> createInlay(e, editor));
     }
 
     @Override
@@ -40,47 +43,20 @@ public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
         return new AuthorAvatarConfigurable();
     }
 
-    private class ClassCollector extends VCSClassCollector {
 
-        protected ClassCollector(@NotNull PsiFile file, @NotNull Editor editor, String key) {
-            super(file, editor, key);
-        }
+    private @Nullable InlayVisuals createInlay(@NotNull PsiElement element, @NotNull Editor editor) {
+        if (vcsBlame == null) return null;
 
-        @Override
-        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiClass element) {
-            if (vcsBlame == null) return null;
+        //text range of this element without comments
+        TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 
-            //text range of this element without comments
-            TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
+        var author = getMostCommonAuthor(element.getProject(), textRange, editor, vcsBlame);
 
-            var author = getMostCommonAuthor(element.getProject(), textRange, getEditor(), vcsBlame);
+        if (author == null) return null;
 
-            if (author == null) return null;
-
-            return makePresentation(author.first, author.second);
-        }
+        return makePresentation(author.first, author.second);
     }
 
-    //screw anonymous classes. they are ugly
-    private class MethodCollector extends VCSMethodCollector {
-        protected MethodCollector(@NotNull PsiFile file, @NotNull Editor editor, String key) {
-            super(file, editor, key);
-        }
-
-        @Override
-        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
-            if (vcsBlame == null) return null;
-
-            //text range of this element without comments
-            TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
-
-            var author = getMostCommonAuthor(element.getProject(), textRange, getEditor(), vcsBlame);
-
-            if (author == null) return null;
-
-            return makePresentation(author.first, author.second);
-        }
-    }
 
     @Nullable
     private InlayVisuals makePresentation(String author, int otherAuthors) {

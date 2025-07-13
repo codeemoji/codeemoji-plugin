@@ -4,26 +4,25 @@ import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.inlay.vcs.CEVcsUtils;
-import codeemoji.inlay.vcs.VCSClassCollector;
-import codeemoji.inlay.vcs.VCSMethodCollector;
-import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiClass;
+import com.intellij.openapi.vcs.annotate.FileAnnotation;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
-import java.util.List;
 
 public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
 
+    FileAnnotation vcsBlame = null;
+
     @Override
     protected void createCollectors(Builder builder, @NotNull PsiFile psiFile, Editor editor) {
-        builder.addIf(getSettings().appliesToMethods(), new RecentlyModifiedMethodCollector(psiFile, editor, getKey()));
-        builder.addIf(getSettings().appliesToClasses(), new RecentlyModifiedClassCollector(psiFile, editor, getKey()));
+        vcsBlame = CEVcsUtils.getAnnotation(psiFile, editor);
+        //builder.addMethodCollector(e -> createInlay(e, editor));
+        //builder.addClassCollector(e -> createInlay(e, editor));
     }
 
     @Override
@@ -31,43 +30,17 @@ public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
         return new RecentlyModifiedConfigurable();
     }
 
-    private class RecentlyModifiedMethodCollector extends VCSMethodCollector {
+    private @Nullable InlayVisuals createInlay(@NotNull PsiElement element, @NotNull Editor editor) {
+        if (vcsBlame == null) return null;
 
-        protected RecentlyModifiedMethodCollector(@NotNull PsiFile file, @NotNull Editor editor, @NotNull String key) {
-            super(file, editor, key);
-        }
+        //text range of this element without comments
+        TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 
-        @Override
-        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
-            if (vcsBlame == null) return null;
+        Date date = CEVcsUtils.getLatestModificationDate(element.getProject(), textRange, editor, vcsBlame);
 
-            //text range of this element without comments
-            TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
-
-            Date date = CEVcsUtils.getLatestModificationDate(element.getProject(), textRange, getEditor(), vcsBlame);
-
-            return makeInlay(date);
-        }
+        return makeInlay(date);
     }
 
-    private class RecentlyModifiedClassCollector extends VCSClassCollector {
-
-        protected RecentlyModifiedClassCollector(@NotNull PsiFile file, @NotNull Editor editor, String key) {
-            super(file, editor, key);
-        }
-
-        @Override
-        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiClass element) {
-            if (vcsBlame == null) return null;
-
-            //text range of this element without comments
-            TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
-
-            Date date = CEVcsUtils.getLatestModificationDate(element.getProject(), textRange, getEditor(), vcsBlame);
-
-            return makeInlay(date);
-        }
-    }
 
     private @Nullable InlayVisuals makeInlay(Date date) {
         if (date == null) return null;
@@ -80,7 +53,7 @@ public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
 
         if (diffDays <= settings.getDays()) {
             String tooltip = settings.isShowDate() ? date.toString() : CEVcsUtils.getDaysAgoTooltipString(date);
-            return InlayVisuals.direct( settings.getMainSymbol(), tooltip);
+            return InlayVisuals.direct(settings.getMainSymbol(), tooltip);
         }
         return null;
     }

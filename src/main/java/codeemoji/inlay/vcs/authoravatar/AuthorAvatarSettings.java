@@ -1,5 +1,6 @@
 package codeemoji.inlay.vcs.authoravatar;
 
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CESymbolHolder;
@@ -36,6 +37,7 @@ public final class AuthorAvatarSettings extends CEBaseSettings<AuthorAvatarSetti
     private int animalIndex = 0;
 
     public AuthorAvatarSettings() {
+        super(CEPSIType.METHODS_AND_CLASSES);
         onUpdated();
     }
 

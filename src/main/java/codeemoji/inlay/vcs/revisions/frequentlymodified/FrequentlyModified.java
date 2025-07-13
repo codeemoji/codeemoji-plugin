@@ -4,24 +4,18 @@ import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.inlay.vcs.CEVcsUtils;
-import codeemoji.inlay.vcs.VCSClassCollector;
-import codeemoji.inlay.vcs.VCSMethodCollector;
-import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
-import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,9 +25,8 @@ public class FrequentlyModified extends CEProvider<FrequentlyModifiedSettings> {
 
     @Override
     protected void createCollectors(CEProvider<FrequentlyModifiedSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
-        String key = getKey();
-        builder.addIf(getSettings().appliesToMethods(), new FrequentlyModifiedMethodCollector(psiFile, editor, key));
-        builder.addIf(getSettings().appliesToClasses(), new FrequentlyModifiedClassCollector(psiFile, editor, key));
+        builder.addMethodCollector(e -> maybeCreatePresentation(e, editor));
+        builder.addClassCollector(e -> maybeCreatePresentation(e, editor));
     }
 
     @Override
@@ -41,34 +34,10 @@ public class FrequentlyModified extends CEProvider<FrequentlyModifiedSettings> {
         return new FrequentlyModifiedConfigurable();
     }
 
-    private class FrequentlyModifiedMethodCollector extends VCSMethodCollector {
+    private @Nullable InlayVisuals maybeCreatePresentation(@NotNull PsiElement element, Editor editor) {
+        FileAnnotation vcsBlame = CEVcsUtils.getAnnotation(element.getContainingFile(), editor);
 
-        protected FrequentlyModifiedMethodCollector(@NotNull PsiFile file, @NotNull Editor editor, @NotNull String key) {
-            super(file, editor, key);
-        }
-
-        @Override
-        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
-            if (vcsBlame == null) return null;
-            return maybeCreatePresentation(element, getEditor(), vcsBlame);
-        }
-    }
-
-    private class FrequentlyModifiedClassCollector extends VCSClassCollector {
-
-        protected FrequentlyModifiedClassCollector(@NotNull PsiFile file, @NotNull Editor editor, @NotNull String key) {
-            super(file, editor, key);
-        }
-
-        @Override
-        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiClass element) {
-            if (vcsBlame == null) return null;
-
-            return maybeCreatePresentation(element, getEditor(), vcsBlame);
-        }
-    }
-
-    private @Nullable InlayVisuals maybeCreatePresentation(@NotNull PsiElement element, Editor editor, FileAnnotation vcsBlame) {
+        if (vcsBlame == null) return null;
         // text range of this element without comments
         TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 

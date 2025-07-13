@@ -16,8 +16,7 @@ public final class FixedIssueSettings extends CEBaseSettings<FixedIssueSettings>
     private int maxRevisions = 1;
 
     public FixedIssueSettings() {
-        super(CEPSIType.METHODS_AND_CLASSES, 
-                FixedIssue.class, VCSSymbols.FIXES_BUG);
+        super(CEPSIType.METHODS, FixedIssue.class, VCSSymbols.FIXES_BUG);
     }
 
 }

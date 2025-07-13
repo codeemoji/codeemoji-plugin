@@ -4,17 +4,16 @@ import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.inlay.vcs.CEVcsUtils;
-import codeemoji.inlay.vcs.VCSMethodCollector;
-import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +25,8 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
 
     @Override
     protected void createCollectors(Builder builder, @NotNull PsiFile psiFile, Editor editor) {
-        builder.add(new RecentlyModifiedCollector(psiFile, editor, getKey()));
+        builder.addMethodCollector(e -> createInlayFor(e, editor));
+        builder.addClassCollector(e -> createInlayFor(e, editor));
     }
 
     @Override
@@ -34,67 +34,60 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
         return new LastCommitConfigurable();
     }
 
-    private class RecentlyModifiedCollector extends VCSMethodCollector {
+    protected @Nullable InlayVisuals createInlayFor(@NotNull PsiElement element, @NotNull Editor editor) {
+        FileAnnotation vcsBlame = CEVcsUtils.getAnnotation(element.getContainingFile(), editor);
+        if (vcsBlame == null) return null;
 
-        protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor, String key) {
-            super(file, editor, key);
-        }
+        //text range of this element without comments
+        TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
+        Project project = element.getProject();
+        VcsRevisionNumber lastRevision = CEVcsUtils.getProjectHeadRevision(element.getProject());
 
-        @Override
-        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
-            if (vcsBlame == null) return null;
-
-            //text range of this element without comments
-            TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
-            Project project = element.getProject();
-            VcsRevisionNumber lastRevision = CEVcsUtils.getProjectHeadRevision(element.getProject());
-
-            RevisionInfo revisionInfo = isLastRevision(project, textRange, getEditor(), lastRevision);
-            if (revisionInfo != null) {
-                if (getSettings().isShowDate()) {
-                    return InlayVisuals.translated(getSettings().getMainSymbol(),
-                            "inlay.lastcommit.tooltip.message", revisionInfo.date);
-                } else {
-                    return InlayVisuals.translated(getSettings().getMainSymbol(),
-                            "inlay.lastcommit.tooltip");
-                }
+        RevisionInfo revisionInfo = isLastRevision(project, vcsBlame, textRange, editor, lastRevision);
+        if (revisionInfo != null) {
+            if (getSettings().isShowDate()) {
+                return InlayVisuals.translated(getSettings().getMainSymbol(),
+                        "inlay.lastcommit.tooltip.message", revisionInfo.date);
+            } else {
+                return InlayVisuals.translated(getSettings().getMainSymbol(),
+                        "inlay.lastcommit.tooltip");
             }
-            return null;
         }
-
-        //null if it's not from last revision
-        @Nullable
-        private RevisionInfo isLastRevision(Project project, TextRange range, Editor editor, VcsRevisionNumber lastRevision) {
-
-
-            if (lastRevision == null || vcsBlame == null) return null;
-            if (!lastRevision.equals(vcsBlame.getCurrentRevision())) return null; //Must be last to modify this file
-            Document document = editor.getDocument();
-            int startLine = document.getLineNumber(range.getStartOffset());
-            int endLine = document.getLineNumber(range.getEndOffset());
-            UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);
-
-            PrimitiveIterator.OfInt iterator = IntStream.rangeClosed(startLine, endLine)
-                    .map(provider::getLineNumber).iterator();
-            while (iterator.hasNext()) {
-                int line = iterator.nextInt();
-                VcsRevisionNumber revision = vcsBlame.getLineRevisionNumber(line);
-                if (lastRevision.equals(revision)) {
-                    var authorProvider = CEVcsUtils.getAspect(vcsBlame, LineAnnotationAspect.AUTHOR);
-                    Date date = vcsBlame.getLineDate(line);
-                    if (authorProvider != null && date != null) {
-                        return new RevisionInfo(authorProvider.getValue(line), date,
-                                revision);
-                    } else {
-                        return null;
-                    }
-                }
-            }
-            return null;
-        }
-
-
+        return null;
     }
+
+
+    //null if it's not from last revision
+    @Nullable
+    private RevisionInfo isLastRevision(Project project, FileAnnotation vcsBlame, TextRange range, Editor editor, VcsRevisionNumber lastRevision) {
+
+
+        if (lastRevision == null || vcsBlame == null) return null;
+        if (!lastRevision.equals(vcsBlame.getCurrentRevision())) return null; //Must be last to modify this file
+        Document document = editor.getDocument();
+        int startLine = document.getLineNumber(range.getStartOffset());
+        int endLine = document.getLineNumber(range.getEndOffset());
+        UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);
+
+        PrimitiveIterator.OfInt iterator = IntStream.rangeClosed(startLine, endLine)
+                .map(provider::getLineNumber).iterator();
+        while (iterator.hasNext()) {
+            int line = iterator.nextInt();
+            VcsRevisionNumber revision = vcsBlame.getLineRevisionNumber(line);
+            if (lastRevision.equals(revision)) {
+                var authorProvider = CEVcsUtils.getAspect(vcsBlame, LineAnnotationAspect.AUTHOR);
+                Date date = vcsBlame.getLineDate(line);
+                if (authorProvider != null && date != null) {
+                    return new RevisionInfo(authorProvider.getValue(line), date,
+                            revision);
+                } else {
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+
 
     private record RevisionInfo(String author, Date date, VcsRevisionNumber number) {
         public String tooltip() {

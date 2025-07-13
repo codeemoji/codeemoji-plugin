@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -21,6 +22,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.print.Doc;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -588,6 +590,23 @@ public enum CEUtils {
             }
         }
         return null;
+    }
+
+    @Nullable
+    public static Document getContainingDocument(PsiElement element) {
+        PsiFile psiFile = element.getContainingFile();
+
+        VirtualFile virtualFile = psiFile.getVirtualFile();
+        if (virtualFile == null){
+            //TODO: why is this null? how to prevent it? fix
+            return null;
+        }
+
+        Document document= FileDocumentManager.getInstance().getDocument(virtualFile);
+        if (document == null) {
+            return null;
+        }
+        return document;
     }
 
 }

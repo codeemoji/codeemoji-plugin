@@ -4,9 +4,8 @@ import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.inlay.vcs.RefactorService;
-import codeemoji.inlay.vcs.VCSMethodCollector;
-import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
@@ -16,15 +15,13 @@ public class NameChanged extends CEProvider<NameChangedSettings> {
 
     public NameChanged() {
         super();
-
     }
 
     @Override
     protected void createCollectors(CEProvider<NameChangedSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
         // initialize service
         RefactorService.getInstance(psiFile.getProject()).preProcess(); //TODO: move out of here
-        builder.addIf(getSettings().appliesToMethods(),
-                new NameChangedCollector(psiFile, editor, getKey()));
+        builder.addMethodCollector(this::createInlayFor);
     }
 
     @Override
@@ -32,24 +29,15 @@ public class NameChanged extends CEProvider<NameChangedSettings> {
         return new NameChangedConfigurable();
     }
 
-    private class NameChangedCollector extends VCSMethodCollector {
-
-        protected NameChangedCollector(@NotNull PsiFile file, @NotNull Editor editor, String key) {
-            super(file, editor, key);
+    protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod method) {
+        RefactorService instance = RefactorService.getInstance(method.getProject());
+        var settings = getSettings();
+        var ref = instance.getMethodRename(method ,settings.getMaxRevisions());
+        if (ref != null) {
+            return InlayVisuals.translated(getSettings().getMainSymbol(),
+                    "inlay.namechanged.tooltip", ref.getOriginalOperation().getName());
         }
-
-        @Override
-        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod method) {
-            RefactorService instance = RefactorService.getInstance(method.getProject());
-            var settings = getSettings();
-            var ref = instance.getMethodRename(method ,settings.getMaxRevisions());
-            if (ref != null) {
-                return InlayVisuals.translated(getSettings().getMainSymbol(),
-                        "inlay.namechanged.tooltip", ref.getOriginalOperation().getName());
-            }
-            return null;
-        }
-
+        return null;
     }
 
 }

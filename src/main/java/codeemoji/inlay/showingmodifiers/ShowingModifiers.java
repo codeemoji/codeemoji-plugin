@@ -154,7 +154,7 @@ public class ShowingModifiers extends CEProvider<ShowingModifiersSettings> {
         protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
             if (needsInlay(element)) {
                 String tooltip = getKey() + ".method." + modifier + "interface";
-                return InlayVisuals.translated(symbol.get(), tooltip, null);
+                return InlayVisuals.translated(symbol.get(), tooltip);
             }
             return null;
         }

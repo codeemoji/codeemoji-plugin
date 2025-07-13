@@ -1,4 +1,4 @@
-package codeemoji.inlay.vcs;
+package codeemoji.inlay.vcs.wip;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;

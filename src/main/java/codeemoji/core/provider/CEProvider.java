@@ -1,8 +1,15 @@
 package codeemoji.core.provider;
 
 import codeemoji.core.collector.CECollectorMulti;
+import codeemoji.core.collector.InlayVisuals;
+import codeemoji.core.collector.base.CEClassCollector;
+import codeemoji.core.collector.base.CEMethodCollector;
+import codeemoji.core.collector.base.CEReferenceClassCollector;
+import codeemoji.core.collector.base.CEReferenceMethodCollector;
 import codeemoji.core.collector.base.simple.CESimpleClassCollector;
 import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.base.simple.CESimpleReferenceClassCollector;
+import codeemoji.core.collector.base.simple.CESimpleReferenceMethodCollector;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -120,8 +127,9 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
         }
 
         public Builder addSimpleMethodCollector(Function<PsiMethod, Boolean> needsInlayFunc) {
+            if (!settings.appliesToMethods()) return this;
             addIf(getSettings().isIncludeReferences(),
-                    new CESimpleMethodCollector(editor, CEProvider.this) {
+                    new CESimpleReferenceMethodCollector(editor, CEProvider.this) {
                         @Override
                         protected boolean needsInlay(@NotNull PsiMethod element) {
                             return needsInlayFunc.apply(element);
@@ -137,8 +145,9 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
         }
 
         public Builder addSimpleClassCollector(Function<PsiClass, Boolean> needsInlayFunc) {
+            if (!settings.appliesToClasses()) return this;
             addIf(getSettings().isIncludeReferences(),
-                    new CESimpleClassCollector(editor, CEProvider.this) {
+                    new CESimpleReferenceClassCollector(editor, CEProvider.this) {
                         @Override
                         protected boolean needsInlay(@NotNull PsiClass element) {
                             return needsInlayFunc.apply(element);
@@ -153,9 +162,45 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
             return this;
         }
 
+        public Builder addMethodCollector(Function<PsiMethod, InlayVisuals> inlayFunc) {
+            if (!settings.appliesToMethods()) return this;
+            addIf(getSettings().isIncludeReferences(),
+                    new CEReferenceMethodCollector(editor, CEProvider.this.getKey()) {
+                        @Override
+                        protected InlayVisuals createInlayFor(@NotNull PsiMethod element) {
+                            return inlayFunc.apply(element);
+                        }
+                    });
+            add(new CEMethodCollector(editor, CEProvider.this.getKey()) {
+                @Override
+                protected InlayVisuals createInlayFor(@NotNull PsiMethod element) {
+                    return inlayFunc.apply(element);
+                }
+            });
+            return this;
+        }
+
+        public Builder addClassCollector(Function<PsiClass, InlayVisuals> inlayFunc) {
+            if (!settings.appliesToClasses()) return this;
+            addIf(getSettings().isIncludeReferences(),
+                    new CEReferenceClassCollector(editor, CEProvider.this.getKey()) {
+                        @Override
+                        protected InlayVisuals createInlayFor(@NotNull PsiClass element) {
+                            return inlayFunc.apply(element);
+                        }
+                    });
+            add(new CEClassCollector(editor, CEProvider.this.getKey()) {
+                @Override
+                protected InlayVisuals createInlayFor(@NotNull PsiClass element) {
+                    return inlayFunc.apply(element);
+                }
+            });
+            return this;
+        }
+
         SharedBypassCollector build() {
             if (collectors.isEmpty()) {
-                throw new IllegalStateException("No collectors were added to the builder.");
+               // throw new IllegalStateException("No collectors were added to the builder.");
             }
             if (collectors.size() == 1) {
                 return collectors.get(0);

@@ -1,12 +1,10 @@
 package codeemoji.inlay.vcs.ownership;
 
 import codeemoji.core.collector.InlayVisuals;
+import codeemoji.core.collector.base.CEClassCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
-import codeemoji.inlay.vcs.CEVcsFileAnnotationProvider;
 import codeemoji.inlay.vcs.CEVcsUtils;
-import codeemoji.inlay.vcs.VCSClassCollector;
-import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -21,18 +19,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class TooManyAuthors extends CEProvider<TooManyAuthorsSettings> {
 
+    private FileAnnotation vcsBlame = null;
 
     @Override
     protected void createCollectors(CEProvider<TooManyAuthorsSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        vcsBlame = CEVcsUtils.getAnnotation(psiFile, editor);
         String key = getKey();
-        builder.add(new Collector(psiFile, editor, key));
+       // builder.add(new Collector(editor, key));
     }
 
     @Override
@@ -40,16 +39,13 @@ public class TooManyAuthors extends CEProvider<TooManyAuthorsSettings> {
         return new TooManyAuthorsConfigurable();
     }
 
-    private class Collector extends VCSClassCollector {
-        protected Collector(@NotNull PsiFile file, @NotNull Editor editor, String key) {
-            super(file, editor, key);
+    private class Collector extends CEClassCollector {
+        protected Collector(@NotNull Editor editor, String key) {
+            super( editor, key);
         }
 
         @Override
         protected @Nullable InlayVisuals createInlayFor(@NotNull PsiClass element) {
-            var v = CEVcsFileAnnotationProvider.getAnnotation(element.getProject(),
-                    element.getContainingFile().getVirtualFile(), getEditor());
-            FileAnnotation vcsBlame = CEVcsUtils.getAnnotation(vcs, element.getContainingFile().getVirtualFile(), getEditor());
 
             //text range of this element without comments
             TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);

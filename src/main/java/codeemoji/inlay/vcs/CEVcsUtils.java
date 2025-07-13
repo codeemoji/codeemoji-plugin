@@ -20,10 +20,7 @@ import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.SyntaxTraverser;
+import com.intellij.psi.*;
 import com.intellij.vcs.CacheableAnnotationProvider;
 import git4idea.GitCommit;
 import git4idea.GitRevisionNumber;
@@ -31,6 +28,7 @@ import git4idea.GitUtil;
 import git4idea.history.GitHistoryUtils;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryManager;
+import io.kinference.core.operators.tensor.Abs;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,7 +58,15 @@ public final class CEVcsUtils {
                 .findFirst().orElse(null);
     }
 
-
+    public static @Nullable FileAnnotation getAnnotation(@NotNull PsiFile file, @NotNull Editor editor) {
+        ProjectLevelVcsManager projectVcs = ProjectLevelVcsManager.getInstance(file.getProject());
+        AbstractVcs vcs = projectVcs.getVcsFor(file.getVirtualFile());
+        if (vcs != null) {
+          return CEVcsUtils.getAnnotation(vcs, file.getVirtualFile(), editor);
+        } else {
+           return null;
+        }
+    }
 
     // copied from VcsCodeAuthorInlayHintsCollector
     // gets the git annotation of the current file

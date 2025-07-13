@@ -1,4 +1,4 @@
-package codeemoji.inlay.vcs;
+package codeemoji.inlay.vcs.wip;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Editor;
