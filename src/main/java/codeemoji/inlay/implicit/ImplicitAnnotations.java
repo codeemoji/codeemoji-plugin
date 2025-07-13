@@ -5,7 +5,7 @@ import codeemoji.core.collector.implicit.jpa.CEJPAEntityCollector;
 import codeemoji.core.collector.implicit.spring.CESpringConfigurationCollector;
 import codeemoji.core.collector.implicit.spring.CESpringControllerCollector;
 import codeemoji.core.collector.implicit.spring.CESpringRestControllerCollector;
-import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
@@ -18,22 +18,19 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
-public class ImplicitAnnotations extends CEProviderMulti<ImplicitAnnotationsSettings> {
+public class ImplicitAnnotations extends CEProvider<ImplicitAnnotationsSettings> {
 
     @Override
-    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
+    protected void createCollectors(Builder consumer, @NotNull PsiFile psiFile, Editor editor) {
         final int codePoint = 0x1F4AD;
         String key = getKey();
-        return new ArrayList<>(
-                Arrays.asList(
-                        new CEJPAEntityCollector(editor, key, codePoint, "javax.persistence"),
-                        new CEJPAEntityCollector(editor, key, codePoint, "jakarta.persistence"),
-                        new CEJPAEmbeddableCollector(editor, key, codePoint, "javax.persistence"),
-                        new CEJPAEmbeddableCollector(editor, key, codePoint, "jakarta.persistence"),
-                        new CESpringConfigurationCollector(editor, key, codePoint),
-                        new CESpringControllerCollector(editor, key, codePoint),
-                        new CESpringRestControllerCollector(editor, key, codePoint)
-                ));
+        consumer.add(new CEJPAEntityCollector(editor, key, codePoint, "javax.persistence"));
+        consumer.add(new CEJPAEntityCollector(editor, key, codePoint, "jakarta.persistence"));
+        consumer.add(new CEJPAEmbeddableCollector(editor, key, codePoint, "javax.persistence"));
+        consumer.add(new CEJPAEmbeddableCollector(editor, key, codePoint, "jakarta.persistence"));
+        consumer.add(new CESpringConfigurationCollector(editor, key, codePoint));
+        consumer.add(new CESpringControllerCollector(editor, key, codePoint));
+        consumer.add(new CESpringRestControllerCollector(editor, key, codePoint));
     }
 
     @Override

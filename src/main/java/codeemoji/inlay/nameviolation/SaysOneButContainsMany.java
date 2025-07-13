@@ -5,7 +5,6 @@ import codeemoji.core.config.CEPSIType;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.editor.Editor;
@@ -26,16 +25,16 @@ public class SaysOneButContainsMany extends CEProvider<SaysOneButContainsMany.Se
     @Data
     @State(name = "SaysOneButContainsMany", storages = @Storage("codeemoji-says-one-but-contains-many-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
-        public Settings(){
+        public Settings() {
             super(CEPSIType.UNSPECIFIED, SaysOneButContainsMany.class, MANY);
         }
     }
 
     @Override
-    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleVariableCollector(editor, this) {
+    protected void createCollectors(CEProvider<Settings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.add(new CESimpleVariableCollector(editor, this) {
             @Override
-            public boolean needsInlay(@NotNull PsiVariable element){
+            public boolean needsInlay(@NotNull PsiVariable element) {
                 var typeElement = element.getTypeElement();
                 return !CEUtils.isPluralForm(element.getName()) &&
                         !CEUtils.sameNameAsType(typeElement, element.getName()) &&
@@ -45,6 +44,6 @@ public class SaysOneButContainsMany extends CEProvider<SaysOneButContainsMany.Se
                         );
             }
 
-        };
+        });
     }
 }

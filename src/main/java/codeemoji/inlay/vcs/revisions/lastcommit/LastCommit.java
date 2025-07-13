@@ -25,8 +25,8 @@ import java.util.stream.IntStream;
 public class LastCommit extends CEProvider<LastCommitSettings> {
 
     @Override
-    public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new RecentlyModifiedCollector(psiFile, editor, getKey());
+    protected void createCollectors(Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.add(new RecentlyModifiedCollector(psiFile, editor, getKey()));
     }
 
     @Override

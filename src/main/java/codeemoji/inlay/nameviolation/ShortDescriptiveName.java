@@ -12,16 +12,16 @@ import org.jetbrains.annotations.NotNull;
 public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSettings> {
 
     @Override
-    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleVariableCollector(editor,this) {
+    protected void createCollectors(CEProvider<ShortDescriptiveNameSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.add(new CESimpleVariableCollector(editor, this) {
             @Override
-            public boolean needsInlay(@NotNull PsiVariable element){
+            public boolean needsInlay(@NotNull PsiVariable element) {
                 if (null != element.getNameIdentifier()) {
                     return getSettings().getNumberOfLetters() >= element.getNameIdentifier().getTextLength();
                 }
                 return false;
             }
-        };
+        });
     }
 
     @Override

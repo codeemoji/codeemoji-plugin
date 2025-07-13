@@ -37,9 +37,11 @@ public class GitTest extends CEProvider<GitTest.Settings> {
     // I believe this is called once per FILE in your project, when opened
 
     @Override
-    public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
+    protected void createCollectors(CEProvider<Settings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
 
-        return new CESimpleMethodCollector(editor, this) {
+
+
+        builder.add(new CESimpleMethodCollector(editor, this) {
 
             //CodeVisionProvider
             //VcsCodeVisionProvider
@@ -123,7 +125,7 @@ public class GitTest extends CEProvider<GitTest.Settings> {
             }
 
 
-        };
+        });
 
     }
 

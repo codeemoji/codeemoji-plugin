@@ -1,7 +1,7 @@
 package codeemoji.inlay.vcs.bugs;
 
 import codeemoji.core.collector.InlayVisuals;
-import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.GitCommitCacheService;
@@ -23,11 +23,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FixedIssue extends CEProviderMulti<FixedIssueSettings> {
+public class FixedIssue extends CEProvider<FixedIssueSettings> {
 
     @Override
-    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
-        return List.of(new Collector(psiFile, editor, getKey()));
+    protected void createCollectors(CEProvider<FixedIssueSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        String key = getKey();
+        builder.add(new Collector(psiFile, editor, key));
     }
 
     @Override

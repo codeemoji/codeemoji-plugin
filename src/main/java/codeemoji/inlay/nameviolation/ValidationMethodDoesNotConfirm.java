@@ -34,14 +34,12 @@ public class ValidationMethodDoesNotConfirm extends CEProvider<ValidationMethodD
     }
 
     @Override
-    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, this) {
-            @Override
-            public boolean needsInlay(@NotNull PsiMethod element){
-                return (element.getName().startsWith("validate") || element.getName().startsWith("check") || element.getName().startsWith("ensure")) && !Objects.equals(element.getReturnType(), PsiTypes.booleanType());
-            }
-        };
+    protected void createCollectors(CEProvider<Settings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addSimpleMethodCollector(this::matches);
+    }
 
+    private boolean matches(@NotNull PsiMethod element) {
+        return (element.getName().startsWith("validate") || element.getName().startsWith("check") || element.getName().startsWith("ensure")) && !Objects.equals(element.getReturnType(), PsiTypes.booleanType());
     }
 }
 

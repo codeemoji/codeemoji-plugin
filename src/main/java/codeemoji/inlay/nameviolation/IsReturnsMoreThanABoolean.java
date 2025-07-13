@@ -28,22 +28,19 @@ public class IsReturnsMoreThanABoolean extends CEProvider<IsReturnsMoreThanABool
     @State(name = "IsReturnsMoreThanABooleanSettings", storages = @Storage("codeemoji-is-returns-more-than-a-boolean-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings() {
-            super(CEPSIType.METHODS, 
-                    IsReturnsMoreThanABoolean.class, CONFUSED);
+            super(CEPSIType.METHODS, IsReturnsMoreThanABoolean.class, CONFUSED);
         }
     }
 
     @Override
-    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor,this) {
-            @Override
-            public boolean needsInlay(@NotNull PsiMethod element){
-                return element.getName().startsWith("is") &&
-                        !(Objects.equals(element.getReturnType(), PsiTypes.booleanType())
-                                || Objects.equals(element.getReturnType(), PsiTypes.voidType()));
-            }
-        };
+    protected void createCollectors(CEProvider<Settings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addSimpleMethodCollector(this::matches);
+    }
 
+    private boolean matches(@NotNull PsiMethod element) {
+        return element.getName().startsWith("is") &&
+                !(Objects.equals(element.getReturnType(), PsiTypes.booleanType())
+                        || Objects.equals(element.getReturnType(), PsiTypes.voidType()));
     }
 }
 

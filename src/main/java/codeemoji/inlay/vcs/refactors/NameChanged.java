@@ -20,12 +20,11 @@ public class NameChanged extends CEProvider<NameChangedSettings> {
     }
 
     @Override
-    public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
+    protected void createCollectors(CEProvider<NameChangedSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
         // initialize service
-        RefactorService.getInstance(psiFile.getProject())
-                .preProcess();
-
-        return new NameChangedCollector(psiFile, editor, getKey());
+        RefactorService.getInstance(psiFile.getProject()).preProcess(); //TODO: move out of here
+        builder.addIf(getSettings().appliesToMethods(),
+                new NameChangedCollector(psiFile, editor, getKey()));
     }
 
     @Override

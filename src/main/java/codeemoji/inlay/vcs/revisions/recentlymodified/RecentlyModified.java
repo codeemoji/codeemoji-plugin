@@ -1,7 +1,7 @@
 package codeemoji.inlay.vcs.revisions.recentlymodified;
 
 import codeemoji.core.collector.InlayVisuals;
-import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSClassCollector;
@@ -18,12 +18,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Date;
 import java.util.List;
 
-public class RecentlyModified extends CEProviderMulti<RecentlyModifiedSettings> {
+public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
 
     @Override
-    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
-        return List.of(new RecentlyModifiedMethodCollector(psiFile, editor, getKey()),
-                new RecentlyModifiedClassCollector(psiFile, editor, getKey()));
+    protected void createCollectors(Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addIf(getSettings().appliesToMethods(), new RecentlyModifiedMethodCollector(psiFile, editor, getKey()));
+        builder.addIf(getSettings().appliesToClasses(), new RecentlyModifiedClassCollector(psiFile, editor, getKey()));
     }
 
     @Override

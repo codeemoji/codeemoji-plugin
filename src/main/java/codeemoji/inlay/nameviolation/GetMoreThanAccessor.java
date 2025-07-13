@@ -33,16 +33,15 @@ public class GetMoreThanAccessor extends CEProvider<GetMoreThanAccessor.Settings
     }
 
     @Override
-    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, this) {
-            @Override
-            public boolean needsInlay(@NotNull PsiMethod element){
-                if (element.getName().startsWith("get") && !Objects.equals(element.getReturnType(), PsiTypes.voidType()) && null != element.getBody()) {
-                    return 1 < element.getBody().getStatements().length && !"getInstance".equalsIgnoreCase(element.getName());
-                }
-                return false;
-            }
-        };
+    protected void createCollectors(CEProvider<Settings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addSimpleMethodCollector(this::matches);
+    }
+
+    private boolean matches(@NotNull PsiMethod element) {
+        if (element.getName().startsWith("get") && !Objects.equals(element.getReturnType(), PsiTypes.voidType()) && null != element.getBody()) {
+            return 1 < element.getBody().getStatements().length && !"getInstance".equalsIgnoreCase(element.getName());
+        }
+        return false;
     }
 }
 

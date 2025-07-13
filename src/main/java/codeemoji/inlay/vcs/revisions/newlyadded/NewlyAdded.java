@@ -1,7 +1,7 @@
 package codeemoji.inlay.vcs.revisions.newlyadded;
 
 import codeemoji.core.collector.InlayVisuals;
-import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSClassCollector;
@@ -23,12 +23,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class NewlyAdded extends CEProviderMulti<NewlyAddedSettings> {
+public class NewlyAdded extends CEProvider<NewlyAddedSettings> {
 
     @Override
-    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
-        return List.of(new NewlyAddedMethodCollector(psiFile, editor, getKey()),
-                new NewlyAddedClassCollector(psiFile, editor, getKey()));
+    protected void createCollectors(CEProvider<NewlyAddedSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        String key = getKey();
+        builder.add(new NewlyAddedMethodCollector(psiFile, editor, key));
+        builder.add(new NewlyAddedClassCollector(psiFile, editor, key));
     }
 
     @Override

@@ -4,7 +4,7 @@ import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.collector.base.CEReferenceClassCollector;
 import codeemoji.core.collector.base.CEReferenceFieldCollector;
 import codeemoji.core.collector.base.CEReferenceMethodCollector;
-import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
@@ -22,61 +22,58 @@ import java.util.function.Supplier;
 import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.*;
 import static com.intellij.psi.PsiModifier.*;
 
-public class ShowingModifiers extends CEProviderMulti<ShowingModifiersSettings> {
+public class ShowingModifiers extends CEProvider<ShowingModifiersSettings> {
 
     @Override
-    public @NotNull List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        List<SharedBypassCollector> list = new ArrayList<>();
+    protected void createCollectors(Builder builder, @NotNull PsiFile psiFile, Editor editor) {
         String key = getKey();
         //class
-        addClass(list, editor, PUBLIC, PUBLIC_CLASS, () -> getSettings().getPublic());
-        addClass(list, editor, DEFAULT, DEFAULT_CLASS, () -> getSettings().getDefault());
-        addClass(list, editor, FINAL, FINAL_CLASS, () -> getSettings().getFinal());
-        addClass(list, editor, ABSTRACT, ABSTRACT_CLASS, () -> getSettings().getAbstract());
+        addClass(builder, editor, PUBLIC, PUBLIC_CLASS, () -> getSettings().getPublic());
+        addClass(builder, editor, DEFAULT, DEFAULT_CLASS, () -> getSettings().getDefault());
+        addClass(builder, editor, FINAL, FINAL_CLASS, () -> getSettings().getFinal());
+        addClass(builder, editor, ABSTRACT, ABSTRACT_CLASS, () -> getSettings().getAbstract());
 
         //fields
-        addField(list, editor, PUBLIC, PUBLIC_FIELD, () -> getSettings().getPublic());
-        addField(list, editor, DEFAULT, DEFAULT_FIELD, () -> getSettings().getDefault());
-        addField(list, editor, FINAL, FINAL_FIELD, () -> getSettings().getFinal());
-        addField(list, editor, PROTECTED, PROTECTED_FIELD, () -> getSettings().getProtected());
-        addField(list, editor, PRIVATE, PRIVATE_FIELD, () -> getSettings().getPrivate());
-        addField(list, editor, STATIC, STATIC_FIELD, () -> getSettings().getStatic());
-        addField(list, editor, VOLATILE, VOLATILE_FIELD, () -> getSettings().getVolatile());
-        addField(list, editor, TRANSIENT, TRANSIENT_FIELD, () -> getSettings().getTransient());
+        addField(builder, editor, PUBLIC, PUBLIC_FIELD, () -> getSettings().getPublic());
+        addField(builder, editor, DEFAULT, DEFAULT_FIELD, () -> getSettings().getDefault());
+        addField(builder, editor, FINAL, FINAL_FIELD, () -> getSettings().getFinal());
+        addField(builder, editor, PROTECTED, PROTECTED_FIELD, () -> getSettings().getProtected());
+        addField(builder, editor, PRIVATE, PRIVATE_FIELD, () -> getSettings().getPrivate());
+        addField(builder, editor, STATIC, STATIC_FIELD, () -> getSettings().getStatic());
+        addField(builder, editor, VOLATILE, VOLATILE_FIELD, () -> getSettings().getVolatile());
+        addField(builder, editor, TRANSIENT, TRANSIENT_FIELD, () -> getSettings().getTransient());
 
         //methods
-        addMethod(list, editor, PUBLIC, PUBLIC_METHOD, () -> getSettings().getPublic());
-        addMethod(list, editor, DEFAULT, DEFAULT_METHOD, () -> getSettings().getDefault());
-        addMethod(list, editor, FINAL, FINAL_METHOD, () -> getSettings().getFinal());
-        addMethod(list, editor, PROTECTED, PROTECTED_METHOD, () -> getSettings().getProtected());
-        addMethod(list, editor, PRIVATE, PRIVATE_METHOD, () -> getSettings().getPrivate());
-        addMethod(list, editor, STATIC, STATIC_METHOD, () -> getSettings().getStatic());
-        addMethod(list, editor, ABSTRACT, ABSTRACT_METHOD, () -> getSettings().getAbstract());
-        addMethod(list, editor, SYNCHRONIZED, SYNCHRONIZED_METHOD, () -> getSettings().getSynchronized());
-        addMethod(list, editor, NATIVE, NATIVE_METHOD, () -> getSettings().getNative());
+        addMethod(builder, editor, PUBLIC, PUBLIC_METHOD, () -> getSettings().getPublic());
+        addMethod(builder, editor, DEFAULT, DEFAULT_METHOD, () -> getSettings().getDefault());
+        addMethod(builder, editor, FINAL, FINAL_METHOD, () -> getSettings().getFinal());
+        addMethod(builder, editor, PROTECTED, PROTECTED_METHOD, () -> getSettings().getProtected());
+        addMethod(builder, editor, PRIVATE, PRIVATE_METHOD, () -> getSettings().getPrivate());
+        addMethod(builder, editor, STATIC, STATIC_METHOD, () -> getSettings().getStatic());
+        addMethod(builder, editor, ABSTRACT, ABSTRACT_METHOD, () -> getSettings().getAbstract());
+        addMethod(builder, editor, SYNCHRONIZED, SYNCHRONIZED_METHOD, () -> getSettings().getSynchronized());
+        addMethod(builder, editor, NATIVE, NATIVE_METHOD, () -> getSettings().getNative());
 
         if (getSettings().query(DEFAULT_INTERFACE_METHOD)) {
-            list.add(new CEModifierInterfaceMethodCollector(editor, key, () -> getSettings().getDefaultInterface(), DEFAULT));
+            builder.add(new CEModifierInterfaceMethodCollector(editor, key, () -> getSettings().getDefaultInterface(), DEFAULT));
         }
-
-        return list;
     }
 
-    public void addMethod(Collection<SharedBypassCollector> list, Editor editor,
+    public void addMethod(Builder list, Editor editor,
                           String psiModifier, ScopeModifier modifier, Supplier<CESymbol> symbol) {
         if (getSettings().query(modifier)) {
             list.add(new CEModifierMethodCollector(editor, getKey(), symbol, psiModifier));
         }
     }
 
-    public void addField(Collection<SharedBypassCollector> list, Editor editor,
+    public void addField(Builder list, Editor editor,
                          String psiModifier, ScopeModifier modifier, Supplier<CESymbol> symbol) {
         if (getSettings().query(modifier)) {
             list.add(new CEModifierFieldCollector(editor, getKey(), symbol, psiModifier));
         }
     }
 
-    public void addClass(Collection<SharedBypassCollector> list, Editor editor,
+    public void addClass(Builder list, Editor editor,
                          String psiModifier, ScopeModifier modifier, Supplier<CESymbol> symbol) {
         if (getSettings().query(modifier)) {
             list.add(new CEModifierClassCollector(editor, getKey(), symbol, psiModifier));

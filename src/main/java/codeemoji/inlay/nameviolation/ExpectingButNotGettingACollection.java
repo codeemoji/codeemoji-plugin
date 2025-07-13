@@ -1,11 +1,9 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
 import codeemoji.core.config.CEPSIType;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.editor.Editor;
@@ -34,25 +32,23 @@ public class ExpectingButNotGettingACollection extends CEProvider<ExpectingButNo
     }
 
     @Override
-    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, this) {
-            @Override
-            public boolean needsInlay(@NotNull PsiMethod element) {
-                if ((element.getName().startsWith("get") || element.getName().startsWith("return"))
-                        && CEUtils.isPluralForm(element.getName())) {
-                    var typeElement = element.getReturnTypeElement();
-                    return !CEUtils.isGenericType(element, typeElement) &&
-                            (
-                                    Objects.equals(element.getReturnType(), PsiTypes.voidType()) ||
-                                            (!CEUtils.isArrayType(typeElement) &&
-                                                    !CEUtils.isIterableType(typeElement) &&
-                                                    !CEUtils.isMappableType(typeElement))
-                            );
-                }
-                return false;
-            }
+    protected void createCollectors(Builder consumer, @NotNull PsiFile psiFile, Editor editor) {
+        consumer.addSimpleMethodCollector(this::matches);
+    }
 
-        };
+    private boolean matches(@NotNull PsiMethod element) {
+        if ((element.getName().startsWith("get") || element.getName().startsWith("return"))
+                && CEUtils.isPluralForm(element.getName())) {
+            var typeElement = element.getReturnTypeElement();
+            return !CEUtils.isGenericType(element, typeElement) &&
+                    (
+                            Objects.equals(element.getReturnType(), PsiTypes.voidType()) ||
+                                    (!CEUtils.isArrayType(typeElement) &&
+                                            !CEUtils.isIterableType(typeElement) &&
+                                            !CEUtils.isMappableType(typeElement))
+                    );
+        }
+        return false;
     }
 }
 

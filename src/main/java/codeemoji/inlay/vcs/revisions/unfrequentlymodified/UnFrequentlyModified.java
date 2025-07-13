@@ -1,7 +1,7 @@
 package codeemoji.inlay.vcs.revisions.unfrequentlymodified;
 
 import codeemoji.core.collector.InlayVisuals;
-import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Date;
 import java.util.List;
 
-public class UnFrequentlyModified extends CEProviderMulti<UnFrequentlyModifiedSettings> {
+public class UnFrequentlyModified extends CEProvider<UnFrequentlyModifiedSettings> {
 
 
     @Override
@@ -28,10 +28,10 @@ public class UnFrequentlyModified extends CEProviderMulti<UnFrequentlyModifiedSe
     }
 
     @Override
-    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
-        return List.of(new UnFrequentlyModifiedMethodCollector(psiFile, editor, getKey()),
-                new UnFrequentlyModifiedClassCollector(psiFile, editor, getKey())
-        );
+    protected void createCollectors(CEProvider<UnFrequentlyModifiedSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        String key = getKey();
+        builder.addIf(getSettings().appliesToMethods(), new UnFrequentlyModifiedMethodCollector(psiFile, editor, key));
+        builder.addIf(getSettings().appliesToClasses(), new UnFrequentlyModifiedClassCollector(psiFile, editor, key));
     }
 
     private class UnFrequentlyModifiedMethodCollector extends VCSMethodCollector {

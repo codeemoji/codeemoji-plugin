@@ -48,6 +48,15 @@ public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements Per
         return symbols.get(0).getSymbol();
     }
 
+
+    public boolean appliesToMethods() {
+        return targetType.isMethods();
+    }
+
+    public boolean appliesToClasses() {
+        return targetType.isClasses();
+    }
+
     @Override
     public final S getState() {
         return (S) this;

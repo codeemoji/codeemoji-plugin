@@ -31,16 +31,17 @@ public class NameSuggestsBooleanButTypeDoesNot extends CEProvider<NameSuggestsBo
     }
 
     @Override
-    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleVariableCollector(editor, this) {
+    protected void createCollectors(Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.add(new CESimpleVariableCollector(editor, this) {
             @Override
-            public boolean needsInlay(@NotNull PsiVariable element){
+            public boolean needsInlay(@NotNull PsiVariable element) {
                 if (null != element.getName()) {
                     return 2 < element.getName().length() &&
                             element.getName().startsWith("is") && !element.getType().equals(PsiTypes.booleanType());
                 }
                 return false;
             }
-        };
+        });
     }
+
 }

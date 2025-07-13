@@ -1,16 +1,13 @@
 package codeemoji.inlay.structuralanalysis.codecomplexity;
 
-import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.java.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,14 +26,8 @@ public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticCom
     );
 
     @Override
-    public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, this) {
-            @Override
-            protected boolean needsInlay(@NotNull PsiMethod element){
-                if(isHighCyclomaticComplexityMethod(element)) System.out.println("Found HIGH_CYCLOMATIC_COMPLEXITY_METHOD in " + element.getName());
-                return isHighCyclomaticComplexityMethod(element);
-            }
-        };
+    protected void createCollectors(CEProvider<HighCyclomaticComplexityMethodSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addSimpleMethodCollector(this::isHighCyclomaticComplexityMethod);
     }
 
     @Override
@@ -44,7 +35,7 @@ public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticCom
         return new HighCyclomaticComplexityMethodConfigurable();
     }
 
-    private boolean isHighCyclomaticComplexityMethod(PsiMethod method){
+    private boolean isHighCyclomaticComplexityMethod(PsiMethod method) {
         int numberOfLinesInMethod = CEUtils.calculateMethodBodyLineCount(method) - CEUtils.calculateCommentPaddingLinesInMethod(method);
         int cyclomaticComplexityOfMethod = calculateCyclomaticComplexity(method);
         return method.getBody() != null &&
@@ -53,8 +44,8 @@ public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticCom
                 (((double) cyclomaticComplexityOfMethod / numberOfLinesInMethod) >= getSettings().getCyclomaticComplexityPerLine());
     }
 
-    private int calculateCyclomaticComplexity(PsiMethod method){
-        return Arrays.stream( PsiTreeUtil.collectElements(method.getBody(), HighCyclomaticComplexityMethod::filterCyclomaticallyComplexElements))
+    private int calculateCyclomaticComplexity(PsiMethod method) {
+        return Arrays.stream(PsiTreeUtil.collectElements(method.getBody(), HighCyclomaticComplexityMethod::filterCyclomaticallyComplexElements))
                 .mapToInt(HighCyclomaticComplexityMethod::mapCyclomaticallyComplexElementToSummableValue)
                 .reduce(1, Integer::sum);
     }
@@ -64,6 +55,6 @@ public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticCom
     }
 
     private static int mapCyclomaticallyComplexElementToSummableValue(PsiElement element) {
-        return ((element instanceof PsiSwitchLabelStatement || element instanceof PsiSwitchLabeledRuleStatement) && !element.getText().startsWith("case"))? 0 : 1;
+        return ((element instanceof PsiSwitchLabelStatement || element instanceof PsiSwitchLabeledRuleStatement) && !element.getText().startsWith("case")) ? 0 : 1;
     }
 }

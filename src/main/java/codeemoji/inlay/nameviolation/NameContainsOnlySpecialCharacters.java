@@ -31,12 +31,12 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NameContainsOn
     }
 
     @Override
-    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleVariableCollector(editor, this) {
+    protected void createCollectors(CEProvider<Settings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.add(new CESimpleVariableCollector(editor, this) {
             @Override
             public boolean needsInlay(@NotNull PsiVariable element) {
                 return CEUtils.containsOnlySpecialCharacters(Objects.requireNonNull(element.getName()));
             }
-        };
+        });
     }
 }

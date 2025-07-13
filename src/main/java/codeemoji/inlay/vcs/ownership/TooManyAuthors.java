@@ -1,7 +1,7 @@
 package codeemoji.inlay.vcs.ownership;
 
 import codeemoji.core.collector.InlayVisuals;
-import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.inlay.vcs.CEVcsFileAnnotationProvider;
 import codeemoji.inlay.vcs.CEVcsUtils;
@@ -21,15 +21,18 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class TooManyAuthors extends CEProviderMulti<TooManyAuthorsSettings> {
+public class TooManyAuthors extends CEProvider<TooManyAuthorsSettings> {
+
 
     @Override
-    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
-        return List.of(new Collector(psiFile, editor, getKey()));
+    protected void createCollectors(CEProvider<TooManyAuthorsSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        String key = getKey();
+        builder.add(new Collector(psiFile, editor, key));
     }
 
     @Override

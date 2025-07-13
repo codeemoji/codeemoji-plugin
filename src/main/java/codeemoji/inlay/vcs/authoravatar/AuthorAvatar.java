@@ -1,7 +1,7 @@
 package codeemoji.inlay.vcs.authoravatar;
 
 import codeemoji.core.collector.InlayVisuals;
-import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
@@ -27,19 +27,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class AuthorAvatar extends CEProviderMulti<AuthorAvatarSettings> {
+public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
 
     @Override
-    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
-        var settings = getSettings();
-        List<SharedBypassCollector> list = new ArrayList<>();
-        if (settings.getTargetType().isMethods()) {
-            list.add(new MethodCollector(psiFile, editor, getKey()));
-        }
-        if (settings.getTargetType().isClasses()) {
-            list.add(new ClassCollector(psiFile, editor, getKey()));
-        }
-        return list;
+    protected void createCollectors(Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addIf(getSettings().appliesToMethods(), new MethodCollector(psiFile, editor, getKey()));
+        builder.addIf(getSettings().appliesToClasses(), new ClassCollector(psiFile, editor, getKey()));
     }
 
     @Override

@@ -21,25 +21,24 @@ import java.util.Objects;
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
 
 public class GetMethodDoesNotReturn extends CEProvider<GetMethodDoesNotReturn.Settings> {
+
     @EqualsAndHashCode(callSuper = true)
     @ToString
     @Data
     @State(name = "GetMethodDoesNotReturnSettings", storages = @Storage("codeemoji-get-method-does-not-return-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings() {
-            super(CEPSIType.METHODS, 
-                    GetMethodDoesNotReturn.class, CONFUSED);
+            super(CEPSIType.METHODS, GetMethodDoesNotReturn.class, CONFUSED);
         }
     }
 
     @Override
-    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, this) {
-            @Override
-            public boolean needsInlay(@NotNull PsiMethod element){
-                return (element.getName().startsWith("get") || element.getName().startsWith("return")) && Objects.equals(element.getReturnType(), PsiTypes.voidType());
-            }
-        };
+    protected void createCollectors(CEProvider<Settings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addSimpleMethodCollector(this::matches);
+    }
+
+    private boolean matches(@NotNull PsiMethod element) {
+        return (element.getName().startsWith("get") || element.getName().startsWith("return")) && Objects.equals(element.getReturnType(), PsiTypes.voidType());
     }
 }
 

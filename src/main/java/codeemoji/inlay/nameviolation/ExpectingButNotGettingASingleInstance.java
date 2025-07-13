@@ -34,22 +34,21 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<ExpectingB
     }
 
     @Override
-    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, this) {
-            @Override
-            public boolean needsInlay(@NotNull PsiMethod element) {
-                if ((element.getName().startsWith("get") || element.getName().startsWith("return")) &&
-                        !Objects.equals(element.getReturnType(), PsiTypes.voidType()) &&
-                        !CEUtils.isPluralForm(element.getName())) {
-                    var typeElement = element.getReturnTypeElement();
-                    return !CEUtils.sameNameAsType(typeElement, element.getName()) &&
-                            (CEUtils.isArrayType(typeElement) ||
-                                    CEUtils.isIterableType(typeElement) ||
-                                    CEUtils.isMappableType(typeElement));
-                }
-                return false;
-            }
-        };
+    protected void createCollectors(Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addSimpleMethodCollector(this::matches);
+    }
+
+    private boolean matches(@NotNull PsiMethod element) {
+        if ((element.getName().startsWith("get") || element.getName().startsWith("return")) &&
+                !Objects.equals(element.getReturnType(), PsiTypes.voidType()) &&
+                !CEUtils.isPluralForm(element.getName())) {
+            var typeElement = element.getReturnTypeElement();
+            return !CEUtils.sameNameAsType(typeElement, element.getName()) &&
+                    (CEUtils.isArrayType(typeElement) ||
+                            CEUtils.isIterableType(typeElement) ||
+                            CEUtils.isMappableType(typeElement));
+        }
+        return false;
     }
 }
 

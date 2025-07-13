@@ -3,7 +3,7 @@ package codeemoji.inlay.vulnerabilities;
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.collector.base.CEMethodCollector;
 import codeemoji.core.collector.base.CEReferenceMethodCollector;
-import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CEUtils;
@@ -18,7 +18,7 @@ import java.util.*;
 
 import static codeemoji.core.util.CEUtils.isVulnerable;
 
-public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySettings> {
+public class VulnerableDependency extends CEProvider<VulnerableDependencySettings> {
 
     @Override
     public @NotNull CEBaseConfigurableWindow<VulnerableDependencySettings> createConfigurable() {
@@ -26,14 +26,14 @@ public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySe
     }
 
     @Override
-    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
+    protected void createCollectors(Builder builder, @NotNull PsiFile psiFile, Editor editor) {
         String key = getKey();
-        return List.of(
-                new VulnerableMethodCollector(editor, key),
-                new VulnerableMethodReferenceCollector(editor, key),
-                new IndirectVulnerableMethodCollector(editor, key),
-                new VulnerableDependencyCallCollector(editor, key)
-        );
+        builder.add(new VulnerableMethodCollector(editor, key));
+        builder.add(new VulnerableMethodReferenceCollector(editor, key));
+        if (getSettings().isCheckVulnerableDependencyApplied()) {
+            builder.add(new IndirectVulnerableMethodCollector(editor, key));
+        }
+        builder.add(new VulnerableDependencyCallCollector(editor, key));
     }
 
     private class VulnerableMethodCollector extends CEMethodCollector {

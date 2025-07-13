@@ -28,19 +28,18 @@ public class TransformMethodDoesNotReturn extends CEProvider<TransformMethodDoes
     @State(name = "TransformMethodDoesNotReturn", storages = @Storage("codeemoji-transform-method-does-not-return-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings(){
-            super(CEPSIType.METHODS, 
-                    TransformMethodDoesNotReturn.class, CONFUSED);
+            super(CEPSIType.METHODS, TransformMethodDoesNotReturn.class, CONFUSED);
         }
     }
 
+
     @Override
-    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, this) {
-            @Override
-            public boolean needsInlay(@NotNull PsiMethod element){
-                return (element.getName().startsWith("translate") || element.getName().startsWith("transform") || element.getName().startsWith("convert")) && Objects.equals(element.getReturnType(), PsiTypes.voidType());
-            }
-        };
+    protected void createCollectors(CEProvider<Settings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addSimpleMethodCollector(this::matches);
+    }
+
+    private boolean matches(@NotNull PsiMethod element) {
+        return (element.getName().startsWith("translate") || element.getName().startsWith("transform") || element.getName().startsWith("convert")) && Objects.equals(element.getReturnType(), PsiTypes.voidType());
     }
 }
 

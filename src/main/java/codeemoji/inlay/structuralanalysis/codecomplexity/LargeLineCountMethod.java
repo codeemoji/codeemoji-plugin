@@ -14,13 +14,8 @@ import org.jetbrains.annotations.Nullable;
 public class LargeLineCountMethod extends CEProvider<LargeLineCountMethodSettings> {
 
     @Override
-    public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, this) {
-            @Override
-            protected boolean needsInlay(@NotNull PsiMethod element) {
-                return isLargeLineCountMethod(element);
-            }
-        };
+    protected void createCollectors(CEProvider<LargeLineCountMethodSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addSimpleMethodCollector(this::isLargeLineCountMethod);
     }
 
     @Override

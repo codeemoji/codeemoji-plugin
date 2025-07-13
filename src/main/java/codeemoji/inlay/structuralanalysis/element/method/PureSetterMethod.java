@@ -1,36 +1,19 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
-import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
-import codeemoji.core.collector.base.simple.CESimpleReferenceMethodCollector;
-import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
-import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import org.codehaus.plexus.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Objects;
 
-public class PureSetterMethod extends CEProviderMulti<PureSetterMethodSettings> {
+public class PureSetterMethod extends CEProvider<PureSetterMethodSettings> {
 
     @Override
-    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
-        return List.of(
-                new CESimpleMethodCollector(editor, this) {
-                    @Override
-                    protected boolean needsInlay(@NotNull PsiMethod element) {
-                        return isPureSetterMethod(element);
-                    }
-                },
-                new CESimpleReferenceMethodCollector(editor, this) {
-                    @Override
-                    protected boolean needsInlay(@NotNull PsiMethod element) {
-                        return isPureSetterMethod(element);
-                    }
-                }
-        );
+    protected void createCollectors(Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addSimpleMethodCollector(this::isPureSetterMethod);
     }
 
     @Override

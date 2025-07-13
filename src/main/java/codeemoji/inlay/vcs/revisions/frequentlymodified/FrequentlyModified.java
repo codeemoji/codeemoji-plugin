@@ -1,7 +1,7 @@
 package codeemoji.inlay.vcs.revisions.frequentlymodified;
 
 import codeemoji.core.collector.InlayVisuals;
-import codeemoji.core.provider.CEProviderMulti;
+import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSClassCollector;
@@ -27,13 +27,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class FrequentlyModified extends CEProviderMulti<FrequentlyModifiedSettings> {
+public class FrequentlyModified extends CEProvider<FrequentlyModifiedSettings> {
 
     @Override
-    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
-
-        return List.of(new FrequentlyModifiedMethodCollector(psiFile, editor, getKey()),
-                new FrequentlyModifiedClassCollector(psiFile, editor, getKey()));
+    protected void createCollectors(CEProvider<FrequentlyModifiedSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        String key = getKey();
+        builder.addIf(getSettings().appliesToMethods(), new FrequentlyModifiedMethodCollector(psiFile, editor, key));
+        builder.addIf(getSettings().appliesToClasses(), new FrequentlyModifiedClassCollector(psiFile, editor, key));
     }
 
     @Override
