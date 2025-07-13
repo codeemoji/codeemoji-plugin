@@ -4,15 +4,11 @@ import codeemoji.core.collector.project.CEProjectClassCollector;
 import codeemoji.core.collector.project.CEProjectMethodCollector;
 import codeemoji.core.collector.project.CEProjectVariableCollector;
 import codeemoji.core.provider.CEProviderMulti;
-import codeemoji.core.settings.CEConfigurableWindow;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
-import com.intellij.codeInsight.hints.SettingsKey;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +32,7 @@ public class ShowingSpecifics extends CEProviderMulti<ShowingSpecificsSettings> 
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<ShowingSpecificsSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<ShowingSpecificsSettings> createConfigurable() {
         return new ShowingSpecificsConfigurable();
     }
 

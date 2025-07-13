@@ -1,5 +1,6 @@
 package codeemoji.inlay.vcs.revisions.unfrequentlymodified;
 
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.inlay.vcs.VCSSymbols;
 import com.intellij.openapi.components.State;
@@ -16,7 +17,8 @@ public final class UnFrequentlyModifiedSettings extends CEBaseSettings<UnFrequen
     private boolean showDate = false;
 
     public UnFrequentlyModifiedSettings() {
-        super(UnFrequentlyModified.class, VCSSymbols.UN_FREQUENTLY_MODIFIED);
+        super(CEPSIType.METHODS_AND_CLASSES, 
+                UnFrequentlyModified.class, VCSSymbols.UN_FREQUENTLY_MODIFIED);
     }
 
 }

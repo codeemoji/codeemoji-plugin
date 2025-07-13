@@ -6,9 +6,7 @@ import codeemoji.core.collector.implicit.spring.CESpringConfigurationCollector;
 import codeemoji.core.collector.implicit.spring.CESpringControllerCollector;
 import codeemoji.core.collector.implicit.spring.CESpringRestControllerCollector;
 import codeemoji.core.provider.CEProviderMulti;
-import codeemoji.core.settings.CEConfigurableWindow;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
-import com.intellij.codeInsight.hints.SettingsKey;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
@@ -39,7 +37,7 @@ public class ImplicitAnnotations extends CEProviderMulti<ImplicitAnnotationsSett
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<ImplicitAnnotationsSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<ImplicitAnnotationsSettings> createConfigurable() {
         return new ImplicitAnnotationsConfigurable();
     }
 }

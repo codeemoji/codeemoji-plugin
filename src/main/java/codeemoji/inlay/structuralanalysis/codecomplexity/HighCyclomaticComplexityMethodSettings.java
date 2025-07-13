@@ -1,14 +1,11 @@
 package codeemoji.inlay.structuralanalysis.codecomplexity;
 
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.HIGH_CYCLOMATIC_COMPLEXITY_METHOD;
 
@@ -22,7 +19,8 @@ public class HighCyclomaticComplexityMethodSettings extends CEBaseSettings<HighC
     private double cyclomaticComplexityPerLine = 0.36;
 
     public HighCyclomaticComplexityMethodSettings(){
-        super(HighCyclomaticComplexityMethod.class, HIGH_CYCLOMATIC_COMPLEXITY_METHOD);
+        super(CEPSIType.METHODS, 
+                HighCyclomaticComplexityMethod.class, HIGH_CYCLOMATIC_COMPLEXITY_METHOD);
     }
 
 }

@@ -1,5 +1,6 @@
 package codeemoji.inlay.vcs.refactors;
 
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.inlay.vcs.VCSSymbols;
 import com.intellij.openapi.components.State;
@@ -15,7 +16,8 @@ public final class NameChangedSettings extends CEBaseSettings<NameChangedSetting
     private int maxRevisions = 1;
 
     public NameChangedSettings() {
-        super(NameChanged.class, VCSSymbols.NAME_CHANGED);
+        super(CEPSIType.METHODS_AND_CLASSES, 
+                NameChanged.class, VCSSymbols.NAME_CHANGED);
     }
 
 }

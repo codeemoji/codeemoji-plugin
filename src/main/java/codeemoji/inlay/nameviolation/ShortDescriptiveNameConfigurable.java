@@ -1,6 +1,6 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-class ShortDescriptiveNameConfigurable extends CEConfigurableWindow<ShortDescriptiveNameSettings> {
+class ShortDescriptiveNameConfigurable extends CEBaseConfigurableWindow<ShortDescriptiveNameSettings> {
 
     @Override
     public @NotNull JComponent createComponent(ShortDescriptiveNameSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {

@@ -1,6 +1,7 @@
 package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -27,7 +28,8 @@ public class IsReturnsMoreThanABoolean extends CEProvider<IsReturnsMoreThanABool
     @State(name = "IsReturnsMoreThanABooleanSettings", storages = @Storage("codeemoji-is-returns-more-than-a-boolean-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings() {
-            super(IsReturnsMoreThanABoolean.class, CONFUSED);
+            super(CEPSIType.METHODS, 
+                    IsReturnsMoreThanABoolean.class, CONFUSED);
         }
     }
 

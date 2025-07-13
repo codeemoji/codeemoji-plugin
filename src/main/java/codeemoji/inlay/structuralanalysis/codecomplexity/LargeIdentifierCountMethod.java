@@ -2,7 +2,7 @@ package codeemoji.inlay.structuralanalysis.codecomplexity;
 
 import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
@@ -25,7 +25,7 @@ public class LargeIdentifierCountMethod extends CEProvider<LargeIdentifierCountM
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<LargeIdentifierCountMethodSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<LargeIdentifierCountMethodSettings> createConfigurable() {
         return new LargeIdentifierCountMethodConfigurable();
     }
     

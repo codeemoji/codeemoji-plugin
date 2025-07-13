@@ -1,5 +1,6 @@
 package codeemoji.inlay.vcs.revisions.newlyadded;
 
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.inlay.vcs.VCSSymbols;
 import com.intellij.openapi.components.State;
@@ -13,7 +14,8 @@ import lombok.EqualsAndHashCode;
 public final class NewlyAddedSettings extends CEBaseSettings<NewlyAddedSettings> {
 
     public NewlyAddedSettings() {
-        super(NewlyAdded.class, VCSSymbols.NEWLY_ADDED);
+        super(CEPSIType.METHODS_AND_CLASSES, 
+                NewlyAdded.class, VCSSymbols.NEWLY_ADDED);
     }
 
 }

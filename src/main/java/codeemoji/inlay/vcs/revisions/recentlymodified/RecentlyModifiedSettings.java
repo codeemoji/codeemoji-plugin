@@ -1,5 +1,6 @@
 package codeemoji.inlay.vcs.revisions.recentlymodified;
 
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.inlay.vcs.VCSSymbols;
 import com.intellij.openapi.components.State;
@@ -16,7 +17,8 @@ public final class RecentlyModifiedSettings extends CEBaseSettings<RecentlyModif
     private boolean showDate = false;
 
     public RecentlyModifiedSettings() {
-        super(RecentlyModified.class, VCSSymbols.RECENTLY_MODIFIED);
+        super(CEPSIType.METHODS_AND_CLASSES, 
+                RecentlyModified.class, VCSSymbols.RECENTLY_MODIFIED);
     }
 
 }

@@ -1,6 +1,7 @@
 package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -27,7 +28,7 @@ public class GetMoreThanAccessor extends CEProvider<GetMoreThanAccessor.Settings
     @State(name = "GetMoreThanAccessorSettings", storages = @Storage("codeemoji-get-more-than-accessor-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings() {
-            super(GetMoreThanAccessor.class, CONFUSED);
+            super(CEPSIType.METHODS, GetMoreThanAccessor.class, CONFUSED);
         }
     }
 

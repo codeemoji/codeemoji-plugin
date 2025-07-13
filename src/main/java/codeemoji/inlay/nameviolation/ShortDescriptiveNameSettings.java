@@ -1,14 +1,12 @@
 package codeemoji.inlay.nameviolation;
 
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jetbrains.annotations.NotNull;
 
-import static codeemoji.inlay.nameviolation.NameViolationSymbols.CONFUSED;
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.SMALL_NAME;
 
 @EqualsAndHashCode(callSuper = true)
@@ -17,7 +15,7 @@ import static codeemoji.inlay.nameviolation.NameViolationSymbols.SMALL_NAME;
 public class ShortDescriptiveNameSettings extends CEBaseSettings<ShortDescriptiveNameSettings> {
 
     public ShortDescriptiveNameSettings() {
-        super(ShortDescriptiveName.class, SMALL_NAME);
+        super(CEPSIType.UNSPECIFIED, ShortDescriptiveName.class, SMALL_NAME);
     }
 
     private int numberOfLetters = 1;

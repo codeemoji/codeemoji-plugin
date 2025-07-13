@@ -1,11 +1,10 @@
 package codeemoji.inlay.vcs.authoravatar;
 
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbolHolder;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,7 +15,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class AuthorAvatarConfigurable extends CEConfigurableWindow<AuthorAvatarSettings> {
+public class AuthorAvatarConfigurable extends CEBaseConfigurableWindow<AuthorAvatarSettings> {
 
     @Override
     public @NotNull JComponent createComponent(AuthorAvatarSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
@@ -26,76 +25,32 @@ public class AuthorAvatarConfigurable extends CEConfigurableWindow<AuthorAvatarS
             localSymbols.add(pair.makeCopy());
         }
 
-        // Main panel with vertical box layout
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        // Create checkbox panel with vertical layout
-        JPanel checkboxPanel = new JPanel();
-        checkboxPanel.setLayout(new BoxLayout(checkboxPanel, BoxLayout.Y_AXIS));
-        checkboxPanel.setBorder(BorderFactory.createTitledBorder("Display Settings"));
-        checkboxPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JCheckBox classesButton = new JCheckBox("Show on classes");
-        classesButton.setSelected(settings.isShowOnClasses());
-        classesButton.addChangeListener(event -> {
-            settings.setShowOnClasses(classesButton.isSelected());
-            changeListener.settingsChanged();
-        });
-
-        JCheckBox methodsButton = new JCheckBox("Show on methods");
-        methodsButton.setSelected(settings.isShowOnMethods());
-        methodsButton.addChangeListener(event -> {
-            settings.setShowOnMethods(methodsButton.isSelected());
-            changeListener.settingsChanged();
-        });
-
-        // Add checkboxes to their panel
-        checkboxPanel.add(classesButton);
-        checkboxPanel.add(Box.createVerticalStrut(5)); // Add some vertical spacing
-        checkboxPanel.add(methodsButton);
-
-        // Add checkbox panel to main panel
-        mainPanel.add(checkboxPanel);
-        mainPanel.add(Box.createVerticalStrut(15)); // Add spacing between sections
-//TODO: make better
-        // Create author mapping panel
-        JPanel authorPanel = new JPanel();
-        authorPanel.setLayout(new BoxLayout(authorPanel, BoxLayout.Y_AXIS));
-        authorPanel.setBorder(BorderFactory.createTitledBorder("Author Mappings"));
-        authorPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        // Add existing rows to the author panel
+        // Add existing rows to the panel
         for (CESymbolHolder pair : localSymbols) {
-            addRow(authorPanel, pair, settings, changeListener);
+            addRow(panel, pair, settings, changeListener);
         }
 
         // Add the "Add" button at the end
-        JButton addButton = new JButton("Add Author Mapping");
-        addButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JButton addButton = new JButton(CEBundle.getString("inlay.authoravatar.settings.add_avatar"));
         addButton.addActionListener(e -> {
             CESymbolHolder newPair = new CESymbolHolder(
                     settings.getNextFriendlyAuthorEmoji(),
-                    "inlay.authoravatar.settings.author",
-                    localSymbols.size() + 1
-            );
-            localSymbols.add(newPair);
-            addRow(authorPanel, newPair, settings, changeListener);
-            syncSettings(settings, changeListener);
+                    "inlay.authoravatar.settings.author", localSymbols.size() + 1);
+            localSymbols.add(newPair); // Add to the local list
+            addRow(panel, newPair, settings, changeListener); // Add the new row to the panel
 
-            // Scroll to show new row
-            authorPanel.revalidate();
-            authorPanel.repaint();
+            syncSettings(settings, changeListener);
         });
 
-        authorPanel.add(Box.createVerticalStrut(10)); // Space before button
-        authorPanel.add(addButton);
+        JPanel addPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        addPanel.add(addButton);
 
-        // Add author panel to main panel
-        mainPanel.add(authorPanel);
+        panel.add(addPanel); // Add the "Add" button panel
 
-        return mainPanel;
+        return panel;
     }
 
     private void addRow(JPanel panel, CESymbolHolder holder, AuthorAvatarSettings settings, ChangeListener listener) {

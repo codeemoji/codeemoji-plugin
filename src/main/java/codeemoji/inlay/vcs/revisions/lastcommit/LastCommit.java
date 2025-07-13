@@ -2,7 +2,7 @@ package codeemoji.inlay.vcs.revisions.lastcommit;
 
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSMethodCollector;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -30,7 +30,7 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<LastCommitSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<LastCommitSettings> createConfigurable() {
         return new LastCommitConfigurable();
     }
 

@@ -1,15 +1,20 @@
 package codeemoji.inlay.vcs;
 
 import codeemoji.core.util.CEBundle;
-import com.intellij.dvcs.repo.Repository;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.AbstractVcs;
+import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.annotate.AnnotationProvider;
+import com.intellij.openapi.vcs.annotate.AnnotationsPreloader;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
@@ -23,9 +28,6 @@ import com.intellij.vcs.CacheableAnnotationProvider;
 import git4idea.GitCommit;
 import git4idea.GitRevisionNumber;
 import git4idea.GitUtil;
-import git4idea.commands.Git;
-import git4idea.commands.GitCommand;
-import git4idea.commands.GitLineHandler;
 import git4idea.history.GitHistoryUtils;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryManager;
@@ -58,6 +60,8 @@ public final class CEVcsUtils {
                 .findFirst().orElse(null);
     }
 
+
+
     // copied from VcsCodeAuthorInlayHintsCollector
     // gets the git annotation of the current file
     // basically gets the git blame for each line
@@ -69,47 +73,53 @@ public final class CEVcsUtils {
             return annotation;
         }
 
-        // gets version control for this project file. Similar to GitInstance thing i guess?
-        if (vcs == null) {
-            return null;
-        }
-
         // could it be this is the GitAnnotationProvider from before?
         AnnotationProvider provider = vcs.getAnnotationProvider();
         if (provider instanceof CacheableAnnotationProvider cacheable) {
             // this probably calls .annotate internally
             // .annotate is where the magic happens
             annotation = cacheable.getFromCache(file);
+            if (annotation == null) {
+                // if we have a cached annotation, we can return it
+                return null;
+            }
 
-            //whatever this does...
+            //whatever this does... (remove?)
 
-            /*
-            Disposable annotationDisposable = new Disposable() {
-                @Override
-                public void dispose() {
-                    unregisterAnnotation(annotation);
-                    annotation.dispose();
-                }
+            FileAnnotation finalAnnotation = annotation;
+ 
+            Disposable annotationDisposable = () -> {
+                unregisterAnnotation(finalAnnotation);
+                finalAnnotation.dispose();
             };
 
-            annotation.setCloser(() -> {
+            finalAnnotation.setCloser(() -> {
                 editor.putUserData(VCS_CODE_AUTHOR_ANNOTATION, null);
                 Disposer.dispose(annotationDisposable);
 
-                project.getService(AnnotationsPreloader.class).schedulePreloading(file);
+                finalAnnotation.getProject().getService(AnnotationsPreloader.class).schedulePreloading(file);
             });
 
-            annotation.setReloader(annotation::close);
+            finalAnnotation.setReloader(FileAnnotation::close);
 
-            editor.putUserData(VCS_CODE_AUTHOR_ANNOTATION, annotation);
-            registerAnnotation(annotation);
-            disposeWithEditor(editor, annotationDisposable);
-            */
+            editor.putUserData(VCS_CODE_AUTHOR_ANNOTATION, finalAnnotation);
+            registerAnnotation(finalAnnotation);
+            ApplicationManager.getApplication().invokeLater(() -> {
+                EditorUtil.disposeWithEditor(editor, annotationDisposable);
+            });
 
-            return annotation;
+            return finalAnnotation;
         }
 
         return null;
+    }
+
+    private static void unregisterAnnotation(FileAnnotation annotation) {
+        ProjectLevelVcsManager.getInstance(annotation.getProject()).getAnnotationLocalChangesListener().unregisterAnnotation(annotation);
+    }
+
+    private static void registerAnnotation(FileAnnotation annotation) {
+        ProjectLevelVcsManager.getInstance(annotation.getProject()).getAnnotationLocalChangesListener().registerAnnotation(annotation);
     }
 
     public static TextRange getTextRangeWithoutLeadingCommentsAndWhitespaces(PsiElement element) {

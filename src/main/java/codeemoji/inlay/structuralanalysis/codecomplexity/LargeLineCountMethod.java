@@ -2,7 +2,7 @@ package codeemoji.inlay.structuralanalysis.codecomplexity;
 
 import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
@@ -24,7 +24,7 @@ public class LargeLineCountMethod extends CEProvider<LargeLineCountMethodSetting
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<LargeLineCountMethodSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<LargeLineCountMethodSettings> createConfigurable() {
         return new LargeLineCountMethodConfigurable();
     }
 

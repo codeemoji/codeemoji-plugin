@@ -5,22 +5,18 @@ import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CESymbolHolder;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.ui.colorpicker.ColorIndicator;
 import com.intellij.util.xmlb.annotations.Transient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.awt.*;
-import java.util.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @State(name = "AuthorAvatarSettings", storages = @Storage("codeemoji-author-avatar-settings.xml"))
 public final class AuthorAvatarSettings extends CEBaseSettings<AuthorAvatarSettings> {
-
-    private boolean showOnClasses = true;
-    private boolean showOnMethods = false;
 
     private static final List<CESymbol> ANIMALS = List.of(
             CESymbol.of(0x1F981), // Lion Face 🦁

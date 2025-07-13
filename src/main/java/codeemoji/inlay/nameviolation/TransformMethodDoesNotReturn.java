@@ -1,6 +1,7 @@
 package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -27,7 +28,8 @@ public class TransformMethodDoesNotReturn extends CEProvider<TransformMethodDoes
     @State(name = "TransformMethodDoesNotReturn", storages = @Storage("codeemoji-transform-method-does-not-return-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings(){
-            super(TransformMethodDoesNotReturn.class, CONFUSED);
+            super(CEPSIType.METHODS, 
+                    TransformMethodDoesNotReturn.class, CONFUSED);
         }
     }
 

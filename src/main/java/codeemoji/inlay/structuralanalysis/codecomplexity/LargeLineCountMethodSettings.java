@@ -1,17 +1,12 @@
 package codeemoji.inlay.structuralanalysis.codecomplexity;
 
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
-import codeemoji.core.util.CESymbol;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.LARGE_IDENTIFIER_COUNT_METHOD;
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.LARGE_LINE_COUNT_METHOD;
 
 @EqualsAndHashCode(callSuper = true)
@@ -23,7 +18,8 @@ public class LargeLineCountMethodSettings extends CEBaseSettings<LargeLineCountM
     private boolean commentExclusionApplied = false;
 
     public LargeLineCountMethodSettings(){
-        super(LargeLineCountMethod.class, LARGE_LINE_COUNT_METHOD);
+        super(CEPSIType.METHODS, 
+                LargeLineCountMethod.class, LARGE_LINE_COUNT_METHOD);
     }
 
 }

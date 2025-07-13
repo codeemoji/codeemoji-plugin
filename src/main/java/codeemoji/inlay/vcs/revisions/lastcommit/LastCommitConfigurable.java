@@ -1,6 +1,6 @@
 package codeemoji.inlay.vcs.revisions.lastcommit;
 
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEBundle;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class LastCommitConfigurable extends CEConfigurableWindow<LastCommitSettings> {
+public class LastCommitConfigurable extends CEBaseConfigurableWindow<LastCommitSettings> {
 
     @Override
     public @NotNull JComponent createComponent(LastCommitSettings settings, @Nullable String preview, Project project,

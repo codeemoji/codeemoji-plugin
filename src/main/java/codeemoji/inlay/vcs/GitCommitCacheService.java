@@ -12,7 +12,6 @@ import git4idea.repo.GitRepository;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -130,6 +129,12 @@ public final class GitCommitCacheService {
 
                 // Update cache with recent commits
                 putCommitsInCache(recentCommits);
+
+                ApplicationManager.getApplication().invokeLater(() -> {
+                    if (!project.isDisposed()) {
+                        DaemonCodeAnalyzer.getInstance(project).restart();
+                    }
+                });
 
             } catch (Exception e) {
                 LOG.warn("Failed to refresh recent commits", e);

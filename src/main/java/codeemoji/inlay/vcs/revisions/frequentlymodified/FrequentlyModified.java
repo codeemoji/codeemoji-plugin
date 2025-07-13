@@ -2,9 +2,7 @@ package codeemoji.inlay.vcs.revisions.frequentlymodified;
 
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProviderMulti;
-import codeemoji.core.settings.CEConfigurableWindow;
-import codeemoji.core.util.CEBundle;
-import codeemoji.core.util.CESymbol;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSClassCollector;
 import codeemoji.inlay.vcs.VCSMethodCollector;
@@ -39,7 +37,7 @@ public class FrequentlyModified extends CEProviderMulti<FrequentlyModifiedSettin
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<FrequentlyModifiedSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<FrequentlyModifiedSettings> createConfigurable() {
         return new FrequentlyModifiedConfigurable();
     }
 

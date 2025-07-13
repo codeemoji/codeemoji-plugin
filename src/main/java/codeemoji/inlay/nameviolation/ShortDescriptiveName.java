@@ -1,9 +1,8 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.base.CEVariableCollector;
 import codeemoji.core.collector.base.simple.CESimpleVariableCollector;
 import codeemoji.core.provider.CEProvider;
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
@@ -26,7 +25,7 @@ public class ShortDescriptiveName extends CEProvider<ShortDescriptiveNameSetting
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<ShortDescriptiveNameSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<ShortDescriptiveNameSettings> createConfigurable() {
         return new ShortDescriptiveNameConfigurable();
     }
 }

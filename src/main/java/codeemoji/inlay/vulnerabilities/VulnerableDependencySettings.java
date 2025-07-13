@@ -2,13 +2,10 @@ package codeemoji.inlay.vulnerabilities;
 
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CESymbol;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

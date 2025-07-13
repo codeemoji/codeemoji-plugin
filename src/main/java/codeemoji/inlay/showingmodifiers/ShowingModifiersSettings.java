@@ -2,10 +2,8 @@ package codeemoji.inlay.showingmodifiers;
 
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CESymbol;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,10 +14,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier;
-import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.NATIVE_METHOD;
-import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.SYNCHRONIZED_METHOD;
-import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.TRANSIENT_FIELD;
-import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.VOLATILE_FIELD;
+import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.*;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString

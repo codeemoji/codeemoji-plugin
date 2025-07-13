@@ -1,6 +1,7 @@
 package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -27,7 +28,8 @@ public class SetMethodReturns extends CEProvider<SetMethodReturns.Settings> {
     @State(name = "SetMethodReturns", storages = @Storage("codeemoji-set-method-returns-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings(){
-            super(SetMethodReturns.class, CONFUSED);
+            super(CEPSIType.METHODS, 
+                    SetMethodReturns.class, CONFUSED);
         }
     }
 

@@ -2,7 +2,7 @@ package codeemoji.inlay.structuralanalysis.codecomplexity;
 
 import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
 import codeemoji.core.provider.CEProvider;
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
@@ -40,7 +40,7 @@ public class HighCyclomaticComplexityMethod extends CEProvider<HighCyclomaticCom
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<HighCyclomaticComplexityMethodSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<HighCyclomaticComplexityMethodSettings> createConfigurable() {
         return new HighCyclomaticComplexityMethodConfigurable();
     }
 

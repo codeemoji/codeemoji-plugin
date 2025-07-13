@@ -1,10 +1,10 @@
 package codeemoji.core.settings;
 
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CESymbolHolder;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Transient;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
@@ -16,16 +16,30 @@ import java.util.*;
 @Data
 public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements PersistentStateComponent<S> {
 
-    private List<CESymbolHolder> symbols = new ArrayList<>();
+    @Transient
+    private transient final CEPSIType allowedPsiType;
 
-    public CEBaseSettings(CESymbolHolder... symbols) {
+    protected List<CESymbolHolder> symbols = new ArrayList<>();
+    protected CEPSIType targetType;
+    protected boolean includeReferences = true;
+
+    public CEBaseSettings(
+            CEPSIType allowedPsiType,
+            CESymbolHolder... symbols) {
         super();
         this.symbols.addAll(Arrays.asList(symbols));
+        this.allowedPsiType = allowedPsiType;
+        this.targetType = allowedPsiType;
     }
 
     //helper that auto makes the string for a single symbol one
-    public CEBaseSettings(Class<?> providerClass, CESymbol symbol) {
-        this(new CESymbolHolder(symbol, providerClass.getSimpleName().toLowerCase(Locale.ROOT)));
+    public CEBaseSettings(CEPSIType allowedPsiType,
+                          Class<?> providerClass, CESymbol symbol) {
+        this(allowedPsiType, new CESymbolHolder(symbol, providerClass.getSimpleName().toLowerCase(Locale.ROOT)));
+    }
+
+    public CEBaseSettings(CESymbolHolder... symbols) {
+        this(CEPSIType.UNSPECIFIED, symbols);
     }
 
     // bad
@@ -73,7 +87,7 @@ public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements Per
         onUpdated();
     }
 
-    public List<CESymbolHolder> gatherAllSymbols(){
+    public List<CESymbolHolder> gatherAllSymbols() {
         List<CESymbolHolder> allSymbols = new ArrayList<>(symbols);
         for (Field field : getClass().getDeclaredFields()) {
             if (field.getType().equals(CESymbol.class) && !isTransient(field)) {

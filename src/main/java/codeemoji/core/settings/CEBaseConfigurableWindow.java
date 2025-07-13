@@ -1,5 +1,6 @@
 package codeemoji.core.settings;
 
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.ui.EmojiPickerPanel;
 import codeemoji.core.ui.EmojiRepository;
 import codeemoji.core.util.CEBundle;
@@ -11,8 +12,10 @@ import com.intellij.openapi.editor.EditorSettings;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.util.ui.FormBuilder;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,49 +24,97 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 // a configurable class that holds a symbol list
-public class CEConfigurableWindow<S extends CEBaseSettings<S>> {
+public class CEBaseConfigurableWindow<S extends CEBaseSettings<S>> {
 
     protected final List<CESymbolHolder> localSymbols = new ArrayList<>();
 
-    public @NotNull JComponent createComponent(S settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
-
+    public @NotNull JComponent createComponent(S settings, @Nullable String preview, Project project,
+                                               Language language, ChangeListener changeListener) {
         localSymbols.clear();
         for (var s : settings.gatherAllSymbols()) {
             localSymbols.add(s.makeCopy());
         }
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-
-        //addPreviewText(panel, project, language, preview);
-        for (var holder : localSymbols) {
-            addSymbolRow(panel, holder, settings, changeListener);
-        }
-
-        return panel;
+        FormBuilder builder = FormBuilder.createFormBuilder();
+        buildForm(builder, settings, preview, project, language, changeListener);
+        return builder.getPanel();
     }
 
-    private void addSymbolRow(JPanel panel, CESymbolHolder holder, S settings, ChangeListener listener) {
-        // Create label
+    /**
+     * Subclasses override this to add their specific fields.
+     */
+    protected void buildForm(FormBuilder builder, S settings, @Nullable String preview, Project project,
+                             Language language, ChangeListener changeListener) {
+
+        // Add symbol rows
+        for (var holder : localSymbols) {
+            builder.addComponent(createSymbolRow(holder, settings, changeListener));
+        }
+
+        // Add PSI Type picker if necessary
+        if (settings.getAllowedPsiType() == CEPSIType.METHODS_AND_CLASSES) {
+            builder.addLabeledComponent(
+                    CEBundle.getString("codeemoji.configurable.target_type"),
+                    createPickTarget(settings, changeListener));
+        }
+
+        // Add "Include References" checkbox
+        JCheckBox checkBox = new JCheckBox();
+        checkBox.setSelected(settings.isIncludeReferences());
+        checkBox.addActionListener(e -> {
+            settings.setIncludeReferences(checkBox.isSelected());
+            changeListener.settingsChanged();
+        });
+        builder.addLabeledComponent(
+                CEBundle.getString("codeemoji.configurable.include_references"), checkBox);
+
+    }
+
+    private @NotNull JComponent createPickTarget(S settings, ChangeListener changeListener) {
+        var filteredValues = Arrays.stream(CEPSIType.values())
+                .filter(v -> v != CEPSIType.UNSPECIFIED)
+                .toArray(CEPSIType[]::new);
+
+        ComboBox<CEPSIType> comboBox = new ComboBox<>(filteredValues);
+        comboBox.setSelectedItem(settings.getTargetType());
+
+        comboBox.setRenderer(new ListCellRenderer<>() {
+            private final DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
+
+            @Override
+            public Component getListCellRendererComponent(JList<? extends CEPSIType> list, CEPSIType value, int index,
+                                                          boolean isSelected, boolean cellHasFocus) {
+                JLabel renderer = (JLabel) defaultRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                renderer.setText(CEBundle.getString("codeemoji.configurable.target_type."
+                        + value.name().toLowerCase()));
+                return renderer;
+            }
+        });
+
+        comboBox.addActionListener(e -> {
+            settings.setTargetType((CEPSIType) comboBox.getSelectedItem());
+            changeListener.settingsChanged();
+        });
+        return comboBox;
+    }
+
+    private @NotNull JComponent createSymbolRow(CESymbolHolder holder, S settings, ChangeListener listener) {
         JLabel label = holder.getSymbol().createLabel(holder.getTranslatedName());
 
-        // Create button
         JButton pickEmojiButton = new JButton(CEBundle.getString("codeemoji.configurable.edit"));
         pickEmojiButton.addActionListener(e -> createPickEmojiMenu(label, holder, true, settings, listener));
 
-        // Create a sub-panel for label and button with horizontal layout
-        JPanel labelButtonPanel = new JPanel(new BorderLayout(10, 0)); // Add some horizontal spacing
-        labelButtonPanel.add(label, BorderLayout.CENTER); // Label on the left
-        labelButtonPanel.add(pickEmojiButton, BorderLayout.EAST); // Button on the right
+        JPanel labelButtonPanel = new JPanel(new BorderLayout(10, 0));
+        labelButtonPanel.add(label, BorderLayout.CENTER);
+        labelButtonPanel.add(pickEmojiButton, BorderLayout.EAST);
         labelButtonPanel.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
 
-        // Add the sub-panel to the main panel
-        panel.add(labelButtonPanel);
+        return labelButtonPanel;
     }
 
     protected void createPickEmojiMenu(JLabel label, CESymbolHolder holder,
@@ -139,7 +190,7 @@ public class CEConfigurableWindow<S extends CEBaseSettings<S>> {
                 return null;
             }));
             editorTextField.setText(previewText);
-            editorTextField.addSettingsProvider(CEConfigurableWindow::addSettings);
+            editorTextField.addSettingsProvider(CEBaseConfigurableWindow::addSettings);
             panel.add(ScrollPaneFactory.createScrollPane(editorTextField), "growx");
         }
     }

@@ -1,8 +1,6 @@
 package codeemoji.inlay.structuralanalysis.codecomplexity;
 
-import codeemoji.core.settings.CEConfigurableWindow;
-import com.intellij.codeInsight.hints.ChangeListener;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
@@ -11,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-class LargeIdentifierCountMethodConfigurable extends CEConfigurableWindow<LargeIdentifierCountMethodSettings> {
+class LargeIdentifierCountMethodConfigurable extends CEBaseConfigurableWindow<LargeIdentifierCountMethodSettings> {
 
 
     @Override

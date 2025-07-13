@@ -3,7 +3,7 @@ package codeemoji.inlay.structuralanalysis.element.method;
 import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
 import codeemoji.core.collector.base.simple.CESimpleReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
@@ -38,7 +38,7 @@ public class ExternalFunctionalityInvokingMethod extends CEProviderMulti<Externa
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<ExternalFunctionalityInvokingMethodSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<ExternalFunctionalityInvokingMethodSettings> createConfigurable() {
    return new ExternalFunctionalityInvokingMethodConfigurable();
     }
 

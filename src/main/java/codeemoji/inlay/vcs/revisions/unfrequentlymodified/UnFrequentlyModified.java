@@ -2,7 +2,7 @@ package codeemoji.inlay.vcs.revisions.unfrequentlymodified;
 
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProviderMulti;
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSClassCollector;
@@ -23,7 +23,7 @@ public class UnFrequentlyModified extends CEProviderMulti<UnFrequentlyModifiedSe
 
 
     @Override
-    public @NotNull CEConfigurableWindow<UnFrequentlyModifiedSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<UnFrequentlyModifiedSettings> createConfigurable() {
         return new UnFrequentlyModifiedConfigurable();
     }
 

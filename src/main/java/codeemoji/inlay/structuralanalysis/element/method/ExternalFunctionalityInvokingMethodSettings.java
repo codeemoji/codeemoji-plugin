@@ -1,13 +1,11 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jetbrains.annotations.NotNull;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.EXTERNAL_FUNCTIONALITY_INVOKING_METHOD;
 
@@ -19,7 +17,8 @@ public class ExternalFunctionalityInvokingMethodSettings extends CEBaseSettings<
     private boolean checkMethodCallsForExternalityApplied = false;
 
     public ExternalFunctionalityInvokingMethodSettings(){
-        super(ExternalFunctionalityInvokingMethod.class, EXTERNAL_FUNCTIONALITY_INVOKING_METHOD);
+        super(CEPSIType.METHODS, 
+                ExternalFunctionalityInvokingMethod.class, EXTERNAL_FUNCTIONALITY_INVOKING_METHOD);
     }
 
 }

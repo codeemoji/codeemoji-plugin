@@ -2,8 +2,7 @@ package codeemoji.inlay.vcs.bugs;
 
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProviderMulti;
-import codeemoji.core.settings.CEConfigurableWindow;
-import codeemoji.core.util.CEBundle;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.GitCommitCacheService;
 import codeemoji.inlay.vcs.VCSMethodCollector;
@@ -32,7 +31,7 @@ public class FixedIssue extends CEProviderMulti<FixedIssueSettings> {
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<FixedIssueSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<FixedIssueSettings> createConfigurable() {
         return new FixedIssueConfigurable();
     }
 

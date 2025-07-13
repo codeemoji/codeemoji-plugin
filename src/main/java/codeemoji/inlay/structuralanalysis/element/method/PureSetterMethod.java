@@ -3,7 +3,7 @@ package codeemoji.inlay.structuralanalysis.element.method;
 import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
 import codeemoji.core.collector.base.simple.CESimpleReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
@@ -34,7 +34,7 @@ public class PureSetterMethod extends CEProviderMulti<PureSetterMethodSettings> 
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<PureSetterMethodSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<PureSetterMethodSettings> createConfigurable() {
         return new PureSetterMethodConfigurable();
     }
 

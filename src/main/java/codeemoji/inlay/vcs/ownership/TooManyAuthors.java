@@ -2,8 +2,8 @@ package codeemoji.inlay.vcs.ownership;
 
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProviderMulti;
-import codeemoji.core.settings.CEConfigurableWindow;
-import codeemoji.core.util.CEBundle;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
+import codeemoji.inlay.vcs.CEVcsFileAnnotationProvider;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSClassCollector;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
@@ -33,7 +33,7 @@ public class TooManyAuthors extends CEProviderMulti<TooManyAuthorsSettings> {
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<TooManyAuthorsSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<TooManyAuthorsSettings> createConfigurable() {
         return new TooManyAuthorsConfigurable();
     }
 
@@ -44,7 +44,9 @@ public class TooManyAuthors extends CEProviderMulti<TooManyAuthorsSettings> {
 
         @Override
         protected @Nullable InlayVisuals createInlayFor(@NotNull PsiClass element) {
-            if (vcsBlame == null) return null;
+            var v = CEVcsFileAnnotationProvider.getAnnotation(element.getProject(),
+                    element.getContainingFile().getVirtualFile(), getEditor());
+            FileAnnotation vcsBlame = CEVcsUtils.getAnnotation(vcs, element.getContainingFile().getVirtualFile(), getEditor());
 
             //text range of this element without comments
             TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
@@ -63,7 +65,7 @@ public class TooManyAuthors extends CEProviderMulti<TooManyAuthorsSettings> {
                 if (i != 0) {
                     authors.append(", ");
                 }
-                authors.append(author.get(i));
+                authors.append(author.get(i).split(" ")[0]); // use only the first name
             }
             return InlayVisuals.translated(getSettings().getMainSymbol(),
                     "inlay.toomanyauthors.tooltip", authors.toString());

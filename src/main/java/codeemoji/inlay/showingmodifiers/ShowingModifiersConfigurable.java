@@ -1,13 +1,10 @@
 package codeemoji.inlay.showingmodifiers;
 
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CEUtils;
-import codeemoji.inlay.showingspecifics.ShowingSpecificsSettings;
-import com.intellij.codeInsight.hints.ChangeListener;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -17,11 +14,10 @@ import javax.swing.*;
 import java.awt.*;
 
 import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.*;
-import static codeemoji.inlay.showingmodifiers.ShowingModifiersSymbols.*;
 import static com.intellij.psi.PsiModifier.*;
 
 @SuppressWarnings({"DuplicatedCode"})
-public class ShowingModifiersConfigurable extends CEConfigurableWindow<ShowingModifiersSettings> {
+public class ShowingModifiersConfigurable extends CEBaseConfigurableWindow<ShowingModifiersSettings> {
 
     @Override
     public @NotNull JComponent createComponent(ShowingModifiersSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {

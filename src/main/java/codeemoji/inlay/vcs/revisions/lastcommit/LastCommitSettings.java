@@ -1,5 +1,6 @@
 package codeemoji.inlay.vcs.revisions.lastcommit;
 
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.inlay.vcs.VCSSymbols;
 import com.intellij.openapi.components.State;
@@ -15,7 +16,8 @@ public final class LastCommitSettings extends CEBaseSettings<LastCommitSettings>
     private boolean showDate = true;
 
     public LastCommitSettings() {
-        super(LastCommit.class, VCSSymbols.LAST_COMMIT);
+        super(CEPSIType.METHODS_AND_CLASSES, 
+                LastCommit.class, VCSSymbols.LAST_COMMIT);
     }
 
 }

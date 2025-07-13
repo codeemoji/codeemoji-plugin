@@ -1,8 +1,6 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
-import codeemoji.core.settings.CEConfigurableWindow;
-import com.intellij.codeInsight.hints.ChangeListener;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
@@ -11,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class StateIndependentMethodConfigurable extends CEConfigurableWindow<StateIndependentMethodSettings>  {
+public class StateIndependentMethodConfigurable extends CEBaseConfigurableWindow<StateIndependentMethodSettings> {
 
     @Override
     public @NotNull JComponent createComponent(StateIndependentMethodSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {

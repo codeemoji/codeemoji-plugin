@@ -1,6 +1,7 @@
 package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CEUtils;
@@ -28,7 +29,7 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<ExpectingB
     @State(name = "ExpectingButNotGettingASingleInstanceSettings", storages = @Storage("codeemoji-expecting-but-not-getting-a-single-instance-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings() {
-            super(ExpectingButNotGettingASingleInstance.class, MANY);
+            super(CEPSIType.METHODS, ExpectingButNotGettingASingleInstance.class, MANY);
         }
     }
 

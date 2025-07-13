@@ -1,6 +1,7 @@
 package codeemoji.inlay.nameviolation;
 
 import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -26,7 +27,8 @@ public class GetMethodDoesNotReturn extends CEProvider<GetMethodDoesNotReturn.Se
     @State(name = "GetMethodDoesNotReturnSettings", storages = @Storage("codeemoji-get-method-does-not-return-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings() {
-            super(GetMethodDoesNotReturn.class, CONFUSED);
+            super(CEPSIType.METHODS, 
+                    GetMethodDoesNotReturn.class, CONFUSED);
         }
     }
 

@@ -14,11 +14,10 @@ public abstract class VCSClassCollector extends CEClassCollector {
     @Nullable
     protected final FileAnnotation vcsBlame;
     protected final AbstractVcs vcs;
-    private final ProjectLevelVcsManager projectVcs;
 
     protected VCSClassCollector(@NotNull PsiFile file, @NotNull Editor editor, String key) {
         super(editor, key);
-        this.projectVcs = ProjectLevelVcsManager.getInstance(file.getProject());
+        ProjectLevelVcsManager projectVcs = ProjectLevelVcsManager.getInstance(file.getProject());
         this.vcs = projectVcs.getVcsFor(file.getVirtualFile());
         this.vcsBlame = CEVcsUtils.getAnnotation(vcs, file.getVirtualFile(), editor);
     }

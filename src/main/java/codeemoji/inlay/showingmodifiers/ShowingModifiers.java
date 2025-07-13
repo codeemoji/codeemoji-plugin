@@ -5,7 +5,7 @@ import codeemoji.core.collector.base.CEReferenceClassCollector;
 import codeemoji.core.collector.base.CEReferenceFieldCollector;
 import codeemoji.core.collector.base.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
@@ -84,7 +84,7 @@ public class ShowingModifiers extends CEProviderMulti<ShowingModifiersSettings> 
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<ShowingModifiersSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<ShowingModifiersSettings> createConfigurable() {
         return new ShowingModifiersConfigurable();
     }
 
@@ -191,7 +191,7 @@ public class ShowingModifiers extends CEProviderMulti<ShowingModifiersSettings> 
         protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
             if (needsInlay(element, modifier)) {
                 String tooltip = getKey() + ".method." + modifier;
-                return InlayVisuals.translated(symbol.get(), tooltip, null);
+                return InlayVisuals.translated(symbol.get(), tooltip);
             }
             return null;
         }

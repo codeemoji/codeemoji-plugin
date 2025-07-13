@@ -2,7 +2,7 @@ package codeemoji.inlay.vcs.revisions.recentlymodified;
 
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProviderMulti;
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSClassCollector;
 import codeemoji.inlay.vcs.VCSMethodCollector;
@@ -27,7 +27,7 @@ public class RecentlyModified extends CEProviderMulti<RecentlyModifiedSettings> 
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<RecentlyModifiedSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<RecentlyModifiedSettings> createConfigurable() {
         return new RecentlyModifiedConfigurable();
     }
 

@@ -1,8 +1,7 @@
 package codeemoji.core.provider;
 
 import codeemoji.core.settings.CEBaseSettings;
-import codeemoji.core.settings.CEConfigurableWindow;
-import codeemoji.core.util.CESymbol;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCustomSettingsProvider;
 import com.intellij.codeInsight.hints.declarative.InlayHintsProvider;
@@ -19,14 +18,13 @@ import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.util.Locale;
-import java.util.function.Supplier;
 
 // Class that providers both the hints collectors and the configurable
 @Getter
 public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHintsProvider, InlayHintsCustomSettingsProvider<S> {
 
     private S settings;
-    private final CEConfigurableWindow<S> window;
+    private final CEBaseConfigurableWindow<S> window;
     private final String key;
 
     protected CEProvider() {
@@ -65,8 +63,8 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
         //   settings.save(project);
     }
 
-    public @NotNull CEConfigurableWindow<S> createConfigurable() {
-        return new CEConfigurableWindow<>();
+    public @NotNull CEBaseConfigurableWindow<S> createConfigurable() {
+        return new CEBaseConfigurableWindow<>();
     }
 
     // encapsulate and delegates the UI behavior to a dedicated object that is composed instead of implemented directly into this class createComponent

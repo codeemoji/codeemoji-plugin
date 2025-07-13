@@ -1,9 +1,7 @@
 package codeemoji.inlay.vcs.bugs;
 
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEBundle;
-import codeemoji.inlay.vcs.revisions.frequentlymodified.FrequentlyModifiedSettings;
-import codeemoji.inlay.vcs.revisions.lastcommit.LastCommitSettings;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
@@ -12,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class FixedIssueConfigurable extends CEConfigurableWindow<FixedIssueSettings> {
+public class FixedIssueConfigurable extends CEBaseConfigurableWindow<FixedIssueSettings> {
 
     @Override
     public @NotNull JComponent createComponent(FixedIssueSettings settings, @Nullable String preview, Project project,

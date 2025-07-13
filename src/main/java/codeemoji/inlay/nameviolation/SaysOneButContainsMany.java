@@ -1,7 +1,7 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.base.CEVariableCollector;
 import codeemoji.core.collector.base.simple.CESimpleVariableCollector;
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CEUtils;
@@ -27,7 +27,7 @@ public class SaysOneButContainsMany extends CEProvider<SaysOneButContainsMany.Se
     @State(name = "SaysOneButContainsMany", storages = @Storage("codeemoji-says-one-but-contains-many-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings(){
-            super(SaysOneButContainsMany.class, MANY);
+            super(CEPSIType.UNSPECIFIED, SaysOneButContainsMany.class, MANY);
         }
     }
 

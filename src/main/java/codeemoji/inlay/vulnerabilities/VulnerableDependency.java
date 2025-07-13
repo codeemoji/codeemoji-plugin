@@ -4,7 +4,7 @@ import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.collector.base.CEMethodCollector;
 import codeemoji.core.collector.base.CEReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
@@ -21,7 +21,7 @@ import static codeemoji.core.util.CEUtils.isVulnerable;
 public class VulnerableDependency extends CEProviderMulti<VulnerableDependencySettings> {
 
     @Override
-    public @NotNull CEConfigurableWindow<VulnerableDependencySettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<VulnerableDependencySettings> createConfigurable() {
         return new VulnerableDependencyConfigurable();
     }
 

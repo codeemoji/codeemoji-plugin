@@ -2,9 +2,7 @@ package codeemoji.inlay.vcs.revisions.newlyadded;
 
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProviderMulti;
-import codeemoji.core.settings.CEConfigurableWindow;
-import codeemoji.core.util.CEBundle;
-import codeemoji.core.util.CESymbol;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import codeemoji.inlay.vcs.VCSClassCollector;
 import codeemoji.inlay.vcs.VCSMethodCollector;
@@ -34,8 +32,8 @@ public class NewlyAdded extends CEProviderMulti<NewlyAddedSettings> {
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<NewlyAddedSettings> createConfigurable() {
-        return new CEConfigurableWindow<>();
+    public @NotNull CEBaseConfigurableWindow<NewlyAddedSettings> createConfigurable() {
+        return new CEBaseConfigurableWindow<>();
     }
 
     private class NewlyAddedMethodCollector extends VCSMethodCollector {

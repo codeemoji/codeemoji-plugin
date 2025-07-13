@@ -1,9 +1,7 @@
 package codeemoji.inlay.structuralanalysis.codecomplexity;
 
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEBundle;
-import com.intellij.codeInsight.hints.ChangeListener;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
@@ -12,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-class HighCyclomaticComplexityMethodConfigurable extends CEConfigurableWindow<HighCyclomaticComplexityMethodSettings> {
+class HighCyclomaticComplexityMethodConfigurable extends CEBaseConfigurableWindow<HighCyclomaticComplexityMethodSettings> {
 
     @Override
     public @NotNull JComponent createComponent(HighCyclomaticComplexityMethodSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {

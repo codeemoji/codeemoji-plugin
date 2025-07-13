@@ -1,6 +1,6 @@
 package codeemoji.inlay.vcs.revisions.recentlymodified;
 
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEBundle;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class RecentlyModifiedConfigurable extends CEConfigurableWindow<RecentlyModifiedSettings> {
+public class RecentlyModifiedConfigurable extends CEBaseConfigurableWindow<RecentlyModifiedSettings> {
 
     @Override
     public @NotNull JComponent createComponent(RecentlyModifiedSettings settings, @Nullable String preview, Project project,

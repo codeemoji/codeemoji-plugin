@@ -2,7 +2,7 @@ package codeemoji.inlay.structuralanalysis.codecomplexity;
 
 import codeemoji.core.collector.base.simple.CESimpleClassCollector;
 import codeemoji.core.provider.CEProvider;
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
@@ -23,7 +23,7 @@ public class LargeMethodCountClass extends CEProvider<LargeMethodCountClassSetti
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<LargeMethodCountClassSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<LargeMethodCountClassSettings> createConfigurable() {
         return new LargeMethodCountClassConfigurable();
     }
 

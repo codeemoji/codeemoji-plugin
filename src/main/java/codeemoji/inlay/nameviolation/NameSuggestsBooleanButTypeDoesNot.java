@@ -1,7 +1,7 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.base.CEVariableCollector;
 import codeemoji.core.collector.base.simple.CESimpleVariableCollector;
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -26,7 +26,7 @@ public class NameSuggestsBooleanButTypeDoesNot extends CEProvider<NameSuggestsBo
     @State(name = "NameSuggestsBooleanButTypeDoesNotSettings", storages = @Storage("codeemoji-name-suggests-boolean-but-type-does-not-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings(){
-            super(NameSuggestsBooleanButTypeDoesNot.class, CONFUSED);
+            super(CEPSIType.UNSPECIFIED, NameSuggestsBooleanButTypeDoesNot.class, CONFUSED);
         }
     }
 

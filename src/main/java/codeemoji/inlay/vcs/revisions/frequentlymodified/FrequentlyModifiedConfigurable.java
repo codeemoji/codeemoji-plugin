@@ -1,6 +1,6 @@
 package codeemoji.inlay.vcs.revisions.frequentlymodified;
 
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEBundle;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class FrequentlyModifiedConfigurable extends CEConfigurableWindow<FrequentlyModifiedSettings> {
+public class FrequentlyModifiedConfigurable extends CEBaseConfigurableWindow<FrequentlyModifiedSettings> {
 
     @Override
     public @NotNull JComponent createComponent(FrequentlyModifiedSettings settings, @Nullable String preview, Project project,

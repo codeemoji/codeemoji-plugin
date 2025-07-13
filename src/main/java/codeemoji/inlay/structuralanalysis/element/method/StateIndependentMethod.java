@@ -3,7 +3,7 @@ package codeemoji.inlay.structuralanalysis.element.method;
 import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
 import codeemoji.core.collector.base.simple.CESimpleReferenceMethodCollector;
 import codeemoji.core.provider.CEProviderMulti;
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
@@ -35,7 +35,7 @@ public class StateIndependentMethod extends CEProviderMulti<StateIndependentMeth
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<StateIndependentMethodSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<StateIndependentMethodSettings> createConfigurable() {
         return new StateIndependentMethodConfigurable();
     }
 

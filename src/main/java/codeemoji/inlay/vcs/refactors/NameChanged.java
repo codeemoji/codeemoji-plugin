@@ -2,8 +2,7 @@ package codeemoji.inlay.vcs.refactors;
 
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
-import codeemoji.core.settings.CEConfigurableWindow;
-import codeemoji.core.util.CEBundle;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.inlay.vcs.RefactorService;
 import codeemoji.inlay.vcs.VCSMethodCollector;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -30,7 +29,7 @@ public class NameChanged extends CEProvider<NameChangedSettings> {
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<NameChangedSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<NameChangedSettings> createConfigurable() {
         return new NameChangedConfigurable();
     }
 
@@ -44,7 +43,7 @@ public class NameChanged extends CEProvider<NameChangedSettings> {
         protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod method) {
             RefactorService instance = RefactorService.getInstance(method.getProject());
             var settings = getSettings();
-            var ref = instance.getRename(method ,settings.getMaxRevisions());
+            var ref = instance.getMethodRename(method ,settings.getMaxRevisions());
             if (ref != null) {
                 return InlayVisuals.translated(getSettings().getMainSymbol(),
                         "inlay.namechanged.tooltip", ref.getOriginalOperation().getName());
