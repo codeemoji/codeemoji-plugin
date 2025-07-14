@@ -17,7 +17,7 @@ public class LargeIdentifierCountMethodSettings extends CEBaseSettings<LargeIden
     private int identifierCount = 70;
 
     public LargeIdentifierCountMethodSettings(){
-        super(CEPSIType.METHODS, 
+        super(builder().targetMethods().targetReferences(),
                 LargeIdentifierCountMethod.class, LARGE_IDENTIFIER_COUNT_METHOD);
     }
 }

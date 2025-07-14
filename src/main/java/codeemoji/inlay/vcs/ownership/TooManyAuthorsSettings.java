@@ -16,7 +16,7 @@ public final class TooManyAuthorsSettings extends CEBaseSettings<TooManyAuthorsS
     private int minimumAuthors = 5;
 
     public TooManyAuthorsSettings() {
-        super(CEPSIType.CLASSES, 
+        super(builder().targetClasses().targetReferences(),
                 TooManyAuthors.class, VCSSymbols.TOO_MANY_OWNERS);
     }
 

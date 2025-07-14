@@ -28,7 +28,7 @@ public class TransformMethodDoesNotReturn extends CEProvider<TransformMethodDoes
     @State(name = "TransformMethodDoesNotReturn", storages = @Storage("codeemoji-transform-method-does-not-return-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings(){
-            super(CEPSIType.METHODS, TransformMethodDoesNotReturn.class, CONFUSED);
+            super(builder().targetMethods().targetReferences(), TransformMethodDoesNotReturn.class, CONFUSED);
         }
     }
 

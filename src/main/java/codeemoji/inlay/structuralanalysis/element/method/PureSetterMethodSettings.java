@@ -17,7 +17,7 @@ public class PureSetterMethodSettings extends CEBaseSettings<PureSetterMethodSet
     private boolean javaBeansNamingConventionApplied = true;
 
     public PureSetterMethodSettings(){
-        super(CEPSIType.METHODS, 
+        super(builder().targetMethods().targetReferences(),
                 PureSetterMethod.class, PURE_SETTER_METHOD);
     }
 

@@ -63,16 +63,17 @@ public class CEBaseConfigurableWindow<S extends CEBaseSettings<S>> {
                     createPickTarget(settings, changeListener));
         }
 
-        // Add "Include References" checkbox
-        JCheckBox checkBox = new JCheckBox();
-        checkBox.setSelected(settings.isIncludeReferences());
-        checkBox.addActionListener(e -> {
-            settings.setIncludeReferences(checkBox.isSelected());
-            changeListener.settingsChanged();
-        });
-        builder.addLabeledComponent(
-                CEBundle.getString("codeemoji.configurable.include_references"), checkBox);
-
+        if (settings.isCanHaveReferences()) {
+            // Add "Include References" checkbox
+            JCheckBox checkBox = new JCheckBox();
+            checkBox.setSelected(settings.isIncludeReferences());
+            checkBox.addActionListener(e -> {
+                settings.setIncludeReferences(checkBox.isSelected());
+                changeListener.settingsChanged();
+            });
+            builder.addLabeledComponent(
+                    CEBundle.getString("codeemoji.configurable.include_references"), checkBox);
+        }
     }
 
     private @NotNull JComponent createPickTarget(S settings, ChangeListener changeListener) {

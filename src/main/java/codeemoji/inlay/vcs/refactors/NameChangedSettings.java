@@ -16,7 +16,7 @@ public final class NameChangedSettings extends CEBaseSettings<NameChangedSetting
     private int maxRevisions = 1;
 
     public NameChangedSettings() {
-        super(CEPSIType.METHODS_AND_CLASSES, 
+        super(builder().targetMethods().targetClasses().targetReferences(),
                 NameChanged.class, VCSSymbols.NAME_CHANGED);
     }
 

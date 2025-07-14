@@ -26,7 +26,7 @@ public class SaysOneButContainsMany extends CEProvider<SaysOneButContainsMany.Se
     @State(name = "SaysOneButContainsMany", storages = @Storage("codeemoji-says-one-but-contains-many-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings() {
-            super(CEPSIType.UNSPECIFIED, SaysOneButContainsMany.class, MANY);
+            super(builder(), SaysOneButContainsMany.class, MANY);
         }
     }
 

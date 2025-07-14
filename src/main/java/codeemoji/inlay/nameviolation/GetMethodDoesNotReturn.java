@@ -28,7 +28,7 @@ public class GetMethodDoesNotReturn extends CEProvider<GetMethodDoesNotReturn.Se
     @State(name = "GetMethodDoesNotReturnSettings", storages = @Storage("codeemoji-get-method-does-not-return-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings() {
-            super(CEPSIType.METHODS, GetMethodDoesNotReturn.class, CONFUSED);
+            super(builder().targetMethods().targetReferences(), GetMethodDoesNotReturn.class, CONFUSED);
         }
     }
 

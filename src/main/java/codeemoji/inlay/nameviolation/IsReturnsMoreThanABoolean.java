@@ -28,7 +28,7 @@ public class IsReturnsMoreThanABoolean extends CEProvider<IsReturnsMoreThanABool
     @State(name = "IsReturnsMoreThanABooleanSettings", storages = @Storage("codeemoji-is-returns-more-than-a-boolean-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings() {
-            super(CEPSIType.METHODS, IsReturnsMoreThanABoolean.class, CONFUSED);
+            super(builder().targetMethods().targetReferences(), IsReturnsMoreThanABoolean.class, CONFUSED);
         }
     }
 

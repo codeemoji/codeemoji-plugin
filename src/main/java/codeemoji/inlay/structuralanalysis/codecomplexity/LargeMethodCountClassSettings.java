@@ -15,7 +15,7 @@ public class LargeMethodCountClassSettings extends CEBaseSettings<LargeMethodCou
 
     private int methodCount = 15;
     public LargeMethodCountClassSettings() {
-        super(CEPSIType.CLASSES, LargeMethodCountClass.class, StructuralAnalysisSymbols.LARGE_METHOD_COUNT_CLASS);
+        super(builder().targetClasses().targetReferences(), LargeMethodCountClass.class, StructuralAnalysisSymbols.LARGE_METHOD_COUNT_CLASS);
     }
 
 }

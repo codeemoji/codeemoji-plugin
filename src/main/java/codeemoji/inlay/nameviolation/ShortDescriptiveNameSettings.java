@@ -15,7 +15,7 @@ import static codeemoji.inlay.nameviolation.NameViolationSymbols.SMALL_NAME;
 public class ShortDescriptiveNameSettings extends CEBaseSettings<ShortDescriptiveNameSettings> {
 
     public ShortDescriptiveNameSettings() {
-        super(CEPSIType.UNSPECIFIED, ShortDescriptiveName.class, SMALL_NAME);
+        super(builder(), ShortDescriptiveName.class, SMALL_NAME);
     }
 
     private int numberOfLetters = 1;

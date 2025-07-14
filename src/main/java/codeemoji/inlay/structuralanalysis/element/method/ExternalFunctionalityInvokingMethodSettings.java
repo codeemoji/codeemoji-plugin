@@ -17,7 +17,7 @@ public class ExternalFunctionalityInvokingMethodSettings extends CEBaseSettings<
     private boolean checkMethodCallsForExternalityApplied = false;
 
     public ExternalFunctionalityInvokingMethodSettings(){
-        super(CEPSIType.METHODS, 
+        super(builder().targetMethods().targetReferences(),
                 ExternalFunctionalityInvokingMethod.class, EXTERNAL_FUNCTIONALITY_INVOKING_METHOD);
     }
 

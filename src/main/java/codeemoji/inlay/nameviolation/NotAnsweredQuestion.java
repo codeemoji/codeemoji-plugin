@@ -26,7 +26,7 @@ public class NotAnsweredQuestion extends CEProvider<NotAnsweredQuestion.Settings
     @State(name = "NotAnsweredQuestionSettings", storages = @Storage("codeemoji-not-answered-question-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings() {
-            super(CEPSIType.METHODS,
+            super(builder().targetMethods().targetReferences(),
                     NotAnsweredQuestion.class, CONFUSED);
         }
     }

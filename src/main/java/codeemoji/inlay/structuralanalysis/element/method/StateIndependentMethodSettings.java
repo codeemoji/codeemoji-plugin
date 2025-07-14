@@ -18,7 +18,7 @@ public class StateIndependentMethodSettings extends CEBaseSettings<StateIndepend
     private boolean checkMethodCallsForStateIndependenceApplied = false;
 
     public StateIndependentMethodSettings(){
-        super(CEPSIType.METHODS, 
+        super(builder().targetMethods().targetReferences(),
                 StateIndependentMethod.class, STATE_INDEPENDENT_METHOD);
     }
 

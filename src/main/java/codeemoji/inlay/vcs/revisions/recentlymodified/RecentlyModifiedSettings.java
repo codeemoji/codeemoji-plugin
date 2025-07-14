@@ -17,7 +17,7 @@ public final class RecentlyModifiedSettings extends CEBaseSettings<RecentlyModif
     private boolean showDate = false;
 
     public RecentlyModifiedSettings() {
-        super(CEPSIType.METHODS_AND_CLASSES, 
+        super(builder().targetMethods().targetClasses().targetReferences(),
                 RecentlyModified.class, VCSSymbols.RECENTLY_MODIFIED);
     }
 

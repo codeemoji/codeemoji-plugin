@@ -29,7 +29,7 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<ExpectingB
     @State(name = "ExpectingButNotGettingASingleInstanceSettings", storages = @Storage("codeemoji-expecting-but-not-getting-a-single-instance-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings() {
-            super(CEPSIType.METHODS, ExpectingButNotGettingASingleInstance.class, MANY);
+            super(builder().targetMethods().targetReferences(), ExpectingButNotGettingASingleInstance.class, MANY);
         }
     }
 

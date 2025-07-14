@@ -16,7 +16,7 @@ public final class LastCommitSettings extends CEBaseSettings<LastCommitSettings>
     private boolean showDate = true;
 
     public LastCommitSettings() {
-        super(CEPSIType.METHODS_AND_CLASSES, 
+        super(builder().targetMethods().targetClasses().targetReferences(),
                 LastCommit.class, VCSSymbols.LAST_COMMIT);
     }
 

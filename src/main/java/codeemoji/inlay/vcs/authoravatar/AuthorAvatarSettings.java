@@ -37,7 +37,7 @@ public final class AuthorAvatarSettings extends CEBaseSettings<AuthorAvatarSetti
     private int animalIndex = 0;
 
     public AuthorAvatarSettings() {
-        super(CEPSIType.METHODS_AND_CLASSES);
+        super(builder().targetMethods().targetClasses().targetReferences());
         onUpdated();
     }
 

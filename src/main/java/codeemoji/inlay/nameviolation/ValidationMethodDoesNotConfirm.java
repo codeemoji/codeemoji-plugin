@@ -28,7 +28,7 @@ public class ValidationMethodDoesNotConfirm extends CEProvider<ValidationMethodD
     @State(name = "ValidationMethodDoesNotConfirm", storages = @Storage("codeemoji-validation-method-does-not-confirm-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings(){
-            super(CEPSIType.METHODS, 
+            super(builder().targetMethods().targetReferences(),
                     ValidationMethodDoesNotConfirm.class, CONFUSED);
         }
     }

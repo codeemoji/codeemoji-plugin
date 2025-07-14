@@ -28,7 +28,7 @@ public class SetMethodReturns extends CEProvider<SetMethodReturns.Settings> {
     @State(name = "SetMethodReturns", storages = @Storage("codeemoji-set-method-returns-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings(){
-            super(CEPSIType.METHODS, SetMethodReturns.class, CONFUSED);
+            super(builder().targetMethods().targetReferences(), SetMethodReturns.class, CONFUSED);
         }
     }
 

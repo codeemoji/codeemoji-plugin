@@ -17,7 +17,7 @@ public class PureGetterMethodSettings extends CEBaseSettings<PureGetterMethodSet
     private boolean javaBeansNamingConventionApplied = true;
 
     public PureGetterMethodSettings(){
-        super(CEPSIType.METHODS, 
+        super(builder().targetMethods().targetReferences(),
                 PureGetterMethod.class, PURE_GETTER_METHOD);
     }
 

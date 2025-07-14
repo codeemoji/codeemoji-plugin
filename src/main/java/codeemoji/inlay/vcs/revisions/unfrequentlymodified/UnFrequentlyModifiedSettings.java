@@ -17,7 +17,7 @@ public final class UnFrequentlyModifiedSettings extends CEBaseSettings<UnFrequen
     private boolean showDate = false;
 
     public UnFrequentlyModifiedSettings() {
-        super(CEPSIType.METHODS_AND_CLASSES, 
+        super(builder().targetMethods().targetClasses().targetReferences(),
                 UnFrequentlyModified.class, VCSSymbols.UN_FREQUENTLY_MODIFIED);
     }
 

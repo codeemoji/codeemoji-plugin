@@ -26,7 +26,7 @@ public class NameSuggestsBooleanButTypeDoesNot extends CEProvider<NameSuggestsBo
     @State(name = "NameSuggestsBooleanButTypeDoesNotSettings", storages = @Storage("codeemoji-name-suggests-boolean-but-type-does-not-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings(){
-            super(CEPSIType.UNSPECIFIED, NameSuggestsBooleanButTypeDoesNot.class, CONFUSED);
+            super(builder(), NameSuggestsBooleanButTypeDoesNot.class, CONFUSED);
         }
     }
 

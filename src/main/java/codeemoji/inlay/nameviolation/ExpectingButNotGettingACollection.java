@@ -1,6 +1,5 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.config.CEPSIType;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CEUtils;
@@ -27,7 +26,8 @@ public class ExpectingButNotGettingACollection extends CEProvider<ExpectingButNo
     @State(name = "ExpectingButNotGettingACollectionSettings", storages = @Storage("codeemoji-expecting-but-not-getting-a-collection-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings() {
-            super(CEPSIType.METHODS, ExpectingButNotGettingACollection.class, ONE);
+            super(builder().targetMethods().targetReferences(),
+                    ExpectingButNotGettingACollection.class, ONE);
         }
     }
 

@@ -26,7 +26,7 @@ public class NameContainsOnlySpecialCharacters extends CEProvider<NameContainsOn
     @State(name = "NameContainsOnlySpecialCharactersSettings", storages = @Storage("codeemoji-name-contains-only-special-characters-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings() {
-            super(CEPSIType.UNSPECIFIED, NameContainsOnlySpecialCharacters.class, NameViolationSymbols.CONFUSED);
+            super(builder(), NameContainsOnlySpecialCharacters.class, NameViolationSymbols.CONFUSED);
         }
     }
 

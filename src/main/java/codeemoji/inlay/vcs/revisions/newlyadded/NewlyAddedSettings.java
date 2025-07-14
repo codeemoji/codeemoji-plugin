@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 public final class NewlyAddedSettings extends CEBaseSettings<NewlyAddedSettings> {
 
     public NewlyAddedSettings() {
-        super(CEPSIType.METHODS_AND_CLASSES, 
+        super(builder().targetMethods().targetReferences(),
                 NewlyAdded.class, VCSSymbols.NEWLY_ADDED);
     }
 

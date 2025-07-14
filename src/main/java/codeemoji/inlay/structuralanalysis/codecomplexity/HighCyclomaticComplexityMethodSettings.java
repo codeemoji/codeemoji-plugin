@@ -19,7 +19,7 @@ public class HighCyclomaticComplexityMethodSettings extends CEBaseSettings<HighC
     private double cyclomaticComplexityPerLine = 0.36;
 
     public HighCyclomaticComplexityMethodSettings(){
-        super(CEPSIType.METHODS, 
+        super(builder().targetMethods().targetReferences(),
                 HighCyclomaticComplexityMethod.class, HIGH_CYCLOMATIC_COMPLEXITY_METHOD);
     }
 

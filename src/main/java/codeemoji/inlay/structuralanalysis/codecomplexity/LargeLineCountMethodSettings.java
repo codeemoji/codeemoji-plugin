@@ -18,7 +18,7 @@ public class LargeLineCountMethodSettings extends CEBaseSettings<LargeLineCountM
     private boolean commentExclusionApplied = false;
 
     public LargeLineCountMethodSettings(){
-        super(CEPSIType.METHODS, 
+        super(builder().targetMethods().targetReferences(),
                 LargeLineCountMethod.class, LARGE_LINE_COUNT_METHOD);
     }
 
