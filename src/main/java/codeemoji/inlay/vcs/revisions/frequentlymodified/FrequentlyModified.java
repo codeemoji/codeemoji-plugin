@@ -3,6 +3,7 @@ package codeemoji.inlay.vcs.revisions.frequentlymodified;
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
+import codeemoji.core.util.CEUtils;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -38,10 +39,14 @@ public class FrequentlyModified extends CEProvider<FrequentlyModifiedSettings> {
         FileAnnotation vcsBlame = CEVcsUtils.getAnnotation(element.getContainingFile(), editor);
 
         if (vcsBlame == null) return null;
+
+        Document document = CEUtils.getContainingDocument(element);
+        if (document == null) return null;
+
         // text range of this element without comments
         TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 
-        Set<Date> date = getAllModificationDates(element.getProject(), textRange, editor, vcsBlame);
+        Set<Date> date = getAllModificationDates(element.getProject(), textRange, document, vcsBlame);
 
         int timeFrame = getSettings().getDaysTimeFrame();
         int modifications = getSettings().getModifications();
@@ -67,9 +72,8 @@ public class FrequentlyModified extends CEProvider<FrequentlyModifiedSettings> {
     }
 
     private static Set<Date> getAllModificationDates(
-            Project project, TextRange range, Editor editor, FileAnnotation blame) {
+            Project project, TextRange range, Document document, FileAnnotation blame) {
 
-        Document document = editor.getDocument();
         int startLine = document.getLineNumber(range.getStartOffset());
         int endLine = document.getLineNumber(range.getEndOffset());
         UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);

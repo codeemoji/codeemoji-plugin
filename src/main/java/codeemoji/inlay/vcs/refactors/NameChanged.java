@@ -13,10 +13,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class NameChanged extends CEProvider<NameChangedSettings> {
 
-    public NameChanged() {
-        super();
-    }
-
     @Override
     protected void createCollectors(CEProvider<NameChangedSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
         // initialize service

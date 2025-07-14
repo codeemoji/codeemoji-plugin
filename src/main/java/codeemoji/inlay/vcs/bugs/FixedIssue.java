@@ -23,13 +23,11 @@ import java.util.regex.Pattern;
 
 public class FixedIssue extends CEProvider<FixedIssueSettings> {
 
-    @Nullable
-    private FileAnnotation vcsBlame = null;
 
     @Override
     protected void createCollectors(CEProvider<FixedIssueSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
-        vcsBlame = CEVcsUtils.getAnnotation(psiFile, editor);
         builder.addMethodCollector(e -> createInlay(e, editor));
+        builder.addClassCollector(e -> createInlay(e, editor));
     }
 
     @Override
@@ -38,6 +36,7 @@ public class FixedIssue extends CEProvider<FixedIssueSettings> {
     }
 
     private @Nullable InlayVisuals createInlay(@NotNull PsiElement element, @NotNull Editor editor) {
+        FileAnnotation vcsBlame = CEVcsUtils.getAnnotation(element.getContainingFile(), editor);
         if (vcsBlame == null) return null;
 
         TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);

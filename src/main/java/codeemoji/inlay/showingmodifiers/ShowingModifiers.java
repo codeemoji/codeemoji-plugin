@@ -8,15 +8,11 @@ import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.function.Supplier;
 
 import static codeemoji.inlay.showingmodifiers.ShowingModifiers.ScopeModifier.*;
@@ -153,7 +149,7 @@ public class ShowingModifiers extends CEProvider<ShowingModifiersSettings> {
         @Override
         protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
             if (needsInlay(element)) {
-                String tooltip = getKey() + ".method." + modifier + "interface";
+                String tooltip = "inlay." + modifier + "interface.name";
                 return InlayVisuals.translated(symbol.get(), tooltip);
             }
             return null;
@@ -187,7 +183,7 @@ public class ShowingModifiers extends CEProvider<ShowingModifiersSettings> {
         @Override
         protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
             if (needsInlay(element, modifier)) {
-                String tooltip = getKey() + ".method." + modifier;
+                String tooltip = "inlay." + modifier + ".name";
                 return InlayVisuals.translated(symbol.get(), tooltip);
             }
             return null;

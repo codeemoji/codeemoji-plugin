@@ -6,6 +6,8 @@ import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CESymbol;
 import codeemoji.inlay.vcs.CEVcsUtils;
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -18,24 +20,22 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
 
-    @Nullable
-    private FileAnnotation vcsBlame = null;
-
     @Override
     protected void createCollectors(Builder builder, @NotNull PsiFile psiFile, Editor editor) {
-        vcsBlame = CEVcsUtils.getAnnotation(psiFile, editor);
-       // builder.addMethodCollector(e -> createInlay(e, editor));
-        // builder.addClassCollector(e -> createInlay(e, editor));
+        builder.addMethodCollector(e -> createInlay(e, editor));
+        builder.addClassCollector(e -> createInlay(e, editor));
     }
 
     @Override
@@ -45,7 +45,10 @@ public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
 
 
     private @Nullable InlayVisuals createInlay(@NotNull PsiElement element, @NotNull Editor editor) {
-        if (vcsBlame == null) return null;
+        FileAnnotation vcsBlame = CEVcsUtils.getAnnotation(element.getContainingFile(), editor);
+        if (vcsBlame == null) {
+            return null;
+        }
 
         //text range of this element without comments
         TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);

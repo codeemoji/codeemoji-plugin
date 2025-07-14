@@ -60,9 +60,10 @@ public final class CEVcsUtils {
 
     public static @Nullable FileAnnotation getAnnotation(@NotNull PsiFile file, @NotNull Editor editor) {
         ProjectLevelVcsManager projectVcs = ProjectLevelVcsManager.getInstance(file.getProject());
-        AbstractVcs vcs = projectVcs.getVcsFor(file.getVirtualFile());
+        VirtualFile virtualFile = file.getVirtualFile();
+        AbstractVcs vcs = projectVcs.getVcsFor(virtualFile);
         if (vcs != null) {
-          return CEVcsUtils.getAnnotation(vcs, file.getVirtualFile(), editor);
+          return CEVcsUtils.getAnnotation(vcs, virtualFile, editor);
         } else {
            return null;
         }
@@ -73,10 +74,10 @@ public final class CEVcsUtils {
     // basically gets the git blame for each line
     @Nullable
     public static FileAnnotation getAnnotation(AbstractVcs vcs, VirtualFile file, Editor editor) {
-        // uhm get cached one maybe
+        // uhm get cached one maybe. we cant use this one.. it could be not related to our file and just be the opened file one
         FileAnnotation annotation = editor.getUserData(VCS_CODE_AUTHOR_ANNOTATION);
         if (annotation != null) {
-            return annotation;
+     //       return annotation;
         }
 
         // could it be this is the GitAnnotationProvider from before?
@@ -237,9 +238,8 @@ public final class CEVcsUtils {
 
     @Nullable
     public static Date getLatestModificationDate(
-            Project project, TextRange range, Editor editor, FileAnnotation blame) {
+            Project project, TextRange range, Document document, FileAnnotation blame) {
 
-        Document document = editor.getDocument();
         int startLine = document.getLineNumber(range.getStartOffset());
         int endLine = document.getLineNumber(range.getEndOffset());
         UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);

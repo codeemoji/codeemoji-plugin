@@ -1,6 +1,9 @@
 package codeemoji.core.collector;
 
 import codeemoji.core.external.CEExternalAnalyzer;
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import com.intellij.codeInsight.daemon.impl.InlayHintsPassFactoryInternal;
+import com.intellij.codeInsight.hints.InlayHintsPass;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.codeInsight.hints.declarative.InlineInlayPosition;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
@@ -48,13 +51,9 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
         return 0;
     }
 
-    protected boolean isEnabled() {
-        return true;
-    }
-
     public final void addInlayInline(@Nullable A element, @NotNull InlayTreeSink sink, @NotNull InlayVisuals inlay) {
         if (null != element) {
-
+            // Add inlay to editor here
             sink.addPresentation(
                     new InlineInlayPosition(element.getTextRange().getEndOffset(), true, 0),
                     List.of(),
@@ -65,6 +64,7 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
                         return Unit.INSTANCE;
                     }
             );
+
         }
     }
 

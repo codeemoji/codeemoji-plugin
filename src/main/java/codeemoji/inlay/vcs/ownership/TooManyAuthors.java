@@ -4,6 +4,7 @@ import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.collector.base.CEClassCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
+import codeemoji.core.util.CEUtils;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -13,6 +14,7 @@ import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
 import com.intellij.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,13 +27,10 @@ import java.util.stream.IntStream;
 
 public class TooManyAuthors extends CEProvider<TooManyAuthorsSettings> {
 
-    private FileAnnotation vcsBlame = null;
-
     @Override
     protected void createCollectors(CEProvider<TooManyAuthorsSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
-        vcsBlame = CEVcsUtils.getAnnotation(psiFile, editor);
-        String key = getKey();
-       // builder.add(new Collector(editor, key));
+        builder.addMethodCollector((e)-> this.createInlayFor(e, editor));
+       // builder.addClassCollector((e)-> this.createInlayFor(e, editor));
     }
 
     @Override
@@ -39,18 +38,16 @@ public class TooManyAuthors extends CEProvider<TooManyAuthorsSettings> {
         return new TooManyAuthorsConfigurable();
     }
 
-    private class Collector extends CEClassCollector {
-        protected Collector(@NotNull Editor editor, String key) {
-            super( editor, key);
-        }
+        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiElement element, @NotNull Editor editor) {
 
-        @Override
-        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiClass element) {
-
+            FileAnnotation vcsBlame = CEVcsUtils.getAnnotation(element.getContainingFile(), editor);
+            if (vcsBlame == null) return null;
             //text range of this element without comments
             TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 
-            List<String> author = getAuthors(element.getProject(), textRange, getEditor(), vcsBlame);
+            Document document = CEUtils.getContainingDocument(element);
+            if (document == null) return null;
+            List<String> author = getAuthors(element.getProject(), textRange, document, vcsBlame);
 
             if (author.size() < getSettings().getMinimumAuthors()) return null;
 
@@ -71,13 +68,11 @@ public class TooManyAuthors extends CEProvider<TooManyAuthorsSettings> {
         }
 
 
-        private List<String> getAuthors(Project project, TextRange range, Editor editor, FileAnnotation blame) {
+        private List<String> getAuthors(Project project, TextRange range, Document document, FileAnnotation blame) {
 
             LineAnnotationAspect aspect = CEVcsUtils.getAspect(blame, LineAnnotationAspect.AUTHOR);
 
             if (aspect == null) return List.of();
-
-            Document document = editor.getDocument();
             int startLine = document.getLineNumber(range.getStartOffset());
             int endLine = document.getLineNumber(range.getEndOffset());
             UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);
@@ -93,8 +88,6 @@ public class TooManyAuthors extends CEProvider<TooManyAuthorsSettings> {
                     .toList();
         }
 
-
-    }
 
 
 }

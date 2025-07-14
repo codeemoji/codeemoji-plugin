@@ -6,12 +6,14 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiTypeParameter;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLTypeParameter;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+@Data
 public final class ClassSignature {
     private final String qualifiedName;
     private final List<String> typeParameters;

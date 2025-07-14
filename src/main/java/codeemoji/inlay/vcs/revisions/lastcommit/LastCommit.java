@@ -3,6 +3,7 @@ package codeemoji.inlay.vcs.revisions.lastcommit;
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
+import codeemoji.core.util.CEUtils;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -38,12 +39,15 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
         FileAnnotation vcsBlame = CEVcsUtils.getAnnotation(element.getContainingFile(), editor);
         if (vcsBlame == null) return null;
 
+        Document document = CEUtils.getContainingDocument(element);
+        if (document == null) return null;
+
         //text range of this element without comments
         TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
         Project project = element.getProject();
         VcsRevisionNumber lastRevision = CEVcsUtils.getProjectHeadRevision(element.getProject());
 
-        RevisionInfo revisionInfo = isLastRevision(project, vcsBlame, textRange, editor, lastRevision);
+        RevisionInfo revisionInfo = isLastRevision(project, vcsBlame, document, textRange, lastRevision);
         if (revisionInfo != null) {
             if (getSettings().isShowDate()) {
                 return InlayVisuals.translated(getSettings().getMainSymbol(),
@@ -59,12 +63,13 @@ public class LastCommit extends CEProvider<LastCommitSettings> {
 
     //null if it's not from last revision
     @Nullable
-    private RevisionInfo isLastRevision(Project project, FileAnnotation vcsBlame, TextRange range, Editor editor, VcsRevisionNumber lastRevision) {
+    private RevisionInfo isLastRevision(Project project, FileAnnotation vcsBlame,Document document,
+                                        TextRange range,VcsRevisionNumber lastRevision) {
 
-
-        if (lastRevision == null || vcsBlame == null) return null;
+        if (lastRevision == null) return null;
         if (!lastRevision.equals(vcsBlame.getCurrentRevision())) return null; //Must be last to modify this file
-        Document document = editor.getDocument();
+
+
         int startLine = document.getLineNumber(range.getStartOffset());
         int endLine = document.getLineNumber(range.getEndOffset());
         UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);

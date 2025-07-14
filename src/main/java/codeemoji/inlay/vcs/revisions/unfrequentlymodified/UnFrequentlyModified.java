@@ -4,7 +4,9 @@ import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CESymbol;
+import codeemoji.core.util.CEUtils;
 import codeemoji.inlay.vcs.CEVcsUtils;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
@@ -17,9 +19,6 @@ import java.util.Date;
 
 public class UnFrequentlyModified extends CEProvider<UnFrequentlyModifiedSettings> {
 
-    @Nullable
-    private FileAnnotation vcsBlame = null;
-
     @Override
     public @NotNull CEBaseConfigurableWindow<UnFrequentlyModifiedSettings> createConfigurable() {
         return new UnFrequentlyModifiedConfigurable();
@@ -27,18 +26,21 @@ public class UnFrequentlyModified extends CEProvider<UnFrequentlyModifiedSetting
 
     @Override
     protected void createCollectors(CEProvider<UnFrequentlyModifiedSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
-        vcsBlame = CEVcsUtils.getAnnotation(psiFile, editor);
-       // builder.addMethodCollector(e -> createInlayFor(e, editor));
-     //   builder.addClassCollector(e -> createInlayFor(e, editor));
+        builder.addMethodCollector(e -> createInlayFor(e, editor));
+        builder.addClassCollector(e -> createInlayFor(e, editor));
     }
 
     protected @Nullable InlayVisuals createInlayFor(@NotNull PsiElement element, @NotNull Editor editor) {
+        FileAnnotation vcsBlame = CEVcsUtils.getAnnotation(element.getContainingFile(), editor);
         if (vcsBlame == null) return null;
+
+        Document document = CEUtils.getContainingDocument(element);
+        if (document == null) return null;
 
         //text range of this element without comments
         TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 
-        Date date = CEVcsUtils.getLatestModificationDate(element.getProject(), textRange, editor, vcsBlame);
+        Date date = CEVcsUtils.getLatestModificationDate(element.getProject(), textRange, document, vcsBlame);
 
         return makeInlay(date);
     }
