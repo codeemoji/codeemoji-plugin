@@ -1,11 +1,10 @@
-package codeemoji.inlay.vcs.refactors;
+package codeemoji.inlay.vcs.refactors.rename;
 
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.inlay.vcs.RefactorService;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;

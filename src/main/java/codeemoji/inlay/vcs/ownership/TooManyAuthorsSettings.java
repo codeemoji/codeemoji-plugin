@@ -1,6 +1,5 @@
 package codeemoji.inlay.vcs.ownership;
 
-import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.inlay.vcs.VCSSymbols;
 import com.intellij.openapi.components.State;
@@ -16,7 +15,7 @@ public final class TooManyAuthorsSettings extends CEBaseSettings<TooManyAuthorsS
     private int minimumAuthors = 5;
 
     public TooManyAuthorsSettings() {
-        super(builder().targetClasses().targetReferences(),
+        super(builder().targetClasses().targetMethods().targetReferences(),
                 TooManyAuthors.class, VCSSymbols.TOO_MANY_OWNERS);
     }
 

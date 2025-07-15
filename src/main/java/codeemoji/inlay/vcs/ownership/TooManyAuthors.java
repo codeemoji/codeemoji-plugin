@@ -1,7 +1,6 @@
 package codeemoji.inlay.vcs.ownership;
 
 import codeemoji.core.collector.InlayVisuals;
-import codeemoji.core.collector.base.CEClassCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEUtils;
@@ -13,7 +12,6 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
 import com.intellij.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
-import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
@@ -29,8 +27,8 @@ public class TooManyAuthors extends CEProvider<TooManyAuthorsSettings> {
 
     @Override
     protected void createCollectors(CEProvider<TooManyAuthorsSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
-        builder.addMethodCollector((e)-> this.createInlayFor(e, editor));
-       // builder.addClassCollector((e)-> this.createInlayFor(e, editor));
+        builder.addMethodCollector((e) -> this.createInlayFor(e, editor));
+        builder.addClassCollector((e) -> this.createInlayFor(e, editor));
     }
 
     @Override
@@ -38,56 +36,55 @@ public class TooManyAuthors extends CEProvider<TooManyAuthorsSettings> {
         return new TooManyAuthorsConfigurable();
     }
 
-        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiElement element, @NotNull Editor editor) {
+    protected @Nullable InlayVisuals createInlayFor(@NotNull PsiElement element, @NotNull Editor editor) {
 
-            FileAnnotation vcsBlame = CEVcsUtils.getAnnotation(element.getContainingFile(), editor);
-            if (vcsBlame == null) return null;
-            //text range of this element without comments
-            TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
+        FileAnnotation vcsBlame = CEVcsUtils.getAnnotation(element.getContainingFile(), editor);
+        if (vcsBlame == null) return null;
+        //text range of this element without comments
+        TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 
-            Document document = CEUtils.getContainingDocument(element);
-            if (document == null) return null;
-            List<String> author = getAuthors(element.getProject(), textRange, document, vcsBlame);
+        Document document = CEUtils.getContainingDocument(element);
+        if (document == null) return null;
+        List<String> author = getAuthors(element.getProject(), textRange, document, vcsBlame);
 
-            if (author.size() < getSettings().getMinimumAuthors()) return null;
+        if (author.size() < getSettings().getMinimumAuthors()) return null;
 
-            return makePresentation(author);
-        }
+        return makePresentation(author);
+    }
 
-        private @NotNull InlayVisuals makePresentation(List<String> author) {
-            StringBuilder authors = new StringBuilder();
-            int max = 4;
-            for (int i = 0; i < author.size() && i < max; i++) {
-                if (i != 0) {
-                    authors.append(", ");
-                }
-                authors.append(author.get(i).split(" ")[0]); // use only the first name
+    private @NotNull InlayVisuals makePresentation(List<String> author) {
+        StringBuilder authors = new StringBuilder();
+        int max = 4;
+        for (int i = 0; i < author.size() && i < max; i++) {
+            if (i != 0) {
+                authors.append(", ");
             }
-            return InlayVisuals.translated(getSettings().getMainSymbol(),
-                    "inlay.toomanyauthors.tooltip", authors.toString());
+            authors.append(author.get(i).split(" ")[0]); // use only the first name
         }
+        return InlayVisuals.translated(getSettings().getMainSymbol(),
+                "inlay.toomanyauthors.tooltip", authors.toString());
+    }
 
 
-        private List<String> getAuthors(Project project, TextRange range, Document document, FileAnnotation blame) {
+    private List<String> getAuthors(Project project, TextRange range, Document document, FileAnnotation blame) {
 
-            LineAnnotationAspect aspect = CEVcsUtils.getAspect(blame, LineAnnotationAspect.AUTHOR);
+        LineAnnotationAspect aspect = CEVcsUtils.getAspect(blame, LineAnnotationAspect.AUTHOR);
 
-            if (aspect == null) return List.of();
-            int startLine = document.getLineNumber(range.getStartOffset());
-            int endLine = document.getLineNumber(range.getEndOffset());
-            UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);
+        if (aspect == null) return List.of();
+        int startLine = document.getLineNumber(range.getStartOffset());
+        int endLine = document.getLineNumber(range.getEndOffset());
+        UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);
 
-            return IntStream.rangeClosed(startLine, endLine)
-                    .mapToObj(provider::getLineNumber)
-                    .map(aspect::getValue) // gets the author name for line
-                    .filter(a -> a != null && !a.isEmpty())
-                    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting())) // group by author and count occurrences
-                    .entrySet().stream()
-                    .sorted(Map.Entry.comparingByValue())
-                    .map(Map.Entry::getKey)
-                    .toList();
-        }
-
+        return IntStream.rangeClosed(startLine, endLine)
+                .mapToObj(provider::getLineNumber)
+                .map(aspect::getValue) // gets the author name for line
+                .filter(a -> a != null && !a.isEmpty())
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting())) // group by author and count occurrences
+                .entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .toList();
+    }
 
 
 }

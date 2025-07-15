@@ -1,6 +1,5 @@
-package codeemoji.inlay.vcs.refactors;
+package codeemoji.inlay.vcs.refactors.extract;
 
-import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.inlay.vcs.VCSSymbols;
 import com.intellij.openapi.components.State;
@@ -10,14 +9,14 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@State(name = "NameChangedSettings", storages = @Storage("codeemoji-name-changed-settings.xml"))
-public final class NameChangedSettings extends CEBaseSettings<NameChangedSettings> {
+@State(name = "MoveRefactorSettings", storages = @Storage("codeemoji-move-refactor-settings.xml"))
+public final class MovedRefactorSettings extends CEBaseSettings<MovedRefactorSettings> {
 
     private int maxRevisions = 1;
 
-    public NameChangedSettings() {
+    public MovedRefactorSettings() {
         super(builder().targetMethods().targetClasses().targetReferences(),
-                NameChanged.class, VCSSymbols.NAME_CHANGED);
+                MovedRefactor.class, VCSSymbols.MOVE_REFACTOR);
     }
 
 }

@@ -1,4 +1,4 @@
-package codeemoji.inlay.vcs.refactors;
+package codeemoji.inlay.vcs.refactors.rename;
 
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEBundle;

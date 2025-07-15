@@ -81,7 +81,8 @@
         <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.newlyadded.NewlyAddedSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.unfrequentlymodified.UnFrequentlyModifiedSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.bugs.FixedIssueSettings"/>
-        <applicationService serviceImplementation="codeemoji.inlay.vcs.refactors.NameChangedSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.refactors.rename.NameChangedSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.refactors.extract.MovedRefactorSettings"/>
 
 
 
@@ -350,11 +351,18 @@
 
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
-                                              implementationClass="codeemoji.inlay.vcs.refactors.NameChanged"
+                                              implementationClass="codeemoji.inlay.vcs.refactors.rename.NameChanged"
                                               nameKey="inlay.namechanged.name"
                                               group="OTHER_GROUP"
                                               descriptionKey="inlay.namechanged.description"
                                               providerId="inlay.namechanged"/>
+
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                              implementationClass="codeemoji.inlay.vcs.refactors.extract.MovedRefactor"
+                                              nameKey="inlay.moverefactor.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.moverefactor.description"
+                                              providerId="inlay.moverefactor"/>
 
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
@@ -504,7 +512,11 @@
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.namechanged"
-                implementationClass="codeemoji.inlay.vcs.refactors.NameChanged" />
+                implementationClass="codeemoji.inlay.vcs.refactors.rename.NameChanged" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.moverefactor"
+                implementationClass="codeemoji.inlay.vcs.refactors.extract.moverefactor" />
 
         <!--END OF IMPLEMENTATIONS SECTION-->
 
