@@ -27,7 +27,7 @@ public class MovedRefactor extends CEProvider<MovedRefactorSettings> {
         var ref = instance.getClassExtracted(psiClass ,settings.getMaxRevisions());
         if (ref != null) {
             return InlayVisuals.translated(getSettings().getMainSymbol(),
-                    "inlay.moverefactor.tooltip.class");
+                    "inlay.moveredfactor.tooltip.class");
         }
         return null;
     }
@@ -43,7 +43,7 @@ public class MovedRefactor extends CEProvider<MovedRefactorSettings> {
         var ref = instance.getMethodMoved(method ,settings.getMaxRevisions());
         if (ref != null) {
             return InlayVisuals.translated(getSettings().getMainSymbol(),
-                    "inlay.moverefactor.tooltip.method");
+                    "inlay.moveredfactor.tooltip.method");
         }
         return null;
     }

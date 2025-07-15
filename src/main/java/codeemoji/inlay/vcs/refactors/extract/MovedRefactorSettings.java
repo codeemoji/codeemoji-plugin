@@ -9,14 +9,14 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@State(name = "MoveRefactorSettings", storages = @Storage("codeemoji-move-refactor-settings.xml"))
+@State(name = "MovedRefactorSettings", storages = @Storage("codeemoji-moved-refactor-settings.xml"))
 public final class MovedRefactorSettings extends CEBaseSettings<MovedRefactorSettings> {
 
     private int maxRevisions = 1;
 
     public MovedRefactorSettings() {
         super(builder().targetMethods().targetClasses().targetReferences(),
-                MovedRefactor.class, VCSSymbols.MOVE_REFACTOR);
+                MovedRefactor.class, VCSSymbols.MOVED_REFACTOR);
     }
 
 }
