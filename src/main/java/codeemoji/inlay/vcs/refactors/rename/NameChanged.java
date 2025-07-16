@@ -5,6 +5,7 @@ import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.inlay.vcs.RefactorService;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +18,7 @@ public class NameChanged extends CEProvider<NameChangedSettings> {
         // initialize service
         RefactorService.getInstance(psiFile.getProject()).preProcess(); //TODO: move out of here
         builder.addMethodCollector(this::createInlayFor);
+        builder.addClassCollector(this::createInlayForClass);
     }
 
     @Override
@@ -34,6 +36,18 @@ public class NameChanged extends CEProvider<NameChangedSettings> {
         }
         return null;
     }
+
+    protected @Nullable InlayVisuals createInlayForClass(@NotNull PsiClass method) {
+        RefactorService instance = RefactorService.getInstance(method.getProject());
+        var settings = getSettings();
+        var ref = instance.getClassRenamed(method ,settings.getMaxRevisions());
+        if (ref != null) {
+            return InlayVisuals.translated(getSettings().getMainSymbol(),
+                    "inlay.namechanged.tooltip", ref.getOriginalClassName());
+        }
+        return null;
+    }
+
 
 }
 

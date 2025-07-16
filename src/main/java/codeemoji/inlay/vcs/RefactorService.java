@@ -10,18 +10,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
-import com.intellij.refactoring.changeSignature.ChangeSignatureHandler;
-import com.intellij.refactoring.changeSignature.ChangeSignatureUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import git4idea.history.GitHistoryUtils;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryChangeListener;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLOperation;
-import gr.uom.java.xmi.diff.ExtractClassRefactoring;
-import gr.uom.java.xmi.diff.MoveOperationRefactoring;
-import gr.uom.java.xmi.diff.RenameClassRefactoring;
-import gr.uom.java.xmi.diff.RenameOperationRefactoring;
+import gr.uom.java.xmi.diff.*;
 import org.eclipse.jgit.lib.Repository;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -67,7 +62,6 @@ public final class RefactorService implements Disposable {
     private final AtomicInteger maxCommits = new AtomicInteger(DEFAULT_MAX_COMMITS);
 
 
-
     private final List<CommitRefactorings> cache = new ArrayList<>();  // New unified cache
     private volatile boolean scanInProgress = false;
     private String lastMaxCommitsConfig = "";
@@ -93,17 +87,22 @@ public final class RefactorService implements Disposable {
 
     @Nullable
     public RenameOperationRefactoring getMethodRename(PsiMethod method, int maxCommits) {
-        return getMethodRefactoring(method, maxCommits, cr -> cr.renameMap);
-    }
-
-    @Nullable
-    public MoveOperationRefactoring getMethodMoved(PsiMethod method, int maxCommits) {
-        return getMethodRefactoring(method, maxCommits, cr -> cr.moveMap);
+        return getMethodRefactoring(method, maxCommits, cr -> cr.renameMethodMap);
     }
 
     @Nullable
     public RenameClassRefactoring getClassRenamed(PsiClass clazz, int maxCommits) {
         return getClassRefactoring(clazz, maxCommits, cr -> cr.renameClassMap);
+    }
+
+    @Nullable
+    public MoveOperationRefactoring getMethodMoved(PsiMethod method, int maxCommits) {
+        return getMethodRefactoring(method, maxCommits, cr -> cr.moveMethodMap);
+    }
+
+    @Nullable
+    public ExtractOperationRefactoring getMethodExtracted(PsiMethod clazz, int maxCommits) {
+        return getMethodRefactoring(clazz, maxCommits, cr -> cr.extractMethodMap);
     }
 
     @Nullable
@@ -177,7 +176,6 @@ public final class RefactorService implements Disposable {
     }
 
 
-
     private void scanRecentCommits(ProgressIndicator indicator) {
         indicator.setText("Locating repository...");
         GitRepository repo = CEVcsUtils.getProjectGitRepository(project);
@@ -235,9 +233,9 @@ public final class RefactorService implements Disposable {
 
                 indicator.setText2(String.format(
                         "Processing %d/%d (Scanned: %d, Reused: %d)",
-                        i+1, total, scannedCount, reusedCount
+                        i + 1, total, scannedCount, reusedCount
                 ));
-                indicator.setFraction((double) (i+1) / total);
+                indicator.setFraction((double) (i + 1) / total);
             }
 
             if (!indicator.isCanceled()) {
@@ -266,15 +264,7 @@ public final class RefactorService implements Disposable {
                 public void handle(String commitId, List<Refactoring> refactorings) {
                     if (indicator.isCanceled()) return;
                     for (Refactoring ref : refactorings) {
-                        if (ref instanceof RenameOperationRefactoring rename) {
-                            cacheRefactoring(results.renameMap, rename.getRenamedOperation(), rename);
-                        } else if (ref instanceof MoveOperationRefactoring move) {
-                            cacheRefactoring(results.moveMap, move.getMovedOperation(), move);
-                        } else if (ref instanceof ExtractClassRefactoring extract) {
-                            cacheRefactoring(results.extractedClassMap, extract.getExtractedClass(), extract);
-                        } else if (ref instanceof RenameClassRefactoring rename) {
-                            cacheRefactoring(results.renameClassMap, rename.getRenamedClass(), rename);
-                        }
+                        results.storeRefactor(ref);
                     }
                 }
 
@@ -288,23 +278,6 @@ public final class RefactorService implements Disposable {
         }
     }
 
-    private <T> void cacheRefactoring(Map<MethodSignature, T> cache, UMLOperation operation, T refactoring) {
-        if (operation != null) {
-            MethodSignature signature = MethodSignature.from(operation);
-            if (!cache.containsKey(signature)) {
-                cache.put(signature, refactoring);
-            }
-        }
-    }
-
-    private <T> void cacheRefactoring(Map<ClassSignature, T> cache, UMLClass operation, T refactoring) {
-        if (operation != null) {
-            ClassSignature signature = ClassSignature.from(operation);
-            if (!cache.containsKey(signature)) {
-                cache.put(signature, refactoring);
-            }
-        }
-    }
 
     private int countRefactorings(List<? extends Map<?, ?>> maps) {
         return maps.stream().mapToInt(Map::size).sum();
@@ -348,13 +321,43 @@ public final class RefactorService implements Disposable {
     // Cache storage
     private static class CommitRefactorings {
         final String commitHash;
-        final Map<MethodSignature, RenameOperationRefactoring> renameMap = new HashMap<>();
-        final Map<MethodSignature, MoveOperationRefactoring> moveMap = new HashMap<>();
-        final Map<ClassSignature, ExtractClassRefactoring> extractedClassMap = new HashMap<>();
+        final Map<MethodSignature, RenameOperationRefactoring> renameMethodMap = new HashMap<>();
         final Map<ClassSignature, RenameClassRefactoring> renameClassMap = new HashMap<>();
+        final Map<MethodSignature, MoveOperationRefactoring> moveMethodMap = new HashMap<>();
+        final Map<ClassSignature, ExtractClassRefactoring> extractedClassMap = new HashMap<>();
+        final Map<MethodSignature, ExtractOperationRefactoring> extractMethodMap = new HashMap<>();
 
         CommitRefactorings(String commitHash) {
             this.commitHash = commitHash;
+        }
+
+        public void storeRefactor(Refactoring ref) {
+            if (ref instanceof RenameOperationRefactoring rename) {
+                cacheRefactoring(this.renameMethodMap, rename.getRenamedOperation(), rename);
+            } else if (ref instanceof MoveOperationRefactoring move) {
+                cacheRefactoring(this.moveMethodMap, move.getMovedOperation(), move);
+            } else if (ref instanceof ExtractClassRefactoring extract) {
+                cacheRefactoring(this.extractedClassMap, extract.getExtractedClass(), extract);
+            } else if (ref instanceof RenameClassRefactoring rename) {
+                cacheRefactoring(this.renameClassMap, rename.getRenamedClass(), rename);
+            } else if (ref instanceof ExtractOperationRefactoring rename) {
+                cacheRefactoring(this.extractMethodMap, rename.getExtractedOperation(), rename);
+            }
+
+        }
+
+        private <T> void cacheRefactoring(Map<MethodSignature, T> cache, UMLOperation operation, T refactoring) {
+            if (operation != null) {
+                MethodSignature signature = MethodSignature.from(operation);
+                cache.put(signature, refactoring);
+            }
+        }
+
+        private <T> void cacheRefactoring(Map<ClassSignature, T> cache, UMLClass operation, T refactoring) {
+            if (operation != null) {
+                ClassSignature signature = ClassSignature.from(operation);
+                cache.put(signature, refactoring);
+            }
         }
     }
 }
