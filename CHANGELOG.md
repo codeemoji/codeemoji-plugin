@@ -4,6 +4,7 @@
 
 - Improved settings menu
 - references and class targets
+- config to alter only touching project files
 
 ## 6.0.0 (March 15th, 2025)
 

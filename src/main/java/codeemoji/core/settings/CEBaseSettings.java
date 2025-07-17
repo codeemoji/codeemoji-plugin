@@ -133,7 +133,7 @@ public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements Per
         boolean targetsClassesDefault = false;
         boolean isOnlyInProject = true;
 
-        public Builder targetsNonProjectFiles() {
+        public Builder targetsExternal() {
             this.isOnlyInProject = false;
             return this;
         }

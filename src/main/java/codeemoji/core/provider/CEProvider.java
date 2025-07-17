@@ -133,7 +133,7 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
                     new CESimpleReferenceMethodCollector(editor, CEProvider.this) {
                         @Override
                         protected boolean needsInlay(@NotNull PsiMethod element) {
-                            if (getSettings().isOnlyInProject() && CEUtils.isFromCurrentProject(element)) {
+                            if (getSettings().isOnlyInProject() && !CEUtils.isFromCurrentProject(element)) {
                                 return false;
                             }
                             return needsInlayFunc.apply(element);
@@ -142,7 +142,7 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
             add(new CESimpleMethodCollector(editor, CEProvider.this) {
                 @Override
                 protected boolean needsInlay(@NotNull PsiMethod element) {
-                    if (getSettings().isOnlyInProject() && CEUtils.isFromCurrentProject(element)) {
+                    if (getSettings().isOnlyInProject() && !CEUtils.isFromCurrentProject(element)) {
                         return false;
                     }
                     return needsInlayFunc.apply(element);
@@ -157,7 +157,7 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
                     new CESimpleReferenceClassCollector(editor, CEProvider.this) {
                         @Override
                         protected boolean needsInlay(@NotNull PsiClass element) {
-                            if (getSettings().isOnlyInProject() && CEUtils.isFromCurrentProject(element)) {
+                            if (getSettings().isOnlyInProject() && !CEUtils.isFromCurrentProject(element)) {
                                 return false;
                             }
                             return needsInlayFunc.apply(element);
@@ -166,7 +166,7 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
             add(new CESimpleClassCollector(editor, CEProvider.this) {
                 @Override
                 protected boolean needsInlay(@NotNull PsiClass element) {
-                    if (getSettings().isOnlyInProject() && CEUtils.isFromCurrentProject(element)) {
+                    if (getSettings().isOnlyInProject() && !CEUtils.isFromCurrentProject(element)) {
                         return false;
                     }
                     return needsInlayFunc.apply(element);
@@ -181,7 +181,7 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
                     new CEReferenceMethodCollector(editor, CEProvider.this.getKey()) {
                         @Override
                         protected InlayVisuals createInlayFor(@NotNull PsiMethod element) {
-                            if (getSettings().isOnlyInProject() && CEUtils.isFromCurrentProject(element)) {
+                            if (getSettings().isOnlyInProject() && !CEUtils.isFromCurrentProject(element)) {
                                 return null;
                             }
                             return inlayFunc.apply(element);
@@ -190,7 +190,7 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
             add(new CEMethodCollector(editor, CEProvider.this.getKey()) {
                 @Override
                 protected InlayVisuals createInlayFor(@NotNull PsiMethod element) {
-                    if (getSettings().isOnlyInProject() && CEUtils.isFromCurrentProject(element)) {
+                    if (getSettings().isOnlyInProject() && !CEUtils.isFromCurrentProject(element)) {
                         return null;
                     }
                     return inlayFunc.apply(element);
@@ -205,7 +205,7 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
                     new CEReferenceClassCollector(editor, CEProvider.this.getKey()) {
                         @Override
                         protected InlayVisuals createInlayFor(@NotNull PsiClass element) {
-                            if (getSettings().isOnlyInProject() && CEUtils.isFromCurrentProject(element)) {
+                            if (getSettings().isOnlyInProject() && !CEUtils.isFromCurrentProject(element)) {
                                 return null;
                             }
                             return inlayFunc.apply(element);
@@ -214,7 +214,7 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
             add(new CEClassCollector(editor, CEProvider.this.getKey()) {
                 @Override
                 protected InlayVisuals createInlayFor(@NotNull PsiClass element) {
-                    if (getSettings().isOnlyInProject() && CEUtils.isFromCurrentProject(element)) {
+                    if (getSettings().isOnlyInProject() && !CEUtils.isFromCurrentProject(element)) {
                         return null;
                     }
                     return inlayFunc.apply(element);

@@ -17,4 +17,8 @@ public class VulnerableDependencySettings extends CEBaseSettings<VulnerableDepen
     private CESymbol vulnerableMethod = VulnerableDependencySymbols.VULNERABLE_METHOD;
     private CESymbol vulnerableDependencyCall = VulnerableDependencySymbols.VULNERABLE_DEPENDENCY_CALL;
     private CESymbol indirectVulnerableMethod = VulnerableDependencySymbols.INDIRECT_VULNERABLE_METHOD;
+
+    VulnerableDependencySettings() {
+        super(builder().targetsExternal().targetMethods());
+    }
 }

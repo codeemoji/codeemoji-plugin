@@ -17,7 +17,7 @@ public class StateChangingMethodSettings extends CEBaseSettings<StateChangingMet
     private boolean checkMethodCallsForStateChangeApplied = false;
 
     public StateChangingMethodSettings(){
-        super(builder().targetMethods().targetReferences(),
+        super(builder().targetMethods().targetReferences().targetsExternal(),
                 StateChangingMethod.class, STATE_CHANGING_METHOD);
     }
 }

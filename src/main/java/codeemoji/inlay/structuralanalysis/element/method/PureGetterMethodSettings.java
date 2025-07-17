@@ -1,6 +1,5 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
-import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -17,7 +16,7 @@ public class PureGetterMethodSettings extends CEBaseSettings<PureGetterMethodSet
     private boolean javaBeansNamingConventionApplied = true;
 
     public PureGetterMethodSettings(){
-        super(builder().targetMethods().targetReferences(),
+        super(builder().targetMethods().targetReferences().targetsExternal(),
                 PureGetterMethod.class, PURE_GETTER_METHOD);
     }
 

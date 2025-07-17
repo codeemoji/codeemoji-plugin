@@ -28,7 +28,7 @@ public class GetMoreThanAccessor extends CEProvider<GetMoreThanAccessor.Settings
     @State(name = "GetMoreThanAccessorSettings", storages = @Storage("codeemoji-get-more-than-accessor-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings() {
-            super(builder().targetMethods().targetReferences(), GetMoreThanAccessor.class, CONFUSED);
+            super(builder().targetMethods().targetReferences().targetsExternal(), GetMoreThanAccessor.class, CONFUSED);
         }
     }
 

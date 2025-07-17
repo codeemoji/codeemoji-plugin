@@ -56,6 +56,9 @@ public class VulnerableDependency extends CEProvider<VulnerableDependencySetting
             if (visitedMethods.contains(method)) {
                 return null;
             }
+            if (getSettings().isOnlyInProject() && !CEUtils.isFromCurrentProject(method)) {
+                return null;
+            }
             PsiMethod[] externalMethods = CEUtils.collectExternalFunctionalityInvokingMethods(method);
             Set<String> vulnerableDependencies = new HashSet<>();
 
@@ -177,12 +180,12 @@ public class VulnerableDependency extends CEProvider<VulnerableDependencySetting
             }
 
             String vulnerabilitiesTooltip = totalVulnerabilities == 1 ?
-                    CEBundle.getString("inlay.vulnerabledependency.call.singular",result.dependencyName(), severityBuilder.toString()) :
-                    CEBundle.getString("inlay.vulnerabledependency.call.plural",result.dependencyName(), severityBuilder.toString());
+                    CEBundle.getString("inlay.vulnerabledependency.call.singular", result.dependencyName(), severityBuilder.toString()) :
+                    CEBundle.getString("inlay.vulnerabledependency.call.plural", result.dependencyName(), severityBuilder.toString());
 
             String scannerPrefix = CEBundle.getString("inlay.vulnerabledependency.call.scanner", result.scanner());
             return InlayVisuals.direct(getSettings().getVulnerableDependencyCall(),
-                    scannerPrefix +": "+ vulnerabilitiesTooltip);
+                    scannerPrefix + ": " + vulnerabilitiesTooltip);
         }
 
     }

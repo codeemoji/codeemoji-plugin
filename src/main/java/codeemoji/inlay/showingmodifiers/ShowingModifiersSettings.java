@@ -42,6 +42,7 @@ public class ShowingModifiersSettings extends CEBaseSettings<ShowingModifiersSet
 
 
     public ShowingModifiersSettings() {
+        super(builder().targetsExternal());
         basicModifiersMap.put(VOLATILE_FIELD, true);
         basicModifiersMap.put(TRANSIENT_FIELD, true);
         basicModifiersMap.put(SYNCHRONIZED_METHOD, true);

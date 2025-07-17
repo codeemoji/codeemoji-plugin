@@ -610,6 +610,7 @@ public enum CEUtils {
 
 
     public static boolean isFromCurrentProject(PsiElement element) {
+
         PsiFile psiFile = element.getContainingFile();
         if (psiFile == null) return false;
         VirtualFile virtualFile = psiFile.getVirtualFile();

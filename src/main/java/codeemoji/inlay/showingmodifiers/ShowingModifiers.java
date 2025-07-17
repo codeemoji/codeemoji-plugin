@@ -194,6 +194,9 @@ public class ShowingModifiers extends CEProvider<ShowingModifiersSettings> {
 
     private boolean needsInlay(@NotNull PsiModifierListOwner element, String modifier) {
         var psiModifierList = element.getModifierList();
+        if(getSettings().isOnlyInProject() && !CEUtils.isFromCurrentProject(element)) {
+            return false;
+        }
         if (null != psiModifierList) {
             if (modifier.equalsIgnoreCase(DEFAULT)) {
                 return CEUtils.checkDefaultModifier(psiModifierList);

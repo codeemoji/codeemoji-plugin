@@ -15,6 +15,7 @@ public class ShowingSpecificsSettings extends CEBaseSettings<ShowingSpecificsSet
     private final @NotNull String howToConfigureURL;
 
     public ShowingSpecificsSettings() {
+        super(builder().targetsExternal()); //TODO: check this setting and use it here
         howToConfigureURL = "https://github.com/codeemoji/codeemoji-plugin/tree/develop#cases-of-showing-specifics-of-projects";
     }
 }
