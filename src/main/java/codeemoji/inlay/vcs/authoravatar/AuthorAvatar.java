@@ -5,6 +5,7 @@ import codeemoji.core.collector.base.CEClassCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CESymbol;
+import codeemoji.core.util.CEUtils;
 import codeemoji.inlay.vcs.CEVcsUtils;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.openapi.application.ApplicationManager;
@@ -49,11 +50,13 @@ public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
         if (vcsBlame == null) {
             return null;
         }
+        Document document = CEUtils.getContainingDocument(element);
+        if (document == null) return null;
 
         //text range of this element without comments
         TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 
-        var author = getMostCommonAuthor(element.getProject(), textRange, editor, vcsBlame);
+        var author = getMostCommonAuthor(element.getProject(), textRange, document, vcsBlame);
 
         if (author == null) return null;
 
@@ -78,13 +81,12 @@ public class AuthorAvatar extends CEProvider<AuthorAvatarSettings> {
 
     @Nullable
     private Pair<String, Integer> getMostCommonAuthor(
-            Project project, TextRange range, Editor editor, FileAnnotation blame) {
+            Project project, TextRange range, Document document, FileAnnotation blame) {
 
         LineAnnotationAspect aspect = CEVcsUtils.getAspect(blame, LineAnnotationAspect.AUTHOR);
 
         if (aspect == null) return null;
 
-        Document document = editor.getDocument();
         int startLine = document.getLineNumber(range.getStartOffset());
         int endLine = document.getLineNumber(range.getEndOffset());
         UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);

@@ -221,9 +221,8 @@ public final class CEVcsUtils {
 
     @Nullable
     public static Date getEarliestModificationDate(
-            Project project, TextRange range, Editor editor, FileAnnotation blame) {
+            Project project, TextRange range, Document document,  FileAnnotation blame) {
 
-        Document document = editor.getDocument();
         int startLine = document.getLineNumber(range.getStartOffset());
         int endLine = document.getLineNumber(range.getEndOffset());
         UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);
