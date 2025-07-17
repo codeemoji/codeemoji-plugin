@@ -24,6 +24,7 @@ public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements Per
     protected List<CESymbolHolder> symbols = new ArrayList<>();
     protected CEPSIType targetType;
     protected boolean includeReferences;
+    protected boolean onlyInProject = true;
 
     public CEBaseSettings(Builder builder, CESymbolHolder... symbols) {
         super();
@@ -32,6 +33,7 @@ public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements Per
         this.targetType = builder.getDefaultTargets();
         this.canHaveReferences = builder.canHaveReferences;
         this.includeReferences = builder.referencesDefault;
+        this.onlyInProject = builder.isOnlyInProject;
     }
 
     //helper that auto makes the string for a single symbol one
@@ -129,6 +131,12 @@ public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements Per
         boolean targetMethodDefault = false;
         boolean canTargetClases = false;
         boolean targetsClassesDefault = false;
+        boolean isOnlyInProject = true;
+
+        public Builder targetsNonProjectFiles() {
+            this.isOnlyInProject = false;
+            return this;
+        }
 
         public Builder targetReferences(boolean defaultOn) {
             this.canHaveReferences = true;

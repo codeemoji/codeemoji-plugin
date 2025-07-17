@@ -105,7 +105,7 @@ public class ShowingModifiers extends CEProvider<ShowingModifiersSettings> {
         protected @Nullable InlayVisuals createInlayFor(@NotNull PsiField element) {
             if (needsInlay(element, modifier)) {
                 String tooltip = getKey() + ".field." + modifier;
-                return InlayVisuals.translated(symbol.get(), tooltip, null);
+                return InlayVisuals.translated(symbol.get(), tooltip);
             }
             return null;
         }
@@ -128,7 +128,7 @@ public class ShowingModifiers extends CEProvider<ShowingModifiersSettings> {
         protected @Nullable InlayVisuals createInlayFor(@NotNull PsiClass element) {
             if (needsInlay(element, modifier)) {
                 String tooltip = getKey() + ".class." + modifier;
-                return InlayVisuals.translated(symbol.get(), tooltip, null);
+                return InlayVisuals.translated(symbol.get(), tooltip);
             }
             return null;
         }

@@ -12,6 +12,7 @@ import codeemoji.core.collector.base.simple.CESimpleReferenceClassCollector;
 import codeemoji.core.collector.base.simple.CESimpleReferenceMethodCollector;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.settings.CEBaseSettings;
+import codeemoji.core.util.CEUtils;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCustomSettingsProvider;
 import com.intellij.codeInsight.hints.declarative.InlayHintsProvider;
@@ -132,12 +133,18 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
                     new CESimpleReferenceMethodCollector(editor, CEProvider.this) {
                         @Override
                         protected boolean needsInlay(@NotNull PsiMethod element) {
+                            if (getSettings().isOnlyInProject() && CEUtils.isFromCurrentProject(element)) {
+                                return false;
+                            }
                             return needsInlayFunc.apply(element);
                         }
                     });
             add(new CESimpleMethodCollector(editor, CEProvider.this) {
                 @Override
                 protected boolean needsInlay(@NotNull PsiMethod element) {
+                    if (getSettings().isOnlyInProject() && CEUtils.isFromCurrentProject(element)) {
+                        return false;
+                    }
                     return needsInlayFunc.apply(element);
                 }
             });
@@ -150,12 +157,18 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
                     new CESimpleReferenceClassCollector(editor, CEProvider.this) {
                         @Override
                         protected boolean needsInlay(@NotNull PsiClass element) {
+                            if (getSettings().isOnlyInProject() && CEUtils.isFromCurrentProject(element)) {
+                                return false;
+                            }
                             return needsInlayFunc.apply(element);
                         }
                     });
             add(new CESimpleClassCollector(editor, CEProvider.this) {
                 @Override
                 protected boolean needsInlay(@NotNull PsiClass element) {
+                    if (getSettings().isOnlyInProject() && CEUtils.isFromCurrentProject(element)) {
+                        return false;
+                    }
                     return needsInlayFunc.apply(element);
                 }
             });
@@ -168,12 +181,18 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
                     new CEReferenceMethodCollector(editor, CEProvider.this.getKey()) {
                         @Override
                         protected InlayVisuals createInlayFor(@NotNull PsiMethod element) {
+                            if (getSettings().isOnlyInProject() && CEUtils.isFromCurrentProject(element)) {
+                                return null;
+                            }
                             return inlayFunc.apply(element);
                         }
                     });
             add(new CEMethodCollector(editor, CEProvider.this.getKey()) {
                 @Override
                 protected InlayVisuals createInlayFor(@NotNull PsiMethod element) {
+                    if (getSettings().isOnlyInProject() && CEUtils.isFromCurrentProject(element)) {
+                        return null;
+                    }
                     return inlayFunc.apply(element);
                 }
             });
@@ -186,12 +205,18 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
                     new CEReferenceClassCollector(editor, CEProvider.this.getKey()) {
                         @Override
                         protected InlayVisuals createInlayFor(@NotNull PsiClass element) {
+                            if (getSettings().isOnlyInProject() && CEUtils.isFromCurrentProject(element)) {
+                                return null;
+                            }
                             return inlayFunc.apply(element);
                         }
                     });
             add(new CEClassCollector(editor, CEProvider.this.getKey()) {
                 @Override
                 protected InlayVisuals createInlayFor(@NotNull PsiClass element) {
+                    if (getSettings().isOnlyInProject() && CEUtils.isFromCurrentProject(element)) {
+                        return null;
+                    }
                     return inlayFunc.apply(element);
                 }
             });
@@ -200,7 +225,7 @@ public abstract class CEProvider<S extends CEBaseSettings<S>> implements InlayHi
 
         SharedBypassCollector build() {
             if (collectors.isEmpty()) {
-               // throw new IllegalStateException("No collectors were added to the builder.");
+                // throw new IllegalStateException("No collectors were added to the builder.");
             }
             if (collectors.size() == 1) {
                 return collectors.get(0);

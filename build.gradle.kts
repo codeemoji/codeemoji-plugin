@@ -40,10 +40,10 @@ intellij {
     updateSinceUntilBuild.set(true)
     val platformPlugins = properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty)
     plugins.set(
-            platformPlugins + listOf(
-                    "com.intellij.java",
-                    "Git4Idea"
-            )
+        platformPlugins + listOf(
+            "com.intellij.java",
+            "Git4Idea"
+        )
     )
 }
 
@@ -76,27 +76,27 @@ tasks {
         sinceBuild.set(properties("pluginSinceBuild"))
         untilBuild.set(properties("pluginUntilBuild"))
         pluginDescription.set(
-                projectDir.resolve("README.md").readText().lines().run {
-                    val start = "<!-- DESCRIPTION HEADER BEGIN -->"
-                    val end = "<!-- DESCRIPTION HEADER END -->"
+            projectDir.resolve("README.md").readText().lines().run {
+                val start = "<!-- DESCRIPTION HEADER BEGIN -->"
+                val end = "<!-- DESCRIPTION HEADER END -->"
+                if (!containsAll(listOf(start, end))) {
+                    throw GradleException("DESCRIPTION HEADER section not found in README.md:\n$start ... $end")
+                }
+                subList(indexOf(start) + 1, indexOf(end))
+            }.joinToString("\n").run {
+                val header = markdownToHTML(this)
+                projectDir.resolve("docs/FOOTER.md").readText().lines().run {
+                    val start = "<!-- DESCRIPTION FOOTER BEGIN -->"
+                    val end = "<!-- DESCRIPTION FOOTER END -->"
                     if (!containsAll(listOf(start, end))) {
-                        throw GradleException("DESCRIPTION HEADER section not found in README.md:\n$start ... $end")
+                        throw GradleException("DESCRIPTION FOOTER section not found in FOOTER.md:\n$start ... $end")
                     }
                     subList(indexOf(start) + 1, indexOf(end))
                 }.joinToString("\n").run {
-                    val header = markdownToHTML(this)
-                    projectDir.resolve("docs/FOOTER.md").readText().lines().run {
-                        val start = "<!-- DESCRIPTION FOOTER BEGIN -->"
-                        val end = "<!-- DESCRIPTION FOOTER END -->"
-                        if (!containsAll(listOf(start, end))) {
-                            throw GradleException("DESCRIPTION FOOTER section not found in FOOTER.md:\n$start ... $end")
-                        }
-                        subList(indexOf(start) + 1, indexOf(end))
-                    }.joinToString("\n").run {
-                        header + markdownToHTML(this)
+                    header + markdownToHTML(this)
 
-                    }
                 }
+            }
         )
         changeNotes.set(changelog.renderItem(changelog.getLatest(), Changelog.OutputType.HTML))
     }

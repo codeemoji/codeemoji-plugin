@@ -74,6 +74,15 @@ public class CEBaseConfigurableWindow<S extends CEBaseSettings<S>> {
             builder.addLabeledComponent(
                     CEBundle.getString("codeemoji.configurable.include_references"), checkBox);
         }
+
+        JCheckBox onlyInProjectCheckBox = new JCheckBox();
+        onlyInProjectCheckBox.setSelected(!settings.isOnlyInProject());
+        onlyInProjectCheckBox.addActionListener(e -> {
+            settings.setOnlyInProject(!onlyInProjectCheckBox.isSelected());
+            changeListener.settingsChanged();
+        });
+        builder.addLabeledComponent(
+                CEBundle.getString("codeemoji.configurable.include_non_project_files"), onlyInProjectCheckBox);
     }
 
     private @NotNull JComponent createPickTarget(S settings, ChangeListener changeListener) {
