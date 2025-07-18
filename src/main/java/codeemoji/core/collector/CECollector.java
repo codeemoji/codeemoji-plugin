@@ -1,9 +1,6 @@
 package codeemoji.core.collector;
 
 import codeemoji.core.external.CEExternalAnalyzer;
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.codeInsight.daemon.impl.InlayHintsPassFactoryInternal;
-import com.intellij.codeInsight.hints.InlayHintsPass;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.codeInsight.hints.declarative.InlineInlayPosition;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
@@ -44,18 +41,13 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
         }
     }
 
-    protected int calcOffset(@Nullable A element) {
-        if (null != element) {
-            return element.getTextOffset() + element.getTextLength();
-        }
-        return 0;
-    }
-
     public final void addInlayInline(@Nullable A element, @NotNull InlayTreeSink sink, @NotNull InlayVisuals inlay) {
         if (null != element) {
             // Add inlay to editor here
             sink.addPresentation(
-                    new InlineInlayPosition(element.getTextRange().getEndOffset(), true, 0),
+                    new InlineInlayPosition(
+                            calcOffset(element),
+                            true, 0),
                     List.of(),
                     inlay.tooltip(),
                     inlay.hasBackground(),
@@ -67,6 +59,15 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
 
         }
     }
+
+
+    protected int calcOffset(@Nullable A element) {
+        if (null != element) {
+            return element.getTextOffset() + element.getTextLength();
+        }
+        return 0;
+    }
+
 
     public final void addInlayBlock(@Nullable A element, @NotNull InlayTreeSink sink, InlayVisuals inlay) {
         if (null != element) {
