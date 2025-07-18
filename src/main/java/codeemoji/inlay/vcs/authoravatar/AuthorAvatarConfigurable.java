@@ -5,6 +5,7 @@ import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbolHolder;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,8 +19,10 @@ import java.awt.event.MouseEvent;
 public class AuthorAvatarConfigurable extends CEBaseConfigurableWindow<AuthorAvatarSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(AuthorAvatarSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
-        localSymbols.clear();
+    protected void buildForm(FormBuilder builder, AuthorAvatarSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
+        super.buildForm(builder, settings, preview, project, language, changeListener);
+
+  localSymbols.clear();
         // Make deep copy. we update later
         for (CESymbolHolder pair : settings.getSymbols()) {
             localSymbols.add(pair.makeCopy());
@@ -45,12 +48,8 @@ public class AuthorAvatarConfigurable extends CEBaseConfigurableWindow<AuthorAva
             syncSettings(settings, changeListener);
         });
 
-        JPanel addPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        addPanel.add(addButton);
-
-        panel.add(addPanel); // Add the "Add" button panel
-
-        return panel;
+        builder.addComponent(panel);
+        builder.addComponent(addButton);
     }
 
     private void addRow(JPanel panel, CESymbolHolder holder, AuthorAvatarSettings settings, ChangeListener listener) {

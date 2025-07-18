@@ -1,5 +1,6 @@
 package codeemoji.core.collector;
 
+import codeemoji.core.config.CEGlobalSettings;
 import codeemoji.core.external.CEExternalAnalyzer;
 import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
 import com.intellij.codeInsight.hints.declarative.InlineInlayPosition;
@@ -44,9 +45,10 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
     public final void addInlayInline(@Nullable A element, @NotNull InlayTreeSink sink, @NotNull InlayVisuals inlay) {
         if (null != element) {
             // Add inlay to editor here
+            boolean leftPlacement = CEGlobalSettings.getInstance().isFrontEmojiPlacement();
             sink.addPresentation(
                     new InlineInlayPosition(
-                            calcOffset(element),
+                            leftPlacement ? element.getTextOffset() : calcOffset(element),
                             true, 0),
                     List.of(),
                     inlay.tooltip(),

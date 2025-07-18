@@ -8,12 +8,15 @@ import com.intellij.openapi.util.NlsContexts;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class CEGlobalConfigurable implements Configurable {
+
 
     private JCheckBox cbMyExternalService;
     private JCheckBox cbSecondaryService;
     private JTextField tfOssApiToken;
+    private JCheckBox cbFrontEmojiPlacement;
 
     @SuppressWarnings("DialogTitleCapitalization")
     @Override
@@ -23,22 +26,28 @@ public class CEGlobalConfigurable implements Configurable {
 
     @Override
     public @Nullable JComponent createComponent() {
-        var globalPanel = new JPanel();
+        var globalPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         var innerPanel = CEUtils.createBasicInnerPanel("codeemoji.configurable.title", 2, 1);
+        innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.Y_AXIS));
+
         var analysersPanel = CEUtils.createBasicInnerPanel("codeemoji.configurable.external.analysers.title", 1, 1);
-        cbMyExternalService = new JCheckBox("Vulnerability Scanner");
-        cbSecondaryService = new JCheckBox("Use secondary Service Sonatype OSS Index");
+        analysersPanel.setLayout(new BoxLayout(analysersPanel, BoxLayout.Y_AXIS));
+        cbMyExternalService = new JCheckBox(CEBundle.getString("codeemoji.configurable.external.analysers.scanner"));
+        cbSecondaryService = new JCheckBox(CEBundle.getString("codeemoji.configurable.external.analysers.secondary"));
         analysersPanel.add(cbMyExternalService);
         analysersPanel.add(cbSecondaryService);
         innerPanel.add(analysersPanel);
 
         var apiTokenPanel = CEUtils.createBasicInnerPanel("codeemoji.configurable.oss.api.token", 1, 1);
+        apiTokenPanel.setLayout(new BoxLayout(apiTokenPanel, BoxLayout.Y_AXIS));
         tfOssApiToken = new JTextField();
         tfOssApiToken.setText(CEGlobalSettings.getInstance().getOssApiToken());
         apiTokenPanel.add(tfOssApiToken);
         innerPanel.add(apiTokenPanel);
 
-
+        cbFrontEmojiPlacement = new JCheckBox(CEBundle.getString("codeemoji.configurable.front_placement"));
+        cbFrontEmojiPlacement.setSelected(CEGlobalSettings.getInstance().isFrontEmojiPlacement());
+        innerPanel.add(cbFrontEmojiPlacement);
 
         globalPanel.add(innerPanel);
         return globalPanel;
@@ -48,18 +57,19 @@ public class CEGlobalConfigurable implements Configurable {
     public boolean isModified() {
         Boolean myExternalServiceState = cbMyExternalService.isSelected();
         Boolean useSecondaryService = cbSecondaryService.isSelected();
+        Boolean frontEmojiPlacement = cbFrontEmojiPlacement.isSelected();
         return (!myExternalServiceState.equals(CEGlobalSettings.getInstance().getMyExternalServiceState()) ||
                 !useSecondaryService.equals(CEGlobalSettings.getInstance().getUseSecondaryVulnerabilityScanner()) ||
-                !tfOssApiToken.getText().equals(CEGlobalSettings.getInstance().getOssApiToken()));
+                !tfOssApiToken.getText().equals(CEGlobalSettings.getInstance().getOssApiToken()) ||
+                !frontEmojiPlacement.equals(CEGlobalSettings.getInstance().isFrontEmojiPlacement()));
     }
 
     @Override
     public void apply() throws ConfigurationException {
-        Boolean myExternalServiceState = cbMyExternalService.isSelected();
-        Boolean useSecondaryService = cbSecondaryService.isSelected();
-        CEGlobalSettings.getInstance().setMyExternalServiceState(myExternalServiceState);
-        CEGlobalSettings.getInstance().setUseSecondaryVulnerabilityScanner(useSecondaryService);
+        CEGlobalSettings.getInstance().setMyExternalServiceState(cbMyExternalService.isSelected());
+        CEGlobalSettings.getInstance().setUseSecondaryVulnerabilityScanner(cbSecondaryService.isSelected());
         CEGlobalSettings.getInstance().setOssApiToken(tfOssApiToken.getText());
+        CEGlobalSettings.getInstance().setFrontEmojiPlacement(cbFrontEmojiPlacement.isSelected());
         CEGlobalSettings.getInstance().fireSettingsChanged();
     }
 
@@ -68,6 +78,7 @@ public class CEGlobalConfigurable implements Configurable {
         cbMyExternalService.setSelected(CEGlobalSettings.getInstance().getMyExternalServiceState());
         cbSecondaryService.setSelected(CEGlobalSettings.getInstance().getUseSecondaryVulnerabilityScanner());
         tfOssApiToken.setText(CEGlobalSettings.getInstance().getOssApiToken());
+        cbFrontEmojiPlacement.setSelected(CEGlobalSettings.getInstance().isFrontEmojiPlacement());
         CEGlobalSettings.getInstance().fireSettingsChanged();
     }
 
@@ -76,5 +87,6 @@ public class CEGlobalConfigurable implements Configurable {
         cbMyExternalService = null;
         cbSecondaryService = null;
         tfOssApiToken = null;
+        cbFrontEmojiPlacement = null;
     }
 }

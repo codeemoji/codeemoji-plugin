@@ -7,7 +7,6 @@ import codeemoji.inlay.external.services.OSVExternalServiceExternalService;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public final class CEExternalAnalyzer {
         CEGlobalSettings globalSettings = CEGlobalSettings.getInstance();
         boolean myExternalServiceState = globalSettings.getMyExternalServiceState();
         if (myExternalServiceState) {
-            VulnerabilityInfo.ScannerType scannerType = globalSettings.getType();
+            VulnerabilityInfo.ScannerType scannerType = globalSettings.getScannerType();
             if (scannerType.equals(VulnerabilityInfo.ScannerType.OSS)) {
                 OSSExternalServiceExternalService ossService = project.getService(OSSExternalServiceExternalService.class);
                 ossService.updateScanner();

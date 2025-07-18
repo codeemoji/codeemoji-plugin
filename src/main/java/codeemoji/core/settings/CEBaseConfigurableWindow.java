@@ -15,6 +15,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.FormBuilder;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,8 +44,14 @@ public class CEBaseConfigurableWindow<S extends CEBaseSettings<S>> {
 
         FormBuilder builder = FormBuilder.createFormBuilder();
         buildForm(builder, settings, preview, project, language, changeListener);
-        return builder.getPanel();
+
+        JPanel panel = builder.getPanel();
+
+        JBScrollPane scroll = new JBScrollPane(panel);
+        scroll.setBorder(null);
+        return scroll;
     }
+
 
     /**
      * Subclasses override this to add their specific fields.
