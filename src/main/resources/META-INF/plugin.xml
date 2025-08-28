@@ -73,10 +73,10 @@
 
         <applicationService serviceImplementation="codeemoji.inlay.vulnerabilities.VulnerableDependencySettings"/>
 
-        <applicationService serviceImplementation="codeemoji.inlay.vcs.authoravatar.AuthorAvatarSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.ownership.authoravatar.AuthorAvatarSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.recentlymodified.RecentlyModifiedSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.lastcommit.LastCommitSettings"/>
-        <applicationService serviceImplementation="codeemoji.inlay.vcs.ownership.TooManyAuthorsSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.ownership.toomanyauthors.TooManyAuthorsSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.frequentlymodified.FrequentlyModifiedSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.newlyadded.NewlyAddedSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.unfrequentlymodified.UnFrequentlyModifiedSettings"/>
@@ -308,14 +308,14 @@
                                               providerId="inlay.lastcommit"/>
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
-                                              implementationClass="codeemoji.inlay.vcs.authoravatar.AuthorAvatar"
+                                              implementationClass="codeemoji.inlay.vcs.ownership.authoravatar.AuthorAvatar"
                                               nameKey="inlay.authoravatar.name"
                                               group="OTHER_GROUP"
                                               descriptionKey="inlay.authoravatar.description"
                                               providerId="inlay.authoravatar"/>
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
-                                              implementationClass="codeemoji.inlay.vcs.ownership.TooManyAuthors"
+                                              implementationClass="codeemoji.inlay.vcs.ownership.toomanyauthors.TooManyAuthors"
                                               nameKey="inlay.toomanyauthors.name"
                                               group="OTHER_GROUP"
                                               descriptionKey="inlay.toomanyauthors.description"
@@ -487,11 +487,11 @@
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.authoravatar"
-                implementationClass="codeemoji.inlay.vcs.authoravatar.AuthorAvatar" />
+                implementationClass="codeemoji.inlay.vcs.ownership.authoravatar.AuthorAvatar" />
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.toomanyauthors"
-                implementationClass="codeemoji.inlay.vcs.ownership.TooManyAuthors" />
+                implementationClass="codeemoji.inlay.vcs.ownership.toomanyauthors.TooManyAuthors" />
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.frequentlymodified"

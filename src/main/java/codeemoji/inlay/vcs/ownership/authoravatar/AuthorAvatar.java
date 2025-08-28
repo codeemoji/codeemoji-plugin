@@ -1,7 +1,6 @@
-package codeemoji.inlay.vcs.authoravatar;
+package codeemoji.inlay.vcs.ownership.authoravatar;
 
 import codeemoji.core.collector.InlayVisuals;
-import codeemoji.core.collector.base.CEClassCollector;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CESymbol;
@@ -26,7 +25,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;

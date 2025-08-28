@@ -1,6 +1,5 @@
-package codeemoji.inlay.vcs.authoravatar;
+package codeemoji.inlay.vcs.ownership.authoravatar;
 
-import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CESymbolHolder;

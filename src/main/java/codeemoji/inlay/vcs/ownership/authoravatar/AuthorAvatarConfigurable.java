@@ -1,4 +1,4 @@
-package codeemoji.inlay.vcs.authoravatar;
+package codeemoji.inlay.vcs.ownership.authoravatar;
 
 import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEBundle;
@@ -6,7 +6,6 @@ import codeemoji.core.util.CESymbolHolder;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -22,7 +21,7 @@ public class AuthorAvatarConfigurable extends CEBaseConfigurableWindow<AuthorAva
     protected void buildForm(FormBuilder builder, AuthorAvatarSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
         super.buildForm(builder, settings, preview, project, language, changeListener);
 
-  localSymbols.clear();
+        localSymbols.clear();
         // Make deep copy. we update later
         for (CESymbolHolder pair : settings.getSymbols()) {
             localSymbols.add(pair.makeCopy());
@@ -50,6 +49,11 @@ public class AuthorAvatarConfigurable extends CEBaseConfigurableWindow<AuthorAva
 
         builder.addComponent(panel);
         builder.addComponent(addButton);
+    }
+
+
+    @Override
+    protected void addSymbolsSelector(FormBuilder builder, AuthorAvatarSettings settings, ChangeListener changeListener) {
     }
 
     private void addRow(JPanel panel, CESymbolHolder holder, AuthorAvatarSettings settings, ChangeListener listener) {

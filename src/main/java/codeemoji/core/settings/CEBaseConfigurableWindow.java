@@ -60,9 +60,7 @@ public class CEBaseConfigurableWindow<S extends CEBaseSettings<S>> {
                              Language language, ChangeListener changeListener) {
 
         // Add symbol rows
-        for (var holder : localSymbols) {
-            builder.addComponent(createSymbolRow(holder, settings, changeListener));
-        }
+        addSymbolsSelector(builder, settings, changeListener);
 
         // Add PSI Type picker if necessary
         if (settings.getAllowedPsiType() == CEPSIType.METHODS_AND_CLASSES) {
@@ -91,6 +89,12 @@ public class CEBaseConfigurableWindow<S extends CEBaseSettings<S>> {
         });
         builder.addLabeledComponent(
                 CEBundle.getString("codeemoji.configurable.include_non_project_files"), onlyInProjectCheckBox);
+    }
+
+    protected void addSymbolsSelector(FormBuilder builder, S settings, ChangeListener changeListener) {
+        for (var holder : localSymbols) {
+            builder.addComponent(createSymbolRow(holder, settings, changeListener));
+        }
     }
 
     private @NotNull JComponent createPickTarget(S settings, ChangeListener changeListener) {

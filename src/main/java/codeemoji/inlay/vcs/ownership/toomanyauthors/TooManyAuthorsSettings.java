@@ -1,4 +1,4 @@
-package codeemoji.inlay.vcs.ownership;
+package codeemoji.inlay.vcs.ownership.toomanyauthors;
 
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.inlay.vcs.VCSSymbols;
