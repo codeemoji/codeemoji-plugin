@@ -1,0 +1,128 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class AuthorAvatar
+class CEClassCollector
+class CECollector<H, A>
+class CEImplicitCollector
+class CEJPAEmbeddableCollector
+class CEJPAEntityCollector
+class CEMethodCollector
+class CEProjectClassCollector
+class CEProjectCollector<H, A>
+class CEProjectMethodCollector
+class CEProjectVariableCollector
+class CEProvider<S>
+class CEReferenceClassCollector
+class CEReferenceFieldCollector
+class CEReferenceMethodCollector
+class CESimpleClassCollector
+class CESimpleMethodCollector
+class CESimpleReferenceClassCollector
+class CESimpleReferenceMethodCollector
+class CESimpleVariableCollector
+class CESpringConfigurationCollector
+class CESpringControllerCollector
+class CESpringRestControllerCollector
+class CEVariableCollector
+class ExpectingButNotGettingACollection
+class ExpectingButNotGettingASingleInstance
+class ExternalFunctionalityInvokingMethod
+class FixedIssue
+class FrequentlyModified
+class GetMethodDoesNotReturn
+class GetMoreThanAccessor
+class GitTest
+class HighCyclomaticComplexityMethod
+class ImplicitAnnotations
+class IsReturnsMoreThanABoolean
+class LargeIdentifierCountMethod
+class LargeLineCountMethod
+class LargeMethodCountClass
+class LastCommit
+class MovedRefactor
+class NameChanged
+class NameContainsOnlySpecialCharacters
+class NameSuggestsBooleanButTypeDoesNot
+class NewlyAdded
+class NotAnsweredQuestion
+class PureGetterMethod
+class PureSetterMethod
+class RecentlyModified
+class SaysManyButContainsOne
+class SaysOneButContainsMany
+class SetMethodReturns
+class ShortDescriptiveName
+class ShowingModifiers
+class ShowingSpecifics
+class StateChangingMethod
+class StateIndependentMethod
+class TooManyAuthors
+class TransformMethodDoesNotReturn
+class UnFrequentlyModified
+class ValidationMethodDoesNotConfirm
+class VulnerableDependency
+
+AuthorAvatar                           -[#000082,plain]-^  CEProvider                            
+CEClassCollector                       -[#000082,plain]-^  CECollector                           
+CEImplicitCollector                    -[#000082,plain]-^  CECollector                           
+CEJPAEmbeddableCollector               -[#000082,plain]-^  CEImplicitCollector                   
+CEJPAEntityCollector                   -[#000082,plain]-^  CEImplicitCollector                   
+CEMethodCollector                      -[#000082,plain]-^  CECollector                           
+CEProjectClassCollector                -[#000082,plain]-^  CEProjectCollector                    
+CEProjectCollector                     -[#000082,plain]-^  CECollector                           
+CEProjectMethodCollector               -[#000082,plain]-^  CEProjectCollector                    
+CEProjectVariableCollector             -[#000082,plain]-^  CEProjectCollector                    
+CEReferenceClassCollector              -[#000082,plain]-^  CECollector                           
+CEReferenceFieldCollector              -[#000082,plain]-^  CECollector                           
+CEReferenceMethodCollector             -[#000082,plain]-^  CECollector                           
+CESimpleClassCollector                 -[#000082,plain]-^  CEClassCollector                      
+CESimpleMethodCollector                -[#000082,plain]-^  CEMethodCollector                     
+CESimpleReferenceClassCollector        -[#000082,plain]-^  CEReferenceClassCollector             
+CESimpleReferenceMethodCollector       -[#000082,plain]-^  CEReferenceMethodCollector            
+CESimpleVariableCollector              -[#000082,plain]-^  CEVariableCollector                   
+CESpringConfigurationCollector         -[#000082,plain]-^  CEImplicitCollector                   
+CESpringControllerCollector            -[#000082,plain]-^  CEImplicitCollector                   
+CESpringRestControllerCollector        -[#000082,plain]-^  CESpringControllerCollector           
+CEVariableCollector                    -[#000082,plain]-^  CECollector                           
+ExpectingButNotGettingACollection      -[#000082,plain]-^  CEProvider                            
+ExpectingButNotGettingASingleInstance  -[#000082,plain]-^  CEProvider                            
+ExternalFunctionalityInvokingMethod    -[#000082,plain]-^  CEProvider                            
+FixedIssue                             -[#000082,plain]-^  CEProvider                            
+FrequentlyModified                     -[#000082,plain]-^  CEProvider                            
+GetMethodDoesNotReturn                 -[#000082,plain]-^  CEProvider                            
+GetMoreThanAccessor                    -[#000082,plain]-^  CEProvider                            
+GitTest                                -[#000082,plain]-^  CEProvider                            
+HighCyclomaticComplexityMethod         -[#000082,plain]-^  CEProvider                            
+ImplicitAnnotations                    -[#000082,plain]-^  CEProvider                            
+IsReturnsMoreThanABoolean              -[#000082,plain]-^  CEProvider                            
+LargeIdentifierCountMethod             -[#000082,plain]-^  CEProvider                            
+LargeLineCountMethod                   -[#000082,plain]-^  CEProvider                            
+LargeMethodCountClass                  -[#000082,plain]-^  CEProvider                            
+LastCommit                             -[#000082,plain]-^  CEProvider                            
+MovedRefactor                          -[#000082,plain]-^  CEProvider                            
+NameChanged                            -[#000082,plain]-^  CEProvider                            
+NameContainsOnlySpecialCharacters      -[#000082,plain]-^  CEProvider                            
+NameSuggestsBooleanButTypeDoesNot      -[#000082,plain]-^  CEProvider                            
+NewlyAdded                             -[#000082,plain]-^  CEProvider                            
+NotAnsweredQuestion                    -[#000082,plain]-^  CEProvider                            
+PureGetterMethod                       -[#000082,plain]-^  CEProvider                            
+PureSetterMethod                       -[#000082,plain]-^  CEProvider                            
+RecentlyModified                       -[#000082,plain]-^  CEProvider                            
+SaysManyButContainsOne                 -[#000082,plain]-^  CEProvider                            
+SaysOneButContainsMany                 -[#000082,plain]-^  CEProvider                            
+SetMethodReturns                       -[#000082,plain]-^  CEProvider                            
+ShortDescriptiveName                   -[#000082,plain]-^  CEProvider                            
+ShowingModifiers                       -[#000082,plain]-^  CEProvider                            
+ShowingSpecifics                       -[#000082,plain]-^  CEProvider                            
+StateChangingMethod                    -[#000082,plain]-^  CEProvider                            
+StateIndependentMethod                 -[#000082,plain]-^  CEProvider                            
+TooManyAuthors                         -[#000082,plain]-^  CEProvider                            
+TransformMethodDoesNotReturn           -[#000082,plain]-^  CEProvider                            
+UnFrequentlyModified                   -[#000082,plain]-^  CEProvider                            
+ValidationMethodDoesNotConfirm         -[#000082,plain]-^  CEProvider                            
+VulnerableDependency                   -[#000082,plain]-^  CEProvider                            
+@enduml
