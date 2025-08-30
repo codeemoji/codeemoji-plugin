@@ -46,7 +46,7 @@ public class FrequentlyModified extends CEProvider<FrequentlyModifiedSettings> {
         // text range of this element without comments
         TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 
-        Set<Date> date = getAllModificationDates(element.getProject(), textRange, document, vcsBlame);
+        Set<Date> date = getAllLatestModificationDates(element.getProject(), textRange, document, vcsBlame);
 
         int timeFrame = getSettings().getDaysTimeFrame();
         int modifications = getSettings().getModifications();
@@ -71,7 +71,7 @@ public class FrequentlyModified extends CEProvider<FrequentlyModifiedSettings> {
                 "inlay.frequentlymodified.tooltip", modifications, timeFrame);
     }
 
-    private static Set<Date> getAllModificationDates(
+    private static Set<Date> getAllLatestModificationDates(
             Project project, TextRange range, Document document, FileAnnotation blame) {
 
         int startLine = document.getLineNumber(range.getStartOffset());
