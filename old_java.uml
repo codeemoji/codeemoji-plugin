@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>C:/Users/Matteo/IdeaProjects/codeemoji-plugin/src/main/java</OriginalElement>
+  <nodes>
+    <node x="790.5" y="558.5">codeemoji.core.collector.simple.modifier.CEModifierInterfaceMethodCollector</node>
+    <node x="361.0" y="960.0">codeemoji.inlay.structuralanalysis.element.method.PureGetterMethod</node>
+    <node x="148.0" y="960.0">codeemoji.inlay.structuralanalysis.element.method.PureSetterMethod</node>
+    <node x="-38.0" y="642.0">codeemoji.core.provider.CEProvider</node>
+    <node x="419.5" y="398.0">codeemoji.core.collector.simple.CEDynamicMethodCollector</node>
+    <node x="419.5" y="291.5">codeemoji.core.collector.project.CEProjectClassCollector</node>
+    <node x="706.5" y="398.0">codeemoji.core.collector.simple.CEDynamicReferenceMethodCollector</node>
+    <node x="-103.0" y="1013.0">codeemoji.inlay.structuralanalysis.element.method.StateIndependentMethod</node>
+    <node x="532.0" y="-13.5">codeemoji.core.collector.implicit.CEImplicitCollector</node>
+    <node x="57.0" y="700.0">codeemoji.inlay.nameviolation.GetMethodDoesNotReturn</node>
+    <node x="558.5" y="339.5">codeemoji.core.collector.simple.CESimpleDynamicCollector</node>
+    <node x="969.0" y="753.0">codeemoji.inlay.nameviolation.NameSuggestsBooleanByTypeDoesNot</node>
+    <node x="678.5" y="291.5">codeemoji.core.collector.project.CEProjectMethodCollector</node>
+    <node x="164.0" y="1013.0">codeemoji.inlay.structuralanalysis.element.method.StateChangingMethod</node>
+    <node x="435.0" y="753.0">codeemoji.inlay.structuralanalysis.codecomplexity.LargeIdentifierCountMethod</node>
+    <node x="905.0" y="806.0">codeemoji.inlay.nameviolation.TransformMethodDoesNotReturn</node>
+    <node x="385.0" y="45.0">codeemoji.core.collector.implicit.jpa.CEJPAEntityCollector</node>
+    <node x="237.0" y="611.5">codeemoji.core.collector.simple.CEMethodCollector</node>
+    <node x="57.0" y="806.0">codeemoji.inlay.structuralanalysis.codecomplexity.LargeLineCountMethod</node>
+    <node x="-217.0" y="902.0">codeemoji.core.provider.CEProviderMulti</node>
+    <node x="432.75" y="126.5">codeemoji.core.collector.CEInlayBuilder</node>
+    <node x="620.0" y="45.0">codeemoji.core.collector.implicit.spring.CESpringConfigurationCollector</node>
+    <node x="935.0" y="45.0">codeemoji.core.collector.implicit.jpa.CEJPAEmbeddableCollector</node>
+    <node x="1143.5" y="558.5">codeemoji.core.collector.simple.modifier.CEModifierMethodCollector</node>
+    <node x="507.0" y="185.0">codeemoji.core.collector.CEDynamicInlayBuilder</node>
+    <node x="575.0" y="960.0">codeemoji.inlay.showingspecifics.ShowingSpecifics</node>
+    <node x="520.0" y="500.0">codeemoji.core.collector.simple.CEReferenceFieldCollector</node>
+    <node x="312.0" y="185.0">codeemoji.core.collector.CECollector</node>
+    <node x="662.0" y="611.5">codeemoji.core.collector.simple.CEVariableCollector</node>
+    <node x="527.5" y="548.0">codeemoji.core.collector.simple.modifier.CEModifierFieldCollector</node>
+    <node x="576.0" y="700.0">codeemoji.inlay.nameviolation.NameContainsOnlySpecialCharacters</node>
+    <node x="407.0" y="1013.0">codeemoji.inlay.implicit.ImplicitAnnotations</node>
+    <node x="1343.0" y="753.0">codeemoji.inlay.nameviolation.SetMethodReturns</node>
+    <node x="723.0" y="753.0">codeemoji.inlay.nameviolation.NotAnsweredQuestion</node>
+    <node x="626.0" y="859.0">codeemoji.inlay.nameviolation.SaysManyButContainsOne</node>
+    <node x="332.0" y="700.0">codeemoji.inlay.nameviolation.ShortDescriptiveName</node>
+    <node x="57.0" y="859.0">codeemoji.inlay.nameviolation.SaysOneButContainsMany</node>
+    <node x="953.5" y="291.5">codeemoji.core.collector.project.CEProjectVariableCollector</node>
+    <node x="79.5" y="93.0">codeemoji.core.collector.implicit.spring.CESpringRestControllerCollector</node>
+    <node x="680.0" y="233.0">codeemoji.core.collector.project.CEProjectCollector</node>
+    <node x="97.0" y="45.0">codeemoji.core.collector.implicit.spring.CESpringControllerCollector</node>
+    <node x="458.0" y="611.5">codeemoji.core.collector.simple.CEClassCollector</node>
+    <node x="781.0" y="960.0">codeemoji.inlay.structuralanalysis.element.method.ExternalFunctionalityInvokingMethod</node>
+    <node x="244.5" y="548.0">codeemoji.core.collector.simple.modifier.CEModifierClassCollector</node>
+    <node x="308.0" y="806.0">codeemoji.inlay.structuralanalysis.codecomplexity.LargeMethodCountClass</node>
+    <node x="976.5" y="500.0">codeemoji.core.collector.simple.CEReferenceMethodCollector</node>
+    <node x="934.0" y="700.0">codeemoji.inlay.structuralanalysis.codecomplexity.HighCyclomaticComplexityMethod</node>
+    <node x="1233.0" y="806.0">codeemoji.inlay.nameviolation.ExpectingButNotGettingACollection</node>
+    <node x="570.0" y="806.0">codeemoji.inlay.nameviolation.ValidationMethodDoesNotConfirm</node>
+    <node x="102.0" y="442.0">codeemoji.core.collector.simple.CESimpleCollector</node>
+    <node x="237.0" y="500.0">codeemoji.core.collector.simple.CEReferenceClassCollector</node>
+    <node x="1270.0" y="700.0">codeemoji.inlay.nameviolation.GetMoreThanAccessor</node>
+    <node x="624.0" y="1013.0">codeemoji.inlay.showingmodifiers.ShowingModifiers</node>
+    <node x="331.0" y="859.0">codeemoji.inlay.nameviolation.IsReturnsMoreThanABoolean</node>
+    <node x="-103.0" y="960.0">codeemoji.inlay.vulnerabilities.VulnerableDependency</node>
+    <node x="57.0" y="753.0">codeemoji.inlay.nameviolation.ExpectingButNotGettingASingleInstance</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="codeemoji.core.collector.simple.CESimpleDynamicCollector" target="codeemoji.core.collector.CECollector" relationship="GENERALIZATION">
+      <point x="-158.0" y="0.0" />
+      <point x="384.75" y="353.5" />
+      <point x="-14.75" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.nameviolation.GetMoreThanAccessor" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="1384.0" y="676.0" />
+      <point x="102.3465295242006" y="676.0" />
+      <point x="55.346529524200605" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.nameviolation.NotAnsweredQuestion" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="836.0" y="740.5" />
+      <point x="41.30785666683778" y="740.5" />
+      <point x="-5.692143333162221" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.simple.modifier.CEModifierFieldCollector" target="codeemoji.core.collector.simple.CEReferenceFieldCollector" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.nameviolation.TransformMethodDoesNotReturn" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="1059.0" y="791.0" />
+      <point x="20.384591904737462" y="791.0" />
+      <point x="-26.615408095262538" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.simple.CESimpleCollector" target="codeemoji.core.collector.CECollector" relationship="GENERALIZATION">
+      <point x="123.0" y="-14.0" />
+      <point x="-49.5" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.nameviolation.SetMethodReturns" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="1440.5" y="732.1666666666666" />
+      <point x="51.76948904788793" y="732.1666666666666" />
+      <point x="4.76948904788793" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.implicit.jpa.CEJPAEntityCollector" target="codeemoji.core.collector.implicit.CEImplicitCollector" relationship="GENERALIZATION">
+      <point x="105.5" y="-14.0" />
+      <point x="-32.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.nameviolation.NameSuggestsBooleanByTypeDoesNot" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="1146.0" y="736.3333333333333" />
+      <point x="46.538672857362855" y="736.3333333333333" />
+      <point x="-0.46132714263714547" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.simple.modifier.CEModifierClassCollector" target="codeemoji.core.collector.simple.CEReferenceClassCollector" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.showingspecifics.ShowingSpecifics" target="codeemoji.core.provider.CEProviderMulti" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="668.0" y="942.0" />
+      <point x="-88.0" y="942.0" />
+      <point x="25.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.structuralanalysis.codecomplexity.HighCyclomaticComplexityMethod" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="1092.0" y="682.0" />
+      <point x="97.11571333367553" y="682.0" />
+      <point x="50.11571333367553" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.project.CEProjectMethodCollector" target="codeemoji.core.collector.project.CEProjectCollector" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.structuralanalysis.element.method.ExternalFunctionalityInvokingMethod" target="codeemoji.core.provider.CEProviderMulti" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="948.0" y="936.0" />
+      <point x="-78.0" y="936.0" />
+      <point x="35.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.CEDynamicInlayBuilder" target="codeemoji.core.collector.CEInlayBuilder" relationship="GENERALIZATION">
+      <point x="-110.75" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.simple.CEDynamicMethodCollector" target="codeemoji.core.collector.simple.CESimpleDynamicCollector" relationship="GENERALIZATION">
+      <point x="7.5" y="-14.0" />
+      <point x="-156.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.nameviolation.ValidationMethodDoesNotConfirm" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="727.5" y="796.0" />
+      <point x="15.153775714212387" y="796.0" />
+      <point x="-31.846224285787613" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.project.CEProjectClassCollector" target="codeemoji.core.collector.project.CEProjectCollector" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="539.0" y="263.0" />
+      <point x="796.0" y="263.0" />
+      <point x="-10.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.structuralanalysis.element.method.StateIndependentMethod" target="codeemoji.core.provider.CEProviderMulti" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="20.5" y="1008.0" />
+      <point x="-175.0" y="1008.0" />
+      <point x="-62.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.simple.CEReferenceMethodCollector" target="codeemoji.core.collector.simple.CESimpleCollector" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="1116.5" y="480.0" />
+      <point x="247.0" y="480.0" />
+      <point x="20.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.nameviolation.IsReturnsMoreThanABoolean" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="468.5" y="846.5" />
+      <point x="-0.5386728573628403" y="846.5" />
+      <point x="-47.53867285736284" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.simple.modifier.CEModifierMethodCollector" target="codeemoji.core.collector.simple.CEReferenceMethodCollector" relationship="GENERALIZATION">
+      <point x="-21.5" y="-14.0" />
+      <point x="138.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.project.CEProjectVariableCollector" target="codeemoji.core.collector.project.CEProjectCollector" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1083.0" y="263.0" />
+      <point x="816.0" y="263.0" />
+      <point x="10.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.implicit.ImplicitAnnotations" target="codeemoji.core.provider.CEProviderMulti" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="505.5" y="998.0" />
+      <point x="-155.0" y="998.0" />
+      <point x="-42.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.nameviolation.SaysManyButContainsOne" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="753.0" y="840.25" />
+      <point x="4.692143333162235" y="840.25" />
+      <point x="-42.307856666837765" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.simple.CEVariableCollector" target="codeemoji.core.collector.simple.CESimpleCollector" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="764.5" y="584.875" />
+      <point x="179.5" y="584.875" />
+      <point x="-47.5" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.nameviolation.ShortDescriptiveName" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="444.0" y="694.0" />
+      <point x="86.65408095262538" y="694.0" />
+      <point x="39.65408095262538" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.structuralanalysis.element.method.StateChangingMethod" target="codeemoji.core.provider.CEProviderMulti" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="275.5" y="1003.0" />
+      <point x="-165.0" y="1003.0" />
+      <point x="-52.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.structuralanalysis.element.method.PureSetterMethod" target="codeemoji.core.provider.CEProviderMulti" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="244.5" y="954.0" />
+      <point x="-108.0" y="954.0" />
+      <point x="5.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.implicit.CEImplicitCollector" target="codeemoji.core.collector.CECollector" relationship="GENERALIZATION">
+      <point x="-98.0" y="0.0" />
+      <point x="-219.0" y="0.5" />
+      <point x="-219.0" y="199.0" />
+      <point x="-87.5" y="0.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.implicit.spring.CESpringConfigurationCollector" target="codeemoji.core.collector.implicit.CEImplicitCollector" relationship="GENERALIZATION">
+      <point x="-98.5" y="-14.0" />
+      <point x="39.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.simple.CEMethodCollector" target="codeemoji.core.collector.simple.CESimpleCollector" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="337.5" y="602.625" />
+      <point x="159.5" y="602.625" />
+      <point x="-67.5" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.structuralanalysis.codecomplexity.LargeLineCountMethod" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="172.5" y="801.0" />
+      <point x="9.922959523687311" y="801.0" />
+      <point x="-37.07704047631269" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.implicit.jpa.CEJPAEmbeddableCollector" target="codeemoji.core.collector.implicit.CEImplicitCollector" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1070.0" y="16.5" />
+      <point x="679.0" y="16.5" />
+      <point x="49.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.CECollector" target="codeemoji.core.collector.CEInlayBuilder" relationship="GENERALIZATION">
+      <point x="85.5" y="-14.0" />
+      <point x="-25.25" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.nameviolation.ExpectingButNotGettingASingleInstance" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="236.0" y="748.8333333333334" />
+      <point x="30.846224285787613" y="748.8333333333334" />
+      <point x="-16.153775714212387" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.simple.CEDynamicReferenceMethodCollector" target="codeemoji.core.collector.simple.CESimpleDynamicCollector" relationship="GENERALIZATION">
+      <point x="-163.5" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.nameviolation.ExpectingButNotGettingACollection" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="1394.5" y="786.0" />
+      <point x="25.615408095262538" y="786.0" />
+      <point x="-21.384591904737462" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.nameviolation.NameContainsOnlySpecialCharacters" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="745.0" y="688.0" />
+      <point x="91.88489714315045" y="688.0" />
+      <point x="44.884897143150454" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.structuralanalysis.codecomplexity.LargeMethodCountClass" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="429.0" y="744.6666666666667" />
+      <point x="36.0770404763127" y="744.6666666666667" />
+      <point x="-10.922959523687297" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.vulnerabilities.VulnerableDependency" target="codeemoji.core.provider.CEProviderMulti" relationship="GENERALIZATION">
+      <point x="-113.5" y="-14.0" />
+      <point x="12.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.structuralanalysis.codecomplexity.LargeIdentifierCountMethod" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="569.0" y="698.0" />
+      <point x="81.4232647621003" y="698.0" />
+      <point x="34.4232647621003" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.implicit.spring.CESpringRestControllerCollector" target="codeemoji.core.collector.implicit.spring.CESpringControllerCollector" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.structuralanalysis.element.method.PureGetterMethod" target="codeemoji.core.provider.CEProviderMulti" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="458.0" y="948.0" />
+      <point x="-98.0" y="948.0" />
+      <point x="15.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.nameviolation.GetMethodDoesNotReturn" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="-125.5" y="-14.0" />
+      <point x="12.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.simple.CEReferenceClassCollector" target="codeemoji.core.collector.simple.CESimpleCollector" relationship="GENERALIZATION">
+      <point x="-129.5" y="-14.0" />
+      <point x="12.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.simple.modifier.CEModifierInterfaceMethodCollector" target="codeemoji.core.collector.simple.CEReferenceMethodCollector" relationship="GENERALIZATION">
+      <point x="159.5" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.project.CEProjectCollector" target="codeemoji.core.collector.CECollector" relationship="GENERALIZATION">
+      <point x="-126.0" y="0.0" />
+      <point x="423.5" y="247.0" />
+      <point x="24.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.simple.CEClassCollector" target="codeemoji.core.collector.simple.CESimpleCollector" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="550.0" y="593.75" />
+      <point x="169.5" y="593.75" />
+      <point x="-57.5" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.showingmodifiers.ShowingModifiers" target="codeemoji.core.provider.CEProviderMulti" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="719.0" y="993.0" />
+      <point x="-145.0" y="993.0" />
+      <point x="-32.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.simple.CEReferenceFieldCollector" target="codeemoji.core.collector.simple.CESimpleCollector" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="649.0" y="490.0" />
+      <point x="237.0" y="490.0" />
+      <point x="10.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.collector.implicit.spring.CESpringControllerCollector" target="codeemoji.core.collector.implicit.CEImplicitCollector" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="231.0" y="16.5" />
+      <point x="653.0" y="16.5" />
+      <point x="23.0" y="14.0" />
+    </edge>
+    <edge source="codeemoji.inlay.nameviolation.SaysOneButContainsMany" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="-0.0" y="-14.0" />
+      <point x="184.0" y="852.75" />
+      <point x="-5.769489047887916" y="852.75" />
+      <point x="-52.769489047887916" y="14.0" />
+    </edge>
+    <edge source="codeemoji.core.provider.CEProviderMulti" target="codeemoji.core.provider.CEProvider" relationship="GENERALIZATION">
+      <point x="102.0" y="-14.0" />
+      <point x="-58.0" y="14.0" />
+    </edge>
+  </edges>
+  <settings layout="Compact" zoom="0.6204651162790698" showDependencies="false" x="527.0007496251876" y="587.9677661169429" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

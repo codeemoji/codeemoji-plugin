@@ -1,0 +1,118 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class CEClassCollector
+class CECollector<A>
+class CEDynamicInlayBuilder
+class CEDynamicMethodCollector
+class CEDynamicReferenceMethodCollector
+class CEImplicitCollector
+class CEInlayBuilder
+class CEJPAEmbeddableCollector
+class CEJPAEntityCollector
+class CEMethodCollector
+class CEModifierClassCollector
+class CEModifierFieldCollector
+class CEModifierInterfaceMethodCollector
+class CEModifierMethodCollector
+class CEProjectClassCollector
+class CEProjectCollector<H, A>
+class CEProjectMethodCollector
+class CEProjectVariableCollector
+class CEProvider<S>
+class CEProviderMulti<S>
+class CEReferenceClassCollector
+class CEReferenceFieldCollector
+class CEReferenceMethodCollector
+class CESimpleCollector<H, A>
+class CESimpleDynamicCollector<H, A>
+class CESpringConfigurationCollector
+class CESpringControllerCollector
+class CESpringRestControllerCollector
+class CEVariableCollector
+class ExpectingButNotGettingACollection
+class ExpectingButNotGettingASingleInstance
+class ExternalFunctionalityInvokingMethod
+class GetMethodDoesNotReturn
+class GetMoreThanAccessor
+class HighCyclomaticComplexityMethod
+class ImplicitAnnotations
+class IsReturnsMoreThanABoolean
+class LargeIdentifierCountMethod
+class LargeLineCountMethod
+class LargeMethodCountClass
+class NameContainsOnlySpecialCharacters
+class NameSuggestsBooleanByTypeDoesNot
+class NotAnsweredQuestion
+class PureGetterMethod
+class PureSetterMethod
+class SaysManyButContainsOne
+class SaysOneButContainsMany
+class SetMethodReturns
+class ShortDescriptiveName
+class ShowingModifiers
+class ShowingSpecifics
+class StateChangingMethod
+class StateIndependentMethod
+class TransformMethodDoesNotReturn
+class ValidationMethodDoesNotConfirm
+class VulnerableDependency
+
+CEClassCollector                       -[#000082,plain]-^  CESimpleCollector                     
+CECollector                            -[#000082,plain]-^  CEInlayBuilder                        
+CEDynamicInlayBuilder                  -[#000082,plain]-^  CEInlayBuilder                        
+CEDynamicMethodCollector               -[#000082,plain]-^  CESimpleDynamicCollector              
+CEDynamicReferenceMethodCollector      -[#000082,plain]-^  CESimpleDynamicCollector              
+CEImplicitCollector                    -[#000082,plain]-^  CECollector                           
+CEJPAEmbeddableCollector               -[#000082,plain]-^  CEImplicitCollector                   
+CEJPAEntityCollector                   -[#000082,plain]-^  CEImplicitCollector                   
+CEMethodCollector                      -[#000082,plain]-^  CESimpleCollector                     
+CEModifierClassCollector               -[#000082,plain]-^  CEReferenceClassCollector             
+CEModifierFieldCollector               -[#000082,plain]-^  CEReferenceFieldCollector             
+CEModifierInterfaceMethodCollector     -[#000082,plain]-^  CEReferenceMethodCollector            
+CEModifierMethodCollector              -[#000082,plain]-^  CEReferenceMethodCollector            
+CEProjectClassCollector                -[#000082,plain]-^  CEProjectCollector                    
+CEProjectCollector                     -[#000082,plain]-^  CECollector                           
+CEProjectMethodCollector               -[#000082,plain]-^  CEProjectCollector                    
+CEProjectVariableCollector             -[#000082,plain]-^  CEProjectCollector                    
+CEProviderMulti                        -[#000082,plain]-^  CEProvider                            
+CEReferenceClassCollector              -[#000082,plain]-^  CESimpleCollector                     
+CEReferenceFieldCollector              -[#000082,plain]-^  CESimpleCollector                     
+CEReferenceMethodCollector             -[#000082,plain]-^  CESimpleCollector                     
+CESimpleCollector                      -[#000082,plain]-^  CECollector                           
+CESimpleDynamicCollector               -[#000082,plain]-^  CECollector                           
+CESpringConfigurationCollector         -[#000082,plain]-^  CEImplicitCollector                   
+CESpringControllerCollector            -[#000082,plain]-^  CEImplicitCollector                   
+CESpringRestControllerCollector        -[#000082,plain]-^  CESpringControllerCollector           
+CEVariableCollector                    -[#000082,plain]-^  CESimpleCollector                     
+ExpectingButNotGettingACollection      -[#000082,plain]-^  CEProvider                            
+ExpectingButNotGettingASingleInstance  -[#000082,plain]-^  CEProvider                            
+ExternalFunctionalityInvokingMethod    -[#000082,plain]-^  CEProviderMulti                       
+GetMethodDoesNotReturn                 -[#000082,plain]-^  CEProvider                            
+GetMoreThanAccessor                    -[#000082,plain]-^  CEProvider                            
+HighCyclomaticComplexityMethod         -[#000082,plain]-^  CEProvider                            
+ImplicitAnnotations                    -[#000082,plain]-^  CEProviderMulti                       
+IsReturnsMoreThanABoolean              -[#000082,plain]-^  CEProvider                            
+LargeIdentifierCountMethod             -[#000082,plain]-^  CEProvider                            
+LargeLineCountMethod                   -[#000082,plain]-^  CEProvider                            
+LargeMethodCountClass                  -[#000082,plain]-^  CEProvider                            
+NameContainsOnlySpecialCharacters      -[#000082,plain]-^  CEProvider                            
+NameSuggestsBooleanByTypeDoesNot       -[#000082,plain]-^  CEProvider                            
+NotAnsweredQuestion                    -[#000082,plain]-^  CEProvider                            
+PureGetterMethod                       -[#000082,plain]-^  CEProviderMulti                       
+PureSetterMethod                       -[#000082,plain]-^  CEProviderMulti                       
+SaysManyButContainsOne                 -[#000082,plain]-^  CEProvider                            
+SaysOneButContainsMany                 -[#000082,plain]-^  CEProvider                            
+SetMethodReturns                       -[#000082,plain]-^  CEProvider                            
+ShortDescriptiveName                   -[#000082,plain]-^  CEProvider                            
+ShowingModifiers                       -[#000082,plain]-^  CEProviderMulti                       
+ShowingSpecifics                       -[#000082,plain]-^  CEProviderMulti                       
+StateChangingMethod                    -[#000082,plain]-^  CEProviderMulti                       
+StateIndependentMethod                 -[#000082,plain]-^  CEProviderMulti                       
+TransformMethodDoesNotReturn           -[#000082,plain]-^  CEProvider                            
+ValidationMethodDoesNotConfirm         -[#000082,plain]-^  CEProvider                            
+VulnerableDependency                   -[#000082,plain]-^  CEProviderMulti                       
+@enduml
