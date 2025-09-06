@@ -1,6 +1,7 @@
 package codeemoji.inlay.vcs;
 
 import codeemoji.core.util.CEBundle;
+import com.intellij.dvcs.repo.RepositoryManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;

@@ -1,4 +1,4 @@
-package codeemoji.inlay.vcs.revisions.unfrequentlymodified;
+package codeemoji.inlay.vcs.revisions.infrequentlymodified;
 
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
@@ -17,15 +17,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 
-public class UnFrequentlyModified extends CEProvider<UnFrequentlyModifiedSettings> {
+public class InFrequentlyModified extends CEProvider<InFrequentlyModifiedSettings> {
 
     @Override
-    public @NotNull CEBaseConfigurableWindow<UnFrequentlyModifiedSettings> createConfigurable() {
-        return new UnFrequentlyModifiedConfigurable();
+    public @NotNull CEBaseConfigurableWindow<InFrequentlyModifiedSettings> createConfigurable() {
+        return new InFrequentlyModifiedConfigurable();
     }
 
     @Override
-    protected void createCollectors(CEProvider<UnFrequentlyModifiedSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+    protected void createCollectors(CEProvider<InFrequentlyModifiedSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
         builder.addMethodCollector(e -> createInlayFor(e, editor));
         builder.addClassCollector(e -> createInlayFor(e, editor));
     }
