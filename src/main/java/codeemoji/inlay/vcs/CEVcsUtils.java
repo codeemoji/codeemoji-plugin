@@ -140,26 +140,6 @@ public final class CEVcsUtils {
         return TextRange.create(startElement.getTextRange().getStartOffset(), element.getTextRange().getEndOffset());
     }
 
-    // I cant find an equivalent of this using intellij vcs. This needs to return the global last revision not the latest one that modifies a certain file
-
-    public static boolean isRevisionRecent(@NotNull Project project,
-                                                  @NotNull VcsRevisionNumber revisionToCheck,
-                                                  int maxRevisions) {
-        //TODO: cache?
-        GitRepository repo = getProjectGitRepository(project);
-        if (repo == null) return false;
-
-        List<GitCommit> recentCommits;
-        try {
-            recentCommits = GitHistoryUtils.history(project, repo.getRoot(), "--max-count=" + maxRevisions);
-        } catch (VcsException e) {
-            return false;
-        }
-
-        return recentCommits.stream()
-                .map(commit -> commit.getId().asString())
-                .anyMatch(rev -> rev.equals(revisionToCheck.asString()));
-    }
 
     public static @Nullable GitRepository getProjectGitRepository(@NotNull Project project) {
         GitRepositoryManager repositoryManager = GitUtil.getRepositoryManager(project);
@@ -177,19 +157,6 @@ public final class CEVcsUtils {
         return hash != null ? new GitRevisionNumber(hash) : null;
     }
 
-    public static @NotNull List<GitCommit> getLastCommits(@NotNull Project project, int limit) {
-        GitRepository repo = getProjectGitRepository(project);
-        if (repo == null) return List.of();
-
-        VirtualFile root = repo.getRoot();
-
-        try {
-            // "--max-count=X" limits the number of commits returned
-            return GitHistoryUtils.history(project, root, "--max-count=" + limit);
-        } catch (VcsException e) {
-            return List.of();
-        }
-    }
 
     /**
      * Gets the full commit message for the given revision hash.
@@ -212,13 +179,6 @@ public final class CEVcsUtils {
         return null;
     }
 
-
-    /**
-     * Gets the full commit message for a given revision object.
-     */
-    public static @Nullable String getCommitMessageForRevision(@NotNull Project project, @NotNull VcsRevisionNumber revision) {
-        return getCommitMessageForRevision(project, revision.asString());
-    }
 
     @Nullable
     public static Date getEarliestModificationDate(
