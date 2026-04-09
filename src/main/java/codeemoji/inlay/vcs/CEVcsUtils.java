@@ -1,30 +1,44 @@
 package codeemoji.inlay.vcs;
 
+import codeemoji.core.util.CEBundle;
+import com.intellij.dvcs.repo.RepositoryManager;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.AbstractVcs;
+import com.intellij.openapi.vcs.ProjectLevelVcsManager;
+import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.annotate.AnnotationProvider;
+import com.intellij.openapi.vcs.annotate.AnnotationsPreloader;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
+import com.intellij.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.SyntaxTraverser;
+import com.intellij.psi.*;
 import com.intellij.vcs.CacheableAnnotationProvider;
-import git4idea.*;
-import git4idea.history.GitLogUtil;
+import git4idea.GitCommit;
+import git4idea.GitRevisionNumber;
+import git4idea.GitUtil;
+import git4idea.history.GitHistoryUtils;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryManager;
+import io.kinference.core.operators.tensor.Abs;
 import org.intellij.lang.annotations.MagicConstant;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 // static class. clean up later.
 public final class CEVcsUtils {
@@ -45,20 +59,26 @@ public final class CEVcsUtils {
                 .findFirst().orElse(null);
     }
 
+    public static @Nullable FileAnnotation getAnnotation(@NotNull PsiFile file, @NotNull Editor editor) {
+        ProjectLevelVcsManager projectVcs = ProjectLevelVcsManager.getInstance(file.getProject());
+        VirtualFile virtualFile = file.getVirtualFile();
+        AbstractVcs vcs = projectVcs.getVcsFor(virtualFile);
+        if (vcs != null) {
+          return CEVcsUtils.getAnnotation(vcs, virtualFile, editor);
+        } else {
+           return null;
+        }
+    }
+
     // copied from VcsCodeAuthorInlayHintsCollector
     // gets the git annotation of the current file
     // basically gets the git blame for each line
     @Nullable
     public static FileAnnotation getAnnotation(AbstractVcs vcs, VirtualFile file, Editor editor) {
-        // uhm get cached one maybe
+        // uhm get cached one maybe. we cant use this one.. it could be not related to our file and just be the opened file one
         FileAnnotation annotation = editor.getUserData(VCS_CODE_AUTHOR_ANNOTATION);
         if (annotation != null) {
-            return annotation;
-        }
-
-        // gets version control for this project file. Similar to GitInstance thing i guess?
-        if (vcs == null) {
-            return null;
+     //       return annotation;
         }
 
         // could it be this is the GitAnnotationProvider from before?
@@ -67,36 +87,47 @@ public final class CEVcsUtils {
             // this probably calls .annotate internally
             // .annotate is where the magic happens
             annotation = cacheable.getFromCache(file);
+            if (annotation == null) {
+                // if we have a cached annotation, we can return it
+                return null;
+            }
 
-            //whatever this does...
+            //whatever this does... (remove?)
 
-            /*
-            Disposable annotationDisposable = new Disposable() {
-                @Override
-                public void dispose() {
-                    unregisterAnnotation(annotation);
-                    annotation.dispose();
-                }
+            FileAnnotation finalAnnotation = annotation;
+ 
+            Disposable annotationDisposable = () -> {
+                unregisterAnnotation(finalAnnotation);
+                finalAnnotation.dispose();
             };
 
-            annotation.setCloser(() -> {
+            finalAnnotation.setCloser(() -> {
                 editor.putUserData(VCS_CODE_AUTHOR_ANNOTATION, null);
                 Disposer.dispose(annotationDisposable);
 
-                project.getService(AnnotationsPreloader.class).schedulePreloading(file);
+                finalAnnotation.getProject().getService(AnnotationsPreloader.class).schedulePreloading(file);
             });
 
-            annotation.setReloader(annotation::close);
+            finalAnnotation.setReloader(FileAnnotation::close);
 
-            editor.putUserData(VCS_CODE_AUTHOR_ANNOTATION, annotation);
-            registerAnnotation(annotation);
-            disposeWithEditor(editor, annotationDisposable);
-            */
+            editor.putUserData(VCS_CODE_AUTHOR_ANNOTATION, finalAnnotation);
+            registerAnnotation(finalAnnotation);
+            ApplicationManager.getApplication().invokeLater(() -> {
+                EditorUtil.disposeWithEditor(editor, annotationDisposable);
+            });
 
-            return annotation;
+            return finalAnnotation;
         }
 
         return null;
+    }
+
+    private static void unregisterAnnotation(FileAnnotation annotation) {
+        ProjectLevelVcsManager.getInstance(annotation.getProject()).getAnnotationLocalChangesListener().unregisterAnnotation(annotation);
+    }
+
+    private static void registerAnnotation(FileAnnotation annotation) {
+        ProjectLevelVcsManager.getInstance(annotation.getProject()).getAnnotationLocalChangesListener().registerAnnotation(annotation);
     }
 
     public static TextRange getTextRangeWithoutLeadingCommentsAndWhitespaces(PsiElement element) {
@@ -109,34 +140,94 @@ public final class CEVcsUtils {
         return TextRange.create(startElement.getTextRange().getStartOffset(), element.getTextRange().getEndOffset());
     }
 
-    // I cant find an equivalent of this using intellij vcs. This needs to return the global last revision not the latest one that modifies a certain file
-    @Nullable
-    public static VcsRevisionNumber getLastGitRevision(Project project, VirtualFile file, AbstractVcs vcs) {
-        // Get all Git repositories in the project
+
+    public static @Nullable GitRepository getProjectGitRepository(@NotNull Project project) {
         GitRepositoryManager repositoryManager = GitUtil.getRepositoryManager(project);
-        Collection<GitRepository> repositories = repositoryManager.getRepositories();
-
-        
-        if (repositories.isEmpty()) {
-            return null;
-        }
-
-        // Get the first repository (assuming single-repo project)
-        GitRepository repo = repositories.iterator().next();
-
-        // Get the current branch and its latest commit hash
-        GitLocalBranch currentBranch = repo.getCurrentBranch();
-        if (currentBranch == null) {
-            return null;
-
-        }
-
-        var latestCommitHash = repo.getInfo().getCurrentRevision();
-        if (latestCommitHash == null) return null;
-
-        return new GitRevisionNumber(latestCommitHash);
+        return repositoryManager.getRepositories().stream().findFirst().orElse(null);
     }
 
+    /**
+     * Gets the latest (HEAD) revision for the current Git repo.
+     */
+    public static @Nullable VcsRevisionNumber getProjectHeadRevision(@NotNull Project project) {
+        GitRepository repo = getProjectGitRepository(project);
+        if (repo == null) return null;
+
+        String hash = repo.getCurrentRevision();
+        return hash != null ? new GitRevisionNumber(hash) : null;
+    }
+
+
+    /**
+     * Gets the full commit message for the given revision hash.
+     */
+    public static @Nullable String getCommitMessageForRevision(@NotNull Project project, @NotNull String commitHash) {
+        GitRepository repo = getProjectGitRepository(project);
+        if (repo == null) return null;
+
+        try {
+            //TODO: cache this
+            List<GitCommit> commits = GitHistoryUtils.history(project, repo.getRoot(), commitHash);
+            if (!commits.isEmpty()) {
+                return commits.get(0).getFullMessage();
+            }
+        } catch (Exception e) {
+            //errorrr!
+            return null;
+        }
+
+        return null;
+    }
+
+
+    @Nullable
+    public static Date getEarliestModificationDate(
+            Project project, TextRange range, Document document,  FileAnnotation blame) {
+
+        int startLine = document.getLineNumber(range.getStartOffset());
+        int endLine = document.getLineNumber(range.getEndOffset());
+        UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);
+
+        return IntStream.rangeClosed(startLine, endLine)
+                .mapToObj(provider::getLineNumber)
+                .map(blame::getLineDate)  //gets the date name for line
+                .filter(Objects::nonNull)
+                .min(Date::compareTo)
+                .orElse(null);
+    }
+
+    @Nullable
+    public static Date getLatestModificationDate(
+            Project project, TextRange range, Document document, FileAnnotation blame) {
+
+        int startLine = document.getLineNumber(range.getStartOffset());
+        int endLine = document.getLineNumber(range.getEndOffset());
+        UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);
+
+        return IntStream.rangeClosed(startLine, endLine)
+                .mapToObj(provider::getLineNumber)
+                .map(blame::getLineDate)  //gets the author name for line
+                .filter(Objects::nonNull)
+                .max(Date::compareTo)
+                .orElse(null);
+    }
+
+
+    public static String getDaysAgoTooltipString(Date date) {
+        // calculate how many days ago it was
+        long diff = System.currentTimeMillis() - date.getTime();
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+        if (diffDays == 0) {
+            return CEBundle.getString("inlay.recentlymodified.tooltip.today");
+        } else if (diffDays == 1) {
+            return CEBundle.getString("inlay.recentlymodified.tooltip.yesterday");
+        } else if (diffDays < 365) {
+            return CEBundle.getString("inlay.recentlymodified.tooltip.days_ago", diffDays);
+        } else {
+            int years = (int) (diffDays / 365);
+            return CEBundle.getString("inlay.recentlymodified.tooltip.years_ago", years);
+        }
+    }
 
     //there's also a Vcsutil calss
 }

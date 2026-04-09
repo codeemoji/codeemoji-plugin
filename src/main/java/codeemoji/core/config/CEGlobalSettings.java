@@ -23,11 +23,13 @@ public class CEGlobalSettings implements PersistentStateComponent<CEGlobalSettin
 
     private String ossApiToken = "";
 
+    private boolean frontEmojiPlacement = false;
+
     public static CEGlobalSettings getInstance() {
         return ApplicationManager.getApplication().getService(CEGlobalSettings.class);
     }
 
-    public VulnerabilityInfo.ScannerType getType() {
+    public VulnerabilityInfo.ScannerType getScannerType() {
         if (useSecondaryVulnerabilityScanner) {
             return VulnerabilityInfo.ScannerType.OSS;
         }
@@ -48,6 +50,7 @@ public class CEGlobalSettings implements PersistentStateComponent<CEGlobalSettin
         myExternalServiceState = state.myExternalServiceState;
         useSecondaryVulnerabilityScanner = state.useSecondaryVulnerabilityScanner;
         ossApiToken = state.ossApiToken;
+        frontEmojiPlacement = state.frontEmojiPlacement;
     }
 
     public void fireSettingsChanged() {

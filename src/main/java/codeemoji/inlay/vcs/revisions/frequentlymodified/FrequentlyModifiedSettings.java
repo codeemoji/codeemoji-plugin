@@ -1,5 +1,6 @@
 package codeemoji.inlay.vcs.revisions.frequentlymodified;
 
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.inlay.vcs.VCSSymbols;
 import com.intellij.openapi.components.State;
@@ -14,8 +15,10 @@ public final class FrequentlyModifiedSettings extends CEBaseSettings<FrequentlyM
 
     private int modifications = 15;
     private int daysTimeFrame = 30;
+
     public FrequentlyModifiedSettings() {
-        super(FrequentlyModified.class, VCSSymbols.FREQUENTLY_MODIFIED);
+        super(builder().targetMethods().targetClasses().targetReferences(),
+                FrequentlyModified.class, VCSSymbols.FREQUENTLY_MODIFIED);
     }
 
 }

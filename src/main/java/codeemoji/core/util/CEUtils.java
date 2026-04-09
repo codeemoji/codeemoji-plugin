@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -27,11 +28,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static com.intellij.psi.PsiModifier.*;
 
@@ -442,27 +442,27 @@ public enum CEUtils {
         return result;
     }
 
-    public static List<VirtualFile> getSourceRootsInProject(@NotNull Project project){
+    public static List<VirtualFile> getSourceRootsInProject(@NotNull Project project) {
         return Arrays.stream(ModuleManager.getInstance(project).getModules()).map(module -> ModuleRootManager.getInstance(module).getSourceRoots()).flatMap(Arrays::stream).toList();
     }
 
-    public static int calculateMethodBodyLineCount(PsiMethod method){
+    public static int calculateMethodBodyLineCount(PsiMethod method) {
         Document documentOfMethod = method.getContainingFile().getViewProvider().getDocument();
         int methodBodyLineCount = 0;
         final PsiCodeBlock methodBody = method.getBody();
         final PsiElement[] methodBodyChildren = methodBody != null ? methodBody.getChildren() : null;
 
-        if(methodBody != null && !methodBody.isEmpty()){
+        if (methodBody != null && !methodBody.isEmpty()) {
             PsiElement leftParenthesis = methodBodyChildren[0];
-            PsiElement rightParenthesis = methodBodyChildren[methodBodyChildren.length-1];
+            PsiElement rightParenthesis = methodBodyChildren[methodBodyChildren.length - 1];
             final PsiStatement[] methodBodyStatements = methodBody.getStatements();
 
             methodBodyLineCount = documentOfMethod.getLineNumber(rightParenthesis.getTextOffset()) - documentOfMethod.getLineNumber(leftParenthesis.getTextOffset()) - 1;
 
-            if(documentOfMethod.getLineNumber(leftParenthesis.getTextOffset()) == documentOfMethod.getLineNumber(methodBodyStatements[0].getTextOffset())){
+            if (documentOfMethod.getLineNumber(leftParenthesis.getTextOffset()) == documentOfMethod.getLineNumber(methodBodyStatements[0].getTextOffset())) {
                 methodBodyLineCount = methodBodyLineCount + 1;
             }
-            if(documentOfMethod.getLineNumber(rightParenthesis.getTextOffset()) == documentOfMethod.getLineNumber(methodBodyStatements[methodBodyStatements.length - 1].getTextOffset())){
+            if (documentOfMethod.getLineNumber(rightParenthesis.getTextOffset()) == documentOfMethod.getLineNumber(methodBodyStatements[methodBodyStatements.length - 1].getTextOffset())) {
                 methodBodyLineCount = methodBodyLineCount + 1;
             }
         }
@@ -470,7 +470,7 @@ public enum CEUtils {
         return methodBodyLineCount;
     }
 
-    public static int calculateCommentPaddingLinesInMethod(PsiMethod method){
+    public static int calculateCommentPaddingLinesInMethod(PsiMethod method) {
         Document documentOfMethod = method.getContainingFile().getViewProvider().getDocument();
         return Arrays.stream(PsiTreeUtil.collectElements(method.getBody(), element -> element instanceof PsiComment))
                 .mapToInt(commentElement -> {
@@ -481,12 +481,12 @@ public enum CEUtils {
                 .sum();
     }
 
-    public static <E extends PsiElement> int calculateLinesOfPsiElement(@NotNull E element){
+    public static <E extends PsiElement> int calculateLinesOfPsiElement(@NotNull E element) {
         Document documentOfMethod = element.getContainingFile().getViewProvider().getDocument();
         return 1 + (documentOfMethod.getLineNumber(element.getTextOffset() + element.getTextLength()) - documentOfMethod.getLineNumber(element.getTextOffset()));
     }
 
-    public static DependencyInfo getDependecyInfo(Library library) {
+    public static DependencyInfo getDependencyInfo(Library library) {
         String dependencyName = library.getName();
         if (!dependencyName.startsWith("Gradle: ")) {
             throw new IllegalArgumentException("Invalid format: not starting with Gradle");
@@ -539,7 +539,7 @@ public enum CEUtils {
                 );
     }
 
-    public static PsiMethod[] collectExternalFunctionalityInvokingMethods(PsiMethod method){
+    public static PsiMethod[] collectExternalFunctionalityInvokingMethods(PsiMethod method) {
         return PsiTreeUtil.collectElementsOfType(method.getNavigationElement(), PsiMethodCallExpression.class)
                 .stream()
                 .distinct()
@@ -566,7 +566,7 @@ public enum CEUtils {
 
         for (Map.Entry<?, ?> entry : externalInfo.entrySet()) {
             if (entry.getKey() instanceof DependencyInfo dependencyInfo) {
-                String name = dependencyInfo.getPath();
+                String name = dependencyInfo.path();
                 String dependency = name.split("@")[0];
                 if (dependency.equals(normalizedPath)) {
                     if (entry.getValue() instanceof ArrayList<?> cveList) {
@@ -589,6 +589,38 @@ public enum CEUtils {
             }
         }
         return null;
+    }
+
+    @Nullable
+    public static Document getContainingDocument(PsiElement element) {
+        PsiFile psiFile = element.getContainingFile();
+
+        VirtualFile virtualFile = psiFile.getVirtualFile();
+        if (virtualFile == null) {
+            //TODO: why is this null? how to prevent it? fix
+            return null;
+        }
+
+        Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
+        if (document == null) {
+            return null;
+        }
+        return document;
+    }
+
+
+    public static boolean isFromCurrentProject(PsiElement element) {
+
+        PsiFile psiFile = element.getContainingFile();
+        if (psiFile == null) return false;
+        VirtualFile virtualFile = psiFile.getVirtualFile();
+        if (virtualFile == null) return false;
+
+        Project project = element.getProject();
+        ProjectFileIndex fileIndex = ProjectFileIndex.getInstance(project);
+
+        // Returns true if the file belongs to the project's source/content roots
+        return fileIndex.isInContent(virtualFile);
     }
 
 }

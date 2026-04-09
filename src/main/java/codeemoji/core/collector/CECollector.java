@@ -1,9 +1,10 @@
 package codeemoji.core.collector;
 
+import codeemoji.core.config.CEGlobalSettings;
 import codeemoji.core.external.CEExternalAnalyzer;
-import codeemoji.core.util.CEBundle;
-import codeemoji.core.util.CESymbol;
-import com.intellij.codeInsight.hints.declarative.*;
+import com.intellij.codeInsight.hints.declarative.InlayTreeSink;
+import com.intellij.codeInsight.hints.declarative.InlineInlayPosition;
+import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.psi.PsiElement;
@@ -36,29 +37,19 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
 
     @Override
     public void collectFromElement(@NotNull PsiElement psiElement, @NotNull InlayTreeSink inlayTreeSink) {
-        if (isEnabled()) {
-            if (psiElement instanceof PsiJavaFile) {
-                psiElement.accept(createElementVisitor(getEditor(), inlayTreeSink));
-            }
+        if (psiElement instanceof PsiJavaFile) {
+            psiElement.accept(createElementVisitor(getEditor(), inlayTreeSink));
         }
-    }
-
-    protected int calcOffset(@Nullable A element) {
-        if (null != element) {
-            return element.getTextOffset() + element.getTextLength();
-        }
-        return 0;
-    }
-
-    protected boolean isEnabled() {
-        return true;
     }
 
     public final void addInlayInline(@Nullable A element, @NotNull InlayTreeSink sink, @NotNull InlayVisuals inlay) {
         if (null != element) {
-
+            // Add inlay to editor here
+            boolean leftPlacement = CEGlobalSettings.getInstance().isFrontEmojiPlacement();
             sink.addPresentation(
-                    new InlineInlayPosition(element.getTextRange().getEndOffset(), true, 0),
+                    new InlineInlayPosition(
+                            leftPlacement ? element.getTextOffset() : calcOffset(element),
+                            true, 0),
                     List.of(),
                     inlay.tooltip(),
                     inlay.hasBackground(),
@@ -67,8 +58,18 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
                         return Unit.INSTANCE;
                     }
             );
+
         }
     }
+
+
+    protected int calcOffset(@Nullable A element) {
+        if (null != element) {
+            return element.getTextOffset() + element.getTextLength();
+        }
+        return 0;
+    }
+
 
     public final void addInlayBlock(@Nullable A element, @NotNull InlayTreeSink sink, InlayVisuals inlay) {
         if (null != element) {
@@ -78,7 +79,7 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
 
             //TODO: check this
             sink.addPresentation(
-                    new InlineInlayPosition(element.getTextRange().getEndOffset()-indent, true,  0),
+                    new InlineInlayPosition(element.getTextRange().getEndOffset() - indent, true, 0),
                     List.of(),
                     inlay.tooltip(),
                     inlay.hasBackground(),
@@ -90,12 +91,10 @@ public abstract class CECollector<H extends PsiElement, A extends PsiElement> im
         }
     }
 
-    //helper function. we are not feeding this all the time into craete inlay
-    protected @NotNull Map<?, ?> getExternalInfo(@Nullable H element) {
+    //helper function. we are not feeding this all the time into create inlay
+    protected @NotNull Map<?, ?> getExternalInfo(@NotNull H element) {
         Map<?, ?> result = new HashMap<>();
-        if (element != null) {
-            CEExternalAnalyzer.getInstance().buildExternalInfo(result, element);
-        }
+        CEExternalAnalyzer.getInstance().buildExternalInfo(result, element);
         return result;
     }
 

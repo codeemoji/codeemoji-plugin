@@ -163,7 +163,7 @@ public abstract class CEImplicitCollector extends CECollector<PsiElement, PsiEle
     private void addImplicitInlay(PsiElement element, @Nullable String fullText, @NotNull InlayTreeSink sink) {
         if (null != fullText) {
             var symbol = CESymbol.of(codePoint, fullText);
-            InlayVisuals inlay = InlayVisuals.translated(symbol, "inlay." + getKey() + ".annotations.tooltip", null);
+            InlayVisuals inlay = InlayVisuals.translated(symbol, "inlay." + getKey() + ".annotations.tooltip");
             addInlayBlock(element, sink, inlay);
         }
     }

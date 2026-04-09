@@ -1,5 +1,19 @@
 # codEEmoji Plugin Changelog
 
+## 7.0.0
+
+- Improved settings menu
+- references and class targets
+- config to alter only touching project files
+
+## 6.0.0 (March 15th, 2025)
+
+- Updated the plugin to the new Declarative Annotation API
+- Plugin is now compatible with all latest IntelliJ versions (tested until 2024.3.4.1)
+- All inlays can now have their emoji changed and customized via the settings menu
+- Added some new VCS Inlays (Author Avatar, Too Many Authors, Recently Modified, Frequently Modified, Last Commit)
+- Big internal refactor so, many internal changes and related fixes were made
+
 ## 5.0.0 (Sep 10th, 2024)
 
 ### Added

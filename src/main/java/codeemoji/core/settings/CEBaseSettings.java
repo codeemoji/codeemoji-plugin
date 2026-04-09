@@ -1,10 +1,10 @@
 package codeemoji.core.settings;
 
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.util.CESymbol;
 import codeemoji.core.util.CESymbolHolder;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Transient;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
@@ -16,22 +16,49 @@ import java.util.*;
 @Data
 public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements PersistentStateComponent<S> {
 
-    private List<CESymbolHolder> symbols = new ArrayList<>();
+    @Transient
+    private transient final CEPSIType allowedPsiType;
+    @Transient
+    private transient final boolean canHaveReferences;
 
-    public CEBaseSettings(CESymbolHolder... symbols) {
+    protected List<CESymbolHolder> symbols = new ArrayList<>();
+    protected CEPSIType targetType;
+    protected boolean includeReferences;
+    protected boolean onlyInProject = true;
+
+    public CEBaseSettings(Builder builder, CESymbolHolder... symbols) {
         super();
         this.symbols.addAll(Arrays.asList(symbols));
+        this.allowedPsiType = builder.getAllowedTargets();
+        this.targetType = builder.getDefaultTargets();
+        this.canHaveReferences = builder.canHaveReferences;
+        this.includeReferences = builder.referencesDefault;
+        this.onlyInProject = builder.isOnlyInProject;
     }
 
     //helper that auto makes the string for a single symbol one
-    public CEBaseSettings(Class<?> providerClass, CESymbol symbol) {
-        this(new CESymbolHolder(symbol, providerClass.getSimpleName().toLowerCase(Locale.ROOT)));
+    public CEBaseSettings(Builder builder,
+                          Class<?> providerClass, CESymbol symbol) {
+        this(builder, new CESymbolHolder(symbol, providerClass.getSimpleName().toLowerCase(Locale.ROOT)));
+    }
+
+    public CEBaseSettings(CESymbolHolder... symbols) {
+        this(builder(), symbols);
     }
 
     // bad
     @Transient
     public CESymbol getMainSymbol() {
         return symbols.get(0).getSymbol();
+    }
+
+
+    public boolean appliesToMethods() {
+        return targetType.isMethods();
+    }
+
+    public boolean appliesToClasses() {
+        return targetType.isClasses();
     }
 
     @Override
@@ -73,7 +100,7 @@ public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements Per
         onUpdated();
     }
 
-    public List<CESymbolHolder> gatherAllSymbols(){
+    public List<CESymbolHolder> gatherAllSymbols() {
         List<CESymbolHolder> allSymbols = new ArrayList<>(symbols);
         for (Field field : getClass().getDeclaredFields()) {
             if (field.getType().equals(CESymbol.class) && !isTransient(field)) {
@@ -91,6 +118,70 @@ public abstract class CEBaseSettings<S extends CEBaseSettings<S>> implements Per
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean isTransient(Field field) {
         return Modifier.isTransient(field.getModifiers()) || field.isAnnotationPresent(Transient.class);
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        boolean canHaveReferences = false;
+        boolean referencesDefault = false;
+        boolean canTargetMethods = false;
+        boolean targetMethodDefault = false;
+        boolean canTargetClases = false;
+        boolean targetsClassesDefault = false;
+        boolean isOnlyInProject = true;
+
+        public Builder targetsExternal() {
+            this.isOnlyInProject = false;
+            return this;
+        }
+
+        public Builder targetReferences(boolean defaultOn) {
+            this.canHaveReferences = true;
+            this.referencesDefault = defaultOn;
+            return this;
+        }
+
+        public Builder targetReferences() {
+            return targetReferences(true);
+        }
+
+        public Builder targetMethods(boolean defaultOn) {
+            this.canTargetMethods = true;
+            this.targetMethodDefault = defaultOn;
+            return this;
+        }
+
+        public Builder targetMethods() {
+            return targetMethods(true);
+        }
+
+        public Builder targetClasses(boolean defaultOn) {
+            this.canTargetClases = true;
+            this.targetsClassesDefault = defaultOn;
+            return this;
+        }
+
+        public Builder targetClasses() {
+            return targetClasses(true);
+        }
+
+        CEPSIType getDefaultTargets() {
+            if (targetsClassesDefault && targetMethodDefault) return CEPSIType.METHODS_AND_CLASSES;
+            else if (targetMethodDefault) return CEPSIType.METHODS;
+            else if (targetsClassesDefault) return CEPSIType.CLASSES;
+            else return CEPSIType.UNSPECIFIED;
+        }
+
+        CEPSIType getAllowedTargets() {
+            if (canTargetClases && canTargetMethods) return CEPSIType.METHODS_AND_CLASSES;
+            else if (canTargetMethods) return CEPSIType.METHODS;
+            else if (canTargetClases) return CEPSIType.CLASSES;
+            else return CEPSIType.UNSPECIFIED;
+        }
+
     }
 }
 

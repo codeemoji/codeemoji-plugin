@@ -1,14 +1,12 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
 
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jetbrains.annotations.NotNull;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.STATE_INDEPENDENT_METHOD;
 
@@ -20,7 +18,8 @@ public class StateIndependentMethodSettings extends CEBaseSettings<StateIndepend
     private boolean checkMethodCallsForStateIndependenceApplied = false;
 
     public StateIndependentMethodSettings(){
-        super(StateIndependentMethod.class, STATE_INDEPENDENT_METHOD);
+        super(builder().targetMethods().targetReferences().targetsExternal(),
+                StateIndependentMethod.class, STATE_INDEPENDENT_METHOD);
     }
 
 }

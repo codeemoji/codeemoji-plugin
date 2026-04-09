@@ -1,6 +1,7 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CEUtils;
@@ -19,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 import static codeemoji.inlay.nameviolation.NameViolationSymbols.MANY;
-import static codeemoji.inlay.nameviolation.NameViolationSymbols.ONE;
 
 public class ExpectingButNotGettingASingleInstance extends CEProvider<ExpectingButNotGettingASingleInstance.Settings> {
 
@@ -29,27 +29,26 @@ public class ExpectingButNotGettingASingleInstance extends CEProvider<ExpectingB
     @State(name = "ExpectingButNotGettingASingleInstanceSettings", storages = @Storage("codeemoji-expecting-but-not-getting-a-single-instance-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings() {
-            super(ExpectingButNotGettingASingleInstance.class, MANY);
+            super(builder().targetMethods().targetReferences(), ExpectingButNotGettingASingleInstance.class, MANY);
         }
     }
 
     @Override
-    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
-            @Override
-            public boolean needsInlay(@NotNull PsiMethod element) {
-                if ((element.getName().startsWith("get") || element.getName().startsWith("return")) &&
-                        !Objects.equals(element.getReturnType(), PsiTypes.voidType()) &&
-                        !CEUtils.isPluralForm(element.getName())) {
-                    var typeElement = element.getReturnTypeElement();
-                    return !CEUtils.sameNameAsType(typeElement, element.getName()) &&
-                            (CEUtils.isArrayType(typeElement) ||
-                                    CEUtils.isIterableType(typeElement) ||
-                                    CEUtils.isMappableType(typeElement));
-                }
-                return false;
-            }
-        };
+    protected void createCollectors(Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addSimpleMethodCollector(this::matches);
+    }
+
+    private boolean matches(@NotNull PsiMethod element) {
+        if ((element.getName().startsWith("get") || element.getName().startsWith("return")) &&
+                !Objects.equals(element.getReturnType(), PsiTypes.voidType()) &&
+                !CEUtils.isPluralForm(element.getName())) {
+            var typeElement = element.getReturnTypeElement();
+            return !CEUtils.sameNameAsType(typeElement, element.getName()) &&
+                    (CEUtils.isArrayType(typeElement) ||
+                            CEUtils.isIterableType(typeElement) ||
+                            CEUtils.isMappableType(typeElement));
+        }
+        return false;
     }
 }
 

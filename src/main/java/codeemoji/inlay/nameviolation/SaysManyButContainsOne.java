@@ -1,10 +1,10 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CESimpleVariableCollector;
+import codeemoji.core.collector.base.simple.CESimpleVariableCollector;
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.editor.Editor;
@@ -25,16 +25,17 @@ public class SaysManyButContainsOne extends CEProvider<SaysManyButContainsOne.Se
     @Data
     @State(name = "SaysManyButContainsOne", storages = @Storage("codeemoji-says-many-but-contains-one-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
-        public Settings(){
-            super(SaysManyButContainsOne.class, ONE);
+        public Settings() {
+            super(builder(), SaysManyButContainsOne.class, ONE);
         }
     }
 
     @Override
-    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleVariableCollector(editor, getKey(), mainSymbol()) {
+    protected void createCollectors(CEProvider<Settings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+
+        builder.add(new CESimpleVariableCollector(editor, this) {
             @Override
-            public boolean needsInlay(@NotNull PsiVariable element){
+            public boolean needsInlay(@NotNull PsiVariable element) {
                 var typeElement = element.getTypeElement();
                 return null != typeElement &&
                         CEUtils.isPluralForm(element.getName()) &&
@@ -49,6 +50,6 @@ public class SaysManyButContainsOne extends CEProvider<SaysManyButContainsOne.Se
                         !CEUtils.sameNameAsType(typeElement, element.getName()) &&
                         !CEUtils.containsOnlySpecialCharacters(typeElement.getText());
             }
-        };
+        });
     }
 }

@@ -1,6 +1,7 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -27,21 +28,19 @@ public class IsReturnsMoreThanABoolean extends CEProvider<IsReturnsMoreThanABool
     @State(name = "IsReturnsMoreThanABooleanSettings", storages = @Storage("codeemoji-is-returns-more-than-a-boolean-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings() {
-            super(IsReturnsMoreThanABoolean.class, CONFUSED);
+            super(builder().targetMethods().targetReferences(), IsReturnsMoreThanABoolean.class, CONFUSED);
         }
     }
 
     @Override
-    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
-            @Override
-            public boolean needsInlay(@NotNull PsiMethod element){
-                return element.getName().startsWith("is") &&
-                        !(Objects.equals(element.getReturnType(), PsiTypes.booleanType())
-                                || Objects.equals(element.getReturnType(), PsiTypes.voidType()));
-            }
-        };
+    protected void createCollectors(CEProvider<Settings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addSimpleMethodCollector(this::matches);
+    }
 
+    private boolean matches(@NotNull PsiMethod element) {
+        return element.getName().startsWith("is") &&
+                !(Objects.equals(element.getReturnType(), PsiTypes.booleanType())
+                        || Objects.equals(element.getReturnType(), PsiTypes.voidType()));
     }
 }
 

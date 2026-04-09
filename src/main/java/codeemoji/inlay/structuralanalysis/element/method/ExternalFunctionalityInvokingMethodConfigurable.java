@@ -1,8 +1,7 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
-import codeemoji.core.settings.CEConfigurableWindow;
-import com.intellij.codeInsight.hints.ChangeListener;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
+import codeemoji.core.util.CEBundle;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
@@ -11,21 +10,18 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-class ExternalFunctionalityInvokingMethodConfigurable extends CEConfigurableWindow<ExternalFunctionalityInvokingMethodSettings> {
+class ExternalFunctionalityInvokingMethodConfigurable extends CEBaseConfigurableWindow<ExternalFunctionalityInvokingMethodSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(ExternalFunctionalityInvokingMethodSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
-        var panel = super.createComponent(settings,preview, project, language, changeListener);
+    protected void buildForm(FormBuilder builder, ExternalFunctionalityInvokingMethodSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
+        super.buildForm(builder, settings, preview, project, language, changeListener);
         var checkBox = new JCheckBox();
         checkBox.setSelected(settings.isCheckMethodCallsForExternalityApplied());
         checkBox.addChangeListener(event -> {
             settings.setCheckMethodCallsForExternalityApplied(checkBox.isSelected());
             changeListener.settingsChanged();
         });
-        panel.add(FormBuilder.createFormBuilder()
-                .addLabeledComponent("Follow method calls and recursively check externality", checkBox)
-                .getPanel());
-
-        return panel;
+        builder.addLabeledComponent(
+                CEBundle.getString("inlay.externalfunctionalityinvokingmethod.settings"), checkBox);
     }
 }

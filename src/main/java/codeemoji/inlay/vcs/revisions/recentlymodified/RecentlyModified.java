@@ -2,108 +2,66 @@ package codeemoji.inlay.vcs.revisions.recentlymodified;
 
 import codeemoji.core.collector.InlayVisuals;
 import codeemoji.core.provider.CEProvider;
-import codeemoji.core.settings.CEConfigurableWindow;
-import codeemoji.core.util.CEBundle;
-import codeemoji.core.util.CESymbol;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
+import codeemoji.core.util.CEUtils;
 import codeemoji.inlay.vcs.CEVcsUtils;
-import codeemoji.inlay.vcs.VCSMethodCollector;
-import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
-import com.intellij.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
-import java.util.Objects;
-import java.util.stream.IntStream;
 
 public class RecentlyModified extends CEProvider<RecentlyModifiedSettings> {
 
     @Override
-    public @Nullable InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new RecentlyModifiedCollector(psiFile, editor, getKey());
+    protected void createCollectors(Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addMethodCollector(e -> createInlay(e, editor));
+        builder.addClassCollector(e -> createInlay(e, editor));
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<RecentlyModifiedSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<RecentlyModifiedSettings> createConfigurable() {
         return new RecentlyModifiedConfigurable();
     }
 
-    private class RecentlyModifiedCollector extends VCSMethodCollector {
+    private @Nullable InlayVisuals createInlay(@NotNull PsiElement element, @NotNull Editor editor) {
+        FileAnnotation vcsBlame = CEVcsUtils.getAnnotation(element.getContainingFile(), editor);
+        if (vcsBlame == null) return null;
 
-        protected RecentlyModifiedCollector(@NotNull PsiFile file, @NotNull Editor editor, @NotNull String key) {
-            super(file, editor, key);
-        }
+        Document document = CEUtils.getContainingDocument(element);
+        if (document == null) return null;
 
-        @Override
-        protected @Nullable InlayVisuals createInlayFor(@NotNull PsiMethod element) {
-            if (vcsBlame == null) return null;
+        //text range of this element without comments
+        TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
 
-            //text range of this element without comments
-            TextRange textRange = CEVcsUtils.getTextRangeWithoutLeadingCommentsAndWhitespaces(element);
+        Date date = CEVcsUtils.getLatestModificationDate(element.getProject(), textRange, document, vcsBlame);
 
-            Date date = getEarliestModificationDate(element.getProject(), textRange, getEditor(), vcsBlame);
-
-            if (date == null) return null;
-
-            //check if date is within a week from now
-
-            long diff = System.currentTimeMillis() - date.getTime();
-            long diffDays = diff / (24 * 60 * 60 * 1000);
-
-            if (diffDays <= getSettings().getDays()) {
-                return makePresentation(date);
-            }
-            return null;
-        }
-
-        private InlayVisuals makePresentation(Date date) {
-            RecentlyModifiedSettings settings = getSettings();
-            String tooltip = settings.isShowDate() ? date.toString() : getDaysAgoTooltipString(date);
-            CESymbol mainSymbol = settings.getMainSymbol();
-            return InlayVisuals.of(mainSymbol, tooltip);
-        }
-
-        private static String getDaysAgoTooltipString(Date date) {
-            // calculate how many days ago it was
-            long diff = System.currentTimeMillis() - date.getTime();
-            long diffDays = diff / (24 * 60 * 60 * 1000);
-            if (diffDays == 0) {
-                return CEBundle.getString("inlay.recentlymodified.tooltip.today");
-            } else if (diffDays == 1) {
-                return CEBundle.getString("inlay.recentlymodified.tooltip.yesterday");
-            } else if (diffDays < 365) {
-                return CEBundle.getString("inlay.recentlymodified.tooltip.days_ago", diffDays);
-            } else {
-                int years = (int) (diffDays / 365);
-                return CEBundle.getString("inlay.recentlymodified.tooltip.years_ago", years);
-            }
-        }
-
-        @Nullable
-        private static Date getEarliestModificationDate(
-                Project project, TextRange range, Editor editor, FileAnnotation blame) {
-
-            Document document = editor.getDocument();
-            int startLine = document.getLineNumber(range.getStartOffset());
-            int endLine = document.getLineNumber(range.getEndOffset());
-            UpToDateLineNumberProviderImpl provider = new UpToDateLineNumberProviderImpl(document, project);
-
-            return IntStream.rangeClosed(startLine, endLine)
-                    .mapToObj(provider::getLineNumber)
-                    .map(blame::getLineDate)  //gets the author name for line
-                    .filter(Objects::nonNull)
-                    .min(Date::compareTo)
-                    .orElse(null);
-        }
-
+        return makeInlay(date);
     }
+
+
+    private @Nullable InlayVisuals makeInlay(Date date) {
+        if (date == null) return null;
+
+        //check if date is within a week from now
+
+        long diff = System.currentTimeMillis() - date.getTime();
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+        RecentlyModifiedSettings settings = getSettings();
+
+        if (diffDays <= settings.getDays()) {
+            String tooltip = settings.isShowDate() ? date.toString() : CEVcsUtils.getDaysAgoTooltipString(date);
+            return InlayVisuals.direct(settings.getMainSymbol(), tooltip);
+        }
+        return null;
+    }
+
+
 }
 
 

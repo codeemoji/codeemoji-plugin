@@ -1,18 +1,12 @@
 package codeemoji.inlay.structuralanalysis.codecomplexity;
 
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
-import codeemoji.core.util.CEBundle;
-import codeemoji.core.util.CESymbol;
-import codeemoji.core.util.CESymbolHolder;
 import codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -21,7 +15,7 @@ public class LargeMethodCountClassSettings extends CEBaseSettings<LargeMethodCou
 
     private int methodCount = 15;
     public LargeMethodCountClassSettings() {
-        super(LargeMethodCountClass.class, StructuralAnalysisSymbols.LARGE_METHOD_COUNT_CLASS);
+        super(builder().targetClasses().targetReferences(), LargeMethodCountClass.class, StructuralAnalysisSymbols.LARGE_METHOD_COUNT_CLASS);
     }
 
 }

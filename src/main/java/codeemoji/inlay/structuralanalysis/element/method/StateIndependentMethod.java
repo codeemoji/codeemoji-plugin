@@ -1,42 +1,27 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
-import codeemoji.core.collector.simple.CESimpleMethodCollector;
-import codeemoji.core.collector.simple.CESimpleReferenceMethodCollector;
-import codeemoji.core.provider.CEProviderMulti;
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.base.simple.CESimpleReferenceMethodCollector;
+import codeemoji.core.provider.CEProvider;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
 
-public class StateIndependentMethod extends CEProviderMulti<StateIndependentMethodSettings> {
+public class StateIndependentMethod extends CEProvider<StateIndependentMethodSettings> {
 
     @Override
-    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
-        return List.of(
-                new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
-                    @Override
-                    protected boolean needsInlay(@NotNull PsiMethod element){
-                        return isStateIndependentMethod(element);
-                    }
-                },
-
-                new CESimpleReferenceMethodCollector(editor, getKey(), mainSymbol()) {
-                    @Override
-                    protected boolean needsInlay(@NotNull PsiMethod element){
-                        return isStateIndependentMethod(element);
-                    }
-                }
-        );
+    protected void createCollectors(CEProvider<StateIndependentMethodSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addSimpleMethodCollector(this::isStateIndependentMethod);
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<StateIndependentMethodSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<StateIndependentMethodSettings> createConfigurable() {
         return new StateIndependentMethodConfigurable();
     }
 

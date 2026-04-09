@@ -5,11 +5,9 @@ import codeemoji.core.collector.project.ProjectRuleSymbol;
 import codeemoji.core.config.CEConfigFile;
 import codeemoji.core.config.CERuleElement;
 import codeemoji.core.config.CERuleFeature;
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEBundle;
 import codeemoji.core.util.CESymbol;
-import com.intellij.codeInsight.hints.ChangeListener;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.lang.Language;
 import com.intellij.openapi.diagnostic.Logger;
@@ -27,15 +25,11 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
-import static codeemoji.core.config.CERuleElement.CLASS;
-import static codeemoji.core.config.CERuleElement.FIELD;
-import static codeemoji.core.config.CERuleElement.LOCALVARIABLE;
-import static codeemoji.core.config.CERuleElement.METHOD;
-import static codeemoji.core.config.CERuleElement.PARAMETER;
+import static codeemoji.core.config.CERuleElement.*;
 import static java.awt.GridBagConstraints.HORIZONTAL;
 import static java.awt.GridBagConstraints.WEST;
 
-public class ShowingSpecificsConfigurable extends CEConfigurableWindow<ShowingSpecificsSettings> implements CEProjectConfig {
+public class ShowingSpecificsConfigurable extends CEBaseConfigurableWindow<ShowingSpecificsSettings> implements CEProjectConfig {
 
     private static @NotNull JPanel createBasicInnerBagPanel(@NotNull String title) {
         var result = new JPanel(new GridBagLayout());
@@ -52,13 +46,12 @@ public class ShowingSpecificsConfigurable extends CEConfigurableWindow<ShowingSp
     }
 
     @Override
-    public @NotNull JComponent createComponent(ShowingSpecificsSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
+    protected void buildForm(FormBuilder builder, ShowingSpecificsSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
+        super.buildForm(builder, settings, preview, project, language, changeListener);
         var specificsPanel = new JPanel();
         var detailProject = initOpenProjectsPanel(settings);
         specificsPanel.add(detailProject);
-        return FormBuilder.createFormBuilder()
-                .addComponent(specificsPanel)
-                .getPanel();
+        builder.addComponent(specificsPanel);
     }
 
     private @NotNull JComponent initOpenProjectsPanel(ShowingSpecificsSettings settings) {

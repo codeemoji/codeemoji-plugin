@@ -868,7 +868,7 @@ _InlayHintsProvider_](https://github.com/JetBrains/intellij-community/blob/idea/
 
 ## Providers
 
-The **codEEmoji** plugin provides two abstract classes (_CEProvider_ and _CEProviderMulti_) that implement the interface
+The **codEEmoji** plugin provides two abstract classes (_CEProvider_ and _CEProvider_) that implement the interface
 _InlayHintsProvider_. They are starting points for implementing a case for adding an inlay hint. See figure
 that follow.
 
@@ -886,7 +886,7 @@ the source code elements and execute the logic to identify the point where the a
 ## Collectors
 
 Generally a class of type _InlayHintProvider_ is linked to a class of type _InlayHintCollector_. At this point, the
-class _CEProviderMulti_ differentiates itself. It extends the _CEProvider_ class and allows a list of
+class _CEProvider_ differentiates itself. It extends the _CEProvider_ class and allows a list of
 coupled collectors.
 
 The **codEEmoji** provides a rich API for implementing classes of type _InlayHintsCollector_. The figure below displays
@@ -897,7 +897,7 @@ class diagram available for this purpose.
 
 The _InlayHintsCollector_ framework interface can be implemented in the plugin by the _CECollector_ and
 _CECollectorMulti_. The interface defines the _collect(PsiElement, Editor, InlayTreeSink)_ method. _CECollectorMulti_
-allows you to implement this method using a list of collectors, useful for use with _CEProviderMulti_.
+allows you to implement this method using a list of collectors, useful for use with _CEProvider_.
 
 The _CECollector_ abstract class is the main class for implementing a collector. It extends the abstract class
 _CEInlayBuilder_ which contains all the methods for manipulating inlay hints. Child classes must implement
@@ -966,7 +966,7 @@ references to modifiers in classes, methods, fields, and interface methods.
 Example of use:
 
 ````java
-public class ShowingModifiers extends CEProviderMulti<ShowingModifiersSettings> {
+public class ShowingModifiers extends CEProvider<ShowingModifiersSettings> {
 
     //source code omitted...
 
@@ -1018,7 +1018,7 @@ collectors and displays the available interfaces.
 Example of use:
 
 ````java
-public class ShowingSpecifics extends CEProviderMulti<ShowingSpecificsSettings> {
+public class ShowingSpecifics extends CEProvider<ShowingSpecificsSettings> {
 
     //source code omitted...
 
@@ -1060,7 +1060,7 @@ invoked to investigate whether to process an inlay hint.
 Example of use:
 
 ````java
-public class ImplicitAnnotations extends CEProviderMulti<ImplicitAnnotationsSettings> {
+public class ImplicitAnnotations extends CEProvider<ImplicitAnnotationsSettings> {
 
     //source code omitted...
 

@@ -39,6 +39,7 @@ public class CEConfigFile {
                             var gson = new GsonBuilder()
                                     .registerTypeAdapter(CERuleElement.class, new CERuleElement.EnumDeserializer())
                                     .registerTypeAdapter(CERuleFeature.class, new CERuleFeature.EnumDeserializer())
+                                    .registerTypeAdapter(CEPSIType.class, new CEPSIType.EnumDeserializer())
                                     .create();
 
                             @SuppressWarnings("unchecked") Map<String, Object> map = gson.fromJson(inputStreamReader, Map.class);

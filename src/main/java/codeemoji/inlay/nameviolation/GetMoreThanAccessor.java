@@ -1,6 +1,7 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
 import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
@@ -27,21 +28,20 @@ public class GetMoreThanAccessor extends CEProvider<GetMoreThanAccessor.Settings
     @State(name = "GetMoreThanAccessorSettings", storages = @Storage("codeemoji-get-more-than-accessor-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
         public Settings() {
-            super(GetMoreThanAccessor.class, CONFUSED);
+            super(builder().targetMethods().targetReferences().targetsExternal(), GetMoreThanAccessor.class, CONFUSED);
         }
     }
 
     @Override
-    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
-            @Override
-            public boolean needsInlay(@NotNull PsiMethod element){
-                if (element.getName().startsWith("get") && !Objects.equals(element.getReturnType(), PsiTypes.voidType()) && null != element.getBody()) {
-                    return 1 < element.getBody().getStatements().length && !"getInstance".equalsIgnoreCase(element.getName());
-                }
-                return false;
-            }
-        };
+    protected void createCollectors(CEProvider<Settings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addSimpleMethodCollector(this::matches);
+    }
+
+    private boolean matches(@NotNull PsiMethod element) {
+        if (element.getName().startsWith("get") && !Objects.equals(element.getReturnType(), PsiTypes.voidType()) && null != element.getBody()) {
+            return 1 < element.getBody().getStatements().length && !"getInstance".equalsIgnoreCase(element.getName());
+        }
+        return false;
     }
 }
 

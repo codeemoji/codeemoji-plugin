@@ -1,9 +1,8 @@
 package codeemoji.inlay.nameviolation;
 
-import codeemoji.core.collector.simple.CESimpleMethodCollector;
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.provider.CEProvider;
 import codeemoji.core.settings.CEBaseSettings;
-import com.intellij.codeInsight.hints.declarative.InlayHintsCollector;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.editor.Editor;
@@ -26,20 +25,19 @@ public class NotAnsweredQuestion extends CEProvider<NotAnsweredQuestion.Settings
     @Data
     @State(name = "NotAnsweredQuestionSettings", storages = @Storage("codeemoji-not-answered-question-settings.xml"))
     public static class Settings extends CEBaseSettings<Settings> {
-        public Settings(){
-            super(NotAnsweredQuestion.class, CONFUSED);
+        public Settings() {
+            super(builder().targetMethods().targetReferences(),
+                    NotAnsweredQuestion.class, CONFUSED);
         }
     }
 
     @Override
-    public @NotNull InlayHintsCollector createCollector(@NotNull PsiFile psiFile, @NotNull Editor editor) {
-        return new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
-            @Override
-            public boolean needsInlay(@NotNull PsiMethod element){
-                return element.getName().startsWith("is") && Objects.equals(element.getReturnType(), PsiTypes.voidType());
-            }
-        };
+    protected void createCollectors(CEProvider<Settings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addSimpleMethodCollector(this::matches);
+    }
 
+    private boolean matches(@NotNull PsiMethod element) {
+        return element.getName().startsWith("is") && Objects.equals(element.getReturnType(), PsiTypes.voidType());
     }
 }
 

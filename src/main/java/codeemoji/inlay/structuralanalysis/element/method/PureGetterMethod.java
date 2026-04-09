@@ -1,43 +1,27 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
-import codeemoji.core.collector.simple.CESimpleMethodCollector;
-import codeemoji.core.collector.simple.CESimpleReferenceMethodCollector;
-import codeemoji.core.provider.CEProviderMulti;
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.collector.base.simple.CESimpleMethodCollector;
+import codeemoji.core.collector.base.simple.CESimpleReferenceMethodCollector;
+import codeemoji.core.provider.CEProvider;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import org.codehaus.plexus.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
 
-public class PureGetterMethod extends CEProviderMulti<PureGetterMethodSettings> {
+public class PureGetterMethod extends CEProvider<PureGetterMethodSettings> {
 
     @Override
-    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
-        return List.of(
-                new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
-                    @Override
-                    protected boolean needsInlay(@NotNull PsiMethod element){
-                        return isPureGetterMethod(element);
-                    }
-
-
-                },
-                new CESimpleReferenceMethodCollector(editor, getKey(), mainSymbol()) {
-                    @Override
-                    protected boolean needsInlay(@NotNull PsiMethod element){
-                        return isPureGetterMethod(element);
-                    }
-                }
-        );
+    protected void createCollectors(CEProvider<PureGetterMethodSettings>.Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addSimpleMethodCollector(this::isPureGetterMethod);
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<PureGetterMethodSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<PureGetterMethodSettings> createConfigurable() {
         return new PureGetterMethodConfigurable();
     }
 

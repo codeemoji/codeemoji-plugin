@@ -1,9 +1,7 @@
 package codeemoji.inlay.implicit;
 
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEUtils;
-import com.intellij.codeInsight.hints.ChangeListener;
-import com.intellij.codeInsight.hints.ImmediateConfigurable;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 @SuppressWarnings({"DuplicatedCode"})
-class ImplicitAnnotationsConfigurable extends CEConfigurableWindow<ImplicitAnnotationsSettings> {
+class ImplicitAnnotationsConfigurable extends CEBaseConfigurableWindow<ImplicitAnnotationsSettings> {
 
     @Override
     public @NotNull JComponent createComponent(ImplicitAnnotationsSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {

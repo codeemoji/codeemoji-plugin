@@ -1,6 +1,6 @@
 package codeemoji.inlay.vcs.revisions.frequentlymodified;
 
-import codeemoji.core.settings.CEConfigurableWindow;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import codeemoji.core.util.CEBundle;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
@@ -10,11 +10,12 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class FrequentlyModifiedConfigurable extends CEConfigurableWindow<FrequentlyModifiedSettings> {
+public class FrequentlyModifiedConfigurable extends CEBaseConfigurableWindow<FrequentlyModifiedSettings> {
 
     @Override
-    public @NotNull JComponent createComponent(FrequentlyModifiedSettings settings, @Nullable String preview, Project project,
-                                               Language language, ChangeListener changeListener) {
+    protected void buildForm(FormBuilder builder, FrequentlyModifiedSettings settings, @Nullable String preview, Project project, Language language, ChangeListener changeListener) {
+        super.buildForm(builder, settings, preview, project, language, changeListener);
+
         var daySelector = new JSpinner();
         daySelector.setValue(settings.getDaysTimeFrame());
         daySelector.addChangeListener(event -> {
@@ -29,13 +30,7 @@ public class FrequentlyModifiedConfigurable extends CEConfigurableWindow<Frequen
             changeListener.settingsChanged();
         });
 
-
-        return FormBuilder.createFormBuilder()
-                .addComponent(super.createComponent(settings, preview, project, language, changeListener))
-                .addLabeledComponent(CEBundle.getString("inlay.frequentlymodified.settings.timeframe"),
-                        daySelector)
-                .addLabeledComponent(CEBundle.getString("inlay.frequentlymodified.settings.modifications"),
-                        modificationSelector)
-                .getPanel();
+        builder.addLabeledComponent(CEBundle.getString("inlay.frequentlymodified.settings.timeframe"), daySelector);
+        builder.addLabeledComponent(CEBundle.getString("inlay.frequentlymodified.settings.modifications"), modificationSelector);
     }
 }

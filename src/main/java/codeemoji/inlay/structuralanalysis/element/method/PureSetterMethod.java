@@ -1,41 +1,23 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
-import codeemoji.core.collector.simple.CESimpleMethodCollector;
-import codeemoji.core.collector.simple.CESimpleReferenceMethodCollector;
-import codeemoji.core.provider.CEProviderMulti;
-import codeemoji.core.settings.CEConfigurableWindow;
-import com.intellij.codeInsight.hints.declarative.SharedBypassCollector;
+import codeemoji.core.provider.CEProvider;
+import codeemoji.core.settings.CEBaseConfigurableWindow;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import org.codehaus.plexus.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Objects;
 
-public class PureSetterMethod extends CEProviderMulti<PureSetterMethodSettings> {
+public class PureSetterMethod extends CEProvider<PureSetterMethodSettings> {
 
     @Override
-    protected List<SharedBypassCollector> createCollectors(@NotNull PsiFile psiFile, Editor editor) {
-        return List.of(
-                new CESimpleMethodCollector(editor, getKey(), mainSymbol()) {
-                    @Override
-                    protected boolean needsInlay(@NotNull PsiMethod element) {
-                        return isPureSetterMethod(element);
-                    }
-                },
-                new CESimpleReferenceMethodCollector(editor, getKey(), mainSymbol()) {
-                    @Override
-                    protected boolean needsInlay(@NotNull PsiMethod element) {
-                        return isPureSetterMethod(element);
-                    }
-                }
-        );
+    protected void createCollectors(Builder builder, @NotNull PsiFile psiFile, Editor editor) {
+        builder.addSimpleMethodCollector(this::isPureSetterMethod);
     }
 
     @Override
-    public @NotNull CEConfigurableWindow<PureSetterMethodSettings> createConfigurable() {
+    public @NotNull CEBaseConfigurableWindow<PureSetterMethodSettings> createConfigurable() {
         return new PureSetterMethodConfigurable();
     }
 

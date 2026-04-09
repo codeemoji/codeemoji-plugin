@@ -73,17 +73,23 @@
 
         <applicationService serviceImplementation="codeemoji.inlay.vulnerabilities.VulnerableDependencySettings"/>
 
-        <applicationService serviceImplementation="codeemoji.inlay.vcs.authoravatar.AuthorAvatarSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.ownership.authoravatar.AuthorAvatarSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.recentlymodified.RecentlyModifiedSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.lastcommit.LastCommitSettings"/>
-        <applicationService serviceImplementation="codeemoji.inlay.vcs.ownership.TooManyAuthorsSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.ownership.toomanyauthors.TooManyAuthorsSettings"/>
         <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.frequentlymodified.FrequentlyModifiedSettings"/>
-        <applicationService serviceImplementation="codeemoji.inlay.vcs.refactors.NameChangedSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.newlyadded.NewlyAddedSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.revisions.infrequentlymodified.InFrequentlyModifiedSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.bugs.FixedIssueSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.refactors.rename.NameChangedSettings"/>
+        <applicationService serviceImplementation="codeemoji.inlay.vcs.refactors.extract.MovedRefactorSettings"/>
 
 
 
         <projectService serviceImplementation="codeemoji.inlay.external.services.OSSExternalServiceExternalService"/>
         <projectService serviceImplementation="codeemoji.inlay.external.services.OSVExternalServiceExternalService"/>
+        <projectService serviceImplementation="codeemoji.inlay.vcs.RefactorService"/>
+        <projectService serviceImplementation="codeemoji.inlay.vcs.GitCommitCacheService"/>
 
 
         <!--END OF CONFIGURABLE & SERVICES SECTION-->
@@ -302,14 +308,14 @@
                                               providerId="inlay.lastcommit"/>
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
-                                              implementationClass="codeemoji.inlay.vcs.authoravatar.AuthorAvatar"
+                                              implementationClass="codeemoji.inlay.vcs.ownership.authoravatar.AuthorAvatar"
                                               nameKey="inlay.authoravatar.name"
                                               group="OTHER_GROUP"
                                               descriptionKey="inlay.authoravatar.description"
                                               providerId="inlay.authoravatar"/>
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
-                                              implementationClass="codeemoji.inlay.vcs.ownership.TooManyAuthors"
+                                              implementationClass="codeemoji.inlay.vcs.ownership.toomanyauthors.TooManyAuthors"
                                               nameKey="inlay.toomanyauthors.name"
                                               group="OTHER_GROUP"
                                               descriptionKey="inlay.toomanyauthors.description"
@@ -323,11 +329,41 @@
                                               providerId="inlay.frequentlymodified"/>
 
         <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
-                                              implementationClass="codeemoji.inlay.vcs.refactors.NameChanged"
+                                              implementationClass="codeemoji.inlay.vcs.revisions.newlyadded.NewlyAdded"
+                                              nameKey="inlay.newlyadded.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.newlyadded.description"
+                                              providerId="inlay.newlyadded"/>
+
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                              implementationClass="codeemoji.inlay.vcs.revisions.infrequentlymodified.InFrequentlyModified"
+                                              nameKey="inlay.infrequentlymodified.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.infrequentlymodified.description"
+                                              providerId="inlay.infrequentlymodified"/>
+
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                              implementationClass="codeemoji.inlay.vcs.bugs.FixedIssue"
+                                              nameKey="inlay.fixedissue.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.fixedissue.description"
+                                              providerId="inlay.fixedissue"/>
+
+
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                              implementationClass="codeemoji.inlay.vcs.refactors.rename.NameChanged"
                                               nameKey="inlay.namechanged.name"
                                               group="OTHER_GROUP"
                                               descriptionKey="inlay.namechanged.description"
                                               providerId="inlay.namechanged"/>
+
+        <codeInsight.declarativeInlayProvider language="JAVA" bundle="CEBundle" isEnabledByDefault="true"
+                                              implementationClass="codeemoji.inlay.vcs.refactors.extract.MovedRefactor"
+                                              nameKey="inlay.movedrefactor.name"
+                                              group="OTHER_GROUP"
+                                              descriptionKey="inlay.movedrefactor.description"
+                                              providerId="inlay.movedrefactor"/>
+
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.showingmodifiers"
@@ -451,21 +487,38 @@
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.authoravatar"
-                implementationClass="codeemoji.inlay.vcs.authoravatar.AuthorAvatar" />
+                implementationClass="codeemoji.inlay.vcs.ownership.authoravatar.AuthorAvatar" />
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.toomanyauthors"
-                implementationClass="codeemoji.inlay.vcs.ownership.TooManyAuthors" />
+                implementationClass="codeemoji.inlay.vcs.ownership.toomanyauthors.TooManyAuthors" />
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.frequentlymodified"
                 implementationClass="codeemoji.inlay.vcs.revisions.frequentlymodified.FrequentlyModified" />
 
         <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.newlyadded"
+                implementationClass="codeemoji.inlay.vcs.revisions.newlyadded.NewlyAdded" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.infrequentlymodified"
+                implementationClass="codeemoji.inlay.vcs.revisions.infrequentlymodified.InFrequentlyModified" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.fixedissue"
+                implementationClass="codeemoji.inlay.vcs.bugs.FixedIssue" />
+
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
                 language="JAVA" providerId="inlay.namechanged"
-                implementationClass="codeemoji.inlay.vcs.refactors.NameChanged" />
+                implementationClass="codeemoji.inlay.vcs.refactors.rename.NameChanged" />
+
+        <codeInsight.declarativeInlayProviderCustomSettingsProvider
+                language="JAVA" providerId="inlay.movedrefactor"
+                implementationClass="codeemoji.inlay.vcs.refactors.extract.MovedRefactor" />
 
         <!--END OF IMPLEMENTATIONS SECTION-->
 
-    </extensions>
+    </extensions>.
 </idea-plugin>

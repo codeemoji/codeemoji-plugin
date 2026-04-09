@@ -1,13 +1,11 @@
 package codeemoji.inlay.structuralanalysis.element.method;
 
+import codeemoji.core.config.CEPSIType;
 import codeemoji.core.settings.CEBaseSettings;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jetbrains.annotations.NotNull;
 
 import static codeemoji.inlay.structuralanalysis.StructuralAnalysisSymbols.STATE_CHANGING_METHOD;
 
@@ -19,6 +17,7 @@ public class StateChangingMethodSettings extends CEBaseSettings<StateChangingMet
     private boolean checkMethodCallsForStateChangeApplied = false;
 
     public StateChangingMethodSettings(){
-        super(StateChangingMethod.class, STATE_CHANGING_METHOD);
+        super(builder().targetMethods().targetReferences().targetsExternal(),
+                StateChangingMethod.class, STATE_CHANGING_METHOD);
     }
 }
